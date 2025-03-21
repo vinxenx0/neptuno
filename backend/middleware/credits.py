@@ -9,6 +9,7 @@ from models.user import User, PlanEnum
 from models.session import AnonymousSession
 from core.database import get_db
 from core.logging import configure_logging
+from services.integration_service import trigger_webhook
 
 logger = configure_logging()
 
@@ -23,7 +24,7 @@ def require_credits(func):
 
             logger.info(f"Usuario {user.user_type} ID {user.user_id} con plan {user.plan or 'anonymous'} realiza consulta")
             response = await func(user=user, db=db, *args, **kwargs)
-
+           
             # Decrementar créditos y registrar transacción
             if user.user_type == "registered":
                 user_db = db.query(User).filter(User.id == int(user.user_id)).first()
@@ -49,6 +50,13 @@ def require_credits(func):
                 )
             db.add(transaction)
             db.commit()
+
+            trigger_webhook(db, "credit_usage", {
+                "user_id": user.user_id,
+                "user_type": user.user_type,
+                "credits_remaining": user.consultas_restantes - 1
+            })
+            
             logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user.consultas_restantes - 1}")
 
             return response

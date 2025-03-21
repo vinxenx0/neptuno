@@ -16,7 +16,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     username = Column(String(50), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)  # Hash bcrypt
+    password_hash = Column(String(255), nullable=True)  # Nullable para terceros
+    auth_provider = Column(String(20), nullable=True)  # "local", "google", "meta", etc.
+    provider_id = Column(String(255), nullable=True)  # ID único del proveedor
     rol = Column(String(20), default="user")  # "user" o "admin"
     activo = Column(Boolean, default=True)  # Estado de la cuenta
     plan = Column(Enum(PlanEnum), default=PlanEnum.FREEMIUM)  # Plan de suscripción

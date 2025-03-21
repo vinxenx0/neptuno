@@ -7,3 +7,6 @@ pyjwt
 python-multipart
 passlib
 passlib[bcrypt]
+oauthlib
+requests
+

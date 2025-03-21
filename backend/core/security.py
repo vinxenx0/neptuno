@@ -3,6 +3,7 @@
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt
+from oauthlib.oauth2 import WebApplicationClient
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jwt import encode, decode, PyJWTError
@@ -12,6 +13,8 @@ from typing import Optional
 
 # Configuración de OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
+google_client = WebApplicationClient(getenv("GOOGLE_CLIENT_ID"))
+meta_client = WebApplicationClient(getenv("META_CLIENT_ID"))
 
 # Configuración de hash de contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -55,3 +58,19 @@ def decode_token(token: str) -> Optional[dict]:
         return decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
     except PyJWTError:
         return None
+    
+    
+def get_oauth2_redirect_url(provider: str) -> str:
+    if provider == "google":
+        return google_client.prepare_request_uri(
+            "https://accounts.google.com/o/oauth2/v2/auth",
+            redirect_uri=getenv("GOOGLE_REDIRECT_URI"),
+            scope=["openid", "email", "profile"]
+        )
+    elif provider == "meta":
+        return meta_client.prepare_request_uri(
+            "https://www.facebook.com/v13.0/dialog/oauth",
+            redirect_uri=getenv("META_REDIRECT_URI"),
+            scope=["email"]
+        )
+    raise ValueError("Proveedor no soportado")

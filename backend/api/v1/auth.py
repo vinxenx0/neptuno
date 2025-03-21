@@ -3,11 +3,11 @@
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from sqlalchemy.orm import Session
 from services.auth_service import (
-    login_user, register_user, get_user_info, update_user, 
+    login_user, login_with_provider, register_user, get_user_info, update_user, 
     delete_user, request_password_reset, refresh_access_token, logout_user
 )
 from core.database import get_db
-from core.security import oauth2_scheme, OAuth2PasswordRequestForm
+from core.security import get_oauth2_redirect_url, oauth2_scheme, OAuth2PasswordRequestForm
 from dependencies.auth import UserContext, get_user_context
 from core.logging import configure_logging
 
@@ -90,3 +90,16 @@ def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
 @router.post("/logout")
 def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return logout_user(db, token)
+
+@router.get("/login/{provider}")
+def get_provider_login_url(provider: str):
+    try:
+        redirect_url = get_oauth2_redirect_url(provider)
+        return {"redirect_url": redirect_url}
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Proveedor no soportado")
+
+@router.post("/login/{provider}/callback")
+def provider_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip)

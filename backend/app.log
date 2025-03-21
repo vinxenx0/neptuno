@@ -1940,3 +1940,707 @@ WHERE usuarios.id = ?
 2025-03-21 14:52:05,041 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
 2025-03-21 14:52:05,041 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
 2025-03-21 14:52:05,041 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,540 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,559 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:54:05,578 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,642 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,650 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:58:50,670 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,816 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,824 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:20,901 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,374 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,383 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 14:59:58,437 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.auth_provider
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,181 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,187 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,205 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:00:34,213 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,724 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,769 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:19,781 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,708 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,726 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,774 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:01:41,791 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,501 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,515 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,555 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:01,565 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,135 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,148 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,179 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:02:09,190 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,843 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,851 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,880 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:01,893 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,205 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,213 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,247 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
