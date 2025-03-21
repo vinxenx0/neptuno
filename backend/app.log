@@ -2644,3 +2644,51 @@ WHERE usuarios.id = ?
 2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
 2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
 2025-03-21 15:03:16,263 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,115 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,123 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,149 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 15:10:35,163 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
