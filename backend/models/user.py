@@ -1,5 +1,6 @@
 # backend/models/user.py
 # Módulo del modelo de usuario.
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Enum
 from core.database import Base
 import enum
@@ -11,16 +12,19 @@ class PlanEnum(enum.Enum):
 
 class User(Base):
     __tablename__ = "usuarios"
+    
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     username = Column(String(50), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    rol = Column(String(20), default="user")  # "user", "admin"
-    activo = Column(Boolean, default=True)
-    plan = Column(Enum(PlanEnum), default=PlanEnum.FREEMIUM)
-    ciudad = Column(String(100), nullable=True)
-    url = Column(String(255), nullable=True)
-    consultas_restantes = Column(Integer, default=100)
-    fecha_renovacion = Column(DateTime, nullable=True)
-    fecha_creacion = Column(DateTime, nullable=True)
-    ultima_ip = Column(String(45), nullable=True)
+    password_hash = Column(String(255), nullable=False)  # Hash bcrypt
+    rol = Column(String(20), default="user")  # "user" o "admin"
+    activo = Column(Boolean, default=True)  # Estado de la cuenta
+    plan = Column(Enum(PlanEnum), default=PlanEnum.FREEMIUM)  # Plan de suscripción
+    ciudad = Column(String(100), nullable=True)  # Para perfil
+    url = Column(String(255), nullable=True)  # URL de avatar o perfil
+    consultas_restantes = Column(Integer, default=100)  # Créditos disponibles
+    fecha_creacion = Column(DateTime, default=datetime.utcnow)  # Fecha de registro
+    fecha_renovacion = Column(DateTime, nullable=True)  # Última renovación de créditos
+    ultima_ip = Column(String(45), nullable=True)  # Última IP conocida (IPv4/IPv6)
+    ultimo_login = Column(DateTime, nullable=True)  # Último inicio de sesión
+    token_valid_until = Column(DateTime, nullable=True)  # Fecha de expiración del token actual

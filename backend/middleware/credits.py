@@ -3,6 +3,7 @@
 from fastapi import Depends, HTTPException
 from functools import wraps
 from sqlalchemy.orm import Session
+from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User, PlanEnum
 from models.session import AnonymousSession
@@ -23,24 +24,36 @@ def require_credits(func):
             logger.info(f"Usuario {user.user_type} ID {user.user_id} con plan {user.plan or 'anonymous'} realiza consulta")
             response = await func(user=user, db=db, *args, **kwargs)
 
+            # Decrementar créditos y registrar transacción
             if user.user_type == "registered":
                 user_db = db.query(User).filter(User.id == int(user.user_id)).first()
                 if not user_db:
-                    logger.error(f"Usuario registrado ID {user.user_id} no encontrado en DB")
                     raise HTTPException(status_code=404, detail="Usuario no encontrado")
                 user_db.consultas_restantes -= 1
+                transaction = CreditTransaction(
+                    user_id=user_db.id,
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada"
+                )
             else:
                 session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
                 if not session_db:
-                    logger.error(f"Sesión anónima ID {user.user_id} no encontrada en DB")
                     raise HTTPException(status_code=404, detail="Sesión no encontrada")
                 session_db.consultas_restantes -= 1
+                transaction = CreditTransaction(
+                    session_id=session_db.id,
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada por anónimo"
+                )
+            db.add(transaction)
             db.commit()
             logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user.consultas_restantes - 1}")
 
             return response
         except HTTPException as e:
-            raise e  # Re-lanzar para que el manejador global lo procese
+            raise e
         except Exception as e:
             logger.error(f"Error inesperado en middleware de créditos para {user.user_type} ID {user.user_id}: {str(e)}")
             raise HTTPException(status_code=500, detail="Error al procesar los créditos")

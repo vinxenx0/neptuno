@@ -30,12 +30,10 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             if db.query(RevokedToken).filter(RevokedToken.token == token).first():
                 logger.warning(f"Intento de uso de token revocado desde IP {client_ip}")
                 raise HTTPException(status_code=401, detail="Token revocado")
-
             payload = decode_token(token)
             if not payload or payload.get("type") != "access":
                 logger.error(f"Token inválido recibido desde IP {client_ip}")
                 raise HTTPException(status_code=401, detail="Token inválido o no es de acceso")
-
             user = db.query(User).filter(User.id == int(payload["sub"])).first()
             if not user:
                 logger.error(f"Usuario no encontrado para token desde IP {client_ip}")
@@ -43,8 +41,12 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             if not user.activo:
                 logger.warning(f"Intento de acceso con usuario inactivo ID {user.id} desde IP {client_ip}")
                 raise HTTPException(status_code=403, detail="Usuario inactivo")
-
+            if user.token_valid_until and user.token_valid_until < datetime.utcnow():
+                logger.warning(f"Token expirado manualmente para usuario ID {user.id} desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token no válido")
+            
             user.ultima_ip = client_ip
+            user.ultimo_login = datetime.utcnow()
             db.commit()
             logger.info(f"Usuario registrado ID {user.id} autenticado desde IP {client_ip}")
             return UserContext(
