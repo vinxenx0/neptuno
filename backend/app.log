@@ -1,0 +1,748 @@
+2025-03-21 11:20:13,038 - SaaS_MVP - ERROR - Error inesperado: (sqlite3.IntegrityError) UNIQUE constraint failed: usuarios.email
+[SQL: INSERT INTO usuarios (email, password_hash, consultas_restantes, fecha_renovacion) VALUES (?, ?, ?, ?)]
+[parameters: ('test@example.com', '1234', 100, '2025-03-21 10:20:13.032279')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-21 11:21:14,243 - SaaS_MVP - INFO - Usuario registered ID 1 realiza consulta
+2025-03-21 11:21:14,244 - SaaS_MVP - ERROR - Error inesperado: consultar() got an unexpected keyword argument 'db'
+2025-03-21 11:21:28,800 - SaaS_MVP - ERROR - HTTP Error: 400 - Sesión anónima inválida
+2025-03-21 11:22:32,369 - SaaS_MVP - INFO - Usuario registered ID 1 realiza consulta
+2025-03-21 11:22:32,370 - SaaS_MVP - ERROR - Error inesperado: consultar() got an unexpected keyword argument 'db'
+2025-03-21 11:22:38,308 - SaaS_MVP - ERROR - HTTP Error: 400 - Sesión anónima inválida
+2025-03-21 11:22:57,410 - SaaS_MVP - ERROR - HTTP Error: 400 - Sesión anónima inválida
+2025-03-21 11:23:22,257 - NeptunO - ERROR - HTTP Error: 400 - Sesión anónima inválida
+2025-03-21 11:35:53,808 - NeptunO - ERROR - Error inesperado: (sqlite3.OperationalError) no such column: usuarios.username
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.ultima_ip AS usuarios_ultima_ip 
+FROM usuarios 
+WHERE usuarios.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('test@example.com', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-21 11:36:40,536 - NeptunO - ERROR - HTTP Error: 401 - Credenciales inválidas
+2025-03-21 11:40:17,785 - NeptunO - ERROR - HTTP Error: 401 - Credenciales inválidas
+2025-03-21 11:41:56,655 - NeptunO - ERROR - HTTP Error: 401 - No autorizado
+2025-03-21 11:42:11,283 - NeptunO - ERROR - HTTP Error: 401 - No autorizado
+2025-03-21 11:42:25,765 - NeptunO - ERROR - HTTP Error: 401 - No autorizado
+2025-03-21 12:12:01,837 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/.venv/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-03-21 12:12:40,454 - NeptunO - ERROR - HTTP Error: 401 - No autorizado
+2025-03-21 12:16:59,699 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/.venv/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-03-21 12:38:55,350 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:38:55,357 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:38:55,357 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:39:06,507 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:39:06,513 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:39:06,513 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:41:00,359 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:41:00,359 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:41:00,359 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:41:00,367 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:41:00,367 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:41:00,367 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:41:00,369 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:41:00,369 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:41:00,369 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:41:17,708 - NeptunO - ERROR - HTTP Error: 404 - Usuario no encontrado
+2025-03-21 12:41:17,708 - NeptunO - ERROR - HTTP Error: 404 - Usuario no encontrado
+2025-03-21 12:41:17,708 - NeptunO - ERROR - HTTP Error: 404 - Usuario no encontrado
+2025-03-21 12:41:23,508 - NeptunO - ERROR - HTTP Error: 401 - Credenciales inválidas
+2025-03-21 12:41:23,508 - NeptunO - ERROR - HTTP Error: 401 - Credenciales inválidas
+2025-03-21 12:41:23,508 - NeptunO - ERROR - HTTP Error: 401 - Credenciales inválidas
+2025-03-21 12:43:12,154 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:43:12,154 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:43:12,154 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:43:12,154 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:43:12,163 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:43:12,163 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:43:12,163 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:43:12,163 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:43:12,170 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:43:12,170 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:43:12,170 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:43:12,170 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:44:27,158 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:44:27,158 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:44:27,158 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:44:27,158 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:44:27,173 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:44:27,173 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:44:27,173 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:44:27,173 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:44:27,180 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:44:27,180 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:44:27,180 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:44:27,180 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:01,426 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:01,426 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:01,426 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:01,426 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:01,436 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:01,436 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:01,436 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:01,436 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:01,439 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:01,439 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:01,439 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:01,439 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:18,619 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:18,619 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:18,619 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:18,619 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:18,619 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:46:18,629 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:18,629 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:18,629 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:18,629 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:18,629 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:46:18,637 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:18,637 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:18,637 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:18,637 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:46:18,637 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:05,287 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:47:05,287 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:47:05,287 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:47:05,287 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:47:05,287 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:47:05,295 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:47:05,295 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:47:05,295 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:47:05,295 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:47:05,295 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:47:05,299 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:05,299 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:05,299 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:05,299 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:05,299 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:47:18,355 - NeptunO - INFO - Usuario registrado ID 1 con plan freemium
+2025-03-21 12:47:18,355 - NeptunO - INFO - Usuario registrado ID 1 con plan freemium
+2025-03-21 12:47:18,355 - NeptunO - INFO - Usuario registrado ID 1 con plan freemium
+2025-03-21 12:47:18,355 - NeptunO - INFO - Usuario registrado ID 1 con plan freemium
+2025-03-21 12:47:18,355 - NeptunO - INFO - Usuario registrado ID 1 con plan freemium
+2025-03-21 12:47:20,433 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:47:20,433 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:47:20,433 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:47:20,433 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:47:20,433 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:47:20,439 - NeptunO - ERROR - HTTP Error: 400 - El email ya está registrado
+2025-03-21 12:47:20,439 - NeptunO - ERROR - HTTP Error: 400 - El email ya está registrado
+2025-03-21 12:47:20,439 - NeptunO - ERROR - HTTP Error: 400 - El email ya está registrado
+2025-03-21 12:47:20,439 - NeptunO - ERROR - HTTP Error: 400 - El email ya está registrado
+2025-03-21 12:47:20,439 - NeptunO - ERROR - HTTP Error: 400 - El email ya está registrado
+2025-03-21 12:48:20,903 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:48:20,903 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:48:20,903 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:48:20,903 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:48:20,903 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:48:20,914 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:48:20,914 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:48:20,914 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:48:20,914 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:48:20,914 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:48:20,923 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:48:20,923 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:48:20,923 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:48:20,923 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:48:20,923 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:49:13,414 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:49:13,414 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:49:13,414 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:49:13,414 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:49:13,414 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:49:13,425 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:49:13,425 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:49:13,425 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:49:13,425 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:49:13,425 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:49:13,432 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:49:13,432 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:49:13,432 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:49:13,432 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:49:13,432 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:50:19,701 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:50:19,701 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:50:19,701 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:50:19,701 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:50:19,701 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:50:19,711 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:50:19,711 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:50:19,711 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:50:19,711 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:50:19,711 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:50:19,714 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:50:19,714 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:50:19,714 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:50:19,714 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:50:19,714 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:51:45,424 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:51:45,424 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:51:45,424 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:51:45,424 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:51:45,424 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:51:45,437 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:51:45,437 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:51:45,437 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:51:45,437 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:51:45,437 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:51:45,449 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:51:45,449 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:51:45,449 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:51:45,449 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:51:45,449 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,380 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,390 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:36,402 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,319 - NeptunO - WARNING - Intento de registro con email duplicado: test@example.com
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:53:44,325 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,693 - NeptunO - WARNING - Intento de registro con username duplicado: testuser
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:01,698 - NeptunO - ERROR - HTTP Error 400 en http://localhost:8000/v1/auth/register: El username ya está registrado
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:12,675 - NeptunO - INFO - Usuario registrado ID 2 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:54:50,740 - NeptunO - INFO - Usuario registrado ID 3 con plan freemium
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,341 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:01,356 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,320 - NeptunO - ERROR - Intento de login fallido para email wrong@example.com desde IP 127.0.0.1
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:27,325 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,717 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:57:33,724 - NeptunO - ERROR - HTTP Error 401 en http://localhost:8000/v1/api/consultar: Token inválido o no es de acceso
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,525 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 12:59:30,538 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,610 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,634 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:00:10,640 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,770 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:01:11,781 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,385 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,410 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:03:19,420 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,781 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,794 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:04:13,805 - NeptunO - ERROR - Error al reiniciar créditos en startup: 403: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,895 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,901 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,919 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:14,928 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,795 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:06:29,802 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,268 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:36,274 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,273 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:37,285 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,968 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,974 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:41,992 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:07:42,003 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,598 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:36,606 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,529 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:08:37,540 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,250 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,260 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,285 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:27,299 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,101 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,121 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:34,131 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,914 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:10:39,919 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,299 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,307 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,327 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:42,334 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,231 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843801c0>}
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,237 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:11:44,245 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,633 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e74f0>}
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,639 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:26,643 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,543 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe184381660>}
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,549 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,555 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,936 - NeptunO - INFO - {<sqlalchemy.orm.session.Session object at 0x7fe1843e7430>}
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,941 - NeptunO - ERROR - Error en health check: Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:27,946 - NeptunO - ERROR - HTTP Error 503 en GET http://127.0.0.1:8000/health: Database unavailable
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,304 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,308 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,316 - NeptunO - ERROR - Intento de resetear créditos por usuario no autorizado: ID 1
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:33,318 - NeptunO - ERROR - Error HTTP en startup: Solo administradores pueden reiniciar créditos
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible
+2025-03-21 13:13:35,872 - NeptunO - INFO - Base de datos accesible

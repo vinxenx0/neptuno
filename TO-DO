@@ -1,0 +1,13 @@
+- manejar cuando el usuario existe ya en la db y lo registras de nuevo
+
+- WARNING:  passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/.venv/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+
+- # Añadir logging a otras funciones de auth_service.py 
+
+- # Añadir manejo de errores y excepciones a otras funciones de auth_service.py 
+
+- # Añadir manejo de errores y excepciones a otras funciones de endpoints.py 
