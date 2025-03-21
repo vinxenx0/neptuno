@@ -37,3 +37,7 @@ def reset_all_credits(user: UserContext = Depends(get_user_context), db: Session
         logger.critical(f"Error inesperado en reset-credits por ID {user.user_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al reiniciar créditos")
     return {"message": "Créditos reiniciados para todos los usuarios"}
+
+@router.get("/example", dependencies=[Depends(require_credits)])
+async def example_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return {"message": "Ejemplo de endpoint protegido por créditos", "credits_remaining": user.consultas_restantes}

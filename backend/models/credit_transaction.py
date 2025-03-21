@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from models.user import Base
 from datetime import datetime
 
 class CreditTransaction(Base):
     __tablename__ = "credit_transactions"
-    
+
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)  # Null para anónimos
-    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)  # Null para registrados
-    amount = Column(Integer, nullable=False)  # Cantidad de créditos (positiva o negativa)
-    transaction_type = Column(String(20), nullable=False)  # "usage", "renewal", "purchase"
-    created_at = Column(DateTime, default=datetime.utcnow)  # Fecha de la transacción
-    description = Column(String(255), nullable=True)  # Detalle opcional
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36), nullable=True)  # Para sesiones anónimas
+    amount = Column(Integer, nullable=False)  # Créditos (positivo o negativo)
+    transaction_type = Column(String(50), nullable=False)  # "usage", "purchase", "reset"
+    payment_amount = Column(Float, nullable=True)  # Monto en dinero (ej. 9.99)
+    payment_method = Column(String(50), nullable=True)  # "stripe", "paypal", etc.
+    payment_status = Column(String(20), default="pending")  # "pending", "completed", "failed"
+    timestamp = Column(DateTime, default=datetime.utcnow)

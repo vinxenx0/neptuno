@@ -10,15 +10,20 @@ from core.security import decode_token
 from core.logging import configure_logging
 from uuid import uuid4
 from datetime import datetime
+from pydantic import BaseModel
 
 logger = configure_logging()
+class UserContext(BaseModel):
+    user_id: str
+    email: str
+    username: str
+    user_type: str  # "registered" o "anonymous"
+    plan: str
+    consultas_restantes: int
+    rol: str
+    class Config:
+        orm_mode = True
 
-class UserContext:
-    def __init__(self, user_type: str, user_id: str, consultas_restantes: int, plan: str = None):
-        self.user_type = user_type
-        self.user_id = user_id
-        self.consultas_restantes = consultas_restantes
-        self.plan = plan
 
 async def get_user_context(request: Request, db: Session = Depends(get_db)):
     token = request.headers.get("Authorization", "").replace("Bearer ", "")

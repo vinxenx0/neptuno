@@ -2,10 +2,50 @@ from sqlalchemy.orm import Session
 from models.payment_method import PaymentMethod
 from models.user import User
 from core.logging import configure_logging
-from fastapi import HTTPException
+from models.credit_transaction import CreditTransaction
+from fastapi import HTTPException, status
 
 logger = configure_logging()
 
+# Simulación de Stripe (en producción, usar stripe-python)
+class StripeSimulator:
+    @staticmethod
+    def create_payment_intent(amount: float, currency: str = "usd"):
+        return {"id": "pi_simulated", "status": "succeeded"}
+
+stripe = StripeSimulator()  # Reemplazar con `import stripe` y configuración real en producción
+
+def purchase_credits(db: Session, user_id: int, credits: int, payment_amount: float, payment_method: str = "stripe"):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+    # Crear transacción de pago
+    transaction = CreditTransaction(
+        user_id=user_id,
+        amount=credits,
+        transaction_type="purchase",
+        payment_amount=payment_amount,
+        payment_method=payment_method,
+        payment_status="pending"
+    )
+    db.add(transaction)
+    db.commit()
+    db.refresh(transaction)
+
+    # Simular procesamiento de pago (en producción, usar Stripe/Paypal real)
+    payment_intent = stripe.create_payment_intent(payment_amount)
+    if payment_intent["status"] == "succeeded":
+        transaction.payment_status = "completed"
+        user.consultas_restantes += credits
+        db.commit()
+        logger.info(f"Compra de {credits} créditos completada para usuario {user_id}")
+        return {"transaction_id": transaction.id, "credits_added": credits, "new_balance": user.consultas_restantes}
+    else:
+        transaction.payment_status = "failed"
+        db.commit()
+        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Error al procesar el pago")
+    
 def add_payment_method(db: Session, user_id: int, payment_type: str, details: str, is_default: bool = False):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

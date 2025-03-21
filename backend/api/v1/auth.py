@@ -10,6 +10,7 @@ from core.database import get_db
 from core.security import get_oauth2_redirect_url, oauth2_scheme, OAuth2PasswordRequestForm
 from dependencies.auth import UserContext, get_user_context
 from core.logging import configure_logging
+from pydantic import BaseModel
 
 router = APIRouter()
 logger = configure_logging()
@@ -29,16 +30,16 @@ def login_for_access_token(
         logger.critical(f"Error inesperado en login desde IP {request.client.host}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al procesar el login")
 
+class RegisterRequest(BaseModel):
+    email: str
+    username: str
+    password: str
+    ciudad: str = None
+    url: str = None
+
 @router.post("/register")
-def register(
-    email: str = Form(...),
-    username: str = Form(...),
-    password: str = Form(...),
-    ciudad: str = Form(None),
-    url: str = Form(None),
-    db: Session = Depends(get_db)
-):
-    return register_user(db, email, username, password, ciudad, url)
+def register(data: RegisterRequest, db: Session = Depends(get_db)):
+    return register_user(db, data.email, data.username, data.password, data.ciudad, data.url)
 
 @router.get("/me")
 def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):

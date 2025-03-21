@@ -11,3 +11,7 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 - # Añadir manejo de errores y excepciones a otras funciones de auth_service.py 
 
 - # Añadir manejo de errores y excepciones a otras funciones de endpoints.py 
+
+- arreglar esto en main
+logger = configure_logging()
+# app.add_middleware(LoggingMiddleware)

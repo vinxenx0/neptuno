@@ -1,32 +1,29 @@
 # backend/services/credits_service.py
 # Permitir la renovación automática o manual de créditos para usuarios registrados y anónimos.
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.user import User, PlanEnum
-from models.session import AnonymousSession
-from core.logging import configure_logging
-from datetime import datetime
+from models.credit_transaction import CreditTransaction
+from datetime import datetime, timedelta
+from fastapi import HTTPException, status
 
-logger = configure_logging()
-
-def reset_credits(db: Session, admin_user_id: int):
-    """Reinicia los créditos de todos los usuarios y sesiones anónimas según su plan."""
-    admin = db.query(User).filter(User.id == admin_user_id).first()
-    if not admin or admin.rol != "admin":
-        logger.error(f"Intento de resetear créditos por usuario no autorizado: ID {admin_user_id}")
-        raise HTTPException(status_code=403, detail="Solo administradores pueden reiniciar créditos")
-
-    # Actualizar usuarios registrados
-    users = db.query(User).all()
+def reset_credits(db: Session, freemium_credits: int = 100, premium_credits: int = 1000, reset_interval: int = 30):
+    """Reinicia créditos para usuarios activos según su plan y el intervalo de renovación."""
+    users = db.query(User).filter(User.activo == True).all()
     for user in users:
-        new_credits = 100 if user.plan == PlanEnum.FREEMIUM else 1000  # Ejemplo: más créditos para premium/corporate
-        user.consultas_restantes = new_credits
-        user.fecha_renovacion = datetime.utcnow()
-    
-    # Actualizar sesiones anónimas
-    sessions = db.query(AnonymousSession).all()
-    for session in sessions:
-        session.consultas_restantes = 100  # Anónimos siempre tienen 100
-    
+        if not user.fecha_renovacion or user.fecha_renovacion < datetime.utcnow() - timedelta(days=reset_interval):
+            user.consultas_restantes = freemium_credits if user.plan == PlanEnum.FREEMIUM else premium_credits
+            user.fecha_renovacion = datetime.utcnow()
+            db.add(CreditTransaction(user_id=user.id, amount=user.consultas_restantes, transaction_type="reset"))
     db.commit()
-    logger.info(f"Créditos reiniciados por admin ID {admin_user_id} para {len(users)} usuarios y {len(sessions)} sesiones anónimas")
+
+def deduct_credit(db: Session, user_id: int, amount: int = 1):
+    """Deduce créditos de un usuario y registra la transacción."""
+    user = db.query(User).filter(User.id == user_id).with_for_update().first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+    if user.consultas_restantes < amount:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No te quedan suficientes créditos")
+    user.consultas_restantes -= amount
+    db.add(CreditTransaction(user_id=user_id, amount=-amount, transaction_type="usage"))
+    db.commit()
+    return user.consultas_restantes

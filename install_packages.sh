@@ -1,1 +1,1 @@
-pip install fastapi uvicorn sqlalchemy pymysql python-dotenv pyjwt python-multipart passlib passlib[bcrypt] oauthlib requests
+pip install fastapi uvicorn sqlalchemy pymysql python-dotenv pyjwt python-multipart passlib passlib[bcrypt] oauthlib requests celery

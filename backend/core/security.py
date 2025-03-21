@@ -10,6 +10,8 @@ from jwt import encode, decode, PyJWTError
 from os import getenv
 from datetime import datetime, timedelta
 from typing import Optional
+from core.database import get_db
+from services.settings_service import get_setting
 
 # Configuración de OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
@@ -18,6 +20,9 @@ meta_client = WebApplicationClient(getenv("META_CLIENT_ID"))
 
 # Configuración de hash de contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
@@ -39,19 +44,21 @@ def decode_token(token: str):
     except jwt.PyJWTError:
         return None
 
-def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=1)) -> str:
+def create_access_token(data: dict):
+    db = next(get_db())
+    expiration = get_setting(db, "token_expiration") or 3600
     to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire, "type": "access"})
-    encoded_jwt = encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
-    return encoded_jwt
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode.update({"exp": expire})
+    return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
-def create_refresh_token(data: dict, expires_delta: timedelta = timedelta(days=7)) -> str:
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    expiration = get_setting(db, "refresh_token_expiration") or 604800
     to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire, "type": "refresh"})
-    encoded_jwt = encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
-    return encoded_jwt
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode.update({"exp": expire})
+    return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
 def decode_token(token: str) -> Optional[dict]:
     try:
