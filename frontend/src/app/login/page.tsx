@@ -89,6 +89,12 @@ export default function LoginPage() {
             Regístrate
           </Link>
         </p>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          ¿Olvidaste tu contraseña?{" "}
+          <Link href="/reset-password" className="text-[var(--secondary)] hover:underline">
+            Recupérala aquí
+          </Link>
+        </p>
       </motion.div>
     </div>
   );

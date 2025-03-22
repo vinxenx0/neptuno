@@ -74,3 +74,13 @@ ConfigurePage/<.children<.children<.children<
 src/app/configure/page.tsx (259:17)
 ConfigurePage
 src/app/configure/page.tsx (258:28)
+
+
+
+- CUANDO se añaden creditos no se actualiza bien
+
+Historial de Transacciones
+
+Reinicio de NaN créditos
+
+Fecha: Invalid Date

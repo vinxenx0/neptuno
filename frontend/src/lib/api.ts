@@ -1,6 +1,6 @@
 // src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { HTTPValidationError } from "./types";
+import { HTTPValidationError, ValidationError } from "./types";
 
 interface FetchResponse<T> {
   data: T | null;
@@ -49,10 +49,16 @@ const fetchAPI = async <T>(
       return { data: response.data, error: null };
     }
     const errorData = error?.response?.data;
-    const errorMessage = errorData?.detail || error?.message || "Error desconocido";
-    return { data: null, error: errorMessage };
+    if (errorData && errorData.detail) {
+      if (typeof errorData.detail === "string") {
+        return { data: null, error: errorData.detail };
+      } else if (Array.isArray(errorData.detail)) {
+        const messages = errorData.detail.map((err: ValidationError) => err.msg).join(", ");
+        return { data: null, error: messages };
+      }
+    }
+    return { data: null, error: "Error desconocido" };
   };
-
   try {
     const response: AxiosResponse<T> = await axios(config);
     logRequest(config.method || "GET", config.url!, response.status, response.data);

@@ -1,9 +1,10 @@
 # backend/services/auth_service.py
 # Módulo de servicio de autenticación.
 from os import getenv
+from uuid import uuid4
 from sqlalchemy.orm import Session
 from models.user import User, subscriptionEnum
-from models.token import RevokedToken
+from models.token import PasswordResetToken, RevokedToken
 from core.security import (
     get_password_hash, verify_password, create_access_token, 
     create_refresh_token, decode_token
@@ -152,12 +153,44 @@ def delete_user(db: Session, user_id: int):
     return {"message": "Usuario eliminado"}
 
 def request_password_reset(db: Session, email: str):
-    """Solicita la recuperación de contraseña (pendiente implementación completa)."""
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(status_code=404, detail="Email no encontrado")
-    # Aquí iría la lógica de enviar un email con un token de reset
-    return {"message": "Solicitud de recuperación enviada"}
+    
+    token = str(uuid4())
+    reset_token = PasswordResetToken(user_id=user.id, token=token)
+    db.add(reset_token)
+    db.commit()
+    
+    logger.info(f"Token de reseteo generado para usuario ID {user.id}: {token}")
+    return {"message": "Solicitud de recuperación enviada", "token": token}  # Temporal para pruebas
+
+def confirm_password_reset(db: Session, token: str, new_password: str):
+    reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
+    if not reset_token:
+        raise HTTPException(status_code=400, detail="Token inválido")
+    if reset_token.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Token expirado")
+    
+    user = db.query(User).filter(User.id == reset_token.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    user.password_hash = get_password_hash(new_password)
+    db.delete(reset_token)  # Eliminar el token usado
+    db.commit()
+    return {"message": "Contraseña actualizada con éxito"}
+
+def change_user_password(db: Session, user_id: int, current_password: str, new_password: str):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    if not verify_password(current_password, user.password_hash):
+        raise HTTPException(status_code=400, detail="Contraseña actual incorrecta")
+    
+    user.password_hash = get_password_hash(new_password)
+    db.commit()
+    return {"message": "Contraseña actualizada con éxito"}
 
 def login_with_provider(db: Session, provider: str, code: str, ip: str):
     if provider == "google":

@@ -2,10 +2,10 @@
 # Módulo de autenticación de la API v1.
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from schemas.auth import TokenResponse, RefreshTokenRequest, PasswordResetRequest
+from schemas.auth import ChangePasswordRequest, PasswordResetConfirm, TokenResponse, RefreshTokenRequest, PasswordResetRequest
 from schemas.user import RegisterRequest, UpdateProfileRequest, UserResponse
 from services.auth_service import (
-    login_user, login_with_provider, register_user, get_user_info, update_user, 
+    change_user_password, login_user, login_with_provider, register_user, get_user_info, update_user, 
     delete_user, request_password_reset, refresh_access_token, logout_user
 )
 from core.database import get_db
@@ -68,6 +68,10 @@ def delete_me(user: UserContext = Depends(get_user_context), db: Session = Depen
 def reset_password(data: PasswordResetRequest, db: Session = Depends(get_db)):
     return request_password_reset(db, data.email)
 
+@router.post("/password-reset/confirm", response_model=dict)
+def confirm_password_reset(data: PasswordResetConfirm, db: Session = Depends(get_db)):
+    return confirm_password_reset(db, data.token, data.new_password)
+
 @router.post("/refresh", response_model=TokenResponse)
 def refresh_token(data: RefreshTokenRequest, db: Session = Depends(get_db)):
     return refresh_access_token(db, data.refresh_token)
@@ -88,3 +92,13 @@ def get_provider_login_url(provider: str):
 def provider_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
     ip = request.client.host
     return login_with_provider(db, provider, code, ip)
+
+@router.put("/me/password", response_model=dict)
+def change_password(
+    data: ChangePasswordRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden cambiar su contraseña")
+    return change_user_password(db, int(user.user_id), data.current_password, data.new_password)

@@ -13,7 +13,15 @@ class RefreshTokenRequest(BaseModel):
 # Solicitud para restablecer contraseña
 class PasswordResetRequest(BaseModel):
     email: EmailStr
+    
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
 
 class LoginRequest(BaseModel):
     username: str  # En este caso, es el email
     password: str
+    
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
