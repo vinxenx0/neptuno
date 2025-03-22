@@ -90,3 +90,6 @@ def set_default_payment_method(db: Session, user_id: int, payment_method_id: int
     db.commit()
     logger.info(f"Método de pago ID {payment_method_id} establecido como predeterminado para usuario ID {user_id}")
     return payment_method
+
+def get_credit_transactions(db: Session, user_id: int):
+    return db.query(CreditTransaction).filter(CreditTransaction.user_id == user_id).all()

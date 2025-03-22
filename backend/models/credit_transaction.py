@@ -1,3 +1,4 @@
+#backend/models/credit_transaction.py
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from models.user import Base
 from datetime import datetime

@@ -43,25 +43,32 @@ const fetchAPI = async <T>(
 
   const normalizeResponse = (
     response: AxiosResponse<T> | undefined,
-    error: any
+    error: unknown
   ): FetchResponse<T> => {
-    if (response && response.status >= 200 && response.status < 300) {
-      return { data: response.data, error: null };
-    }
-    const errorData = error?.response?.data;
-    const errorMessage = errorData?.detail || error?.message || "Error desconocido";
+    const axiosError = error as { response?: { data?: unknown } };
+    const errorData = axiosError?.response?.data;
+    const errorMessage =
+      (typeof errorData === "object" && errorData !== null && "detail" in errorData
+        ? (errorData as { detail?: string }).detail
+        : (error as Error)?.message) || "Error desconocido";
     return { data: null, error: errorMessage };
   };
+  
 
   try {
     const response: AxiosResponse<T> = await axios(config);
     logRequest(config.method || "GET", config.url!, response.status, response.data);
     return normalizeResponse(response, null);
     
-  } catch (err: any) {
+  } catch (err: unknown) {
     
-    logRequest(config.method || "GET", config.url!, err.response?.status || 500, err.response?.data);
-    if (err.response?.status === 401) {
+    const axiosError = err as { response?: { status?: number; data?: unknown } };
+    if (axios.isAxiosError(err) && err.response) {
+      logRequest(config.method || "GET", config.url!, err.response.status, err.response.data);
+    } else {
+      logRequest(config.method || "GET", config.url!, 500, err);
+    }
+    if (axiosError.response?.status === 401) {
       const refresh = localStorage.getItem("refreshToken");
       if (refresh) {
         try {

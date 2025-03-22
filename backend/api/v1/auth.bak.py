@@ -1,9 +1,8 @@
 # backend/api/v1/auth.py
 # Módulo de autenticación de la API v1.
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from sqlalchemy.orm import Session
-from schemas.auth import TokenResponse, RefreshTokenRequest, PasswordResetRequest
-from schemas.user import RegisterRequest, UpdateProfileRequest, UserResponse
+from schemas.user import RegisterRequest, UpdateProfileRequest
 from services.auth_service import (
     login_user, login_with_provider, register_user, get_user_info, update_user, 
     delete_user, request_password_reset, refresh_access_token, logout_user
@@ -12,11 +11,12 @@ from core.database import get_db
 from core.security import get_oauth2_redirect_url, oauth2_scheme, OAuth2PasswordRequestForm
 from dependencies.auth import UserContext, get_user_context
 from core.logging import configure_logging
+from pydantic import BaseModel
 
 router = APIRouter()
 logger = configure_logging()
 
-@router.post("/token", response_model=TokenResponse)
+@router.post("/token")
 def login_for_access_token(
     request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -31,17 +31,30 @@ def login_for_access_token(
         logger.critical(f"Error inesperado en login desde IP {request.client.host}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al procesar el login")
 
-@router.post("/register", response_model=TokenResponse)
+@router.post("/register")
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     return register_user(db, data.email, data.username, data.password, data.ciudad, data.url)
 
-@router.get("/me", response_model=UserResponse)
+@router.get("/me")
 def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     if user.user_type != "registered":
         raise HTTPException(status_code=403, detail="Solo usuarios registrados")
-    return get_user_info(db, int(user.user_id))
+    user_info = get_user_info(db, int(user.user_id))
+    return {
+        "id": user_info.id,
+        "email": user_info.email,
+        "username": user_info.username,
+        "rol": user_info.rol,
+        "activo": user_info.activo,
+        "plan": user_info.plan.value,
+        "ciudad": user_info.ciudad,
+        "url": user_info.url,
+        "consultas_restantes": user_info.consultas_restantes,
+        "fecha_creacion": user_info.fecha_creacion,
+        "ultima_ip": user_info.ultima_ip
+    }
 
-@router.put("/me", response_model=UserResponse)
+@router.put("/me")
 def update_me(
     request: UpdateProfileRequest,
     user: UserContext = Depends(get_user_context),
@@ -49,7 +62,7 @@ def update_me(
 ):
     if user.user_type != "registered":
         raise HTTPException(status_code=403, detail="Solo usuarios registrados")
-    return update_user(
+    updated_user = update_user(
         db,
         int(user.user_id),
         request.email,
@@ -57,26 +70,39 @@ def update_me(
         request.ciudad,
         request.url
     )
+    return {
+        "id": updated_user.id,
+        "email": updated_user.email,
+        "username": updated_user.username,
+        "rol": updated_user.rol,
+        "activo": updated_user.activo,
+        "plan": updated_user.plan.value,
+        "ciudad": updated_user.ciudad,
+        "url": updated_user.url,
+        "consultas_restantes": updated_user.consultas_restantes,
+        "fecha_creacion": updated_user.fecha_creacion,
+        "ultima_ip": updated_user.ultima_ip
+    }
 
-@router.delete("/me", response_model=dict)
+@router.delete("/me")
 def delete_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     if user.user_type != "registered":
         raise HTTPException(status_code=403, detail="Solo usuarios registrados")
     return delete_user(db, int(user.user_id))
 
-@router.post("/password-reset", response_model=dict)
-def reset_password(data: PasswordResetRequest, db: Session = Depends(get_db)):
-    return request_password_reset(db, data.email)
+@router.post("/password-reset")
+def reset_password(email: str, db: Session = Depends(get_db)):
+    return request_password_reset(db, email)
 
-@router.post("/refresh", response_model=TokenResponse)
-def refresh_token(data: RefreshTokenRequest, db: Session = Depends(get_db)):
-    return refresh_access_token(db, data.refresh_token)
+@router.post("/refresh")
+def refresh_token(refresh_token: str = Form(...), db: Session = Depends(get_db)):
+    return refresh_access_token(db, refresh_token)
 
-@router.post("/logout", response_model=dict)
+@router.post("/logout")
 def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return logout_user(db, token)
 
-@router.get("/login/{provider}", response_model=dict)
+@router.get("/login/{provider}")
 def get_provider_login_url(provider: str):
     try:
         redirect_url = get_oauth2_redirect_url(provider)
@@ -84,7 +110,7 @@ def get_provider_login_url(provider: str):
     except ValueError:
         raise HTTPException(status_code=400, detail="Proveedor no soportado")
 
-@router.post("/login/{provider}/callback", response_model=TokenResponse)
+@router.post("/login/{provider}/callback")
 def provider_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
     ip = request.client.host
     return login_with_provider(db, provider, code, ip)

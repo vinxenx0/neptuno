@@ -114,18 +114,30 @@ def get_user_info(db: Session, user_id: int):
     return user
 
 def update_user(db: Session, user_id: int, email: str = None, username: str = None, ciudad: str = None, url: str = None):
-    """Actualiza los datos del usuario."""
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    if email:
+    
+    # Verificar si el nuevo email ya existe (si se proporciona)
+    if email and email != user.email:
+        existing_email = db.query(User).filter(User.email == email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="El email ya está en uso")
         user.email = email
-    if username:
+    
+    # Verificar si el nuevo username ya existe (si se proporciona)
+    if username and username != user.username:
+        existing_username = db.query(User).filter(User.username == username).first()
+        if existing_username:
+            raise HTTPException(status_code=400, detail="El username ya está en uso")
         user.username = username
-    if ciudad:
+    
+    # Actualizar otros campos
+    if ciudad is not None:
         user.ciudad = ciudad
-    if url:
+    if url is not None:
         user.url = url
+    
     db.commit()
     db.refresh(user)
     return user

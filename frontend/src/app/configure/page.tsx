@@ -6,22 +6,9 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { motion } from "framer-motion";
+import { Integration, SiteSetting } from "@/lib/types";
 
-interface SiteSetting {
-  key: string;
-  value: string | number | object | boolean | string[];
-  description?: string;
-}
 
-interface Integration {
-  id: number;
-  name: string;
-  webhook_url: string;
-  event_type: string;
-  active: boolean;
-  created_at: string;
-  last_triggered: string | null;
-}
 
 export default function ConfigurePage() {
   const { user } = useAuth();
@@ -45,14 +32,30 @@ export default function ConfigurePage() {
     const fetchData = async () => {
       try {
         // Fetch SiteSettings
-        const settingsRes = await fetchAPI<Record<string, any>>("/v1/settings/admin/config");
+        const settingsRes = await fetchAPI<Record<string, unknown>>("/v1/settings/admin/config");
         if (settingsRes.error) throw new Error(settingsRes.error as string);
-        const settingsArray = Object.entries(settingsRes.data || {}).map(([key, value]) => ({
-          key,
-          value,
-          description: "", // Ajustar si el backend devuelve description
-        }));
+        const settingsArray = Object.entries(settingsRes.data || {}).map(([key, value]) => {
+          let formattedValue: string | number | boolean | object | string[];
+        
+          if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+            formattedValue = value;
+          } else if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+            formattedValue = value as string[];
+          } else if (typeof value === "object" && value !== null) {
+            formattedValue = value;
+          } else {
+            formattedValue = String(value); // Fallback to string representation
+          }
+        
+          return {
+            key,
+            value: formattedValue,
+            description: "", // Ajustar si el backend devuelve description
+          };
+        });
+        
         setSettings(settingsArray);
+        
 
         // Fetch Allowed Origins
         const originsRes = await fetchAPI<string[]>("/v1/settings/allowed_origins");
@@ -119,7 +122,11 @@ export default function ConfigurePage() {
         },
       });
       if (error) throw new Error(error as string);
-      setIntegrations([...integrations, data!]);
+      setIntegrations((prev) => {
+        const updatedIntegrations = [...prev, data!];
+        console.log("Integraciones actualizadas:", updatedIntegrations); // Depuración
+        return updatedIntegrations;
+      });
       setNewIntegration({ name: "", webhook_url: "", event_type: "" });
       setSuccess("Integración creada con éxito");
       setTimeout(() => setSuccess(null), 3000);

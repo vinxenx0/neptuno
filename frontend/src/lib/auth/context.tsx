@@ -123,13 +123,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return data.access_token;
   };
 
-  const updateProfile = async (data: { email: string; username: string; ciudad?: string; url?: string }) => {
+  const updateProfile = async (data: Partial<User>) => {
     try {
       const response = await fetchAPI<User>("/v1/auth/me", {
         method: "PUT",
         data,
       });
-      if (response.error) throw new Error(response.error);
+      if (response.error) throw new Error(typeof response.error === "string" ? response.error : JSON.stringify(response.error));
       if (response.data) {
         setUser(response.data); // Actualiza el estado con el usuario completo
       } else {
@@ -140,6 +140,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw err;
     }
   };
+  
   
   const deleteProfile = async () => {
     const { error } = await fetchAPI("/v1/auth/me", { method: "DELETE" });

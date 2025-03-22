@@ -17,7 +17,6 @@
     "swr": "^2.3.3"
   },
   "devDependencies": {
-    "@types/axios": "^0.9.36",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
