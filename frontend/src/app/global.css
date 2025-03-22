@@ -93,12 +93,13 @@ textarea::placeholder {
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
 }
 
 .btn-secondary {
@@ -108,12 +109,13 @@ textarea::placeholder {
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(75, 85, 99, 0.1);
 }
 
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(75, 85, 99, 0.2);
+  box-shadow: 0 6px 12px rgba(75, 85, 99, 0.2);
 }
 
 .btn-accent {
@@ -123,12 +125,13 @@ textarea::placeholder {
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
 }
 
 .btn-accent:hover {
   background-color: var(--accent-hover);
   transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.2);
 }
 
 .btn-disabled {
@@ -180,7 +183,7 @@ h2 {
 }
 
 .card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transform: translateY(-5px);
 }
 
@@ -240,4 +243,21 @@ h2 {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Additional Effects */
+.shadow-lg {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+.hover-shadow-lg:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hover-shadow-xl:hover {
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
 }

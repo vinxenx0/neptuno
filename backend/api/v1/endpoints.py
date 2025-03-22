@@ -20,7 +20,7 @@ def get_info():
 async def consultar(user: UserContext = Depends(get_user_context)):
     return {
         "message": f"Consulta realizada por {user.user_type} con ID {user.user_id}",
-        "creditos_restantes": user.consultas_restantes - 1
+        "creditos_restantes": user.credits - 1
     }
 
 @router.post("/reset-credits")
@@ -40,4 +40,4 @@ def reset_all_credits(user: UserContext = Depends(get_user_context), db: Session
 
 @router.get("/example", dependencies=[Depends(require_credits)])
 async def example_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    return {"message": "Ejemplo de endpoint protegido por créditos", "credits_remaining": user.consultas_restantes}
+    return {"message": "Ejemplo de endpoint protegido por créditos", "credits_remaining": user.credits}

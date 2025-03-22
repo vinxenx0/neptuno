@@ -1,6 +1,6 @@
 - manejar cuando el usuario existe ya en la db y lo registras de nuevo
 
-- WARNING:  passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+-  WARNING:  passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
 Traceback (most recent call last):
   File "/home/vinxenxo/neptuno/.venv/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
     version = _bcrypt.__about__.__version__
@@ -18,7 +18,7 @@ logger = configure_logging()
 
 - poner ya los endpoints para usuarios registrados (estan todos abiertos)
 
-- actualizar perfil / resatablecer contraseña / mensajes mejor manejo e información
+- actualizar perfil / resatablecer contraseña / cambiar contraseña / mensajes mejor manejo e información
 
 - reset credits no me reconoce el tooken de admin
 
@@ -47,3 +47,30 @@ src/app/profile/page.tsx (13:12)
 - en el backend no todos los modelos tienen endpoints
 
 - el lio de los loggers
+
+- cuando sumo una integracion
+
+Console Error
+
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Fragment`. It was passed a child from ConfigurePage. See https://react.dev/link/warning-keys for more information.
+
+src/app/configure/page.tsx (259:17) @ ConfigurePage/<.children<.children<.children<
+
+  257 |             ) : (
+  258 |               integrations.map((integration) => (
+> 259 |                 <div key={integration.id} className="bg-white p-4 rounded-lg shadow-lg hover-grow">
+      |                 ^
+  260 |                   <p className="font-semibold text-[var(--primary)]">{integration.name}</p>
+  261 |                   <p className="text-gray-600">Webhook: {integration.webhook_url}</p>
+  262 |                   <p className="text-gray-600">Evento: {integration.event_type}</p>
+
+Call Stack 23
+Show 20 ignore-listed frame(s)
+div
+unknown (0:0)
+ConfigurePage/<.children<.children<.children<
+src/app/configure/page.tsx (259:17)
+ConfigurePage
+src/app/configure/page.tsx (258:28)

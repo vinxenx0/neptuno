@@ -33,7 +33,7 @@ def login_for_access_token(
 
 @router.post("/register", response_model=TokenResponse)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    return register_user(db, data.email, data.username, data.password, data.ciudad, data.url)
+    return register_user(db, data.email, data.username, data.password, data.ciudad, data.website)
 
 @router.get("/me", response_model=UserResponse)
 def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
@@ -55,7 +55,7 @@ def update_me(
         request.email,
         request.username,
         request.ciudad,
-        request.url
+        request.website
     )
 
 @router.delete("/me", response_model=dict)

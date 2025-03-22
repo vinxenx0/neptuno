@@ -10,7 +10,7 @@ export default function ProfilePage() {
   const { user, logout, updateProfile } = useAuth();
   const router = useRouter();
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", url: "" });
+  const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", website: "" });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ export default function ProfilePage() {
         email: user.email || "",
         username: user.username || "",
         ciudad: user.ciudad || "",
-        url: user.url || "",
+        website: user.website || "",
       });
     }
   }, [user, router]);
@@ -113,11 +113,11 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">URL</label>
+              <label className="block text-sm font-medium text-gray-700">WEBSITE</label>
               <input
                 type="text"
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
             </div>
@@ -139,28 +139,28 @@ export default function ProfilePage() {
               <span>{user.ciudad || "N/A"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-semibold text-[var(--primary)]">URL:</span>
-              <span>{user.url || "N/A"}</span>
+              <span className="font-semibold text-[var(--primary)]">website:</span>
+              <span>{user.website || "N/A"}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-[var(--primary)]">Rol:</span>
               <span className="capitalize">{user.rol}</span>
             </div>
             <div className="flex justify-between">
-              <span className="font-semibold text-[var(--primary)]">Plan:</span>
-              <span>{user.plan || "N/A"}</span>
+              <span className="font-semibold text-[var(--primary)]">subscription:</span>
+              <span>{user.subscription || "N/A"}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-[var(--primary)]">Consultas restantes:</span>
-              <span>{user.consultas_restantes ?? "N/A"}</span>
+              <span>{user.credits ?? "N/A"}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-[var(--primary)]">Fecha de creación:</span>
-              <span>{user.fecha_creacion ? new Date(user.fecha_creacion).toLocaleDateString() : "N/A"}</span>
+              <span>{user.create_at ? new Date(user.create_at).toLocaleDateString() : "N/A"}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-semibold text-[var(--primary)]">Último inicio de sesión:</span>
-              <span>{user.ultimo_login ? new Date(user.ultimo_login).toLocaleString() : "N/A"}</span>
+              <span>{user.last_login ? new Date(user.last_login).toLocaleString() : "N/A"}</span>
             </div>
             <button onClick={() => setEditMode(true)} className="btn-primary w-full mt-4">Editar Perfil</button>
             <button onClick={handleLogout} className="btn-primary w-full mt-2">Cerrar Sesión</button>

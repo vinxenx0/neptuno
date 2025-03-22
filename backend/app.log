@@ -9770,3 +9770,228 @@ rol
 2025-03-22 19:52:56,180 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
 2025-03-22 19:52:56,243 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
 2025-03-22 19:52:56,270 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 19:54:40,595 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 19:54:40,596 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 19:55:18,653 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 19:56:20,654 - NeptunO - INFO - Usuario registrado ID 5 con plan freemium
+2025-03-22 19:56:20,988 - NeptunO - INFO - Login exitoso para usuario ID 5 desde IP 127.0.0.1
+2025-03-22 19:56:20,999 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 19:56:33,214 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 19:57:49,318 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 19:57:49,319 - NeptunO - INFO - Usuario registered ID 5 con plan freemium realiza consulta
+2025-03-22 19:57:49,319 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 5: consultar() got an unexpected keyword argument 'db'
+2025-03-22 19:57:49,320 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-22 19:58:03,693 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:20:12,493 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 20:20:12,536 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:20:16,269 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:20:16,295 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:20:21,667 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:20:21,703 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:26:57,415 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:26:57,416 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:26:57,426 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.website
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.website AS usuarios_website, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:27:03,402 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:27:03,403 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:27:03,412 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.website
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.website AS usuarios_website, usuarios.consultas_restantes AS usuarios_consultas_restantes, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:27:51,911 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:27:51,911 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:28:02,339 - NeptunO - ERROR - Intento de login fallido para email admin@example.com desde IP 127.0.0.1
+2025-03-22 20:28:02,341 - NeptunO - ERROR - HTTP Error 401 en POST http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-22 20:28:33,659 - NeptunO - ERROR - Intento de login fallido para email admin@example.com desde IP 127.0.0.1
+2025-03-22 20:28:33,660 - NeptunO - ERROR - HTTP Error 401 en POST http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-22 20:29:14,645 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:29:14,646 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:29:19,724 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 20:29:19,745 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:29:33,670 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:29:33,675 - NeptunO - CRITICAL - Error inesperado en PUT http://localhost:8000/v1/auth/me: 'UpdateProfileRequest' object has no attribute 'url'
+2025-03-22 20:30:12,015 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:30:12,015 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:30:29,393 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:30:39,471 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:31:11,998 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:31:11,999 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:31:18,514 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:31:18,514 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:31:29,592 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:31:55,679 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:31:55,679 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:32:02,434 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:32:08,068 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:34:42,106 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:34:42,106 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:34:44,527 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:34:44,527 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:34:49,649 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:34:54,354 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:34:54,371 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:34:59,642 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:34:59,657 - NeptunO - INFO - Compra de 69696969 créditos completada para usuario 4
+2025-03-22 20:35:03,211 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:03,279 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:03,297 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:09,333 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:09,348 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:12,343 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:12,351 - NeptunO - INFO - Método de pago añadido para usuario ID 4: stripe
+2025-03-22 20:35:18,770 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:18,776 - NeptunO - INFO - Método de pago añadido para usuario ID 4: stripe
+2025-03-22 20:35:20,680 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:20,687 - NeptunO - INFO - Método de pago ID 2 establecido como predeterminado para usuario ID 4
+2025-03-22 20:35:25,167 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:25,195 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:25,231 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:25,241 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:26,542 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:26,556 - NeptunO - INFO - Configuración 'token_expiration' actualizada por admin 4: 36002
+2025-03-22 20:35:26,719 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:26,730 - NeptunO - INFO - Configuración 'token_expiration' actualizada por admin 4: 360022
+2025-03-22 20:35:28,575 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:28,580 - NeptunO - INFO - Configuración 'refresh_token_expiration' actualizada por admin 4: 6048002
+2025-03-22 20:35:28,666 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:28,672 - NeptunO - INFO - Configuración 'refresh_token_expiration' actualizada por admin 4: 60480022
+2025-03-22 20:35:28,802 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:28,806 - NeptunO - INFO - Configuración 'refresh_token_expiration' actualizada por admin 4: 604800222
+2025-03-22 20:35:31,325 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:31,329 - NeptunO - INFO - Configuración 'credit_reset_interval' actualizada por admin 4: 302
+2025-03-22 20:35:31,417 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:31,423 - NeptunO - INFO - Configuración 'credit_reset_interval' actualizada por admin 4: 3022
+2025-03-22 20:35:35,396 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:35,401 - NeptunO - INFO - Configuración 'log_level' actualizada por admin 4: E
+2025-03-22 20:35:35,554 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:35,559 - NeptunO - INFO - Configuración 'log_level' actualizada por admin 4: ER
+2025-03-22 20:35:35,643 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:35,648 - NeptunO - INFO - Configuración 'log_level' actualizada por admin 4: ERR
+2025-03-22 20:35:44,873 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:44,879 - NeptunO - INFO - Configuración 'allowed_origins' actualizada por admin 4: ['http://localhost:3000', 'asdfasdf']
+2025-03-22 20:35:48,635 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:35:48,642 - NeptunO - INFO - Integración asdfasdf añadida para usuario ID 4
+2025-03-22 20:36:15,636 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:36:15,636 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:38:02,323 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:38:02,324 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:38:02,332 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.url
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.ultimo_login AS usuarios_ultimo_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:38:28,179 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:38:28,179 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:38:28,184 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.url
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.ultima_ip AS usuarios_ultima_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:38:44,480 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:38:44,481 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:38:44,488 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.url
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.fecha_renovacion AS usuarios_fecha_renovacion, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:39:05,183 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:39:05,184 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:39:05,189 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.url
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.fecha_creacion AS usuarios_fecha_creacion, usuarios.renewal AS usuarios_renewal, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:39:27,487 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:39:27,488 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:39:27,496 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.url
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios."plan" AS usuarios_plan, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.create_at AS usuarios_create_at, usuarios.renewal AS usuarios_renewal, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:41:11,301 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:41:11,301 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:41:11,308 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.subscription
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios.subscription AS usuarios_subscription, usuarios.ciudad AS usuarios_ciudad, usuarios.url AS usuarios_url, usuarios.credits AS usuarios_credits, usuarios.create_at AS usuarios_create_at, usuarios.renewal AS usuarios_renewal, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:41:58,657 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:41:58,658 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:41:58,663 - NeptunO - ERROR - Error inesperado en startup: (sqlite3.OperationalError) no such column: usuarios.subscription
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios.subscription AS usuarios_subscription, usuarios.ciudad AS usuarios_ciudad, usuarios.website AS usuarios_website, usuarios.credits AS usuarios_credits, usuarios.create_at AS usuarios_create_at, usuarios.renewal AS usuarios_renewal, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.activo = 1]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:42:10,464 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: (sqlite3.OperationalError) no such column: usuarios.subscription
+[SQL: SELECT usuarios.id AS usuarios_id, usuarios.email AS usuarios_email, usuarios.username AS usuarios_username, usuarios.password_hash AS usuarios_password_hash, usuarios.auth_provider AS usuarios_auth_provider, usuarios.provider_id AS usuarios_provider_id, usuarios.rol AS usuarios_rol, usuarios.activo AS usuarios_activo, usuarios.subscription AS usuarios_subscription, usuarios.ciudad AS usuarios_ciudad, usuarios.website AS usuarios_website, usuarios.credits AS usuarios_credits, usuarios.create_at AS usuarios_create_at, usuarios.renewal AS usuarios_renewal, usuarios.last_ip AS usuarios_last_ip, usuarios.last_login AS usuarios_last_login, usuarios.token_valid_until AS usuarios_token_valid_until 
+FROM usuarios 
+WHERE usuarios.id = ?
+ LIMIT ? OFFSET ?]
+[parameters: (4, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-03-22 20:42:10,465 - NeptunO - ERROR - HTTP Error 500 en PUT http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:42:39,033 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:42:39,033 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:42:54,342 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:42:54,343 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...remium', 'rol': 'admin'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:42:54,348 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:42:57,462 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 20:42:57,504 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:42:57,504 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...remium', 'rol': 'admin'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:42:57,505 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:43:19,118 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:43:19,118 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...remium', 'rol': 'admin'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:43:19,119 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:43:24,811 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 20:43:24,824 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:43:24,824 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...remium', 'rol': 'admin'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:43:24,825 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:43:39,903 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:43:39,903 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...remium', 'rol': 'admin'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:43:39,904 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:51:10,579 - NeptunO - INFO - Usuario registrado ID 5 con subscription freemium
+2025-03-22 20:51:10,915 - NeptunO - INFO - Login exitoso para usuario ID 5 desde IP 127.0.0.1
+2025-03-22 20:51:10,928 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:51:10,929 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 1 validation error for UserContext
+plan
+  Field required [type=missing, input_value={'user_type': 'registered...reemium', 'rol': 'user'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-03-22 20:51:10,930 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/auth/me: Error al procesar la autenticación
+2025-03-22 20:53:34,549 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 20:53:34,550 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 20:53:46,882 - NeptunO - INFO - Login exitoso para usuario ID 5 desde IP 127.0.0.1
+2025-03-22 20:53:46,904 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:53:54,042 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:53:57,858 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:04,298 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:08,451 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:08,456 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:10,537 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:10,542 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:20,109 - NeptunO - INFO - Login exitoso para usuario ID 5 desde IP 127.0.0.1
+2025-03-22 20:54:20,148 - NeptunO - INFO - Usuario registrado ID 5 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:29,145 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 20:54:29,184 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:32,520 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:32,539 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:32,574 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 20:54:32,581 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1

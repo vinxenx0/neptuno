@@ -37,10 +37,10 @@ def purchase_credits(db: Session, user_id: int, credits: int, payment_amount: fl
     payment_intent = stripe.create_payment_intent(payment_amount)
     if payment_intent["status"] == "succeeded":
         transaction.payment_status = "completed"
-        user.consultas_restantes += credits
+        user.credits += credits
         db.commit()
         logger.info(f"Compra de {credits} créditos completada para usuario {user_id}")
-        return {"transaction_id": transaction.id, "credits_added": credits, "new_balance": user.consultas_restantes}
+        return {"transaction_id": transaction.id, "credits_added": credits, "new_balance": user.credits}
     else:
         transaction.payment_status = "failed"
         db.commit()

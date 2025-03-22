@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from core.database import SessionLocal
 from models.site_settings import SiteSettings
-from models.user import User, PlanEnum
+from models.user import User, subscriptionEnum
 from core.security import hash_password
 from datetime import datetime
 import json
@@ -24,8 +24,8 @@ def init_settings_and_users():
             {"key": "db_pool_size", "value": 20, "description": "Tamaño del pool de conexiones a la DB"},
             {"key": "db_max_overflow", "value": 10, "description": "Conexiones adicionales permitidas en el pool"},
             {"key": "db_pool_timeout", "value": 30, "description": "Tiempo de espera para una conexión del pool (segundos)"},
-            {"key": "freemium_credits", "value": 100, "description": "Créditos iniciales para plan freemium"},
-            {"key": "premium_credits", "value": 1000, "description": "Créditos iniciales para plan premium"},
+            {"key": "freemium_credits", "value": 100, "description": "Créditos iniciales para subscription freemium"},
+            {"key": "premium_credits", "value": 1000, "description": "Créditos iniciales para subscription premium"},
             {"key": "credit_reset_interval", "value": 30, "description": "Intervalo de reinicio de créditos (días)"},
             {"key": "log_level", "value": "INFO", "description": "Nivel de logging"},
         ]
@@ -44,40 +44,40 @@ def init_settings_and_users():
                 "email": "freemium@example.com",
                 "username": "freemium_user",
                 "password_hash": hash_password("password123"),
-                "plan": PlanEnum.FREEMIUM,
-                "consultas_restantes": 100,
+                "subscription": subscriptionEnum.FREEMIUM,
+                "credits": 100,
                 "rol": "user",
-                "fecha_creacion": datetime.utcnow(),
+                "create_at": datetime.utcnow(),
                 "activo": True
             },
             {
                 "email": "premium@example.com",
                 "username": "premium_user",
                 "password_hash": hash_password("password123"),
-                "plan": PlanEnum.PREMIUM,
-                "consultas_restantes": 1000,
+                "subscription": subscriptionEnum.PREMIUM,
+                "credits": 1000,
                 "rol": "user",
-                "fecha_creacion": datetime.utcnow(),
+                "create_at": datetime.utcnow(),
                 "activo": True
             },
             {
                 "email": "corporate@example.com",
                 "username": "corporate_user",
                 "password_hash": hash_password("password123"),
-                "plan": PlanEnum.CORPORATE,
-                "consultas_restantes": 1000,  # Podríamos ajustarlo según el plan
+                "subscription": subscriptionEnum.CORPORATE,
+                "credits": 1000,  # Podríamos ajustarlo según el subscription
                 "rol": "user",
-                "fecha_creacion": datetime.utcnow(),
+                "create_at": datetime.utcnow(),
                 "activo": True
             },
             {
                 "email": "admin@example.com",
                 "username": "admin_user",
                 "password_hash": hash_password("admin123"),
-                "plan": PlanEnum.PREMIUM,  # Admin también puede tener un plan
-                "consultas_restantes": 1000,
+                "subscription": subscriptionEnum.PREMIUM,  # Admin también puede tener un subscription
+                "credits": 1000,
                 "rol": "admin",
-                "fecha_creacion": datetime.utcnow(),
+                "create_at": datetime.utcnow(),
                 "activo": True
             }
         ]

@@ -5,13 +5,13 @@ export interface User {
   username: string;
   rol: string;
   activo: boolean;
-  plan: string;
+  subscription: string;
   ciudad?: string;
-  url?: string;
-  consultas_restantes: number;
-  fecha_creacion: string;  // ISO string (e.g., "2023-10-01T12:00:00Z")
-  ultima_ip?: string;
-  ultimo_login: string;
+  website?: string;
+  credits: number;
+  create_at: string;  // ISO string (e.g., "2023-10-01T12:00:00Z")
+  last_ip?: string;
+  last_login: string;
   user_type: string;
 }
 
@@ -26,14 +26,14 @@ export interface RegisterRequest {
   username: string;
   password: string;
   ciudad?: string;
-  url?: string;
+  website?: string;
 }
 
 export interface UpdateProfileRequest {
   email?: string;
   username?: string;
   ciudad?: string;
-  url?: string;
+  website?: string;
 }
 
 export interface PurchaseRequest {

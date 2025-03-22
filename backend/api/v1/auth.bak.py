@@ -33,7 +33,7 @@ def login_for_access_token(
 
 @router.post("/register")
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    return register_user(db, data.email, data.username, data.password, data.ciudad, data.url)
+    return register_user(db, data.email, data.username, data.password, data.ciudad, data.website)
 
 @router.get("/me")
 def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
@@ -46,12 +46,12 @@ def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(
         "username": user_info.username,
         "rol": user_info.rol,
         "activo": user_info.activo,
-        "plan": user_info.plan.value,
+        "subscription": user_info.subscription.value,
         "ciudad": user_info.ciudad,
-        "url": user_info.url,
-        "consultas_restantes": user_info.consultas_restantes,
-        "fecha_creacion": user_info.fecha_creacion,
-        "ultima_ip": user_info.ultima_ip
+        "website": user_info.website,
+        "credits": user_info.credits,
+        "create_at": user_info.create_at,
+        "last_ip": user_info.last_ip
     }
 
 @router.put("/me")
@@ -68,7 +68,7 @@ def update_me(
         request.email,
         request.username,
         request.ciudad,
-        request.url
+        request.website
     )
     return {
         "id": updated_user.id,
@@ -76,12 +76,12 @@ def update_me(
         "username": updated_user.username,
         "rol": updated_user.rol,
         "activo": updated_user.activo,
-        "plan": updated_user.plan.value,
+        "subscription": updated_user.subscription.value,
         "ciudad": updated_user.ciudad,
-        "url": updated_user.url,
-        "consultas_restantes": updated_user.consultas_restantes,
-        "fecha_creacion": updated_user.fecha_creacion,
-        "ultima_ip": updated_user.ultima_ip
+        "website": updated_user.website,
+        "credits": updated_user.credits,
+        "create_at": updated_user.create_at,
+        "last_ip": updated_user.last_ip
     }
 
 @router.delete("/me")

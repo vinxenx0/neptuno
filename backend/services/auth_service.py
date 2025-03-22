@@ -2,7 +2,7 @@
 # Módulo de servicio de autenticación.
 from os import getenv
 from sqlalchemy.orm import Session
-from models.user import User, PlanEnum
+from models.user import User, subscriptionEnum
 from models.token import RevokedToken
 from core.security import (
     get_password_hash, verify_password, create_access_token, 
@@ -22,8 +22,8 @@ def register_user(
     username: str, 
     password: str, 
     ciudad: str = None, 
-    url: str = None, 
-    plan: str = "freemium"
+    website: str = None, 
+    subscription: str = "freemium"
 ):
     try:
         if db.query(User).filter(User.email == email).first():
@@ -39,11 +39,11 @@ def register_user(
             username=username,
             password_hash=hashed_password,
             ciudad=ciudad,
-            url=url,
-            plan=PlanEnum(plan),
-            consultas_restantes=100,
-            fecha_renovacion=datetime.utcnow(),
-            fecha_creacion=datetime.utcnow()
+            website=website,
+            subscription=subscriptionEnum(subscription),
+            credits=100,
+            renewal=datetime.utcnow(),
+            create_at=datetime.utcnow()
         )
         db.add(user)
         db.commit()
@@ -51,7 +51,7 @@ def register_user(
         
         access_token = create_access_token({"sub": str(user.id), "type": "registered"})
         refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
-        logger.info(f"Usuario registrado ID {user.id} con plan {plan}")
+        logger.info(f"Usuario registrado ID {user.id} con subscription {subscription}")
         return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
     except HTTPException as e:
         raise e
@@ -69,7 +69,7 @@ def login_user(db: Session, email: str, password: str, ip: str):
             logger.warning(f"Intento de login con usuario inactivo ID {user.id} desde IP {ip}")
             raise HTTPException(status_code=403, detail="Usuario inactivo")
         
-        user.ultima_ip = ip
+        user.last_ip = ip
         db.commit()
         
         access_token = create_access_token({"sub": str(user.id), "type": "registered"})
@@ -113,7 +113,7 @@ def get_user_info(db: Session, user_id: int):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return user
 
-def update_user(db: Session, user_id: int, email: str = None, username: str = None, ciudad: str = None, url: str = None):
+def update_user(db: Session, user_id: int, email: str = None, username: str = None, ciudad: str = None, website: str = None):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -135,8 +135,8 @@ def update_user(db: Session, user_id: int, email: str = None, username: str = No
     # Actualizar otros campos
     if ciudad is not None:
         user.ciudad = ciudad
-    if url is not None:
-        user.url = url
+    if website is not None:
+        user.website = website
     
     db.commit()
     db.refresh(user)
@@ -200,8 +200,8 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
             username=email.split("@")[0],  # Provisional, podría pedirse al usuario
             auth_provider=provider,
             provider_id=provider_id,
-            consultas_restantes=100,
-            fecha_creacion=datetime.utcnow()
+            credits=100,
+            create_at=datetime.utcnow()
         )
         db.add(user)
         db.commit()
@@ -211,8 +211,8 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
             logger.warning(f"Conflicto de proveedor para email {email}")
             raise HTTPException(status_code=400, detail="Email ya registrado con otro proveedor")
 
-    user.ultima_ip = ip
-    user.ultimo_login = datetime.utcnow()
+    user.last_ip = ip
+    user.last_login = datetime.utcnow()
     db.commit()
 
     access_token = create_access_token({"sub": str(user.id), "type": "registered"})

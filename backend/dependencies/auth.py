@@ -18,8 +18,8 @@ class UserContext(BaseModel):
     email: str
     username: str
     user_type: str  # "registered" o "anonymous"
-    plan: str
-    consultas_restantes: int
+    subscription: str
+    credits: int
     rol: str
     class Config:
         from_attributes=True #orm_mode = True
@@ -50,8 +50,8 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
                 logger.warning(f"Token expirado manualmente para usuario ID {user.id} desde IP {client_ip}")
                 raise HTTPException(status_code=401, detail="Token no válido")
             
-            user.ultima_ip = client_ip
-            user.ultimo_login = datetime.utcnow()
+            user.last_ip = client_ip
+            user.last_login = datetime.utcnow()
             db.commit()
             logger.info(f"Usuario registrado ID {user.id} autenticado desde IP {client_ip}")
             return UserContext(
@@ -59,8 +59,8 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
                 user_id=str(user.id),
                 email=user.email,
                 username=user.username,
-                consultas_restantes=user.consultas_restantes,
-                plan=user.plan.value,
+                credits=user.credits,
+                subscription=user.subscription.value,
                 rol=user.rol
             )
 
@@ -68,9 +68,9 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             session_id = str(uuid4())
             new_session = AnonymousSession(
                 id=session_id,
-                consultas_restantes=100,
+                credits=100,
                 ultima_actividad=datetime.utcnow(),
-                ultima_ip=client_ip
+                last_ip=client_ip
             )
             db.add(new_session)
             db.commit()
@@ -80,8 +80,8 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
                 user_id=session_id,
                 email="anonymous@example.com",  # Valor por defecto
                 username="anonymous",           # Valor por defecto
-                consultas_restantes=100,
-                plan="basic",                   # Valor por defecto
+                credits=100,
+                subscription="basic",                   # Valor por defecto
                 rol="anonymous"                 # Valor por defecto
             )
         else:
@@ -90,7 +90,7 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
                 logger.warning(f"Sesión anónima inválida ID {session_id} desde IP {client_ip}")
                 raise HTTPException(status_code=400, detail="Sesión anónima inválida")
             
-            session.ultima_ip = client_ip
+            session.last_ip = client_ip
             session.ultima_actividad = datetime.utcnow()
             db.commit()
             logger.info(f"Sesión anónima ID {session_id} actualizada desde IP {client_ip}")
@@ -99,8 +99,8 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
                 user_id=session.id,
                 email="anonymous@example.com",  # Valor por defecto
                 username="anonymous",           # Valor por defecto
-                consultas_restantes=session.consultas_restantes,
-                plan="basic",                   # Valor por defecto
+                credits=session.credits,
+                subscription="basic",                   # Valor por defecto
                 rol="anonymous"                 # Valor por defecto
             )
 
