@@ -21,3 +21,29 @@ logger = configure_logging()
 - actualizar perfil / resatablecer contraseña / mensajes mejor manejo e información
 
 - reset credits no me reconoce el tooken de admin
+
+- cuando hago logout
+
+Console Error
+
+Cannot update a component (`Router`) while rendering a different component (`ProfilePage`). To locate the bad setState() call inside `ProfilePage`, follow the stack trace as described in https://react.dev/link/setstate-in-render
+
+src/app/profile/page.tsx (13:12) @ ProfilePage
+
+  11 |
+  12 |   if (!user) {
+> 13 |     router.push("/login");
+     |            ^
+  14 |     return null;
+  15 |   }
+  16 |
+
+Call Stack 13
+Show 12 ignore-listed frame(s)
+ProfilePage
+src/app/profile/page.tsx (13:12)
+
+
+- en el backend no todos los modelos tienen endpoints
+
+- el lio de los loggers

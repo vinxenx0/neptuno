@@ -6,7 +6,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
+      /* colors: { 
         background: '#1a1a2e',
         foreground: '#e0e0e0',
         primary: '#0f3460',
@@ -14,8 +14,8 @@ module.exports = {
         accent: '#f8b400', // Define accent color
         'gradient-start': '#0f3460',
         'gradient-end': '#e94560',
-      },
-    },
+      }, */
+    }, 
   },
   plugins: [],
 };

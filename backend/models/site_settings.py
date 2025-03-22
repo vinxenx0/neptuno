@@ -1,3 +1,4 @@
+# backend/models/site_settings.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
 from core.database import Base

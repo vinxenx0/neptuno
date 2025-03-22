@@ -1,3 +1,4 @@
+# backend/services/settings_service.py
 import json
 from sqlalchemy.orm import Session
 from models.site_settings import SiteSettings
@@ -6,8 +7,7 @@ from fastapi import HTTPException
 
 logger = configure_logging()
 
-def update_setting(db: Session, admin_id: int, key: str, value: str, description: str = None):
-    # Importación diferida para evitar el ciclo de importación
+def update_setting(db: Session, admin_id: str, key: str, value: str, description: str = None):
     from models.user import User
     admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
     if not admin:
@@ -32,7 +32,7 @@ def get_setting(db: Session, key: str) -> dict | list | int | str | None:
         return None
     return json.loads(setting.value)
 
-def set_setting(db: Session, key: str, value: any, admin_id: int, description: str = None):
+def set_setting(db: Session, key: str, value: any, admin_id: str, description: str = None):
     from models.user import User
     admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
     if not admin:
@@ -49,7 +49,7 @@ def set_setting(db: Session, key: str, value: any, admin_id: int, description: s
     logger.info(f"Configuración '{key}' actualizada por admin {admin_id}: {value}")
     return {"key": key, "value": value}
 
-def get_all_settings(db: Session, admin_id: int) -> dict:
+def get_all_settings(db: Session, admin_id: str) -> dict:
     from models.user import User
     admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
     if not admin:

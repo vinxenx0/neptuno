@@ -1,3 +1,4 @@
+# backend/services/integration_service.py
 from datetime import datetime
 from sqlalchemy.orm import Session
 from models.integration import Integration
@@ -7,7 +8,7 @@ import requests
 
 logger = configure_logging()
 
-def add_integration(db: Session, user_id: int, name: str, webhook_url: str, event_type: str):
+def add_integration(db: Session, user_id: str, name: str, webhook_url: str, event_type: str):
     integration = Integration(
         user_id=user_id,
         name=name,

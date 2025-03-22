@@ -3,93 +3,109 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth/context";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import { RegisterRequest } from "@/lib/types";
 
 export default function RegisterPage() {
-  const [form, setForm] = useState<RegisterRequest>({
-    email: "",
-    username: "",
-    password: "",
-    ciudad: "",
-    url: "",
-  });
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
     try {
-      await register(form);
-    } catch (err: any) {
-      setError(err.message);
+      const data: RegisterRequest = { email, username, password };
+      await register(data);
+      setSuccess("¡Registro exitoso! Redirigiendo...");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al registrarse");
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Registrarse</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+    <div className="container p-6 fade-in min-h-screen flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg"
+      >
+        <h1 className="mb-6 text-center">Registrarse</h1>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-4 p-3 bg-red-500 text-white rounded-md text-center"
+          >
+            {error}
+          </motion.p>
+        )}
+        {success && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-4 p-3 bg-green-500 text-white rounded-md text-center"
+          >
+            {success}
+          </motion.p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full p-2 border rounded"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              required
             />
           </div>
-          <div className="mb-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Nombre de usuario
+            </label>
             <input
               type="text"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              placeholder="Nombre de usuario"
-              className="w-full p-2 border rounded"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              required
             />
           </div>
-          <div className="mb-4">
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Contraseña
+            </label>
             <input
               type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Contraseña"
-              className="w-full p-2 border rounded"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              required
             />
           </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="ciudad"
-              value={form.ciudad}
-              onChange={handleChange}
-              placeholder="Ciudad (opcional)"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              name="url"
-              value={form.url}
-              onChange={handleChange}
-              placeholder="URL (opcional)"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
+          <button type="submit" className="btn-primary w-full">
             Registrarse
           </button>
         </form>
-      </div>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          ¿Ya tienes cuenta?{" "}
+          <Link href="/login" className="text-[var(--secondary)] hover:underline">
+            Inicia sesión
+          </Link>
+        </p>
+      </motion.div>
     </div>
   );
 }

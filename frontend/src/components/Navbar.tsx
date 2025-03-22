@@ -20,6 +20,12 @@ export default function Navbar() {
               <Link href="/profile" className="nav-link">
                 {user.username}
               </Link>
+              <Link href="/payments" className="nav-link">
+                Pagos
+              </Link>
+              <Link href="/payment-methods" className="nav-link">
+                Métodos de Pago
+              </Link>
               {user.rol === "admin" && (
                 <Link href="/configure" className="nav-link">
                   Configurar

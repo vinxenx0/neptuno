@@ -60,19 +60,41 @@ def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(
         "ultima_ip": user_info.ultima_ip
     }
 
+class UpdateProfileRequest(BaseModel):
+    email: str | None = None
+    username: str | None = None
+    ciudad: str | None = None
+    url: str | None = None
+
 @router.put("/me")
 def update_me(
-    email: str = None,
-    username: str = None,
-    ciudad: str = None,
-    url: str = None,
+    request: UpdateProfileRequest,
     user: UserContext = Depends(get_user_context),
     db: Session = Depends(get_db)
 ):
     if user.user_type != "registered":
         raise HTTPException(status_code=403, detail="Solo usuarios registrados")
-    updated_user = update_user(db, int(user.user_id), email, username, ciudad, url)
-    return {"message": "Usuario actualizado", "user": updated_user.email}
+    updated_user = update_user(
+        db,
+        int(user.user_id),
+        request.email,
+        request.username,
+        request.ciudad,
+        request.url
+    )
+    return {
+        "id": updated_user.id,
+        "email": updated_user.email,
+        "username": updated_user.username,
+        "rol": updated_user.rol,
+        "activo": updated_user.activo,
+        "plan": updated_user.plan.value,
+        "ciudad": updated_user.ciudad,
+        "url": updated_user.url,
+        "consultas_restantes": updated_user.consultas_restantes,
+        "fecha_creacion": updated_user.fecha_creacion,
+        "ultima_ip": updated_user.ultima_ip
+    }
 
 @router.delete("/me")
 def delete_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):

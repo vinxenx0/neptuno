@@ -1,3 +1,4 @@
+# backend/api/v1/payments.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from dependencies.auth import UserContext, get_user_context
@@ -6,7 +7,7 @@ from core.database import get_db
 from core.logging import configure_logging
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/v1/payments", tags=["payments"])
+router = APIRouter(tags=["payments"])
 logger = configure_logging()
 
 class PurchaseRequest(BaseModel):

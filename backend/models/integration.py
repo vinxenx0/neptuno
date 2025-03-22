@@ -1,3 +1,4 @@
+# backend/models/integration.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from models.user import Base
 from datetime import datetime

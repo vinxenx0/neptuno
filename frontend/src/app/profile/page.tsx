@@ -1,118 +1,172 @@
 // src/app/profile/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
-import { User } from "@/lib/types";
+import { motion } from "framer-motion";
 
 export default function ProfilePage() {
-  const { user, logout, updateProfile, deleteProfile, resetPassword } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState<Partial<User>>({});
-  const [error, setError] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", url: "" });
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) router.push("/login");
-    else setForm({ email: user.email, username: user.username, ciudad: user.ciudad, url: user.url });
+    if (!user) {
+      router.push("/login");
+    } else {
+      setFormData({
+        email: user.email || "",
+        username: user.username || "",
+        ciudad: user.ciudad || "",
+        url: user.url || "",
+      });
+    }
   }, [user, router]);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
     try {
-      await updateProfile(form);
-      setError("");
-    } catch (err: any) {
-      setError(err.message);
+      console.log("Datos enviados para actualizar:", formData); // Verifica los datos enviados
+      await updateProfile(formData);
+      setSuccess("Perfil actualizado con éxito");
+      setEditMode(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Error al actualizar perfil";
+      setError(errorMessage);
+      console.error("Error recibido:", errorMessage); // Verifica el error
     }
   };
 
-  const handleDelete = async () => {
-    if (confirm("¿Estás seguro de eliminar tu cuenta?")) {
-      try {
-        await deleteProfile();
-      } catch (err: any) {
-        setError(err.message);
-      }
-    }
-  };
-
-  const handleResetPassword = async () => {
+  const handleLogout = async () => {
+    setError(null);
     try {
-      await resetPassword(user!.email);
-      alert("Se ha enviado un enlace para restablecer tu contraseña");
-    } catch (err: any) {
-      setError(err.message);
+      await logout();
+      router.push("/login"); // Redirige después de logout
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cerrar sesión");
     }
   };
 
-  if (!user) return null;
+  if (!user) return null; // Evita renderizado mientras redirige
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Perfil</h1>
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
-            <input
-              type="email"
-              value={form.email || ""}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="Email"
-              className="w-full p-2 border rounded"
-            />
+    <div className="container p-6 fade-in min-h-screen flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-lg w-full bg-white p-8 rounded-lg shadow-lg"
+      >
+        <h1 className="mb-6 text-center">Perfil de {user.username}</h1>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-4 p-3 bg-red-500 text-white rounded-md text-center"
+          >
+            {error}
+          </motion.p>
+        )}
+        {success && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-4 p-3 bg-green-500 text-white rounded-md text-center"
+          >
+            {success}
+          </motion.p>
+        )}
+        {editMode ? (
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Username</label>
+              <input
+                type="text"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ciudad</label>
+              <input
+                type="text"
+                value={formData.ciudad}
+                onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">URL</label>
+              <input
+                type="text"
+                value={formData.url}
+                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              />
+            </div>
+            <button type="submit" className="btn-primary w-full">Guardar</button>
+            <button type="button" onClick={() => setEditMode(false)} className="btn-disabled w-full mt-2">Cancelar</button>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Email:</span>
+              <span>{user.email}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Username:</span>
+              <span>{user.username}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Ciudad:</span>
+              <span>{user.ciudad || "N/A"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">URL:</span>
+              <span>{user.url || "N/A"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Rol:</span>
+              <span className="capitalize">{user.rol}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Plan:</span>
+              <span>{user.plan || "N/A"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Consultas restantes:</span>
+              <span>{user.consultas_restantes ?? "N/A"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Fecha de creación:</span>
+              <span>{user.fecha_creacion ? new Date(user.fecha_creacion).toLocaleDateString() : "N/A"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-[var(--primary)]">Último inicio de sesión:</span>
+              <span>{user.ultimo_login ? new Date(user.ultimo_login).toLocaleString() : "N/A"}</span>
+            </div>
+            <button onClick={() => setEditMode(true)} className="btn-primary w-full mt-4">Editar Perfil</button>
+            <button onClick={handleLogout} className="btn-primary w-full mt-2">Cerrar Sesión</button>
           </div>
-          <div>
-            <input
-              type="text"
-              value={form.username || ""}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              placeholder="Usuario"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={form.ciudad || ""}
-              onChange={(e) => setForm({ ...form, ciudad: e.target.value })}
-              placeholder="Ciudad"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={form.url || ""}
-              onChange={(e) => setForm({ ...form, url: e.target.value })}
-              placeholder="URL"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-            Actualizar Perfil
-          </button>
-        </form>
-        <button
-          onClick={handleResetPassword}
-          className="w-full mt-4 bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
-        >
-          Restablecer Contraseña
-        </button>
-        <button
-          onClick={logout}
-          className="w-full mt-4 bg-red-500 text-white p-2 rounded hover:bg-red-600"
-        >
-          Cerrar Sesión
-        </button>
-        <button
-          onClick={handleDelete}
-          className="w-full mt-4 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-        >
-          Eliminar Cuenta
-        </button>
-      </div>
+        )}
+      </motion.div>
     </div>
   );
 }

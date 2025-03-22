@@ -3,35 +3,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* src/app/global.css */
-@layer components {
-  .gradient-text {
-    background: linear-gradient(90deg, var(--accent), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
-/* Variables de color personalizadas */
+/* Trendy Modern Color Variables */
 :root {
-  --background: #1a1a2e; /* Fondo oscuro con un toque azul */
-  --foreground: #e0e0e0; /* Texto claro */
-  --primary: #0f3460; /* Azul profundo */
-  --secondary: #e94560; /* Rojo vibrante */
-  --accent: #f8b400; /* Amarillo dorado */
-  --gradient-start: #0f3460;
-  --gradient-end: #e94560;
+  --background: #ddd; /* Deep Charcoal */
+  --foreground: #333; /* Light Grey */
+  --primary: #6366f1; /* Vivid Indigo */
+  --primary-hover: #4f46e5; /* Deep Indigo */
+  --secondary: #a0a4aa; /* Cool Dark Blue */
+  --secondary-hover: #374151; /* Slightly Lighter Dark Blue */
+  --accent: #f43f5e; /* Neon Coral */
+  --accent-hover: #e11d48; /* Richer Coral */
+  --border: #334155; /* Cool Grey-Blue */
+  --gradient-primary: linear-gradient(135deg, #6366f1, #3b82f6); /* Gradient Indigo */
+  --gradient-accent: linear-gradient(135deg, #f43f5e, #fb7185); /* Gradient Coral */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* Estilos base */
+/* Base Styles */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -40,65 +27,186 @@ body {
   padding: 0;
 }
 
-/* Clases personalizadas */
-@layer components {
-  /* Navbar */
-  .nav-bar {
-    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .nav-bar:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-  }
-
-  .nav-link {
-    @apply text-white font-semibold px-4 py-2 rounded-md transition-all duration-300;
-  }
-
-  .nav-link:hover {
-    @apply bg-opacity-20 bg-white scale-105;
-  }
-
-  /* Botones */
-  .btn-primary {
-    @apply bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105;
-  }
-
-  .btn-disabled {
-    @apply bg-gray-600 text-gray-300 cursor-not-allowed py-2 px-6 rounded-full opacity-75;
-  }
-
-  /* Contenedor principal */
-  .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Títulos */
-  h1 {
-    @apply text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r;
-    background-image: linear-gradient(to right, var(--accent), var(--secondary));
-  }
-
-  /* Footer */
-  .footer {
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    @apply text-white p-6 text-center shadow-inner;
-  }
+/* Form Controls */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: var(--foreground); 
+  background-color: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  transition: all 0.3s ease;
 }
 
-/* Animaciones */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.5); /* Neon Coral Glow */
+}
+
+/* Navbar */
+.nav-bar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.nav-link {
+  color: var(--foreground);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent);
+  background-color: rgba(244, 63, 94, 0.1); /* Coral Tint */
+  transform: scale(1.08);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-accent {
+  background: var(--gradient-accent);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-disabled {
+  background-color: #4b5563;
+  color: #9ca3af;
+  cursor: not-allowed;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  opacity: 0.6;
+}
+
+/* Main Container */
+.container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Titles */
+h1 {
+  color: var(--primary);
+  font-size: 2.5rem;
+  line-height: 2.75rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  color: var(--foreground);
+  font-size: 2rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Cards */
+.card {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Footer */
+.footer {
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pulse-effect {
+  animation: pulse 0.8s ease-in-out infinite;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
-/* Efecto de hover para tarjetas o enlaces */
+/* Hover Effects */
 .hover-grow {
-  @apply transition-transform duration-300 transform hover:scale-105 hover:shadow-xl;
+  transition: transform 0.3s ease;
+}
+
+.hover-grow:hover {
+  transform: scale(1.08);
 }

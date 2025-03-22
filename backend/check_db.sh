@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_NAME="backend/dev.db"
+DB_NAME="dev.db"
 
 # Verificar si el archivo de la base de datos existe
 if [[ ! -f "$DB_NAME" ]]; then

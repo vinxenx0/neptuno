@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { User, TokenResponse, RegisterRequest } from "../types";
+import { motion } from "framer-motion";
 
 interface AuthContextType {
   user: User | null;
@@ -122,15 +123,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return data.access_token;
   };
 
-  const updateProfile = async (data: Partial<User>) => {
-    const { data: updatedUser, error } = await fetchAPI<User>("/v1/auth/me", {
-      method: "PUT",
-      data,  // Cambiamos params a data para PUT
-    });
-    if (error) throw new Error(typeof error === "string" ? error : "Error al actualizar perfil");
-    setUser(updatedUser);
+  const updateProfile = async (data: { email: string; username: string; ciudad?: string; url?: string }) => {
+    try {
+      const response = await fetchAPI<User>("/v1/auth/me", {
+        method: "PUT",
+        data,
+      });
+      if (response.error) throw new Error(response.error);
+      if (response.data) {
+        setUser(response.data); // Actualiza el estado con el usuario completo
+      } else {
+        throw new Error("No se recibió la información del usuario actualizado");
+      }
+    } catch (err) {
+      console.error("Error al actualizar el perfil:", err);
+      throw err;
+    }
   };
-
+  
   const deleteProfile = async () => {
     const { error } = await fetchAPI("/v1/auth/me", { method: "DELETE" });
     if (error) throw new Error(typeof error === "string" ? error : "Error al eliminar perfil");
@@ -140,13 +150,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const resetPassword = async (email: string) => {
     const { error } = await fetchAPI("/v1/auth/password-reset", {
       method: "POST",
-      data: { email },  // Cambiamos params a data
+      data: { email },
     });
     if (error) throw new Error(typeof error === "string" ? error : "Error al restablecer contraseña");
   };
 
   if (loading) {
-    return <div className="text-center p-4">Cargando autenticación...</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 flex items-center justify-center bg-[var(--background)] z-50"
+      >
+        <div className="text-[var(--foreground)] text-xl font-semibold">
+          Cargando Neptuno...
+        </div>
+      </motion.div>
+    );
   }
 
   return (
