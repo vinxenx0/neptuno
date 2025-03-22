@@ -22,7 +22,7 @@ class UserContext(BaseModel):
     consultas_restantes: int
     rol: str
     class Config:
-        orm_mode = True
+        from_attributes=True #orm_mode = True
 
 
 async def get_user_context(request: Request, db: Session = Depends(get_db)):
@@ -57,8 +57,11 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             return UserContext(
                 user_type="registered",
                 user_id=str(user.id),
+                email=user.email,
+                username=user.username,
                 consultas_restantes=user.consultas_restantes,
-                plan=user.plan.value
+                plan=user.plan.value,
+                rol=user.rol
             )
 
         if not session_id:
@@ -75,7 +78,11 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             return UserContext(
                 user_type="anonymous",
                 user_id=session_id,
-                consultas_restantes=100
+                email="anonymous@example.com",  # Valor por defecto
+                username="anonymous",           # Valor por defecto
+                consultas_restantes=100,
+                plan="basic",                   # Valor por defecto
+                rol="anonymous"                 # Valor por defecto
             )
         else:
             session = db.query(AnonymousSession).filter(AnonymousSession.id == session_id).first()
@@ -90,7 +97,11 @@ async def get_user_context(request: Request, db: Session = Depends(get_db)):
             return UserContext(
                 user_type="anonymous",
                 user_id=session.id,
-                consultas_restantes=session.consultas_restantes
+                email="anonymous@example.com",  # Valor por defecto
+                username="anonymous",           # Valor por defecto
+                consultas_restantes=session.consultas_restantes,
+                plan="basic",                   # Valor por defecto
+                rol="anonymous"                 # Valor por defecto
             )
 
         logger.error(f"No autorizado: sin token ni sesión válida desde IP {client_ip}")

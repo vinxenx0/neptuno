@@ -49,7 +49,7 @@ def create_access_token(data: dict):
     expiration = get_setting(db, "token_expiration") or 3600
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(seconds=expiration)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})  # Añadimos "type": "access"
     return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
 def create_refresh_token(data: dict):
@@ -57,7 +57,7 @@ def create_refresh_token(data: dict):
     expiration = get_setting(db, "refresh_token_expiration") or 604800
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(seconds=expiration)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "refresh"})  # Añadimos "type": "refresh"
     return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
 def decode_token(token: str) -> Optional[dict]:

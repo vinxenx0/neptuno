@@ -85,7 +85,7 @@ def reset_password(email: str, db: Session = Depends(get_db)):
     return request_password_reset(db, email)
 
 @router.post("/refresh")
-def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
+def refresh_token(refresh_token: str = Form(...), db: Session = Depends(get_db)):
     return refresh_access_token(db, refresh_token)
 
 @router.post("/logout")

@@ -64,7 +64,7 @@ app.include_router(endpoints.router, prefix="/v1/api", tags=["api"])
 app.include_router(payments.router, prefix="/v1/payments", tags=["payments"])
 app.include_router(site_settings.router, prefix="/v1/settings", tags=["site_settings"])
 app.include_router(integrations.router, prefix="/v1/integrations", tags=["integrations"])
-app.include_router(payments.router, prefix="/v1/payments", tags=["payments"], dependencies=[Depends(RateLimiter(**rate_limit_api, identifier=get_rate_limit_key))])
+#app.include_router(payments.router, prefix="/v1/payments", tags=["payments"], dependencies=[Depends(RateLimiter(**rate_limit_api, identifier=get_rate_limit_key))])
 
 
 Base.metadata.create_all(bind=engine)

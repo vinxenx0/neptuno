@@ -15,3 +15,9 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 - arreglar esto en main
 logger = configure_logging()
 # app.add_middleware(LoggingMiddleware)
+
+- poner ya los endpoints para usuarios registrados (estan todos abiertos)
+
+- actualizar perfil / resatablecer contraseña / mensajes mejor manejo e información
+
+- reset credits no me reconoce el tooken de admin
