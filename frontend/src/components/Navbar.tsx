@@ -8,9 +8,8 @@ import { motion } from "framer-motion";
 
 export default function Navbar() {
   const { user, credits, logout } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState("light"); // Estado para el tema
+  const [theme, setTheme] = useState("light");
 
   // Cargar el tema desde localStorage al montar el componente
   useEffect(() => {
@@ -39,115 +38,46 @@ export default function Navbar() {
             💳 {credits} créditos
           </span>
 
-          {/* Botón para alternar tema */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
-            aria-label="Alternar tema"
-          >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-
-          {user ? (
-            <>
-              {/* Settings (solo para admins) */}
-              {user.rol === "admin" && (
-                <div className="relative flex items-center">
-                  <Link href="/configure" className="flex items-center hover:underline">
-                    ⚙️ Settings
-                  </Link>
-                  <button onClick={() => setSettingsOpen(!settingsOpen)} className="ml-1">
-                    <span>▼</span>
-                  </button>
-                  {settingsOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 0 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-10 right-0 w-48 submenu py-2 z-50"
-                    >
-                      <Link
-                        href="/admin/errors"
-                        className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                        onClick={() => setSettingsOpen(false)}
-                      >
-                        🐛 Errors
-                      </Link>
-                      <Link
-                        href="/admin/logs"
-                        className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                        onClick={() => setSettingsOpen(false)}
-                      >
-                        📝 Api Log
-                      </Link>
-                      <Link
-                        href="/admin/transactions"
-                        className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                        onClick={() => setSettingsOpen(false)}
-                      >
-                        🔄 Transactions
-                      </Link>
-                      <Link
-                        href="/admin/sessions"
-                        className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                        onClick={() => setSettingsOpen(false)}
-                      >
-                        🌐 Sessions
-                      </Link>
-                    </motion.div>
-                  )}
-                </div>
-              )}
-
-              {/* Username con submenú */}
-              <div className="relative flex items-center">
-                <Link href="/profile" className="flex items-center hover:underline">
-                  👤 {user.username}
-                </Link>
-                <button onClick={() => setMenuOpen(!menuOpen)} className="ml-1">
-                  <span>▼</span>
-                </button>
-                {menuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 0 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-10 right-0 w-48 submenu py-2 z-50"
+          {/* SETTINGS (solo para admins) */}
+          {user?.rol === "admin" && (
+            <div className="relative flex items-center">
+              <Link href="/configure" className="flex items-center hover:underline">
+                ⚙️ Settings
+              </Link>
+              <button onClick={() => setSettingsOpen(!settingsOpen)} className="ml-1">
+                <span>▼</span>
+              </button>
+              {settingsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-10 right-0 w-48 submenu py-2 z-50"
+                >
+                  <Link
+                    href="/admin/registry"
+                    className="block px-4 py-2 hover:bg-gray-700 flex items-center"
+                    onClick={() => setSettingsOpen(false)}
                   >
-                    <Link
-                      href="/payments"
-                      className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      💳 Pagos
-                    </Link>
-                    <Link
-                      href="/payment-methods"
-                      className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      💳 Formas de Pago
-                    </Link>
-                    <Link
-                      href="/change-password"
-                      className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      🔑 Contraseña
-                    </Link>
-                    <button
-                      onClick={async () => {
-                        await logout();
-                        setMenuOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-700 flex items-center"
-                    >
-                      🚪 Cerrar Sesión
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-            </>
+                    📋 Registry
+                  </Link>
+                  <Link
+                    href="/admin/users"
+                    className="block px-4 py-2 hover:bg-gray-700 flex items-center"
+                    onClick={() => setSettingsOpen(false)}
+                  >
+                    👥 Users
+                  </Link>
+                </motion.div>
+              )}
+            </div>
+          )}
+
+          {/* USERNAME o Login/Register */}
+          {user ? (
+            <Link href="/user/dashboard" className="flex items-center hover:underline">
+              👤 {user.username}
+            </Link>
           ) : (
             <>
               <Link href="/login" className="hover:underline">
@@ -158,6 +88,15 @@ export default function Navbar() {
               </Link>
             </>
           )}
+
+          {/* Botón para alternar tema */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+            aria-label="Alternar tema"
+          >
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
         </div>
       </div>
     </nav>
