@@ -6,43 +6,43 @@
 
 /* Tema claro (valores por defecto) */
 :root {
-  --background: #f5f5f5; /* Fondo claro */
-  --foreground: #333333; /* Texto oscuro */
-  --primary: #ff007f; /* Rosa neón */
-  --primary-hover: #d6006b; /* Rosa intenso */
-  --secondary: #facc15; /* Amarillo brillante */
-  --secondary-hover: #eab308; /* Amarillo oscuro */
-  --accent: #00f7ff; /* Cian eléctrico */
-  --accent-hover: #00c4cc; /* Cian oscuro */
-  --border: #333333; /* Gris oscuro */
-  --danger: #ff4d4d; /* Rojo brillante */
-  --danger-hover: #e60000; /* Rojo intenso */
-  --success: #32cd32; /* Verde lima */
-  --success-hover: #28a428; /* Verde oscuro */
+  --background: #ffffff; /* Blanco puro */
+  --foreground: #1f2937; /* Gris oscuro */
+  --primary: #2563eb; /* Azul profesional */
+  --primary-hover: #1d4ed8; /* Azul más oscuro */
+  --secondary: #6b7280; /* Gris medio */
+  --secondary-hover: #4b5563; /* Gris más oscuro */
+  --accent: #10b981; /* Verde esmeralda */
+  --accent-hover: #059669; /* Verde más oscuro */
+  --border: #d1d5db; /* Gris claro */
+  --danger: #ef4444; /* Rojo suave */
+  --danger-hover: #dc2626; /* Rojo intenso */
+  --success: #22c55e; /* Verde éxito */
+  --success-hover: #16a34a; /* Verde más oscuro */
 }
 
 /* Tema oscuro */
 [data-theme="dark"] {
-  --background: #1a1a1a; /* Fondo oscuro */
-  --foreground: #f0f0f0; /* Texto claro */
-  --primary: #ff007f; /* Rosa neón (mantenido) */
-  --primary-hover: #ff3399; /* Rosa más claro */
-  --secondary: #facc15; /* Amarillo brillante (mantenido) */
-  --secondary-hover: #ffd700; /* Amarillo dorado */
-  --accent: #00f7ff; /* Cian eléctrico (mantenido) */
-  --accent-hover: #00e6e6; /* Cian más claro */
-  --border: #444444; /* Gris medio */
-  --danger: #ff6666; /* Rojo claro */
-  --danger-hover: #ff3333; /* Rojo más intenso */
-  --success: #66ff66; /* Verde claro */
-  --success-hover: #33cc33; /* Verde medio */
+  --background: #111827; /* Gris oscuro profundo */
+  --foreground: #e5e7eb; /* Gris claro */
+  --primary: #3b82f6; /* Azul claro */
+  --primary-hover: #60a5fa; /* Azul más claro */
+  --secondary: #9ca3af; /* Gris claro */
+  --secondary-hover: #d1d5db; /* Gris medio */
+  --accent: #34d399; /* Verde claro */
+  --accent-hover: #6ee7b7; /* Verde más claro */
+  --border: #374151; /* Gris medio oscuro */
+  --danger: #f87171; /* Rojo claro */
+  --danger-hover: #fca5a5; /* Rojo más claro */
+  --success: #4ade80; /* Verde claro */
+  --success-hover: #86efac; /* Verde más claro */
 }
 
 /* Estilos base */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -55,7 +55,6 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Enlaces del Navbar */
 .nav-bar a {
   color: var(--foreground);
 }
@@ -69,25 +68,17 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
 /* Form Controls */
 button,
 input,
-optgroup,
 select,
 textarea {
   font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  color: var(--foreground); /* Texto gris oscuro */
-  background-color: var(--background); /* Fondo blanco */
-  border: 1px solid var(--border); /* Borde gris claro */
+  color: var(--foreground);
+  background-color: var(--background);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  margin: 0;
   transition: all 0.3s ease;
 }
 
@@ -95,43 +86,9 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--primary); /* Borde azul al enfocar */
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Sombra azul suave */
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
-
-/* Placeholder Text */
-input::placeholder,
-textarea::placeholder {
-  color: #9ca3af; /* Color gris medio para placeholders */
-}
-
-/* Navbar */
-.nav-bar {
-  background: var(--background);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.nav-bar:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.nav-link {
-  color: var(--foreground);
-  font-weight: 500;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-  color: var(--primary);
-  background-color: rgba(37, 99, 235, 0.1); /* Fondo azul con opacidad */
-  transform: translateY(-2px);
-}
-
-
 
 /* Buttons */
 .btn-primary {
@@ -141,13 +98,11 @@ textarea::placeholder {
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
+  transform: translateY(-2px);
 }
 
 .btn-secondary {
@@ -157,66 +112,30 @@ textarea::placeholder {
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(75, 85, 99, 0.1);
 }
 
 .btn-secondary:hover {
   background-color: var(--secondary-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(75, 85, 99, 0.2);
 }
 
-.btn-accent {
-  background-color: var(--accent);
+.btn-danger {
+  background-color: var(--danger);
   color: white;
   font-weight: bold;
   padding: 0.75rem 1.75rem;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
 }
 
-.btn-accent:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.2);
+.btn-danger:hover {
+  background-color: var(--danger-hover);
 }
 
-.btn-disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
-  cursor: not-allowed;
-  padding: 0.75rem 1.75rem;
-  border-radius: 0.75rem;
-  opacity: 0.6;
-}
-
-/* Main Container */
+/* Container */
 .container {
   max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-/* Titles */
-h1 {
-  color: var(--primary);
-  font-size: 2.5rem;
-  line-height: 3rem;
-  font-weight: 900;
-  margin-bottom: 1.5rem;
-  animation: fadeIn 0.8s ease-out;
-}
-
-h2 {
-  color: var(--foreground);
-  font-size: 2rem;
-  line-height: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-  animation: fadeIn 1s ease-out;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 /* Cards */
@@ -227,12 +146,6 @@ h2 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   transition: all 0.3s ease;
-  animation: fadeIn 1.2s ease-out;
-}
-
-.card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-5px);
 }
 
 /* Footer */
@@ -242,43 +155,14 @@ h2 {
   color: var(--foreground);
   padding: 2rem;
   text-align: center;
-  animation: fadeIn 1.4s ease-out;
 }
 
-/* Animations */
+/* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.pulse-effect {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.slide-in {
-  animation: slideIn 0.8s ease-out;
-}
-
-/* Hover Effects */
-.hover-grow {
-  transition: transform 0.3s ease;
-}
-
-.hover-grow:hover {
-  transform: scale(1.05);
-}
-
-/* Loading Spinner */
 .loading-spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   border-top: 4px solid var(--primary);
@@ -291,32 +175,4 @@ h2 {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/* Additional Effects */
-.shadow-lg {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.shadow-xl {
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-}
-
-.hover-shadow-lg:hover {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-}
-
-.hover-shadow-xl:hover {
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
-}
-
-
-/* Para enlaces en el menú principal con fondo blanco */
-.nav-bar a {
-  color: var(--foreground); /* #1a1a1a, gris oscuro */
-}
-
-/* Si tienes un submenú con fondo oscuro, ajusta según la clase */
-a.block:nth-child(n) {
-  color: #ffffff; /* Blanco puro */
 }

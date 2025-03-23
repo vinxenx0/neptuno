@@ -87,7 +87,7 @@ export default function PaymentMethodsPage() {
     }
   };
 
-  if (loading) return <div className="text-center p-4">Cargando métodos de pago...</div>;
+  if (loading) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Cargando métodos de pago...</div>;
 
   return (
     <div className="container p-6 fade-in">

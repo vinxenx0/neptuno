@@ -30,7 +30,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) return <div>Cargando...</div>;
+  if (!user) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Cargando...</div>;
 
   return (
     <div className="container p-6 fade-in">

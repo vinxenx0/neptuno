@@ -10,7 +10,6 @@ logger = configure_logging()
 
 - poner ya los endpoints para usuarios registrados (estan todos abiertos)
 
-- hacer todo lo de profile en la misma pagina sin transiciones (ya casi lo hace)
 
 - en el backend no todos los modelos tienen endpoints
 
@@ -56,3 +55,13 @@ checkAuth completado
 ---- no guarda sesiones anonimas en db? hay q revisar flujo
 -- limpiar api que no vale
 -- el temoraly redirect de logs por el pageination
+- meterle ya mano al consumo de creditos
+
+- comando uvicorn q mole
+- no se han rellenado todas las tablas del init data 
+- AÑADIR CERTIFICADOS
+-- unificar el cargando con un spinner
+-- poner tiempo de consulta a la api en el footer?
+
+
+-- unir los interfaces en los types.ts

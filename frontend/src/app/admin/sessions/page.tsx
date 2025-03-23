@@ -1,4 +1,7 @@
+
+// admin/sessions/page.tsx
 "use client";
+
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
@@ -41,8 +44,8 @@ export default function AnonymousSessionsPage() {
     fetchSessions();
   }, [user, router]);
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Cargando...</div>;
+  if (error) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Error: {error}</div>;
 
   return (
     <div className="container mx-auto p-6">

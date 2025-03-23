@@ -1,3 +1,4 @@
+// admin/errors/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -48,8 +49,8 @@ export default function ErrorLogsPage() {
     fetchLogs();
   }, [user, router, page]);
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Cargando...</div>;
+  if (error) return <div className="text-[var(--foreground)] text-center p-4 text-xl font-semibold">Error: {error}</div>;
 
   return (
     <div className="container mx-auto p-6">
