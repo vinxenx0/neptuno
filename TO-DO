@@ -72,3 +72,4 @@ checkAuth completado
 -- borrar rutas que ya no se usan
 -- redirect despues de login a dashboard no a profile
 -- arreglar los nuevos errores de builds
+-- avanzar en la configuracion modular del sitio para activar o desactivar features
