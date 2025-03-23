@@ -10,8 +10,11 @@ from jwt import encode, decode, PyJWTError
 from os import getenv
 from datetime import datetime, timedelta
 from typing import Optional
+from core.logging import configure_logging
 from core.database import get_db
 from services.settings_service import get_setting
+
+logger = configure_logging()
 
 # Configuración de OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
@@ -46,21 +49,29 @@ def decode_token(token: str):
 
 def create_access_token(data: dict):
     db = next(get_db())
-    expiration_str = get_setting(db, "token_expiration") or "3600"
-    expiration = int(expiration_str)  # Convertir a entero
+    expiration_str = get_setting(db, "token_expiration") or "3600"  # Valor por defecto: 1 hora
+    try:
+        expiration = int(str(expiration_str))  # Convertir a cadena primero y luego a entero
+    except ValueError:
+        logger.error(f"Valor inválido para token_expiration: {expiration_str}")
+        expiration = 3600  # Valor por defecto si falla
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(seconds=expiration)
     to_encode.update({"exp": expire, "type": "access"})
-    return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
 def create_refresh_token(data: dict):
     db = next(get_db())
-    expiration_str = get_setting(db, "refresh_token_expiration") or "604800"
-    expiration = int(expiration_str)  # Convertir a entero
+    expiration_str = get_setting(db, "refresh_token_expiration") or "604800"  # Valor por defecto: 7 días
+    try:
+        expiration = int(str(expiration_str))  # Convertir a cadena primero y luego a entero
+    except ValueError:
+        logger.error(f"Valor inválido para refresh_token_expiration: {expiration_str}")
+        expiration = 604800  # Valor por defecto si falla
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(seconds=expiration)
     to_encode.update({"exp": expire, "type": "refresh"})
-    return encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
 def decode_token(token: str) -> Optional[dict]:
     try:

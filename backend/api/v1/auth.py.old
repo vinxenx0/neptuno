@@ -1,24 +1,19 @@
-# backend/api/v1/auth.py
-# Módulo de autenticación de la API v1.
+# backend/api/v1/auth.py.OLD
+# Módulo old de autenticación de la API v1.
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from schemas.auth import (
-    ChangePasswordRequest, PasswordResetConfirm, TokenResponse, 
-    RefreshTokenRequest, PasswordResetRequest
-)
-from schemas.user import RegisterRequest
+from schemas.auth import ChangePasswordRequest, PasswordResetConfirm, TokenResponse, RefreshTokenRequest, PasswordResetRequest
+from schemas.user import RegisterRequest, UpdateProfileRequest, UserResponse
 from services.auth_service import (
-    login_user, register_user, refresh_access_token, logout_user, 
-    request_password_reset, confirm_password_reset, change_user_password,
-    login_with_provider
+    change_user_password, login_user, login_with_provider, register_user, get_user_info, update_user, 
+    delete_user, request_password_reset, refresh_access_token, logout_user
 )
 from core.database import get_db
-from core.security import oauth2_scheme, OAuth2PasswordRequestForm
-from core.security import get_oauth2_redirect_url
+from core.security import get_oauth2_redirect_url, oauth2_scheme, OAuth2PasswordRequestForm
 from dependencies.auth import UserContext, get_user_context
 from core.logging import configure_logging
 
-router = APIRouter(tags=["auth"])
+router = APIRouter()
 logger = configure_logging()
 
 @router.post("/token", response_model=TokenResponse)
@@ -39,6 +34,35 @@ def login_for_access_token(
 @router.post("/register", response_model=TokenResponse)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     return register_user(db, data.email, data.username, data.password, data.ciudad, data.website)
+
+@router.get("/me", response_model=UserResponse)
+def get_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+    return get_user_info(db, int(user.user_id))
+
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    request: UpdateProfileRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+    return update_user(
+        db,
+        int(user.user_id),
+        request.email,
+        request.username,
+        request.ciudad,
+        request.website
+    )
+
+@router.delete("/me", response_model=dict)
+def delete_me(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+    return delete_user(db, int(user.user_id))
 
 @router.post("/password-reset", response_model=dict)
 def reset_password(data: PasswordResetRequest, db: Session = Depends(get_db)):

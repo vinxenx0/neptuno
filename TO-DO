@@ -65,3 +65,10 @@ checkAuth completado
 
 
 -- unir los interfaces en los types.ts
+
+-- añadir el hacer predeterminada en el form
+-- el toast q se vea siempre
+-- reset password ubicarlo mejor
+-- borrar rutas que ya no se usan
+-- redirect despues de login a dashboard no a profile
+-- arreglar los nuevos errores de builds

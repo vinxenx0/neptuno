@@ -1,6 +1,6 @@
 // src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-import { HTTPValidationError, ValidationError } from "./types";
+import { HTTPValidationError, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";
 
 interface FetchResponse<T> {
   data: T | null;
@@ -103,6 +103,34 @@ const fetchAPI = async <T>(
 
     return normalizeResponse(undefined, err);
   }
+};
+
+// Obtener la lista de usuarios (ya debería estar implementado o similar)
+export const getAllUsers = async (): Promise<FetchResponse<User[]>> => {
+  return fetchAPI<User[]>("/v1/users/admin/users", { method: "GET" });
+};
+
+// Obtener un usuario específico por ID
+export const getUserById = async (userId: number): Promise<FetchResponse<User>> => {
+  return fetchAPI<User>(`/v1/users/${userId}`, { method: "GET" });
+};
+
+// Actualizar un usuario por ID
+export const updateUser = async (
+  userId: number,
+  data: UpdateProfileRequest
+): Promise<FetchResponse<User>> => {
+  return fetchAPI<User>(`/v1/users/${userId}`, { method: "PUT", data });
+};
+
+// Eliminar un usuario por ID
+export const deleteUser = async (userId: number): Promise<FetchResponse<void>> => {
+  return fetchAPI<void>(`/v1/users/${userId}`, { method: "DELETE" });
+};
+
+// Crear un nuevo usuario (usando el endpoint de registro)
+export const createUser = async (data: RegisterRequest): Promise<FetchResponse<TokenResponse>> => {
+  return fetchAPI<TokenResponse>("/v1/auth/register", { method: "POST", data });
 };
 
 export default fetchAPI;

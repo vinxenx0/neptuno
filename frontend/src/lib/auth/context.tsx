@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const token = localStorage.getItem("accessToken");
         if (token) {
-          const { data } = await fetchAPI<User>("/v1/auth/me");
+          const { data } = await fetchAPI<User>("/v1/users/me");
           if (data) {
             setUser(data);
             setCredits(data.credits);
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw new Error(typeof error === "string" ? error : "Error al iniciar sesión");
     localStorage.setItem("accessToken", data!.access_token);
     localStorage.setItem("refreshToken", data!.refresh_token);
-    const userResponse = await fetchAPI<User>("/v1/auth/me");
+    const userResponse = await fetchAPI<User>("/v1/users/me");
     if (userResponse.data) {
       setUser(userResponse.data);
       setCredits(userResponse.data.credits);
@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateProfile = async (data: Partial<User>) => {
     try {
-      const response = await fetchAPI<User>("/v1/auth/me", {
+      const response = await fetchAPI<User>("/v1/users/me", {
         method: "PUT",
         data,
       });
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const deleteProfile = async () => {
-    const { error } = await fetchAPI("/v1/auth/me", { method: "DELETE" });
+    const { error } = await fetchAPI("/v1/users/me", { method: "DELETE" });
     if (error) throw new Error(typeof error === "string" ? error : "Error al eliminar perfil");
     logout();
   };

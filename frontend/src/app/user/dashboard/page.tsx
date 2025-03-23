@@ -143,7 +143,7 @@ export default function UserDashboard() {
   const handleDeleteAccount = async () => {
     if (confirm("¿Estás seguro de eliminar tu cuenta? Esta acción es irreversible.")) {
       try {
-        await fetchAPI("/v1/auth/me", { method: "DELETE" });
+        await fetchAPI("/v1/users/me", { method: "DELETE" });
         await logout();
         router.push("/login");
       } catch (err) {

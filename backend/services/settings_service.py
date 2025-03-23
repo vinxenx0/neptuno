@@ -52,7 +52,16 @@ def get_setting(db: Session, key: str) -> dict | list | int | str | None:
         setting = db.query(SiteSettings).filter(SiteSettings.key == key).first()
         if not setting:
             return None
-        return json.loads(setting.value)
+        value = setting.value
+        try:
+            return json.loads(value)  # Intentar deserializar como JSON
+        except json.JSONDecodeError:
+            # Si falla, intentar limpiar comillas adicionales y devolver la cadena
+            cleaned_value = value.strip('"')
+            try:
+                return json.loads(cleaned_value)  # Reintentar con el valor limpio
+            except json.JSONDecodeError:
+                return cleaned_value  # Devolver la cadena limpia si no es JSON válido
     except Exception as e:
         logger.error(f"Error al obtener ajuste {key}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al obtener ajuste")
@@ -65,11 +74,12 @@ def set_setting(db: Session, key: str, value: any, admin_id: str, description: s
             raise HTTPException(status_code=403, detail="Solo administradores pueden modificar configuraciones")
         
         setting = db.query(SiteSettings).filter(SiteSettings.key == key).first()
+        serialized_value = json.dumps(value)  # Serializar a JSON
         if setting:
-            setting.value = json.dumps(value)
+            setting.value = serialized_value
             setting.description = description or setting.description
         else:
-            setting = SiteSettings(key=key, value=json.dumps(value), description=description)
+            setting = SiteSettings(key=key, value=serialized_value, description=description)
             db.add(setting)
         db.commit()
         logger.info(f"Configuración '{key}' actualizada por admin {admin_id}: {value}")

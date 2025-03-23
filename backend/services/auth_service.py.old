@@ -1,4 +1,4 @@
-# backend/services/auth_service.py
+# backend/services/auth_service.py.OLD
 # Módulo de servicio de autenticación.
 from os import getenv
 from uuid import uuid4
@@ -9,9 +9,8 @@ from core.security import (
     get_password_hash, verify_password, create_access_token, 
     create_refresh_token, decode_token
 )
-from core.logging import configure_logging
 from core.security import google_client, meta_client
-
+from core.logging import configure_logging
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 import requests
@@ -94,10 +93,11 @@ def refresh_access_token(db: Session, refresh_token: str):
         raise HTTPException(status_code=403, detail="Usuario no encontrado o inactivo")
     
     new_access_token = create_access_token({"sub": str(user.id), "type": "registered"})
-    new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+    new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})  # Generar nuevo refresh token
     return {"access_token": new_access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
 
-def logout_user(db: Session, token: str): #_estimate ?
+def logout_user(db: Session, token: str):
+    """Revoca un token para cerrar sesión."""
     payload = decode_token(token)
     if not payload:
         raise HTTPException(status_code=401, detail="Token inválido")
@@ -106,6 +106,51 @@ def logout_user(db: Session, token: str): #_estimate ?
     db.add(revoked_token)
     db.commit()
     return {"message": "Sesión cerrada"}
+
+def get_user_info(db: Session, user_id: int):
+    """Obtiene la información completa del usuario."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
+def update_user(db: Session, user_id: int, email: str = None, username: str = None, ciudad: str = None, website: str = None):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Verificar si el nuevo email ya existe (si se proporciona)
+    if email and email != user.email:
+        existing_email = db.query(User).filter(User.email == email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="El email ya está en uso")
+        user.email = email
+    
+    # Verificar si el nuevo username ya existe (si se proporciona)
+    if username and username != user.username:
+        existing_username = db.query(User).filter(User.username == username).first()
+        if existing_username:
+            raise HTTPException(status_code=400, detail="El username ya está en uso")
+        user.username = username
+    
+    # Actualizar otros campos
+    if ciudad is not None:
+        user.ciudad = ciudad
+    if website is not None:
+        user.website = website
+    
+    db.commit()
+    db.refresh(user)
+    return user
+
+def delete_user(db: Session, user_id: int):
+    """Elimina un usuario."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    db.delete(user)
+    db.commit()
+    return {"message": "Usuario eliminado"}
 
 def request_password_reset(db: Session, email: str):
     user = db.query(User).filter(User.email == email).first()
@@ -118,7 +163,7 @@ def request_password_reset(db: Session, email: str):
     db.commit()
     
     logger.info(f"Token de reseteo generado para usuario ID {user.id}: {token}")
-    return {"message": "Solicitud de recuperación enviada", "token": token}
+    return {"message": "Solicitud de recuperación enviada", "token": token}  # Temporal para pruebas
 
 def confirm_password_reset(db: Session, token: str, new_password: str):
     reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
@@ -132,7 +177,7 @@ def confirm_password_reset(db: Session, token: str, new_password: str):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
     user.password_hash = get_password_hash(new_password)
-    db.delete(reset_token)
+    db.delete(reset_token)  # Eliminar el token usado
     db.commit()
     return {"message": "Contraseña actualizada con éxito"}
 
@@ -185,7 +230,7 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
     if not user:
         user = User(
             email=email,
-            username=email.split("@")[0],
+            username=email.split("@")[0],  # Provisional, podría pedirse al usuario
             auth_provider=provider,
             provider_id=provider_id,
             credits=100,
