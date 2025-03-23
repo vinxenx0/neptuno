@@ -1,4 +1,5 @@
 // src/app/register/page.tsx
+// src/app/register/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -24,7 +25,15 @@ export default function RegisterPage() {
       await register(data);
       setSuccess("¡Registro exitoso! Redirigiendo...");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al registrarse");
+      const errorMessage = err instanceof Error ? err.message : "Error al registrarse";
+      // Personalizar mensajes según el error del backend
+      if (errorMessage.includes("email")) {
+        setError("El email ya está registrado");
+      } else if (errorMessage.includes("username")) {
+        setError("El nombre de usuario ya está en uso");
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 

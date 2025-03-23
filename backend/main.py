@@ -4,6 +4,8 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from api.v1 import auth, endpoints, payments, site_settings, integrations, payments
+from api.v1 import anonymous_sessions, credit_transactions, error_logs
+from api.v1 import api_logs
 from middleware.logging import LoggingMiddleware
 from dependencies.auth import UserContext, get_user_context
 from services.settings_service import get_setting
@@ -70,6 +72,10 @@ app.include_router(payments.router, prefix="/v1/payments", tags=["payments"])
 app.include_router(site_settings.router, prefix="/v1/settings", tags=["site_settings"])
 app.include_router(integrations.router, prefix="/v1/integrations", tags=["integrations"])
 #app.include_router(payments.router, prefix="/v1/payments", tags=["payments"], dependencies=[Depends(RateLimiter(**rate_limit_api, identifier=get_rate_limit_key))])
+app.include_router(error_logs.router, prefix="/v1/errors", tags=["Errors"])
+app.include_router(anonymous_sessions.router, prefix="/v1/sessions", tags=["Sessions"])
+app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=["Transactions"])
+app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
 
 
 

@@ -1,9 +1,11 @@
 // src/app/profile/page.tsx
+// src/app/profile/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Añadido para el enlace
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {
@@ -32,15 +34,12 @@ export default function ProfilePage() {
     setError(null);
     setSuccess(null);
     try {
-      console.log("Datos enviados para actualizar:", formData); // Verifica los datos enviados
       await updateProfile(formData);
       setSuccess("Perfil actualizado con éxito");
       setEditMode(false);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Error al actualizar perfil";
-      setError(errorMessage);
-      console.error("Error recibido:", errorMessage); // Verifica el error
+      setError(err instanceof Error ? err.message : "Error al actualizar perfil");
     }
   };
 
@@ -48,13 +47,13 @@ export default function ProfilePage() {
     setError(null);
     try {
       await logout();
-      router.push("/login"); // Redirige después de logout
+      router.push("/login");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cerrar sesión");
     }
   };
 
-  if (!user) return null; // Evita renderizado mientras redirige
+  if (!user) return null;
 
   return (
     <div className="container p-6 fade-in min-h-screen flex items-center justify-center">
@@ -123,6 +122,7 @@ export default function ProfilePage() {
             </div>
             <button type="submit" className="btn-primary w-full">Guardar</button>
             <button type="button" onClick={() => setEditMode(false)} className="btn-disabled w-full mt-2">Cancelar</button>
+            <Link href="/change-password" className="btn-primary w-full mt-2 inline-block text-center">Cambiar Contraseña</Link>
           </form>
         ) : (
           <div className="space-y-4">

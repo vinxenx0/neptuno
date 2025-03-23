@@ -84,7 +84,6 @@ def login_user(db: Session, email: str, password: str, ip: str):
         raise HTTPException(status_code=500, detail="Error al iniciar sesión")
 
 def refresh_access_token(db: Session, refresh_token: str):
-    """Renueva el token de acceso usando el refresh token."""
     payload = decode_token(refresh_token)
     if not payload or payload.get("type") != "refresh" or db.query(RevokedToken).filter(RevokedToken.token == refresh_token).first():
         raise HTTPException(status_code=401, detail="Refresh token inválido o revocado")
@@ -94,7 +93,8 @@ def refresh_access_token(db: Session, refresh_token: str):
         raise HTTPException(status_code=403, detail="Usuario no encontrado o inactivo")
     
     new_access_token = create_access_token({"sub": str(user.id), "type": "registered"})
-    return {"access_token": new_access_token, "token_type": "bearer"}
+    new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})  # Generar nuevo refresh token
+    return {"access_token": new_access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
 
 def logout_user(db: Session, token: str):
     """Revoca un token para cerrar sesión."""

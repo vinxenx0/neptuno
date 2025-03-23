@@ -1,4 +1,5 @@
 // src/app/payments/page.tsx
+// src/app/payments/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,8 +8,6 @@ import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { motion } from "framer-motion";
 import { CreditTransaction } from "@/lib/types";
-
-
 
 export default function PaymentsPage() {
   const { user } = useAuth();
@@ -52,7 +51,11 @@ export default function PaymentsPage() {
         data: { credits: parseInt(credits), payment_amount: parseFloat(paymentAmount), payment_method: paymentMethod },
       });
       if (error) throw new Error(error as string);
-      setTransactions([data!, ...transactions]); // Añadir la nueva transacción al inicio
+      console.log("Nueva transacción:", data); // Depuración
+      if (!data?.amount || !data?.timestamp) {
+        throw new Error("Datos de transacción incompletos");
+      }
+      setTransactions([data, ...transactions]);
       setCredits("");
       setPaymentAmount("");
       setSuccess("Créditos comprados con éxito");
@@ -78,7 +81,6 @@ export default function PaymentsPage() {
         </motion.div>
       )}
 
-      {/* Formulario de compra */}
       <form onSubmit={handlePurchase} className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
         <h2 className="text-xl font-semibold mb-4 text-[var(--primary)]">Comprar Créditos</h2>
         <div className="space-y-4">
@@ -111,22 +113,20 @@ export default function PaymentsPage() {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="stripe">Stripe</option>
-              {/* Agrega más opciones si es necesario */}
             </select>
           </div>
           <button type="submit" className="btn-primary w-full">Comprar</button>
         </div>
       </form>
 
-      {/* Historial de transacciones */}
-       <h2 className="text-xl font-semibold mb-4 text-[var(--primary)]">Historial de Transacciones</h2>
+      <h2 className="text-xl font-semibold mb-4 text-[var(--primary)]">Historial de Transacciones</h2>
       <div className="grid grid-cols-1 gap-6">
         {transactions.length === 0 ? (
           <p className="text-center text-gray-600">No hay transacciones registradas.</p>
         ) : (
           transactions.map((transaction, index) => (
             <motion.div
-              key={transaction.id ?? `transaction-${index}`} // 👈 Fallback si el ID es nulo o indefinido
+              key={transaction.id ?? `transaction-${index}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}

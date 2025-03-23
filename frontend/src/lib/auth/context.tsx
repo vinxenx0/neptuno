@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 
 interface AuthContextType {
   user: User | null;
+  credits: number;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
@@ -23,37 +24,38 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [credits, setCredits] = useState<number>(100); // Valor por defecto para anónimos
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Montando AuthProvider");
     const checkAuth = async () => {
       try {
-        console.log("Iniciando checkAuth...");
         const token = localStorage.getItem("accessToken");
-        if (!token) {
-          console.log("No hay token, saltando checkAuth");
-          return;
-        }
-        console.log("Token encontrado, llamando a /v1/auth/me");
-        const { data, error } = await fetchAPI<User>("/v1/auth/me");
-        console.log("Respuesta de /v1/auth/me:", { data, error });
-        if (data) {
-          setUser(data);
+        if (token) {
+          const { data } = await fetchAPI<User>("/v1/auth/me");
+          if (data) {
+            setUser(data);
+            setCredits(data.credits);
+          } else {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            setUser(null);
+            // Cargar créditos de anónimos desde localStorage
+            const anonCredits = localStorage.getItem("anonCredits");
+            setCredits(anonCredits ? parseInt(anonCredits) : 100);
+          }
         } else {
-          console.log("No se obtuvo usuario, limpiando tokens");
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          setUser(null);
+          // Sin token, usuario anónimo
+          const anonCredits = localStorage.getItem("anonCredits");
+          setCredits(anonCredits ? parseInt(anonCredits) : 100);
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
         setUser(null);
+        const anonCredits = localStorage.getItem("anonCredits");
+        setCredits(anonCredits ? parseInt(anonCredits) : 100);
       } finally {
-        console.log("checkAuth completado");
         setLoading(false);
       }
     };
@@ -75,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const userResponse = await fetchAPI<User>("/v1/auth/me");
     if (userResponse.data) {
       setUser(userResponse.data);
+      setCredits(userResponse.data.credits);
       router.push("/profile");
     }
   };
@@ -88,6 +91,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setUser(null);
+    const anonCredits = localStorage.getItem("anonCredits");
+    setCredits(anonCredits ? parseInt(anonCredits) : 100);
     router.push("/login");
   };
 
@@ -107,19 +112,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshToken = async () => {
     const refresh = localStorage.getItem("refreshToken");
     if (!refresh) return null;
+
     const { data, error } = await fetchAPI<TokenResponse>(
       "/v1/auth/refresh",
       {
         method: "POST",
         data: { refresh_token: refresh },
       },
-      "application/x-www-form-urlencoded"
+      "application/json"
     );
+
     if (error || !data) {
       logout();
       return null;
     }
+
     localStorage.setItem("accessToken", data.access_token);
+    localStorage.setItem("refreshToken", data.refresh_token || refresh);
     return data.access_token;
   };
 
@@ -131,7 +140,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       if (response.error) throw new Error(typeof response.error === "string" ? response.error : JSON.stringify(response.error));
       if (response.data) {
-        setUser(response.data); // Actualiza el estado con el usuario completo
+        setUser(response.data);
+        setCredits(response.data.credits);
       } else {
         throw new Error("No se recibió la información del usuario actualizado");
       }
@@ -140,8 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       throw err;
     }
   };
-  
-  
+
   const deleteProfile = async () => {
     const { error } = await fetchAPI("/v1/auth/me", { method: "DELETE" });
     if (error) throw new Error(typeof error === "string" ? error : "Error al eliminar perfil");
@@ -172,7 +181,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

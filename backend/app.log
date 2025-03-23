@@ -2,3 +2,477 @@
 2025-03-22 22:17:05,138 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
 2025-03-22 22:17:05,200 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
 2025-03-22 22:17:05,210 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:47:17,400 - NeptunO - ERROR - HTTP Error 401 en POST http://localhost:8000/v1/auth/logout: Token inválido
+2025-03-22 22:47:30,221 - NeptunO - WARNING - Intento de registro con email duplicado: admin@example.com
+2025-03-22 22:47:30,222 - NeptunO - ERROR - HTTP Error 400 en POST http://localhost:8000/v1/auth/register: El email ya está registrado
+2025-03-22 22:48:53,732 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 22:48:53,775 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:48:59,332 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:49:46,929 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:49:55,849 - NeptunO - ERROR - Intento de login fallido para email admin@example.com desde IP 127.0.0.1
+2025-03-22 22:49:55,851 - NeptunO - ERROR - HTTP Error 401 en POST http://localhost:8000/v1/auth/token: Credenciales inválidas
+2025-03-22 22:50:00,042 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 22:50:00,085 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:50:09,930 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:50:21,668 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 22:50:21,720 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:50:32,047 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:51:35,934 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:51:35,952 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:51:36,007 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:51:36,024 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:53:37,980 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:53:37,993 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:53:41,875 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:53:59,653 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:03,765 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:06,821 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:06,837 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:23,846 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:23,853 - NeptunO - INFO - Compra de 879 créditos completada para usuario 4
+2025-03-22 22:54:28,517 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:28,525 - NeptunO - INFO - Compra de 879 créditos completada para usuario 4
+2025-03-22 22:54:38,559 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:38,615 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:54:38,631 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:55:26,129 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:55:26,136 - NeptunO - INFO - Compra de 1223 créditos completada para usuario 4
+2025-03-22 22:56:09,980 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:56:27,104 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:56:27,104 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-22 22:56:27,105 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-22 22:56:27,106 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-22 22:56:35,560 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 22:56:35,602 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:59:00,123 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 22:59:00,161 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 22:59:48,544 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:02:02,671 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:02:02,689 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:02:02,735 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:02:02,742 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:24:33,654 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:24:33,655 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:24:55,759 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:24:55,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:25:06,421 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:25:06,421 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:25:22,081 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:25:22,082 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:28:45,872 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:28:45,873 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:29:16,992 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:29:16,993 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:29:42,042 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:29:42,043 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:29:55,430 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:29:55,431 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:33:24,729 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:33:24,730 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:33:29,432 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:33:29,433 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:34:13,099 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:34:13,100 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:34:17,778 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:34:17,778 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:34:23,695 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:34:23,696 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:35:24,676 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:35:24,677 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:35:41,530 - NeptunO - INFO - Nueva sesión anónima creada ID 35845457-63cb-44b8-af35-01588673f26e desde IP 127.0.0.1
+2025-03-22 23:35:41,532 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/errors/v1/errors/: Solo los administradores pueden acceder a este recurso
+2025-03-22 23:36:01,027 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 23:36:06,870 - NeptunO - INFO - Nueva sesión anónima creada ID bf79a76b-d195-402d-93bc-85f82b331ebd desde IP 127.0.0.1
+2025-03-22 23:36:06,871 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/errors/v1/errors/: Solo los administradores pueden acceder a este recurso
+2025-03-22 23:36:10,789 - NeptunO - INFO - Nueva sesión anónima creada ID 6ac5e803-f7c1-4fdc-9ad2-ad6fd4313c06 desde IP 127.0.0.1
+2025-03-22 23:36:10,790 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/errors/v1/errors/: Solo los administradores pueden acceder a este recurso
+2025-03-22 23:38:07,873 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-22 23:38:07,875 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/auth/me: Token inválido o no es de acceso
+2025-03-22 23:39:05,473 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 23:39:05,494 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:39:09,225 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:39:51,591 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:41:40,922 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:41:40,922 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:42:06,052 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:42:06,054 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:42:12,026 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:42:12,151 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:42:12,181 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:45:00,161 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:45:00,161 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:45:21,739 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:45:51,170 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:45:51,170 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:45:52,807 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:46:10,180 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:46:10,180 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:46:10,555 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:46:57,603 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-22 23:46:57,605 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/auth/me: Token inválido o no es de acceso
+2025-03-22 23:47:04,418 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 23:47:04,459 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:07,576 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:07,589 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:11,665 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:11,734 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:11,760 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:19,224 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:19,251 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:20,691 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:20,707 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:26,177 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:37,875 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:47,110 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:47:53,763 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:48:10,360 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:48:21,820 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:48:21,821 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:48:28,232 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:48:28,246 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:49:04,109 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:49:26,660 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:49:48,051 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:49:50,431 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:49:53,797 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:50:04,005 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:50:09,589 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:50:09,881 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:50:09,898 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:50:56,216 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 23:50:56,232 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:51:02,311 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:51:02,336 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:51:04,772 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:51:04,795 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:51:11,323 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-22 23:51:11,370 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:18,518 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:53:18,518 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:53:27,047 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:27,148 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:27,171 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:42,000 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:42,030 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:47,190 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:49,344 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:49,365 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:50,933 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:53:50,953 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:09,390 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-22 23:55:09,390 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-22 23:55:09,433 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:09,443 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:09,468 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:09,477 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:22,604 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:22,617 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:24,158 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:24,173 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:25,689 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:27,658 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:27,674 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:35,909 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:36,043 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:36,052 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:41,356 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:41,469 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:41,491 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:42,980 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:43,085 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:43,099 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:46,339 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:46,457 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:55:46,480 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-22 23:59:58,853 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-22 23:59:58,854 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/sessions/: Token inválido o no es de acceso
+2025-03-22 23:59:58,884 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-22 23:59:58,887 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/sessions/: Token inválido o no es de acceso
+2025-03-23 00:00:08,109 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-23 00:00:08,110 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/auth/me: Token inválido o no es de acceso
+2025-03-23 00:06:30,394 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 00:06:30,429 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:06:39,353 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:06:39,465 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:06:39,493 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:06:39,578 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:06:39,600 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:12:04,943 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:12:04,970 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:37:44,534 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 00:37:44,534 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 00:41:06,154 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-23 00:41:06,155 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/auth/me: Token inválido o no es de acceso
+2025-03-23 00:41:34,636 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 00:41:34,680 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:57:55,179 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 00:57:55,179 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 00:58:13,594 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 00:58:13,595 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 00:58:16,470 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 00:58:16,496 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:25,190 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:25,230 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:25,307 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:25,365 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:32,829 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 00:58:32,872 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:02:14,324 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 01:02:14,325 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 01:03:02,531 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 01:03:02,532 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 01:03:50,728 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:03:50,777 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:03:58,360 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:03:58,364 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:03:58,385 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:03:58,387 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:04:01,735 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:01,796 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:09,743 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:09,758 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:42,929 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:04:42,943 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:46,255 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:46,275 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:47,790 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:47,808 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:47,841 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:04:47,864 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:06:43,219 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:06:43,236 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:06:54,671 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:07:14,824 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:07:14,831 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:20:19,638 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 01:20:19,638 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 01:21:22,540 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:21:22,591 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:29,818 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:29,822 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:21:29,841 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:29,845 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:21:34,083 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:34,085 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:21:34,103 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:34,105 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:21:37,305 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:37,327 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:41,071 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:41,079 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:45,409 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:45,423 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:50,945 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:50,966 - NeptunO - INFO - Compra de 1212 créditos completada para usuario 4
+2025-03-23 01:21:53,650 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:53,660 - NeptunO - INFO - Compra de 1212 créditos completada para usuario 4
+2025-03-23 01:21:56,612 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:56,684 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:21:56,707 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:22:32,476 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:22:32,478 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:22:32,494 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:22:32,497 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:23:06,055 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:06,060 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:35,813 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:35,824 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:35,863 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:35,869 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:51,625 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:51,631 - NeptunO - INFO - Configuración 'allowed_origins' actualizada por admin 4: ['http://localhost:3000', 'asdfgasdf']
+2025-03-23 01:23:55,550 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:23:55,558 - NeptunO - INFO - Integración asdf añadida para usuario ID 4
+2025-03-23 01:24:35,348 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 01:24:35,348 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 01:25:03,765 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-23 01:25:03,766 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-23 01:26:12,971 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:13,038 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:13,080 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:13,124 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:13,151 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:33,446 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:33,453 - NeptunO - INFO - Configuración 'token_expiration' actualizada por admin 4: 36000
+2025-03-23 01:26:35,363 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:35,367 - NeptunO - INFO - Configuración 'refresh_token_expiration' actualizada por admin 4: 6048000
+2025-03-23 01:26:40,152 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:40,157 - NeptunO - INFO - Configuración 'allowed_origins' actualizada por admin 4: ['http://localhost:3000', 'asdfgasdf', 'dfsagsdfg']
+2025-03-23 01:26:46,289 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:46,294 - NeptunO - INFO - Integración sdfgsd añadida para usuario ID 4
+2025-03-23 01:26:55,078 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:55,081 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:26:55,097 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:26:55,099 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:27:00,698 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:27:00,700 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:27:00,720 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:27:00,722 - NeptunO - INFO - Logs encontrados: 0 para page=1, limit=10
+2025-03-23 01:27:04,194 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:27:04,221 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:28,543 - NeptunO - INFO - Nueva sesión anónima creada ID 00b48057-2468-419a-ac6c-873d1ed1d7df desde IP 127.0.0.1
+2025-03-23 01:30:28,545 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/sessions/: Solo los administradores pueden acceder a este recurso
+2025-03-23 01:30:39,182 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:30:39,223 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:50,211 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:52,130 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:52,140 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:52,179 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:30:52,192 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:07,846 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:07,859 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:10,805 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:10,820 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:10,857 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:10,873 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:39,034 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:39,034 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:33:39,035 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:33:39,036 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:33:42,109 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:42,111 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:33:42,127 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:42,129 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:33:50,998 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:51,000 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:33:51,013 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:33:51,014 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:36:33,223 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:36:33,224 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:36:33,242 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:36:33,244 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:37:23,609 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:37:26,131 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:37:26,133 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:37:26,153 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:37:26,158 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:38:07,839 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:38:07,852 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:38:07,912 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:38:07,922 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:39:03,465 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:39:14,343 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:39:21,707 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:29,425 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:29,468 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:41,811 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:41,836 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:44,396 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:44,398 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:40:44,417 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:44,419 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:40:49,037 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:49,071 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:51,978 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:40:52,018 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:16,753 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:16,755 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:41:16,768 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:16,771 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:41:22,978 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:23,081 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:23,083 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:41:23,113 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:41:23,128 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:42:57,830 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:42:57,877 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:04,743 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:04,756 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:04,800 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:04,812 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:06,917 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:06,926 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:06,931 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:44:06,932 - NeptunO - INFO - Logs encontrados: 2 para page=1, limit=10
+2025-03-23 01:44:21,647 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:21,648 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:21,648 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:21,649 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:22,694 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:22,695 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:22,695 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:22,696 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:23,745 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:23,745 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:23,745 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:23,746 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:25,829 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:26,636 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:26,636 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:26,636 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:26,637 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:28,453 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:29,217 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:29,218 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:29,218 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:29,219 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:31,155 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:31,916 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:31,917 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:31,917 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:31,918 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:33,882 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:34,628 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:34,629 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:34,629 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:34,630 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:36,577 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:37,387 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:37,388 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:37,388 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:37,420 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:39,173 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:39,882 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:39,883 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:39,883 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:39,884 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:41,693 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:42,578 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:42,579 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:42,579 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:42,581 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:44,509 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:45,034 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:45,035 - NeptunO - INFO - Usuario registered ID 4 con subscription premium realiza consulta
+2025-03-23 01:44:45,035 - NeptunO - ERROR - Error inesperado en middleware de créditos para registered ID 4: consultar() got an unexpected keyword argument 'db'
+2025-03-23 01:44:45,036 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/consultar: Error al procesar los créditos
+2025-03-23 01:44:47,120 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:47,135 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:47,183 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:47,196 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:49,448 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:49,450 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:44:49,469 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:49,472 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:44:56,486 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:56,488 - NeptunO - INFO - Logs encontrados: 3 para page=2, limit=10
+2025-03-23 01:44:58,860 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:44:58,861 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:45:00,628 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:45:00,630 - NeptunO - INFO - Logs encontrados: 3 para page=2, limit=10
+2025-03-23 01:46:25,825 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:25,873 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:30,448 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:30,457 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:30,505 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:30,516 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:35,148 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:35,152 - NeptunO - INFO - Integración asdfasd añadida para usuario ID 4
+2025-03-23 01:46:37,811 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:37,816 - NeptunO - INFO - Integración asdfasdf añadida para usuario ID 4
+2025-03-23 01:46:41,033 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:41,037 - NeptunO - INFO - Integración 123123 añadida para usuario ID 4
+2025-03-23 01:46:43,903 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:43,905 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:46:43,926 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:43,928 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:46:45,053 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:45,061 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:45,111 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:45,128 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:50,197 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:50,199 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:46:50,220 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-23 01:46:50,226 - NeptunO - INFO - Logs encontrados: 10 para page=1, limit=10
+2025-03-23 01:49:43,515 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-23 01:49:43,539 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1

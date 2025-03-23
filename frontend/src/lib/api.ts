@@ -1,5 +1,5 @@
 // src/lib/api.ts
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { HTTPValidationError, ValidationError } from "./types";
 
 interface FetchResponse<T> {
@@ -10,7 +10,6 @@ interface FetchResponse<T> {
 const logRequest = (method: string, url: string, status: number, data?: unknown) => {
   console.log(`[${method}] ${url} - Status: ${status}`, data ?? "");
 };
-
 
 const fetchAPI = async <T>(
   endpoint: string,
@@ -43,31 +42,43 @@ const fetchAPI = async <T>(
 
   const normalizeResponse = (
     response: AxiosResponse<T> | undefined,
-    error: any
+    error: unknown
   ): FetchResponse<T> => {
     if (response && response.status >= 200 && response.status < 300) {
       return { data: response.data, error: null };
     }
-    const errorData = error?.response?.data;
-    if (errorData && errorData.detail) {
-      if (typeof errorData.detail === "string") {
-        return { data: null, error: errorData.detail };
-      } else if (Array.isArray(errorData.detail)) {
-        const messages = errorData.detail.map((err: ValidationError) => err.msg).join(", ");
-        return { data: null, error: messages };
+
+    if (axios.isAxiosError(error)) {
+      const errorData = error.response?.data;
+      if (errorData && errorData.detail) {
+        if (typeof errorData.detail === "string") {
+          return { data: null, error: errorData.detail };
+        } else if (Array.isArray(errorData.detail)) {
+          const messages = errorData.detail
+            .map((err: ValidationError) => err.msg)
+            .join(", ");
+          return { data: null, error: messages };
+        }
       }
     }
+
     return { data: null, error: "Error desconocido" };
   };
+
   try {
     const response: AxiosResponse<T> = await axios(config);
     logRequest(config.method || "GET", config.url!, response.status, response.data);
     return normalizeResponse(response, null);
-    
-  } catch (err: any) {
-    
-    logRequest(config.method || "GET", config.url!, err.response?.status || 500, err.response?.data);
-    if (err.response?.status === 401) {
+  } catch (err: unknown) {
+    const axiosError = err as AxiosError;
+    logRequest(
+      config.method || "GET",
+      config.url!,
+      axiosError.response?.status || 500,
+      axiosError.response?.data
+    );
+
+    if (axiosError.response?.status === 401) {
       const refresh = localStorage.getItem("refreshToken");
       if (refresh) {
         try {
@@ -83,12 +94,13 @@ const fetchAPI = async <T>(
           const retryResponse: AxiosResponse<T> = await axios(config);
           logRequest(config.method || "GET", config.url!, retryResponse.status, retryResponse.data);
           return normalizeResponse(retryResponse, null);
-        } catch (refreshErr) {
+        } catch (refreshErr: unknown) {
           console.error("Error al refrescar token:", refreshErr);
           return normalizeResponse(undefined, { message: "Sesión expirada, por favor inicia sesión nuevamente" });
         }
       }
     }
+
     return normalizeResponse(undefined, err);
   }
 };

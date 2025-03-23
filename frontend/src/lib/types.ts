@@ -88,7 +88,11 @@ export interface Integration {
 }
 
 export interface SiteSetting {
-  key: string;
-  value: string | number | object | boolean | string[];
-  description?: string;
+    id: number;
+    key: string;
+    value: string;
+    description?: string;
+    tag?: string;
+    updated_by?: number;
+    updated_at: string; // ISO string
 }

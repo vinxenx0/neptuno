@@ -6,15 +6,13 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { motion } from "framer-motion";
-import { Integration, SiteSetting } from "@/lib/types";
-
-
+import { SiteSetting, Integration } from "@/lib/types";
 
 export default function ConfigurePage() {
   const { user } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"settings" | "origins" | "integrations">("settings");
-  const [settings, setSettings] = useState<SiteSetting[]>([]);
+  const [settingsByTag, setSettingsByTag] = useState<Record<string, SiteSetting[]>>({});
   const [origins, setOrigins] = useState<string[]>([]);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [newOrigin, setNewOrigin] = useState("");
@@ -32,30 +30,16 @@ export default function ConfigurePage() {
     const fetchData = async () => {
       try {
         // Fetch SiteSettings
-        const settingsRes = await fetchAPI<Record<string, unknown>>("/v1/settings/admin/config");
+        const settingsRes = await fetchAPI<SiteSetting[]>("/v1/settings/admin/config");
         if (settingsRes.error) throw new Error(settingsRes.error as string);
-        const settingsArray = Object.entries(settingsRes.data || {}).map(([key, value]) => {
-          let formattedValue: string | number | boolean | object | string[];
-        
-          if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-            formattedValue = value;
-          } else if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
-            formattedValue = value as string[];
-          } else if (typeof value === "object" && value !== null) {
-            formattedValue = value;
-          } else {
-            formattedValue = String(value); // Fallback to string representation
-          }
-        
-          return {
-            key,
-            value: formattedValue,
-            description: "", // Ajustar si el backend devuelve description
-          };
-        });
-        
-        setSettings(settingsArray);
-        
+        const settings = settingsRes.data || [];
+        const grouped = settings.reduce((acc, setting) => {
+          const tag = setting.tag || "General";
+          if (!acc[tag]) acc[tag] = [];
+          acc[tag].push(setting);
+          return acc;
+        }, {} as Record<string, SiteSetting[]>);
+        setSettingsByTag(grouped);
 
         // Fetch Allowed Origins
         const originsRes = await fetchAPI<string[]>("/v1/settings/allowed_origins");
@@ -72,7 +56,6 @@ export default function ConfigurePage() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [user, router]);
 
@@ -80,12 +63,18 @@ export default function ConfigurePage() {
     try {
       const { error } = await fetchAPI("/v1/settings/admin/config", {
         method: "POST",
-        data: { key, value: newValue, description: "" },
+        data: { key, value: newValue },
       });
       if (error) throw new Error(error as string);
-      setSettings((prev) =>
-        prev.map((s) => (s.key === key ? { ...s, value: newValue } : s))
-      );
+      setSettingsByTag((prev) => {
+        const updated = { ...prev };
+        for (const tag in updated) {
+          updated[tag] = updated[tag].map((s) =>
+            s.key === key ? { ...s, value: newValue } : s
+          );
+        }
+        return updated;
+      });
       setSuccess("Configuración actualizada");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
@@ -122,11 +111,7 @@ export default function ConfigurePage() {
         },
       });
       if (error) throw new Error(error as string);
-      setIntegrations((prev) => {
-        const updatedIntegrations = [...prev, data!];
-        console.log("Integraciones actualizadas:", updatedIntegrations); // Depuración
-        return updatedIntegrations;
-      });
+      setIntegrations([...integrations, data!]);
       setNewIntegration({ name: "", webhook_url: "", event_type: "" });
       setSuccess("Integración creada con éxito");
       setTimeout(() => setSuccess(null), 3000);
@@ -135,138 +120,190 @@ export default function ConfigurePage() {
     }
   };
 
-  if (loading) return <div className="text-center p-4">Cargando datos de administración...</div>;
+  if (loading) return <div className="text-center p-4 text-xl">Cargando Dashboard...</div>;
 
   return (
-    <div className="container p-6 fade-in">
-      <h1 className="mb-6 text-center">Dashboard de Administración</h1>
+    <div className="container mx-auto p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-4xl font-bold text-center text-[var(--primary)] mb-8">
+        Dashboard de Administración
+      </h1>
       {error && (
-        <motion.div className="mb-4 p-4 bg-red-500 text-white rounded-lg" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          className="mb-6 p-4 bg-red-500 text-white rounded-lg shadow-md"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           {error}
         </motion.div>
       )}
       {success && (
-        <motion.div className="mb-4 p-4 bg-green-500 text-white rounded-lg" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          className="mb-6 p-4 bg-green-500 text-white rounded-lg shadow-md"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           {success}
         </motion.div>
       )}
 
       {/* Pestañas */}
-      <div className="flex space-x-4 mb-6">
+      <div className="flex justify-center space-x-4 mb-8">
         <button
           onClick={() => setActiveTab("settings")}
-          className={`nav-link ${activeTab === "settings" ? "bg-[var(--accent)]" : "bg-gray-200 text-gray-700"}`}
+          className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+            activeTab === "settings"
+              ? "bg-[var(--primary)] text-white"
+              : "bg-white text-gray-700 hover:bg-gray-200"
+          }`}
         >
           Configuraciones
         </button>
         <button
           onClick={() => setActiveTab("origins")}
-          className={`nav-link ${activeTab === "origins" ? "bg-[var(--accent)]" : "bg-gray-200 text-gray-700"}`}
+          className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+            activeTab === "origins"
+              ? "bg-[var(--primary)] text-white"
+              : "bg-white text-gray-700 hover:bg-gray-200"
+          }`}
         >
           Orígenes Permitidos
         </button>
         <button
           onClick={() => setActiveTab("integrations")}
-          className={`nav-link ${activeTab === "integrations" ? "bg-[var(--accent)]" : "bg-gray-200 text-gray-700"}`}
+          className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+            activeTab === "integrations"
+              ? "bg-[var(--primary)] text-white"
+              : "bg-white text-gray-700 hover:bg-gray-200"
+          }`}
         >
           Integraciones
         </button>
       </div>
 
       {/* Contenido */}
-      <motion.div key={activeTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="grid grid-cols-1 gap-6">
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {activeTab === "settings" && (
-          settings.length === 0 ? (
-            <p className="text-center text-gray-600">No hay configuraciones disponibles.</p>
-          ) : (
-            settings.map((setting) => (
-              <div key={setting.key} className="bg-white p-4 rounded-lg shadow-lg">
-                <h2 className="text-xl font-semibold text-[var(--primary)]">{setting.key}</h2>
-                <p className="text-gray-600">{setting.description || "Sin descripción"}</p>
-                <input
-                  type="text"
-                  value={typeof setting.value === "string" ? setting.value : JSON.stringify(setting.value)}
-                  onChange={(e) => handleSaveSetting(setting.key, e.target.value)}
-                  className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-                />
+          <div className="space-y-8">
+            {Object.entries(settingsByTag).map(([tag, settings]) => (
+              <div key={tag} className="bg-white p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl font-semibold text-[var(--accent)] mb-4 capitalize">
+                  {tag}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {settings.map((setting) => (
+                    <div key={setting.key} className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        {setting.key}
+                      </label>
+                      <p className="text-gray-500 text-sm">{setting.description}</p>
+                      <input
+                        type="text"
+                        defaultValue={setting.value}
+                        onBlur={(e) => handleSaveSetting(setting.key, e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))
-          )
+            ))}
+          </div>
         )}
 
         {activeTab === "origins" && (
-          <>
-            <form onSubmit={handleAddOrigin} className="mb-6 bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold text-[var(--primary)] mb-4">Añadir Origen</h2>
-              <input
-                type="text"
-                value={newOrigin}
-                onChange={(e) => setNewOrigin(e.target.value)}
-                placeholder="https://example.com"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-                required
-              />
-              <button type="submit" className="btn-primary mt-4 w-full">Añadir</button>
+          <div className="space-y-6">
+            <form onSubmit={handleAddOrigin} className="bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold text-[var(--primary)] mb-4">
+                Añadir Origen
+              </h2>
+              <div className="flex space-x-4">
+                <input
+                  type="text"
+                  value={newOrigin}
+                  onChange={(e) => setNewOrigin(e.target.value)}
+                  placeholder="https://example.com"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  required
+                />
+                <button type="submit" className="btn-primary px-6 py-2">
+                  Añadir
+                </button>
+              </div>
             </form>
-            {origins.length === 0 ? (
-              <p className="text-center text-gray-600">No hay orígenes permitidos.</p>
-            ) : (
-              origins.map((origin, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow-lg hover-grow">
-                  <p className="text-gray-600">{origin}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {origins.map((origin, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  {origin}
                 </div>
-              ))
-            )}
-          </>
+              ))}
+            </div>
+          </div>
         )}
 
         {activeTab === "integrations" && (
-          <>
-            <form onSubmit={handleAddIntegration} className="mb-6 bg-white p-4 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold text-[var(--primary)] mb-4">Crear Integración</h2>
-              <div className="space-y-4">
+          <div className="space-y-6">
+            <form onSubmit={handleAddIntegration} className="bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold text-[var(--primary)] mb-4">
+                Nueva Integración
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input
                   type="text"
                   value={newIntegration.name}
-                  onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewIntegration({ ...newIntegration, name: e.target.value })
+                  }
                   placeholder="Nombre"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                   required
                 />
                 <input
                   type="text"
                   value={newIntegration.webhook_url}
-                  onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
+                  onChange={(e) =>
+                    setNewIntegration({ ...newIntegration, webhook_url: e.target.value })
+                  }
                   placeholder="Webhook URL"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                   required
                 />
                 <input
                   type="text"
                   value={newIntegration.event_type}
-                  onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
+                  onChange={(e) =>
+                    setNewIntegration({ ...newIntegration, event_type: e.target.value })
+                  }
                   placeholder="Tipo de Evento"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                   required
                 />
-                <button type="submit" className="btn-primary w-full">Crear</button>
               </div>
+              <button type="submit" className="btn-primary mt-4 w-full">
+                Crear
+              </button>
             </form>
-            {integrations.length === 0 ? (
-              <p className="text-center text-gray-600">No hay integraciones.</p>
-            ) : (
-              integrations.map((integration) => (
-                <div key={integration.id} className="bg-white p-4 rounded-lg shadow-lg hover-grow">
-                  <p className="font-semibold text-[var(--primary)]">{integration.name}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {integrations.map((integration) => (
+                <div
+                  key={integration.id}
+                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <h3 className="font-semibold text-[var(--primary)]">{integration.name}</h3>
                   <p className="text-gray-600">Webhook: {integration.webhook_url}</p>
                   <p className="text-gray-600">Evento: {integration.event_type}</p>
                   <p className="text-gray-600">Activo: {integration.active ? "Sí" : "No"}</p>
-                  <p className="text-gray-600">Creado: {new Date(integration.created_at).toLocaleString()}</p>
-                  <p className="text-gray-600">Último disparo: {integration.last_triggered ? new Date(integration.last_triggered).toLocaleString() : "Nunca"}</p>
                 </div>
-              ))
-            )}
-          </>
+              ))}
+            </div>
+          </div>
         )}
       </motion.div>
     </div>

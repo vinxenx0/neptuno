@@ -1,6 +1,8 @@
 # backend/api/v1/site_settings.py
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from schemas.site_settings import SiteSettingResponse
 from services.origin_service import add_allowed_origin
 from models.user import User
 from dependencies.auth import UserContext, get_user_context
@@ -29,11 +31,10 @@ async def add_origin(
     allowed_origins.append(origin)
     return set_setting(db, "allowed_origins", allowed_origins, user.user_id, "Orígenes permitidos para CORS")
 
-@router.get("/admin/config", response_model=dict)
-async def get_config(
-    user: UserContext = Depends(get_user_context),
-    db: Session = Depends(get_db)
-):
+@router.get("/admin/config", response_model=List[SiteSettingResponse])
+def get_admin_config(user=Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo administradores")
     return get_all_settings(db, user.user_id)
 
 

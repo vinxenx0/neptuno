@@ -4,17 +4,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Variables de color */
+/* Tema claro (valores por defecto) */
 :root {
-  --background: #ffffff; /* Fondo blanco */
-  --foreground: #1a1a1a; /* Texto gris oscuro */
-  --primary: #2563eb; /* Azul vibrante */
-  --primary-hover: #1d4ed8; /* Azul más oscuro */
-  --secondary: #4b5563; /* Gris azulado */
-  --secondary-hover: #374151; /* Gris más oscuro */
-  --accent: #10b981; /* Verde esmeralda */
-  --accent-hover: #059669; /* Verde más oscuro */
-  --border: #e5e7eb; /* Bordes gris claro */
+  --background: #f5f5f5; /* Fondo claro */
+  --foreground: #333333; /* Texto oscuro */
+  --primary: #ff007f; /* Rosa neón */
+  --primary-hover: #d6006b; /* Rosa intenso */
+  --secondary: #facc15; /* Amarillo brillante */
+  --secondary-hover: #eab308; /* Amarillo oscuro */
+  --accent: #00f7ff; /* Cian eléctrico */
+  --accent-hover: #00c4cc; /* Cian oscuro */
+  --border: #333333; /* Gris oscuro */
+  --danger: #ff4d4d; /* Rojo brillante */
+  --danger-hover: #e60000; /* Rojo intenso */
+  --success: #32cd32; /* Verde lima */
+  --success-hover: #28a428; /* Verde oscuro */
+}
+
+/* Tema oscuro */
+[data-theme="dark"] {
+  --background: #1a1a1a; /* Fondo oscuro */
+  --foreground: #f0f0f0; /* Texto claro */
+  --primary: #ff007f; /* Rosa neón (mantenido) */
+  --primary-hover: #ff3399; /* Rosa más claro */
+  --secondary: #facc15; /* Amarillo brillante (mantenido) */
+  --secondary-hover: #ffd700; /* Amarillo dorado */
+  --accent: #00f7ff; /* Cian eléctrico (mantenido) */
+  --accent-hover: #00e6e6; /* Cian más claro */
+  --border: #444444; /* Gris medio */
+  --danger: #ff6666; /* Rojo claro */
+  --danger-hover: #ff3333; /* Rojo más intenso */
+  --success: #66ff66; /* Verde claro */
+  --success-hover: #33cc33; /* Verde medio */
 }
 
 /* Estilos base */
@@ -25,6 +46,31 @@ body {
   margin: 0;
   padding: 0;
 }
+
+/* Navbar */
+.nav-bar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Enlaces del Navbar */
+.nav-bar a {
+  color: var(--foreground);
+}
+
+/* Submenús */
+.submenu {
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
 
 /* Form Controls */
 button,
@@ -84,6 +130,8 @@ textarea::placeholder {
   background-color: rgba(37, 99, 235, 0.1); /* Fondo azul con opacidad */
   transform: translateY(-2px);
 }
+
+
 
 /* Buttons */
 .btn-primary {
@@ -260,4 +308,15 @@ h2 {
 
 .hover-shadow-xl:hover {
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Para enlaces en el menú principal con fondo blanco */
+.nav-bar a {
+  color: var(--foreground); /* #1a1a1a, gris oscuro */
+}
+
+/* Si tienes un submenú con fondo oscuro, ajusta según la clase */
+a.block:nth-child(n) {
+  color: #ffffff; /* Blanco puro */
 }

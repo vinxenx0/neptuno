@@ -1,11 +1,3 @@
-- manejar cuando el usuario existe ya en la db y lo registras de nuevo
-
--  WARNING:  passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
-Traceback (most recent call last):
-  File "/home/vinxenxo/neptuno/.venv/lib/python3.10/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
-    version = _bcrypt.__about__.__version__
-AttributeError: module 'bcrypt' has no attribute '__about__'
-
 - # Añadir logging a otras funciones de auth_service.py 
 
 - # Añadir manejo de errores y excepciones a otras funciones de auth_service.py 
@@ -18,69 +10,49 @@ logger = configure_logging()
 
 - poner ya los endpoints para usuarios registrados (estan todos abiertos)
 
-- actualizar perfil / resatablecer contraseña / cambiar contraseña / mensajes mejor manejo e información
-
-- reset credits no me reconoce el tooken de admin
-
-- cuando hago logout
-
-Console Error
-
-Cannot update a component (`Router`) while rendering a different component (`ProfilePage`). To locate the bad setState() call inside `ProfilePage`, follow the stack trace as described in https://react.dev/link/setstate-in-render
-
-src/app/profile/page.tsx (13:12) @ ProfilePage
-
-  11 |
-  12 |   if (!user) {
-> 13 |     router.push("/login");
-     |            ^
-  14 |     return null;
-  15 |   }
-  16 |
-
-Call Stack 13
-Show 12 ignore-listed frame(s)
-ProfilePage
-src/app/profile/page.tsx (13:12)
-
+- hacer todo lo de profile en la misma pagina sin transiciones (ya casi lo hace)
 
 - en el backend no todos los modelos tienen endpoints
 
 - el lio de los loggers
 
-- cuando sumo una integracion
 
-Console Error
+-- error desconocido cuando el email es el mismo hay q revisarlo
 
-Each child in a list should have a unique "key" prop.
+-- cuando añado una transaccion me dice Datos de transacción incompletos pero funciona (aunque no recarga)
 
-Check the render method of `Fragment`. It was passed a child from ConfigurePage. See https://react.dev/link/warning-keys for more information.
-
-src/app/configure/page.tsx (259:17) @ ConfigurePage/<.children<.children<.children<
-
-  257 |             ) : (
-  258 |               integrations.map((integration) => (
-> 259 |                 <div key={integration.id} className="bg-white p-4 rounded-lg shadow-lg hover-grow">
-      |                 ^
-  260 |                   <p className="font-semibold text-[var(--primary)]">{integration.name}</p>
-  261 |                   <p className="text-gray-600">Webhook: {integration.webhook_url}</p>
-  262 |                   <p className="text-gray-600">Evento: {integration.event_type}</p>
-
-Call Stack 23
-Show 20 ignore-listed frame(s)
-div
-unknown (0:0)
-ConfigurePage/<.children<.children<.children<
-src/app/configure/page.tsx (259:17)
-ConfigurePage
-src/app/configure/page.tsx (258:28)
+--- reset credits enchufa 2000 creditos y reset credits no me reconoce el tooken de admin
 
 
+todo: mejorar la configuración (  archivos o db para los limites?, ) hacerla mas escalable y desactivar features
 
-- CUANDO se añaden creditos no se actualiza bien
+-- el token de refresco no tira:
 
-Historial de Transacciones
+2025-03-22 23:38:07,873 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-22 23:38:07,875 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/auth/me: Token inválido o no es de acceso
+INFO:     127.0.0.1:50852 - "GET /v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50852 - "POST /v1/auth/refresh HTTP/1.1" 422 Unprocessable Entity
 
-Reinicio de NaN créditos
+Iniciando checkAuth... context.tsx:33:16
+Token encontrado, llamando a /v1/auth/me context.tsx:39:16
+Iniciando fetchAPI para /v1/auth/me api.ts:20:10
+[GET] http://localhost:8000/v1/auth/me - Status: 401 
+Object { error: {…} }
+api.ts:11:10
+Intentando refrescar token api.ts:74:18
+Error al refrescar token: 
+Object { stack: "AxiosError@webpack-internal:///(app-pages-browser)/./node_modules/axios/lib/core/AxiosError.js:27:19\nsettle@webpack-internal:///(app-pages-browser)/./node_modules/axios/lib/core/settle.js:24:12\nonloadend@webpack-internal:///(app-pages-browser)/./node_modules/axios/lib/adapters/xhr.js:73:66\n", message: "Request failed with status code 422", name: "AxiosError", code: "ERR_BAD_REQUEST", config: {…}, request: XMLHttpRequest, response: {…}, status: 422, Symbol("next.console.error.digest"): "NEXT_UNHANDLED_ERROR", Symbol("next.console.error.type"): "error" }
+intercept-console-error.ts:41:25
+Respuesta de /v1/auth/me: 
+Object { data: null, error: "Error desconocido" }
+context.tsx:41:16
+No se obtuvo usuario, limpiando tokens context.tsx:45:18
+checkAuth completado
 
-Fecha: Invalid Date
+
+
+---- datos de transaccion incompletos pero no es asi si refrescas
+---- el de las integraciones  es por el invalid date?
+---- no guarda sesiones anonimas en db? hay q revisar flujo
+-- limpiar api que no vale
+-- el temoraly redirect de logs por el pageination

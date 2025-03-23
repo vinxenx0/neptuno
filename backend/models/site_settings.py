@@ -7,13 +7,14 @@ class SiteSettings(Base):
     __tablename__ = "site_settings"
     
     id = Column(Integer, primary_key=True, index=True)
-    key = Column(String(50), unique=True, nullable=False)  # Ejemplo: "max_credits_freemium", "site_maintenance"
-    value = Column(String(255), nullable=False)  # Valor como string (puede convertirse según contexto)
-    description = Column(String(255), nullable=True)  # Descripción del ajuste
-    updated_by = Column(Integer, nullable=True)  # ID del admin que lo modificó
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Última actualización
+    key = Column(String(50), unique=True, nullable=False)
+    value = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=True)
+    tag = Column(String(50), nullable=True) # Nuevo atributo
+    updated_by = Column(Integer, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-     # Claves esperadas (documentación):
+    # Claves esperadas (documentación):
     # - token_expiration: int (segundos)
     # - refresh_token_expiration: int (segundos)
     # - rate_limit_auth: {"times": int, "seconds": int}
