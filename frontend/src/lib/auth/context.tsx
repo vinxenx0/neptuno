@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 interface AuthContextType {
   user: User | null;
   credits: number;
+  setCredits: (credits: number) => void; // Añadido
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
@@ -41,12 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             setUser(null);
-            // Cargar créditos de anónimos desde localStorage
             const anonCredits = localStorage.getItem("anonCredits");
             setCredits(anonCredits ? parseInt(anonCredits) : 100);
           }
         } else {
-          // Sin token, usuario anónimo
           const anonCredits = localStorage.getItem("anonCredits");
           setCredits(anonCredits ? parseInt(anonCredits) : 100);
         }
@@ -181,7 +180,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

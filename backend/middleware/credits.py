@@ -17,19 +17,28 @@ def require_credits(func):
     @wraps(func)
     async def wrapper(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db), *args, **kwargs):
         try:
-            credit_limit = 100 if user.subscription in [None, subscriptionEnum.FREEMIUM.value] else 1000
-            if user.credits <= 0:
-                logger.warning(f"Usuario {user.user_type} ID {user.user_id} sin créditos suficientes (subscription: {user.subscription or 'anonymous'})")
-                raise HTTPException(status_code=403, detail="No te quedan créditos disponibles.")
-
-            logger.info(f"Usuario {user.user_type} ID {user.user_id} con subscription {user.subscription or 'anonymous'} realiza consulta")
-            response = await func(user=user, db=db, *args, **kwargs)
-           
-            # Decrementar créditos y registrar transacción
+            # Obtener créditos según el tipo de usuario
             if user.user_type == "registered":
                 user_db = db.query(User).filter(User.id == int(user.user_id)).first()
                 if not user_db:
                     raise HTTPException(status_code=404, detail="Usuario no encontrado")
+                credits = user_db.credits
+            else:  # anonymous
+                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
+                if not session_db:
+                    raise HTTPException(status_code=404, detail="Sesión no encontrada")
+                credits = session_db.credits
+
+            # Verificar si hay créditos suficientes
+            if credits <= 0:
+                logger.warning(f"Usuario {user.user_type} ID {user.user_id} sin créditos suficientes")
+                raise HTTPException(status_code=403, detail="No te quedan créditos disponibles.")
+
+            logger.info(f"Usuario {user.user_type} ID {user.user_id} realiza consulta")
+            response = await func(user=user, db=db, *args, **kwargs)
+
+            # Decrementar créditos y registrar transacción
+            if user.user_type == "registered":
                 user_db.credits -= 1
                 transaction = CreditTransaction(
                     user_id=user_db.id,
@@ -38,9 +47,6 @@ def require_credits(func):
                     description="Consulta realizada"
                 )
             else:
-                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
-                if not session_db:
-                    raise HTTPException(status_code=404, detail="Sesión no encontrada")
                 session_db.credits -= 1
                 transaction = CreditTransaction(
                     session_id=session_db.id,
@@ -51,14 +57,14 @@ def require_credits(func):
             db.add(transaction)
             db.commit()
 
+            # Disparar webhook para notificar el uso de créditos
             trigger_webhook(db, "credit_usage", {
                 "user_id": user.user_id,
                 "user_type": user.user_type,
-                "credits_remaining": user.credits - 1
+                "credits_remaining": credits - 1
             })
-            
-            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user.credits - 1}")
 
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits - 1}")
             return response
         except HTTPException as e:
             raise e

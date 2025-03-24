@@ -41,3 +41,9 @@ def reset_all_credits(user: UserContext = Depends(get_user_context), db: Session
 @router.get("/example", dependencies=[Depends(require_credits)])
 async def example_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     return {"message": "Ejemplo de endpoint protegido por créditos", "credits_remaining": user.credits}
+
+
+@router.get("/test-credit-consumption")
+@require_credits
+async def test_credit_consumption(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return {"message": "Crédito consumido exitosamente"}
