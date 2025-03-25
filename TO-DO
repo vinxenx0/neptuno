@@ -73,3 +73,12 @@ checkAuth completado
 -- redirect despues de login a dashboard no a profile
 -- arreglar los nuevos errores de builds
 -- avanzar en la configuracion modular del sitio para activar o desactivar features
+
+-- refresco de token sigue sin tirar
+-- avisar del registro de usuarios
+
+
+-- hasta que no hago creditos no me da un id de session eso es lo que pasa :
+Hay que implantar el nuevo id se session en todo el proceso de lo que hace
+bug de login / log out en la misma sesion ¿dejarlo? al menos que conserve el mismo id 
+q todo busque por id

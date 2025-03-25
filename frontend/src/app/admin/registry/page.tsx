@@ -1,10 +1,14 @@
+// src/app/admin/registry/page.tsx
+// src/app/admin/registry/page.tsx
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Box, Paper, Tabs, Tab, Skeleton, Pagination, Snackbar, Alert, Typography } from "@mui/material";
+import { DataGrid, GridColDef, GridValueGetter } from "@mui/x-data-grid";
 
 // Interfaces de datos
 interface ErrorLog {
@@ -51,7 +55,6 @@ interface CreditTransaction {
   timestamp: string;
 }
 
-// Componente de pestañas
 const TabContent = ({ tab }: { tab: string }) => {
   const { user } = useAuth();
   const router = useRouter();
@@ -59,35 +62,30 @@ const TabContent = ({ tab }: { tab: string }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const limit = 10;
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
-      router.push("/login");
+      router.push("/user/login");
       return;
     }
 
     const fetchData = async () => {
       try {
         setLoading(true);
-        let endpoint = "";
-        switch (tab) {
-          case "errors":
-            endpoint = `/v1/logs?page=${page}&limit=${limit}`;
-            break;
-          case "logs":
-            endpoint = "/v1/logs";
-            break;
-          case "sessions":
-            endpoint = "/v1/sessions";
-            break;
-          case "transactions":
-            endpoint = "/v1/transactions";
-            break;
-        }
-        const { data, error } = await fetchAPI<any[]>(endpoint);
-        if (error) throw new Error(error as string);
-        setData(data || []);
+        let endpoint = `/v1/${tab}?page=${page}&limit=${limit}`;
+        const response = await fetchAPI<{
+          data: any[];
+          total_items: number;
+          total_pages: number;
+          current_page: number;
+        }>(endpoint);
+
+        if (response.error) throw new Error(typeof response.error === 'string' ? response.error : 'Error desconocido');
+
+        setData(response.data?.data || []);
+        setTotalPages(response.data?.total_pages || 1);
       } catch (err) {
         setError(err instanceof Error ? err.message : `Error al cargar ${tab}`);
       } finally {
@@ -97,203 +95,240 @@ const TabContent = ({ tab }: { tab: string }) => {
 
     fetchData();
   }, [user, router, tab, page]);
+  // Función segura para valueGetter con tipado correcto
+  const safeValueGetter: GridColDef['valueGetter'] = (value: any) => {
+    return value ?? "N/A";
+  };
 
-  if (loading) return <div className="text-center p-4"><div className="loading-spinner mx-auto"></div></div>;
-  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
-
-  const renderTable = () => {
-    switch (tab) {
-      case "errors":
-        return (
-          <table className="min-w-full bg-[var(--background)] border border-[var(--border)] rounded-lg">
-            <thead>
-              <tr className="bg-[var(--primary)] text-white">
-                <th className="p-3">ID</th>
-                <th className="p-3">User ID</th>
-                <th className="p-3">Session ID</th>
-                <th className="p-3">Error Code</th>
-                <th className="p-3">Message</th>
-                <th className="p-3">URL</th>
-                <th className="p-3">Method</th>
-                <th className="p-3">IP Address</th>
-                <th className="p-3">Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(data as ErrorLog[]).map((log) => (
-                <tr key={log.id} className="hover:bg-[var(--accent-hover)] transition-colors">
-                  <td className="border p-2">{log.id}</td>
-                  <td className="border p-2">{log.user_id ?? "N/A"}</td>
-                  <td className="border p-2">{log.session_id ?? "N/A"}</td>
-                  <td className="border p-2">{log.error_code}</td>
-                  <td className="border p-2">{log.message}</td>
-                  <td className="border p-2">{log.url ?? "N/A"}</td>
-                  <td className="border p-2">{log.method ?? "N/A"}</td>
-                  <td className="border p-2">{log.ip_address ?? "N/A"}</td>
-                  <td className="border p-2">{new Date(log.created_at).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        );
-      case "logs":
-        return (
-          <table className="min-w-full bg-[var(--background)] border border-[var(--border)] rounded-lg">
-            <thead>
-              <tr className="bg-[var(--primary)] text-white">
-                <th className="p-3">ID</th>
-                <th className="p-3">User ID</th>
-                <th className="p-3">Endpoint</th>
-                <th className="p-3">Method</th>
-                <th className="p-3">Status Code</th>
-                <th className="p-3">Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(data as APILog[]).map((log) => (
-                <tr key={log.id} className="hover:bg-[var(--accent-hover)] transition-colors">
-                  <td className="border p-2">{log.id}</td>
-                  <td className="border p-2">{log.user_id ?? "N/A"}</td>
-                  <td className="border p-2">{log.endpoint}</td>
-                  <td className="border p-2">{log.method}</td>
-                  <td className="border p-2">{log.status_code}</td>
-                  <td className="border p-2">{new Date(log.timestamp).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        );
-      case "sessions":
-        return (
-          <table className="min-w-full bg-[var(--background)] border border-[var(--border)] rounded-lg">
-            <thead>
-              <tr className="bg-[var(--primary)] text-white">
-                <th className="p-3">ID</th>
-                <th className="p-3">Créditos</th>
-                <th className="p-3">Creado</th>
-                <th className="p-3">Última Actividad</th>
-                <th className="p-3">Última IP</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(data as AnonymousSession[]).map((session) => (
-                <tr key={session.id} className="hover:bg-[var(--accent-hover)] transition-colors">
-                  <td className="border p-2">{session.id}</td>
-                  <td className="border p-2">{session.credits}</td>
-                  <td className="border p-2">{new Date(session.create_at).toLocaleString()}</td>
-                  <td className="border p-2">
-                    {session.ultima_actividad ? new Date(session.ultima_actividad).toLocaleString() : "N/A"}
-                  </td>
-                  <td className="border p-2">{session.last_ip ?? "N/A"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        );
-      case "transactions":
-        return (
-          <table className="min-w-full bg-[var(--background)] border border-[var(--border)] rounded-lg">
-            <thead>
-              <tr className="bg-[var(--primary)] text-white">
-                <th className="p-3">ID</th>
-                <th className="p-3">User ID</th>
-                <th className="p-3">Session ID</th>
-                <th className="p-3">Cantidad</th>
-                <th className="p-3">Tipo</th>
-                <th className="p-3">Monto Pago</th>
-                <th className="p-3">Método Pago</th>
-                <th className="p-3">Estado</th>
-                <th className="p-3">Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(data as CreditTransaction[]).map((transaction) => (
-                <tr key={transaction.id} className="hover:bg-[var(--accent-hover)] transition-colors">
-                  <td className="border p-2">{transaction.id}</td>
-                  <td className="border p-2">{transaction.user_id ?? "N/A"}</td>
-                  <td className="border p-2">{transaction.session_id ?? "N/A"}</td>
-                  <td className="border p-2">{transaction.amount}</td>
-                  <td className="border p-2">{transaction.transaction_type}</td>
-                  <td className="border p-2">{transaction.payment_amount?.toFixed(2) ?? "N/A"}</td>
-                  <td className="border p-2">{transaction.payment_method ?? "N/A"}</td>
-                  <td className="border p-2">{transaction.payment_status}</td>
-                  <td className="border p-2">{new Date(transaction.timestamp).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        );
-      default:
-        return null;
+  // Función segura para formatear fechas con tipado correcto
+  const safeDateFormatter: GridColDef['valueGetter'] = (value: any) => {
+    try {
+      return value ? new Date(value as string).toLocaleString() : "N/A";
+    } catch {
+      return "N/A";
     }
   };
 
+  const getColumns = (): GridColDef[] => {
+    switch (tab) {
+      case "errors":
+        return [
+          { field: "id", headerName: "ID", width: 90 },
+          {
+            field: "user_id",
+            headerName: "User ID",
+            width: 120,
+            valueGetter: safeValueGetter
+          },
+          {
+            field: "session_id",
+            headerName: "Session ID",
+            width: 150,
+            valueGetter: safeValueGetter
+          },
+          { field: "error_code", headerName: "Error Code", width: 120 },
+          { field: "message", headerName: "Message", width: 200 },
+          {
+            field: "url",
+            headerName: "URL",
+            width: 150,
+            valueGetter: safeValueGetter
+          },
+          {
+            field: "method",
+            headerName: "Method",
+            width: 100,
+            valueGetter: safeValueGetter
+          },
+          {
+            field: "ip_address",
+            headerName: "IP Address",
+            width: 130,
+            valueGetter: safeValueGetter
+          },
+          {
+            field: "created_at",
+            headerName: "Created At",
+            width: 180,
+            valueGetter: safeDateFormatter,
+          },
+        ];
+      case "logs":
+        return [
+          { field: "id", headerName: "ID", width: 90 },
+          {
+            field: "user_id",
+            headerName: "User ID",
+            width: 120,
+            valueGetter: safeValueGetter
+          },
+          { field: "endpoint", headerName: "Endpoint", width: 200 },
+          { field: "method", headerName: "Method", width: 100 },
+          { field: "status_code", headerName: "Status Code", width: 120 },
+          {
+            field: "timestamp",
+            headerName: "Timestamp",
+            width: 180,
+            valueGetter: safeDateFormatter,
+          },
+        ];
+      case "sessions":
+        return [
+          { field: "id", headerName: "ID", width: 150 },
+          { field: "credits", headerName: "Créditos", width: 120 },
+          {
+            field: "create_at",
+            headerName: "Creado",
+            width: 180,
+            valueGetter: safeDateFormatter,
+          },
+          {
+            field: "ultima_actividad",
+            headerName: "Última Actividad",
+            width: 180,
+            valueGetter: safeDateFormatter,
+          },
+          {
+            field: "last_ip",
+            headerName: "Última IP",
+            width: 130,
+            valueGetter: safeValueGetter
+          },
+        ];
+      case "transactions":
+        return [
+          { field: "id", headerName: "ID", width: 90 },
+          {
+            field: "user_id",
+            headerName: "User ID",
+            width: 120,
+            valueGetter: safeValueGetter
+          },
+          {
+            field: "session_id",
+            headerName: "Session ID",
+            width: 150,
+            valueGetter: safeValueGetter
+          },
+          { field: "amount", headerName: "Cantidad", width: 120 },
+          { field: "transaction_type", headerName: "Tipo", width: 150 },
+          {
+            field: "payment_amount",
+            headerName: "Monto Pago",
+            width: 130,
+            valueGetter: (value: any) =>
+              value ? (value as number).toFixed(2) : "N/A",
+          },
+          {
+            field: "payment_method",
+            headerName: "Método Pago",
+            width: 150,
+            valueGetter: safeValueGetter
+          },
+          { field: "payment_status", headerName: "Estado", width: 120 },
+          {
+            field: "timestamp",
+            headerName: "Fecha",
+            width: 180,
+            valueGetter: safeDateFormatter,
+          },
+        ];
+      default:
+        return [];
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box>
+        <Skeleton variant="rectangular" height={400} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Snackbar open autoHideDuration={6000} onClose={() => setError(null)}>
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      </Snackbar>
+    );
+  }
+
   return (
-    <div className="overflow-x-auto">
-      {renderTable()}
-      {tab === "errors" && (
-        <div className="mt-4 flex justify-between">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="btn-secondary disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span>Página {page}</span>
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={data.length < limit}
-            className="btn-secondary disabled:opacity-50"
-          >
-            Siguiente
-          </button>
-        </div>
-      )}
-    </div>
+    <Box>
+      <DataGrid
+        rows={data}
+        columns={getColumns()}
+        pageSizeOptions={[limit]}
+        disableRowSelectionOnClick
+        autoHeight
+        sx={{ borderRadius: 2, boxShadow: 2 }}
+        getRowId={(row) => row.id || Math.random().toString(36).substring(2, 9)}
+        paginationModel={{ page: page - 1, pageSize: limit }}
+        onPaginationModelChange={(model) => setPage(model.page + 1)}
+        rowCount={totalPages * limit}
+        paginationMode="server"
+      />
+      <Pagination
+        count={totalPages}
+        page={page}
+        onChange={(e, value) => setPage(value)}
+        color="primary"
+        sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+      />
+    </Box>
   );
 };
 
 export default function RegistryPage() {
   const [activeTab, setActiveTab] = useState("errors");
 
-  const tabs = [
-    { id: "errors", label: "Error Logs" },
-    { id: "logs", label: "API Logs" },
-    { id: "sessions", label: "Sesiones" },
-    { id: "transactions", label: "Transacciones" },
-  ];
-
   return (
-    <div className="container mx-auto p-6 min-h-screen">
-      <motion.h1
+    <Box sx={{ p: 6, minHeight: "100vh" }} className="container mx-auto">
+      <Typography
+        component={motion.h1}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-3xl font-bold mb-6 text-center"
+        sx={{
+          fontSize: "2rem",
+          fontWeight: "bold",
+          mb: 6,
+          textAlign: "center"
+        }}
       >
         Registro de Administración
-      </motion.h1>
-      <div className="bg-[var(--background)] rounded-lg shadow-lg p-4">
-        <div className="flex border-b border-[var(--border)] mb-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-4 text-center font-semibold transition-colors ${
-                activeTab === tab.id
-                  ? "bg-[var(--primary)] text-white"
-                  : "bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--accent-hover)]"
-              }`}
+      </Typography>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+        <Tabs
+          value={activeTab}
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          centered
+          sx={{ mb: 4 }}
+        >
+          <Tab label="Error Logs" value="errors" />
+          <Tab label="API Logs" value="logs" />
+          <Tab label="Sesiones" value="sessions" />
+          <Tab label="Transacciones" value="transactions" />
+        </Tabs>
+        <Suspense fallback={<Skeleton variant="rectangular" height={400} />}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
             >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <Suspense fallback={<div className="text-center p-4"><div className="loading-spinner mx-auto"></div></div>}>
-          <TabContent tab={activeTab} />
+              <TabContent tab={activeTab} />
+            </motion.div>
+          </AnimatePresence>
         </Suspense>
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 }

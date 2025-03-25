@@ -73,14 +73,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw new Error(typeof error === "string" ? error : "Error al iniciar sesión");
     localStorage.setItem("accessToken", data!.access_token);
     localStorage.setItem("refreshToken", data!.refresh_token);
+    localStorage.removeItem("session_id");  // Limpiar session_id al iniciar sesión
     const userResponse = await fetchAPI<User>("/v1/users/me");
     if (userResponse.data) {
       setUser(userResponse.data);
       setCredits(userResponse.data.credits);
-      router.push("/profile");
+      router.push("/user/dashboard");
     }
   };
-
+  
   const logout = async () => {
     try {
       await fetchAPI("/v1/auth/logout", { method: "POST" });
@@ -89,10 +90,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("session_id");  // Limpiar session_id al cerrar sesión
     setUser(null);
     const anonCredits = localStorage.getItem("anonCredits");
     setCredits(anonCredits ? parseInt(anonCredits) : 100);
-    router.push("/login");
+    router.push("/user/login");
   };
 
   const register = async (data: RegisterRequest) => {
@@ -108,27 +110,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login/google`;
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (): Promise<string | null> => {
     const refresh = localStorage.getItem("refreshToken");
-    if (!refresh) return null;
-
-    const { data, error } = await fetchAPI<TokenResponse>(
-      "/v1/auth/refresh",
-      {
-        method: "POST",
-        data: { refresh_token: refresh },
-      },
-      "application/json"
-    );
-
-    if (error || !data) {
-      logout();
+    if (!refresh) {
+      await logout();
       return null;
     }
 
-    localStorage.setItem("accessToken", data.access_token);
-    localStorage.setItem("refreshToken", data.refresh_token || refresh);
-    return data.access_token;
+    try {
+      const { data, error } = await fetchAPI<TokenResponse>("/v1/auth/refresh", {
+        method: "POST",
+        data: { refresh_token: refresh },
+        ...(true && { _retry: true }) // Evitar bucle infinito
+      });
+
+      if (error || !data) {
+        throw new Error(typeof error === "string" ? error : JSON.stringify(error) || "Refresh failed");
+      }
+
+      // Actualizar localStorage ANTES de cualquier otra operación
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+
+      // Actualizar estado del usuario
+      const userResponse = await fetchAPI<User>("/v1/users/me");
+      if (userResponse.data) {
+        setUser(userResponse.data);
+        setCredits(userResponse.data.credits);
+      }
+
+      return data.access_token;
+    } catch (err) {
+      console.error("Refresh error:", err);
+      await logout();
+      return null;
+    }
   };
 
   const updateProfile = async (data: Partial<User>) => {

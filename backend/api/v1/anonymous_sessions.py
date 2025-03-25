@@ -1,19 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+# backend/api/v1/anonymous_sessions.py
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
 from models.session import AnonymousSession
-from schemas.anonymous_session import AnonymousSessionResponse
+from schemas.anonymous_session import AnonymousSessionResponse  # Asegúrate de que este esquema existe
 from dependencies.auth import get_user_context
 from core.database import get_db
+from math import ceil
 
-router = APIRouter( tags=["Sessions"])
+router = APIRouter(tags=["Sessions"])
 
-@router.get("/", response_model=List[AnonymousSessionResponse])
+@router.get("/", response_model=dict)
 def get_anonymous_sessions(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
     user=Depends(get_user_context),
     db: Session = Depends(get_db)
 ):
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
-    sessions = db.query(AnonymousSession).all()
-    return sessions
+    
+    offset = (page - 1) * limit
+    query = db.query(AnonymousSession)
+    total_items = query.count()
+    sessions = query.offset(offset).limit(limit).all()
+    
+    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+    sessions_data = [AnonymousSessionResponse.from_orm(session) for session in sessions]
+    
+    return {
+        "data": sessions_data,  # Usar los datos serializados
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }

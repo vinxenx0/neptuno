@@ -26,7 +26,7 @@ export default function APILogsPage() {
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
-      router.push("/login");
+      router.push("/user/login");
       return;
     }
 

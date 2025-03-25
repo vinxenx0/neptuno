@@ -1,3 +1,5 @@
+// src/app/user/dashboard/page.tsx
+// src/app/user/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,6 +7,32 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  IconButton,
+  Snackbar,
+  Alert,
+  MenuItem,
+} from "@mui/material";
+import {
+  AccountCircle,
+  Lock,
+  Payment,
+  CreditCard,
+  AddCircle,
+  Delete,
+  ExpandMore,
+} from "@mui/icons-material";
 
 // Interfaces
 interface PaymentMethod {
@@ -43,7 +71,7 @@ export default function UserDashboard() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/user/login");
       return;
     }
     setFormData({
@@ -145,259 +173,280 @@ export default function UserDashboard() {
       try {
         await fetchAPI("/v1/users/me", { method: "DELETE" });
         await logout();
-        router.push("/login");
+        router.push("/user/login");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al eliminar cuenta");
       }
     }
   };
 
-  if (!user) return <div className="text-center p-4"><div className="loading-spinner mx-auto"></div></div>;
+  if (!user) return <Box sx={{ textAlign: "center", p: 4 }}>Cargando...</Box>;
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
-      <motion.h1
+    <Box sx={{ p: 6, minHeight: "100vh" }} className="container mx-auto">
+      <Typography 
+        component={motion.h1}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold mb-6 text-center"
+        transition={{ duration: 0.5 }}
+        sx={{ 
+          fontSize: "2rem", 
+          fontWeight: "bold", 
+          mb: 6, 
+          textAlign: "center" 
+        }}
       >
         Dashboard de {user.username}
-      </motion.h1>
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mb-4 p-3 bg-[var(--danger)] text-white rounded-md text-center"
-          >
-            {error}
-          </motion.div>
-        )}
-        {success && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mb-4 p-3 bg-[var(--success)] text-white rounded-md text-center"
-          >
-            {success}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Typography>
 
-      {/* Perfil */}
-      <motion.div className="card mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="text-2xl font-semibold mb-4">Perfil</h2>
-        {editMode ? (
-          <form onSubmit={handleUpdate} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium">Email</label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Username</label>
-              <input
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Ciudad</label>
-              <input
-                type="text"
-                value={formData.ciudad}
-                onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Website</label>
-              <input
-                type="text"
-                value={formData.website}
-                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-            </div>
-            <div className="flex space-x-4">
-              <button type="submit" className="btn-primary flex-1">Guardar</button>
-              <button type="button" onClick={() => setEditMode(false)} className="btn-secondary flex-1">Cancelar</button>
-            </div>
-          </form>
-        ) : (
-          <div className="space-y-2">
-            <p><span className="font-semibold">Email:</span> {user.email}</p>
-            <p><span className="font-semibold">Username:</span> {user.username}</p>
-            <p><span className="font-semibold">Ciudad:</span> {user.ciudad || "N/A"}</p>
-            <p><span className="font-semibold">Website:</span> {user.website || "N/A"}</p>
-            <p><span className="font-semibold">Créditos:</span> {user.credits ?? "N/A"}</p>
-            <button onClick={() => setEditMode(true)} className="btn-primary w-full mt-4">Editar Perfil</button>
-          </div>
-        )}
-      </motion.div>
+      <Grid container spacing={4}>
+        {/* Perfil */}
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardHeader title="Perfil" avatar={<AccountCircle />} />
+            <CardContent>
+              <AnimatePresence mode="wait">
+                {editMode ? (
+                  <Box
+                    component={motion.form}
+                    key="edit"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onSubmit={handleUpdate}
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
+                    <TextField
+                      label="Email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Username"
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Ciudad"
+                      type="text"
+                      value={formData.ciudad}
+                      onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
+                      fullWidth
+                    />
+                    <TextField
+                      label="Website"
+                      type="text"
+                      value={formData.website}
+                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                      fullWidth
+                    />
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                      <Button type="submit" variant="contained" color="primary">
+                        Guardar
+                      </Button>
+                      <Button onClick={() => setEditMode(false)} variant="outlined">
+                        Cancelar
+                      </Button>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box
+                    component={motion.div}
+                    key="view"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                  >
+                    <Typography><strong>Email:</strong> {user.email}</Typography>
+                    <Typography><strong>Username:</strong> {user.username}</Typography>
+                    <Typography><strong>Ciudad:</strong> {user.ciudad || "N/A"}</Typography>
+                    <Typography><strong>Website:</strong> {user.website || "N/A"}</Typography>
+                    <Typography><strong>Créditos:</strong> {user.credits ?? "N/A"}</Typography>
+                    <Button onClick={() => setEditMode(true)} variant="contained" color="primary" sx={{ mt: 2 }}>
+                      Editar Perfil
+                    </Button>
+                  </Box>
+                )}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      {/* Cambio de Contraseña */}
-      <motion.div className="card mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="text-2xl font-semibold mb-4">Cambiar Contraseña</h2>
-        <form onSubmit={handleChangePassword} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Contraseña Actual</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Nueva Contraseña</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              required
-            />
-          </div>
-          <button type="submit" className="btn-primary w-full">Cambiar Contraseña</button>
-        </form>
-      </motion.div>
+        {/* Cambio de Contraseña */}
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardHeader title="Cambiar Contraseña" avatar={<Lock />} />
+            <CardContent>
+              <Box 
+                component="form" 
+                onSubmit={handleChangePassword} 
+                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+              >
+                <TextField
+                  label="Contraseña Actual"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label="Nueva Contraseña"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  fullWidth
+                  required
+                />
+                <Button type="submit" variant="contained" color="primary">
+                  Cambiar Contraseña
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
 
-      {/* Transacciones */}
-      <motion.div className="card mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <button
-          onClick={() => setTransactionsOpen(!transactionsOpen)}
-          className="w-full text-left text-2xl font-semibold mb-4 flex justify-between items-center"
-        >
-          Transacciones
-          <span>{transactionsOpen ? "▲" : "▼"}</span>
-        </button>
-        <AnimatePresence>
-          {transactionsOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-            >
+        {/* Transacciones */}
+        <Grid item xs={12}>
+          <Accordion expanded={transactionsOpen} onChange={() => setTransactionsOpen(!transactionsOpen)}>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">Transacciones</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               {transactions.length === 0 ? (
-                <p>No hay transacciones registradas.</p>
+                <Typography>No hay transacciones.</Typography>
               ) : (
                 transactions.map((t) => (
-                  <div key={t.id} className="p-4 border-b border-[var(--border)]">
-                    <p className="font-semibold">{t.transaction_type} de {Math.abs(t.amount)} créditos</p>
-                    <p>Monto: ${t.payment_amount?.toFixed(2) || "N/A"}</p>
-                    <p>Método: {t.payment_method || "N/A"}</p>
-                    <p>Estado: {t.payment_status}</p>
-                    <p className="text-sm">{new Date(t.timestamp).toLocaleString()}</p>
-                  </div>
+                  <Box key={t.id} sx={{ p: 2, borderBottom: "1px solid #ddd" }}>
+                    <Typography><strong>{t.transaction_type}</strong> de {Math.abs(t.amount)} créditos</Typography>
+                    <Typography>Monto: ${t.payment_amount?.toFixed(2) || "N/A"}</Typography>
+                    <Typography>Método: {t.payment_method || "N/A"}</Typography>
+                    <Typography>Estado: {t.payment_status}</Typography>
+                    <Typography variant="caption">{new Date(t.timestamp).toLocaleString()}</Typography>
+                  </Box>
                 ))
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
 
-      {/* Métodos de Pago */}
-      <motion.div className="card mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <button
-          onClick={() => setMethodsOpen(!methodsOpen)}
-          className="w-full text-left text-2xl font-semibold mb-4 flex justify-between items-center"
-        >
-          Métodos de Pago
-          <span>{methodsOpen ? "▲" : "▼"}</span>
-        </button>
-        <AnimatePresence>
-          {methodsOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-            >
+        {/* Métodos de Pago */}
+        <Grid item xs={12}>
+          <Accordion expanded={methodsOpen} onChange={() => setMethodsOpen(!methodsOpen)}>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography variant="h6">Métodos de Pago</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               {methods.map((m) => (
-                <div key={m.id} className="p-4 border-b border-[var(--border)] flex justify-between items-center">
-                  <div>
-                    <p className="font-semibold">{m.payment_type}</p>
-                    <p>{m.details}</p>
-                    {m.is_default && <p className="text-[var(--success)]">Predeterminado</p>}
-                  </div>
+                <Box key={m.id} sx={{ p: 2, borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between" }}>
+                  <Box>
+                    <Typography><strong>{m.payment_type}</strong></Typography>
+                    <Typography>{m.details}</Typography>
+                    {m.is_default && <Typography color="success.main">Predeterminado</Typography>}
+                  </Box>
                   {!m.is_default && (
-                    <button onClick={() => handleSetDefault(m.id)} className="btn-secondary">Hacer Predeterminado</button>
+                    <Button onClick={() => handleSetDefault(m.id)} variant="outlined">
+                      Hacer Predeterminado
+                    </Button>
                   )}
-                </div>
+                </Box>
               ))}
-              <form onSubmit={handleAddMethod} className="p-4 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium">Tipo</label>
-                  <select
-                    value={newMethod.payment_type}
-                    onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
-                    className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-                  >
-                    <option value="stripe">Stripe</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium">Detalles</label>
-                  <input
-                    type="text"
-                    value={newMethod.details}
-                    onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
-                    className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn-primary w-full">Añadir Método</button>
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+              <Box 
+                component="form" 
+                onSubmit={handleAddMethod} 
+                sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}
+              >
+                <TextField
+                  label="Tipo"
+                  select
+                  value={newMethod.payment_type}
+                  onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
+                  fullWidth
+                >
+                  <MenuItem value="stripe">Stripe</MenuItem>
+                </TextField>
+                <TextField
+                  label="Detalles"
+                  value={newMethod.details}
+                  onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                  fullWidth
+                  required
+                />
+                <Button type="submit" variant="contained" color="primary">
+                  Añadir Método
+                </Button>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
 
-      {/* Compra de Créditos */}
-      <motion.div className="card mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="text-2xl font-semibold mb-4">Comprar Créditos</h2>
-        <form onSubmit={handlePurchase} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Créditos</label>
-            <input
-              type="number"
-              value={credits}
-              onChange={(e) => setCredits(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Monto (USD)</label>
-            <input
-              type="number"
-              step="0.01"
-              value={paymentAmount}
-              onChange={(e) => setPaymentAmount(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-[var(--border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              required
-            />
-          </div>
-          <button type="submit" className="btn-primary w-full">Comprar</button>
-        </form>
-      </motion.div>
+        {/* Compra de Créditos */}
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title="Comprar Créditos" avatar={<CreditCard />} />
+            <CardContent>
+              <Box 
+                component="form" 
+                onSubmit={handlePurchase} 
+                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+              >
+                <TextField
+                  label="Créditos"
+                  type="number"
+                  value={credits}
+                  onChange={(e) => setCredits(e.target.value)}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label="Monto (USD)"
+                  type="number"
+                  inputProps={{ step: "0.01" }}
+                  value={paymentAmount}
+                  onChange={(e) => setPaymentAmount(e.target.value)}
+                  fullWidth
+                  required
+                />
+                <Button type="submit" variant="contained" color="primary">
+                  Comprar
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       {/* Acciones */}
-      <motion.div className="flex space-x-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <button onClick={logout} className="btn-secondary flex-1">Cerrar Sesión</button>
-        <button onClick={handleDeleteAccount} className="btn-danger flex-1">Eliminar Cuenta</button>
-      </motion.div>
-    </div>
+      <Box sx={{ mt: 6, display: "flex", gap: 2 }}>
+        <Button onClick={logout} variant="outlined" color="secondary" fullWidth>
+          Cerrar Sesión
+        </Button>
+        <Button onClick={handleDeleteAccount} variant="contained" color="error" fullWidth>
+          Eliminar Cuenta
+        </Button>
+      </Box>
+
+      <AnimatePresence>
+        {error && (
+          <Snackbar open autoHideDuration={3000} onClose={() => setError(null)}>
+            <Alert severity="error" onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          </Snackbar>
+        )}
+        {success && (
+          <Snackbar open autoHideDuration={3000} onClose={() => setSuccess(null)}>
+            <Alert severity="success" onClose={() => setSuccess(null)}>
+              {success}
+            </Alert>
+          </Snackbar>
+        )}
+      </AnimatePresence>
+    </Box>
   );
 }

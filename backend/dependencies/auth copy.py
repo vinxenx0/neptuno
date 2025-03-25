@@ -22,15 +22,13 @@ class UserContext(BaseModel):
     subscription: str
     credits: int
     rol: str
-    session_id: str | None = None  # Campo opcional para sesiones anónimas
-    
     class Config:
         from_attributes=True #orm_mode = True
 
 
 async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
-    session_id = request.headers.get("X-Session-ID")  # Leer de header en lugar de cookie
+    session_id = request.cookies.get("session_id")  # Leer de cookie en lugar de header
     client_ip = request.client.host
     logger.info(f"Procesando solicitud: token={bool(token)}, session_id={session_id}, ip={client_ip}")
 
@@ -70,7 +68,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             )
 
         if not session_id:
-            logger.info("No hay session_id en header, creando nueva sesión anónima")
+            logger.info("No hay session_id en cookie, creando nueva sesión anónima")
             session_id = str(uuid4())
             new_session = AnonymousSession(
                 id=session_id,
@@ -82,6 +80,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             db.add(new_session)
             db.commit()
             logger.info(f"Nueva sesión anónima creada ID {session_id} desde IP {client_ip}")
+            response.set_cookie(key="session_id", value=session_id, httponly=True, samesite="lax")
             return UserContext(
                 user_type="anonymous",
                 user_id=session_id,
@@ -89,11 +88,10 @@ async def get_user_context(request: Request, response: Response, db: Session = D
                 username="anonymous",
                 credits=100,
                 subscription="basic",
-                rol="anonymous",
-                session_id=session_id  # Añadir session_id al contexto
+                rol="anonymous"
             )
         else:
-            logger.info(f"Buscando sesión anónima con ID {session_id} desde header")
+            logger.info(f"Buscando sesión anónima con ID {session_id} desde cookie")
             session = db.query(AnonymousSession).filter(AnonymousSession.id == session_id).first()
             if not session:
                 logger.warning(f"Sesión anónima inválida ID {session_id} desde IP {client_ip}")
@@ -110,8 +108,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
                 username="anonymous",
                 credits=session.credits,
                 subscription="basic",
-                rol="anonymous",
-                session_id=session_id  # Añadir session_id al contexto
+                rol="anonymous"
             )
 
         logger.error(f"No autorizado: sin token ni sesión válida desde IP {client_ip}")

@@ -1,3 +1,4 @@
+# backend/api/v1/anonymous_sessions.py
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -10,4 +11,4 @@ class AnonymousSessionBase(BaseModel):
 
 class AnonymousSessionResponse(AnonymousSessionBase):
     class Config:
-        orm_mode = True
+        from_attributes = True  # Reemplaza orm_mode = True

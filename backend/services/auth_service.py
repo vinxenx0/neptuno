@@ -15,6 +15,14 @@ from core.security import google_client, meta_client
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 import requests
+from threading import Lock
+from threading import Lock
+from datetime import datetime, timedelta
+from fastapi import HTTPException
+from threading import Lock
+import jwt
+
+refresh_lock = Lock()
 
 logger = configure_logging()
 
@@ -74,29 +82,85 @@ def login_user(db: Session, email: str, password: str, ip: str):
         user.last_ip = ip
         db.commit()
         
+        # Añadir log para inspeccionar los datos del usuario
+        logger.debug(f"Usuario encontrado: ID={user.id}, email={user.email}, subscription={user.subscription}, type={type(user.subscription)}")
+        
+        # Generar el token
         access_token = create_access_token({"sub": str(user.id), "type": "registered"})
         refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
         logger.info(f"Login exitoso para usuario ID {user.id} desde IP {ip}")
         return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
-    except HTTPException as e:
-        raise e
     except Exception as e:
-        logger.critical(f"Error inesperado en login para {email} desde IP {ip}: {str(e)}")
+        logger.critical(f"Error inesperado en login para {email} desde IP {ip}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error al iniciar sesión")
 
-def refresh_access_token(db: Session, refresh_token: str):
-    payload = decode_token(refresh_token)
-    if not payload or payload.get("type") != "refresh" or db.query(RevokedToken).filter(RevokedToken.token == refresh_token).first():
-        raise HTTPException(status_code=401, detail="Refresh token inválido o revocado")
-    
-    user = db.query(User).filter(User.id == int(payload["sub"])).first()
-    if not user or not user.activo:
-        raise HTTPException(status_code=403, detail="Usuario no encontrado o inactivo")
-    
-    new_access_token = create_access_token({"sub": str(user.id), "type": "registered"})
-    new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
-    return {"access_token": new_access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
 
+
+
+
+def refresh_access_token(db: Session, refresh_token: str):
+    if not refresh_token or len(refresh_token) < 10:
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+    with refresh_lock:
+        try:
+            # 1. Decodificar primero sin verificar revocación
+            try:
+                payload = jwt.decode(
+                    refresh_token,
+                    getenv("SECRET_KEY"),
+                    algorithms=["HS256"],
+                    options={"verify_exp": True}
+                )
+            except jwt.ExpiredSignatureError:
+                logger.warning("Refresh token expirado")
+                raise HTTPException(status_code=401, detail="Refresh token expirado")
+            except Exception as e:
+                logger.warning(f"Error decodificando token: {str(e)}")
+                raise HTTPException(status_code=401, detail="Token inválido")
+
+            # 2. Verificar si el token fue revocado DESPUÉS de decodificar
+            if db.query(RevokedToken).filter(RevokedToken.token == refresh_token).first():
+                logger.warning("Refresh token ya revocado")
+                raise HTTPException(status_code=401, detail="Refresh token revocado")
+
+            # 3. Validar claims
+            if payload.get("type") != "refresh":
+                raise HTTPException(status_code=401, detail="Tipo de token incorrecto")
+
+            user_id = payload.get("sub")
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Falta sub claim")
+
+            # 4. Verificar usuario
+            user = db.query(User).filter(User.id == int(user_id)).first()
+            if not user or not user.activo:
+                raise HTTPException(status_code=403, detail="Usuario inválido")
+
+            # 5. Revocar el token actual
+            db.add(RevokedToken(token=refresh_token, user_id=user.id))
+            
+            # 6. Crear nuevos tokens
+            new_access_token = create_access_token({"sub": str(user.id), "type": "registered"})
+            new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+            
+            db.commit()  # Hacer commit después de crear los nuevos tokens
+            
+            return {
+                "access_token": new_access_token,
+                "refresh_token": new_refresh_token,
+                "token_type": "bearer"
+            }
+
+        except HTTPException:
+            db.rollback()
+            raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Error crítico: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error interno")
+
+        
 def logout_user(db: Session, token: str): #_estimate ?
     payload = decode_token(token)
     if not payload:

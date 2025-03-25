@@ -30,7 +30,7 @@ export default function ErrorLogsPage() {
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
-      router.push("/login");
+      router.push("/user/login");
       return;
     }
 
