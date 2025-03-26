@@ -7,6 +7,12 @@ from api.v1 import auth, endpoints, payments, site_settings, integrations, payme
 from api.v1 import anonymous_sessions, credit_transactions, error_logs
 from api.v1 import api_logs
 from api.v1 import users
+from dependencies.credits import check_credits
+from models.credit_transaction import CreditTransaction
+from models.session import AnonymousSession
+from models.user import User
+from services.integration_service import trigger_webhook
+from middleware.credits import require_credits
 from middleware.logging import LoggingMiddleware
 from dependencies.auth import UserContext, get_user_context
 from services.settings_service import get_setting
@@ -32,7 +38,12 @@ logger = configure_logging()
 db = next(get_db())
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
+    allow_origins=["*",
+        "http://localhost:3000",
+        "http://194.164.164.177:3000",
+        "http://neptuno.ciberpunk.es"
+    ],  # Lista explícita de dominios permitidos
+    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -139,3 +150,140 @@ async def health_check(db: Session = Depends(get_db)):
 @app.get("/")
 async def root():
     return {"message": "Bienvenido a la API Backend"}
+
+@app.get("/no-login/")
+async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
+    """
+    Endpoint para probar la API sin necesidad de login.
+    Consume créditos si están activos.
+    """
+    # Preparar la respuesta
+    response = {"message": "Consulta realizada sin necesidad de login", "user_type": user.user_type}
+    if user.user_type == "anonymous":
+        response["session_id"] = user.user_id  # Incluir session_id en la respuesta
+
+    # Consumir créditos si no están desactivados
+    disable_credits = get_setting(db, "disable_credits")
+    if disable_credits != "true":
+        try:
+            if user.user_type == "registered":
+                user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+                user_db.credits -= 1
+                transaction = CreditTransaction(
+                    user_id=user_db.id,
+                    user_type="registered",  # Especificar explícitamente
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada"
+                )
+                credits_remaining = user_db.credits
+            else:
+                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
+                session_db.credits -= 1
+                transaction = CreditTransaction(
+                    session_id=session_db.id,
+                    user_type="anonymous",  # Especificar explícitamente para claridad
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada por anónimo"
+                )
+                credits_remaining = session_db.credits
+            
+            db.add(transaction)
+            db.commit()
+
+            trigger_webhook(db, "credit_usage", {
+                "user_id": user.user_id,
+                "user_type": user.user_type,
+                "credits_remaining": credits_remaining
+            })
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits_remaining}")
+        except Exception as e:
+            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+
+    return response
+
+@app.get("/restricted")
+async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
+    """
+    Endpoint restringido que requiere login.
+    Consume créditos si están activos.
+    """
+    if user.user_type != "registered":
+        raise HTTPException(status_code=401, detail="Se requiere autenticación")
+
+    # Preparar la respuesta
+    response = {"message": "Consulta realizada con login", "user_type": user.user_type}
+
+    # Consumir créditos si no están desactivados
+    disable_credits = get_setting(db, "disable_credits")
+    if disable_credits != "true":
+        try:
+            user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+            user_db.credits -= 1
+            transaction = CreditTransaction(
+                user_id=user_db.id,
+                user_type="registered",  # Especificar explícitamente
+                amount=-1,
+                transaction_type="usage",
+                description="Consulta realizada"
+            )
+            db.add(transaction)
+            db.commit()
+
+            trigger_webhook(db, "credit_usage", {
+                "user_id": user.user_id,
+                "user_type": user.user_type,
+                "credits_remaining": user_db.credits
+            })
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user_db.credits}")
+        except Exception as e:
+            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+
+    return response
+
+@app.get("/info")
+async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    """
+    Endpoint para obtener información del usuario basado en el contexto actual.
+    - Si el usuario está registrado, muestra la info de la base de datos.
+    - Si no está registrado y se permiten usuarios anónimos, muestra su contexto.
+    - Si no está registrado y no se permiten usuarios anónimos, muestra un contexto vacío.
+    """
+    disable_anonymous = get_setting(db, "disable_anonymous_users")
+    if user.user_type == "registered":
+        # Información del usuario registrado
+        return {
+            "user_id": user.user_id,
+            "email": user.email,
+            "username": user.username,
+            "user_type": user.user_type,
+            "subscription": user.subscription,
+            "credits": user.credits,
+            "rol": user.rol
+        }
+    elif user.user_type == "anonymous" and disable_anonymous != "true":
+        # Información del usuario anónimo (si están permitidos)
+        return {
+            "session_id": user.session_id,
+            "user_id": user.user_id,
+            "email": user.email,
+            "username": user.username,
+            "user_type": user.user_type,
+            "subscription": user.subscription,
+            "credits": user.credits,
+            "rol": user.rol
+        }
+    else:
+        # Contexto vacío si no se permiten usuarios anónimos y no está autenticado
+        return {
+            "user_id": None,
+            "email": None,
+            "username": None,
+            "user_type": "none",
+            "subscription": None,
+            "credits": 0,
+            "rol": None
+        }

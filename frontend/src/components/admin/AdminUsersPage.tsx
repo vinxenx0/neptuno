@@ -1,26 +1,53 @@
+// src/components/admin/AdminUsersPage.tsx
+// src/components/admin/AdminUsersPage.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
-import { getAllUsers, getUserById, updateUser, deleteUser, createUser } from "@/lib/api";
+import { getAllUsers, updateUser, deleteUser, createUser } from "@/lib/api";
 import { User, RegisterRequest, UpdateProfileRequest } from "@/lib/types";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Snackbar,
+  Alert,
+  IconButton,
+  Pagination,
+  CircularProgress,
+} from "@mui/material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Edit, Delete } from "@mui/icons-material";
+import { motion } from "framer-motion";
 
 const AdminUsersPage = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [formMode, setFormMode] = useState<"create" | "update" | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [formMode, setFormMode] = useState<"create" | "update">("create");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [formData, setFormData] = useState<RegisterRequest | UpdateProfileRequest>({
+  const [formData, setFormData] = useState<RegisterRequest | Omit<UpdateProfileRequest, 'password'>>({
     email: "",
     username: "",
-    password: "", // Solo para creación
+    password: "",
     ciudad: "",
     website: "",
   });
 
-  // Cargar usuarios al montar el componente
+  // Estado para la paginación
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    totalItems: 0,
+    totalPages: 1,
+  });
+
   useEffect(() => {
     if (user?.rol !== "admin") {
       setError("No tienes permisos para acceder a esta página");
@@ -28,224 +55,269 @@ const AdminUsersPage = () => {
       return;
     }
     fetchUsers();
-  }, [user]);
+  }, [user, pagination.page]);
 
   const fetchUsers = async () => {
     setLoading(true);
-    const response = await getAllUsers();
-    if (response.error) {
-      setError(response.error);
-    } else {
-      setUsers(response.data || []);
+    try {
+      const response = await getAllUsers(pagination.page, pagination.limit);
+  
+      if (response.error) {
+        let errorMessage: string;
+        
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if ('detail' in response.error) {
+          // Manejo de errores de validación HTTP
+          if (Array.isArray(response.error.detail)) {
+            errorMessage = response.error.detail.map(d => d.msg).join(', ');
+          } else {
+            errorMessage = response.error.detail || 'Error de validación';
+          }
+        } else {
+          errorMessage = JSON.stringify(response.error);
+        }
+        
+        setError(errorMessage);
+      } else if (response.data) {
+        setUsers(response.data.data || []);
+        setPagination(prev => ({
+          ...prev,
+          totalItems: response.data?.total_items || 0,
+          totalPages: response.data?.total_pages || 1
+        }));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido");
     }
     setLoading(false);
   };
 
-  // Iniciar creación de usuario
-  const handleCreateUser = () => {
-    setFormMode("create");
-    setSelectedUser(null);
-    setFormData({ email: "", username: "", password: "", ciudad: "", website: "" });
+  const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPagination(prev => ({ ...prev, page: newPage }));
   };
 
-  // Iniciar actualización de usuario
-  const handleUpdateUser = async (userId: number) => {
-    const response = await getUserById(userId);
-    if (response.data) {
-      setSelectedUser(response.data);
-      setFormMode("update");
-      setFormData({
-        email: response.data.email,
-        username: response.data.username,
-        ciudad: response.data.ciudad || "",
-        website: response.data.website || "",
-      });
-    } else {
-      setError("Error al obtener la información del usuario");
-    }
+  const handleOpenDialog = (mode: "create" | "update", user?: User) => {
+    setFormMode(mode);
+    setSelectedUser(user || null);
+    setFormData(
+      user
+        ? {
+          email: user.email,
+          username: user.username,
+          ciudad: user.ciudad || "",
+          website: user.website || ""
+        }
+        : {
+          email: "",
+          username: "",
+          password: "",
+          ciudad: "",
+          website: ""
+        }
+    );
+    setOpenDialog(true);
   };
 
-  // Eliminar usuario
-  const handleDeleteUser = async (userId: number) => {
-    if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-      const response = await deleteUser(userId);
-      if (response.error) {
-        setError(response.error);
-      } else {
-        fetchUsers();
-      }
-    }
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
-  // Manejar cambios en el formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (formMode === 'update' && name === 'password') return;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Guardar usuario (crear o actualizar)
   const handleSaveUser = async () => {
-    if (formMode === "create") {
-      const response = await createUser(formData as RegisterRequest);
-      if (response.error) {
-        setError(response.error);
-      } else {
-        setFormMode(null);
-        fetchUsers();
+    try {
+      if (formMode === "create") {
+        await createUser(formData as RegisterRequest);
+      } else if (selectedUser) {
+        await updateUser(selectedUser.id, formData as UpdateProfileRequest);
       }
-    } else if (selectedUser) {
-      const response = await updateUser(selectedUser.id, formData as UpdateProfileRequest);
-      if (response.error) {
-        setError(response.error);
-      } else {
-        setFormMode(null);
+      fetchUsers();
+      handleCloseDialog();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al guardar usuario");
+    }
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    if (confirm("¿Estás seguro de eliminar este usuario?")) {
+      try {
+        await deleteUser(userId);
         fetchUsers();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al eliminar usuario");
       }
     }
   };
 
-  // Cancelar edición o creación
-  const handleCancel = () => {
-    setFormMode(null);
-    setSelectedUser(null);
-  };
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 90 },
+    { field: "email", headerName: "Email", width: 200 },
+    { field: "username", headerName: "Username", width: 150 },
+    { field: "rol", headerName: "Rol", width: 120 },
+    { field: "credits", headerName: "Créditos", width: 120 },
+    { field: "activo", headerName: "Activo", width: 100, type: "boolean" },
+    {
+      field: "actions",
+      headerName: "Acciones",
+      width: 150,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => handleOpenDialog("update", params.row)}>
+            <Edit />
+          </IconButton>
+          <IconButton onClick={() => handleDeleteUser(params.row.id)}>
+            <Delete />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading && users.length === 0) {
+    return (
+      <Box sx={{ p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Gestión de Usuarios</h1>
-
-      {/* Formulario de Creación/Actualización */}
-      {formMode && (
-        <div className="mb-6 p-4 border rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">
-            {formMode === "create" ? "Crear Usuario" : "Actualizar Usuario"}
-          </h2>
-          <form>
-            <div className="mb-4">
-              <label className="block mb-1">Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded"
-                required={formMode === "create"}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">Username:</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded"
-                required={formMode === "create"}
-              />
-            </div>
-            {formMode === "create" && (
-              <div className="mb-4">
-                <label className="block mb-1">Password:</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password || ""}
-                  onChange={handleInputChange}
-                  className="w-full border p-2 rounded"
-                  required
-                />
-              </div>
-            )}
-            <div className="mb-4">
-              <label className="block mb-1">Ciudad:</label>
-              <input
-                type="text"
-                name="ciudad"
-                value={formData.ciudad || ""}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1">Website:</label>
-              <input
-                type="text"
-                name="website"
-                value={formData.website || ""}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded"
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveUser}
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                Guardar
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Botón para crear nuevo usuario */}
-      {!formMode && (
-        <button
-          onClick={handleCreateUser}
-          className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+    <Box sx={{ p: 4 }}>
+      <Box sx={{ fontSize: "2rem", fontWeight: "bold", mb: 4 }}>
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          Crear Nuevo Usuario
-        </button>
-      )}
+          Gestión de Usuarios
+        </motion.h1>
+      </Box>
 
-      {/* Lista de Usuarios */}
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2">ID</th>
-            <th className="border p-2">Email</th>
-            <th className="border p-2">Username</th>
-            <th className="border p-2">Rol</th>
-            <th className="border p-2">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((u) => (
-            <tr key={u.id} className="hover:bg-gray-100">
-              <td className="border p-2">{u.id}</td>
-              <td className="border p-2">{u.email}</td>
-              <td className="border p-2">{u.username}</td>
-              <td className="border p-2">{u.rol}</td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleUpdateUser(u.id)}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleDeleteUser(u.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleOpenDialog("create")}
+        sx={{ mb: 4 }}
+      >
+        Crear Nuevo Usuario
+      </Button>
+
+      <Box sx={{ height: 600, width: '100%', mb: 2 }}>
+        <DataGrid
+          rows={users}
+          columns={columns}
+          loading={loading}
+          pageSizeOptions={[pagination.limit]}
+          disableRowSelectionOnClick
+          autoHeight
+          sx={{ borderRadius: 2, boxShadow: 2 }}
+          rowCount={pagination.totalItems}
+          paginationMode="server"
+          paginationModel={{
+            page: pagination.page - 1,
+            pageSize: pagination.limit
+          }}
+          onPaginationModelChange={(model) => {
+            setPagination(prev => ({
+              ...prev,
+              page: model.page + 1
+            }));
+          }}
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Pagination
+          count={pagination.totalPages}
+          page={pagination.page}
+          onChange={handlePageChange}
+          color="primary"
+          showFirstButton
+          showLastButton
+        />
+      </Box>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>{formMode === "create" ? "Crear Usuario" : "Actualizar Usuario"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+            required={formMode === "create"}
+          />
+          <TextField
+            label="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+            required={formMode === "create"}
+          />
+          {formMode === "create" && (
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={(formData as RegisterRequest).password || ""}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+              required
+            />
+          )}
+          <TextField
+            label="Ciudad"
+            name="ciudad"
+            value={formData.ciudad || ""}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Website"
+            name="website"
+            value={formData.website || ""}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancelar</Button>
+          <Button onClick={handleSaveUser} variant="contained" color="primary">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={() => setError(null)}
+      >
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };
 

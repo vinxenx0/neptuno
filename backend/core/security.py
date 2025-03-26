@@ -41,24 +41,58 @@ def create_token(user_id: str, user_type: str = "registered"):
     }
     return jwt.encode(payload, getenv("SECRET_KEY"), algorithm="HS256")
 
-def decode_token(token: str):
+def decode_token(token: str) -> Optional[dict]:
     try:
-        return jwt.decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
-    except jwt.PyJWTError:
+        payload = jwt.decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
+        # Validación adicional del payload
+        if not payload.get("sub") or not payload.get("type"):
+            logger.warning(f"Token inválido: falta sub o type en el payload")
+            return None
+        return payload
+    except jwt.ExpiredSignatureError:
+        logger.warning("Token expirado")
+        return None
+    except jwt.InvalidTokenError as e:
+        logger.warning(f"Token inválido: {str(e)}")
+        return None
+    except Exception as e:
+        logger.error(f"Error inesperado al decodificar token: {str(e)}")
         return None
 
 def create_access_token(data: dict):
     db = next(get_db())
-    expiration_str = get_setting(db, "token_expiration") or "3600"  # Valor por defecto: 1 hora
     try:
-        expiration = int(str(expiration_str))  # Convertir a cadena primero y luego a entero
-    except ValueError:
-        logger.error(f"Valor inválido para token_expiration: {expiration_str}")
-        expiration = 3600  # Valor por defecto si falla
-    to_encode = data.copy()
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "token_expiration") or "3600")
+        if expiration < 300:  # Mínimo 5 minutos
+            expiration = 3600
+            logger.warning("Token expiration too low, using default 1h")
+    except Exception as e:
+        logger.error(f"Error token_expiration: {str(e)}")
+        expiration = 3600
+    
     expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
     to_encode.update({"exp": expire, "type": "access"})
     return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    try:
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "refresh_token_expiration") or "604800")
+        if expiration < 86400:  # Mínimo 1 día
+            expiration = 604800
+            logger.warning("Refresh token expiration too low, using default 7d")
+    except Exception as e:
+        logger.error(f"Error refresh_token_expiration: {str(e)}")
+        expiration = 604800
+    
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
 
 def create_refresh_token(data: dict):
     db = next(get_db())
@@ -73,12 +107,6 @@ def create_refresh_token(data: dict):
     to_encode.update({"exp": expire, "type": "refresh"})
     return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
-def decode_token(token: str) -> Optional[dict]:
-    try:
-        return decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
-    except PyJWTError:
-        return None
-    
     
 def get_oauth2_redirect_url(provider: str) -> str:
     if provider == "google":

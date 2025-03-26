@@ -2,6 +2,7 @@
 # Módulo de endpoints de la API v1.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from services.settings_service import get_setting
 from middleware.credits import require_credits
 from dependencies.auth import UserContext, get_user_context
 from services.credits_service import reset_credits
@@ -11,9 +12,6 @@ from core.logging import configure_logging
 router = APIRouter()
 logger = configure_logging()
 
-@router.get("/info")
-def get_info():
-    return {"message": "Endpoint público sin restricciones"}
 
 @router.get("/consultar")
 @require_credits

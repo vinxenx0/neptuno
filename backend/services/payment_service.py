@@ -22,6 +22,7 @@ def purchase_credits(db: Session, user_id: int, credits: int, payment_amount: fl
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
 
         transaction = CreditTransaction(
+            user_type="registered",  # ¡Añadimos esto explícitamente!
             user_id=user_id,
             amount=credits,
             transaction_type="purchase",

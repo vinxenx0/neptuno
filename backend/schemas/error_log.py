@@ -16,4 +16,4 @@ class ErrorLogResponse(ErrorLogBase):
     id: int
 
     class Config:
-        orm_mode = True  # Permite mapear desde objetos SQLAlchemy
+        from_attributes = True  # Reemplaza orm_mode = True

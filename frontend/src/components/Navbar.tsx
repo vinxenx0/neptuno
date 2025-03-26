@@ -1,24 +1,42 @@
 // src/components/Navbar.tsx
+// src/components/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import fetchAPI from "@/lib/api";
 
 export default function Navbar() {
   const { user, credits, logout } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [theme, setTheme] = useState("light");
+  const [disableCredits, setDisableCredits] = useState(false);
+  const [enableRegistration, setEnableRegistration] = useState(true);
 
-  // Cargar el tema desde localStorage al montar el componente
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
     document.body.setAttribute("data-theme", savedTheme);
   }, []);
 
-  // Función para alternar el tema
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const disableCreditsRes = await fetchAPI("/v1/settings/disable_credits");
+        const enableRegistrationRes = await fetchAPI("/v1/settings/enable_registration");
+        setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
+        setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
+      } catch (err) {
+        console.error("Error al obtener configuraciones:", err);
+        setDisableCredits(false);
+        setEnableRegistration(true);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -33,15 +51,14 @@ export default function Navbar() {
           Neptuno
         </Link>
         <div className="flex items-center space-x-4">
-          {/* Créditos */}
-          <span className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm flex items-center">
-            💳 {credits} créditos
-          </span>
-
-          {/* SETTINGS (solo para admins) */}
+          {!disableCredits && credits > 0 && (
+            <span className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm flex items-center">
+              💳 {credits} créditos
+            </span>
+          )}
           {user?.rol === "admin" && (
             <div className="relative flex items-center">
-              <Link href="/configure" className="flex items-center hover:underline">
+              <Link href="/admin/configure" className="flex items-center hover:underline">
                 ⚙️ Settings
               </Link>
               <button onClick={() => setSettingsOpen(!settingsOpen)} className="ml-1">
@@ -72,24 +89,22 @@ export default function Navbar() {
               )}
             </div>
           )}
-
-          {/* USERNAME o Login/Register */}
           {user ? (
             <Link href="/user/dashboard" className="flex items-center hover:underline">
               👤 {user.username}
             </Link>
           ) : (
             <>
-              <Link href="/login" className="hover:underline">
+              <Link href="/user/login" className="hover:underline">
                 Login
               </Link>
-              <Link href="/register" className="hover:underline">
-                Register
-              </Link>
+              {enableRegistration && (
+                <Link href="/user/register" className="hover:underline">
+                  Register
+                </Link>
+              )}
             </>
           )}
-
-          {/* Botón para alternar tema */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"

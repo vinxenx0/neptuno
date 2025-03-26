@@ -22,7 +22,7 @@ class UserResponse(BaseModel):
     username: str
     rol: str
     activo: bool
-    subscription: str
+    subscription: str  # Esto funciona porque Pydantic automáticamente usa el .value de los Enum
     ciudad: Optional[str] = None
     website: Optional[str] = None
     credits: int
@@ -30,4 +30,4 @@ class UserResponse(BaseModel):
     last_ip: Optional[str] = None
 
     class Config:
-        from_attributes = True  # Permite mapear desde modelos SQLAlchemy
+        from_attributes = True  # Esto reemplaza a orm_mode = True en Pydantic v2

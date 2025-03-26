@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/user/login");
     } else {
       setFormData({
         email: user.email || "",
@@ -47,7 +47,7 @@ export default function ProfilePage() {
     setError(null);
     try {
       await logout();
-      router.push("/login");
+      router.push("/user/login");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cerrar sesión");
     }

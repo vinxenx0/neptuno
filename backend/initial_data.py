@@ -11,7 +11,7 @@ def init_settings_and_users():
     try:
         # Configuraciones iniciales con tags
         settings_data = [
-            {"key": "token_expiration", "value": 3600, "description": "Tiempo de vida del access token (segundos)", "tag": "auth"},
+            {"key": "token_expiration", "value": 60, "description": "Tiempo de vida del access token (segundos)", "tag": "auth"},
             {"key": "refresh_token_expiration", "value": 604800, "description": "Tiempo de vida del refresh token (7 días)", "tag": "auth"},
             {"key": "max_login_attempts", "value": 5, "description": "Máximo de intentos de login antes de bloqueo", "tag": "auth"},
             {"key": "rate_limit_auth", "value": {"times": 20, "seconds": 60}, "description": "Límite de peticiones para auth", "tag": "rate_limit"},

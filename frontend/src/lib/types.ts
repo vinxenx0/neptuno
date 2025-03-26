@@ -96,3 +96,9 @@ export interface SiteSetting {
     updated_by?: number;
     updated_at: string; // ISO string
 }
+
+export interface FetchResponse<T> {
+  data: T | null;
+  error: string | HTTPValidationError | null;
+  total_pages?: number;
+}

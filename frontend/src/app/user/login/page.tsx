@@ -1,39 +1,28 @@
-// src/app/register/page.tsx
-// src/app/register/page.tsx
+// src/app/login/page.tsx
+// src/app/login/page.tsx
 "use client";
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { RegisterRequest } from "@/lib/types";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { register } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
     try {
-      const data: RegisterRequest = { email, username, password };
-      await register(data);
-      setSuccess("¡Registro exitoso! Redirigiendo...");
+      await login(email, password);
+      setSuccess("¡Inicio de sesión exitoso! Redirigiendo...");
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Error al registrarse";
-      // Personalizar mensajes según el error del backend
-      if (errorMessage.includes("email")) {
-        setError("El email ya está registrado");
-      } else if (errorMessage.includes("username")) {
-        setError("El nombre de usuario ya está en uso");
-      } else {
-        setError(errorMessage);
-      }
+      setError(err instanceof Error ? err.message : "Error al iniciar sesión");
     }
   };
 
@@ -45,7 +34,7 @@ export default function RegisterPage() {
         transition={{ duration: 0.3 }}
         className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg"
       >
-        <h1 className="mb-6 text-center">Registrarse</h1>
+        <h1 className="mb-6 text-center">Iniciar Sesión</h1>
         {error && (
           <motion.p
             initial={{ opacity: 0 }}
@@ -79,19 +68,6 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Nombre de usuario
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              required
-            />
-          </div>
-          <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Contraseña
             </label>
@@ -105,13 +81,19 @@ export default function RegisterPage() {
             />
           </div>
           <button type="submit" className="btn-primary w-full">
-            Registrarse
+            Iniciar Sesión
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
-          ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-[var(--secondary)] hover:underline">
-            Inicia sesión
+          ¿No tienes cuenta?{" "}
+          <Link href="/user/register" className="text-[var(--secondary)] hover:underline">
+            Regístrate
+          </Link>
+        </p>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          ¿Olvidaste tu contraseña?{" "}
+          <Link href="/user/reset-password" className="text-[var(--secondary)] hover:underline">
+            Recupérala aquí
           </Link>
         </p>
       </motion.div>

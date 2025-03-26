@@ -14,4 +14,4 @@ class APILogResponse(APILogBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Reemplaza orm_mode = True

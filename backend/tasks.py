@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta
 from celery import Celery
+from backend.models.session import AnonymousSession
 from core.config import settings
 from core.database import SessionLocal
 from services.credits_service import deduct_credit
@@ -12,3 +14,12 @@ def async_deduct_credit(user_id: int, amount: int = 1):
         deduct_credit(db, user_id, amount)
     finally:
         db.close()
+
+#  eliminar sesiones inactivas después de 30 días:
+
+@celery_app.task
+def cleanup_anonymous_sessions():
+    db = SessionLocal()
+    threshold = datetime.utcnow() - timedelta(days=30)
+    db.query(AnonymousSession).filter(AnonymousSession.ultima_actividad < threshold).delete()
+    db.commit()
