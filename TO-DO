@@ -81,6 +81,20 @@ checkAuth completado
 -- incongruencia con el id de anonimo: cuando hago logout me da un nuevo sesion? pero me mantiene los creditos
 -- update navbar creditos segun endpoit hay unos q actualiza en tiempo  real y otros no
 
+-- Nomenclatuura estructura archivos para compartir github gnu -> añadir nuevas carpetas en api, ordenar mejor
+-- Enfoque ya de que otros lo vean
+-- mejorar initial data
+-- en el prompnt:
+    -- he desplegado ya el mvp vamos a profundizar en la seguridad: cors
+    -- ha quedado dpm las features vamos a profundizar: categorias, planes, creditos, ssl, crones
+    -- vamos añadir un modulo nuevo: type, schema, model, middleware, security 
+            -- modulo notificaciones, modulo gaming, modulo badges, 
+    -- añadir crud a las ventanas del registry
+    -- arranque unico
+    -- loading como cargando neptuno en todas las paginas
+
+-- empezar avanzar con el moonitor-neptuno
+
 -- Implantar:
 MIDDDLEWARE q controla user_type
 
