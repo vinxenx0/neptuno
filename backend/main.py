@@ -38,7 +38,12 @@ logger = configure_logging()
 db = next(get_db())
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
+    allow_origins=["*",
+        "http://localhost:3000",
+        "http://194.164.164.177:3000",
+        "http://neptuno.ciberpunk.es"
+    ],  # Lista explícita de dominios permitidos
+    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -157,7 +162,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
     if user.user_type == "anonymous":
         response["session_id"] = user.user_id  # Incluir session_id en la respuesta
 
-    # Consumir créditos si no están desactivados (sin cambios)
+    # Consumir créditos si no están desactivados
     disable_credits = get_setting(db, "disable_credits")
     if disable_credits != "true":
         try:
@@ -166,6 +171,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
                 user_db.credits -= 1
                 transaction = CreditTransaction(
                     user_id=user_db.id,
+                    user_type="registered",  # Especificar explícitamente
                     amount=-1,
                     transaction_type="usage",
                     description="Consulta realizada"
@@ -176,6 +182,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
                 session_db.credits -= 1
                 transaction = CreditTransaction(
                     session_id=session_db.id,
+                    user_type="anonymous",  # Especificar explícitamente para claridad
                     amount=-1,
                     transaction_type="usage",
                     description="Consulta realizada por anónimo"
@@ -197,7 +204,6 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
 
     return response
 
-
 @app.get("/restricted")
 async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
     """
@@ -218,6 +224,7 @@ async def restricted_test(user: UserContext = Depends(check_credits), db: Sessio
             user_db.credits -= 1
             transaction = CreditTransaction(
                 user_id=user_db.id,
+                user_type="registered",  # Especificar explícitamente
                 amount=-1,
                 transaction_type="usage",
                 description="Consulta realizada"

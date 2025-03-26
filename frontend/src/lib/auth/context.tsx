@@ -42,22 +42,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             setUser(null);
-            const anonCredits = localStorage.getItem("anonCredits");
-            setCredits(anonCredits ? parseInt(anonCredits) : 100);
+            await handleAnonymousCredits();
           }
         } else {
-          const anonCredits = localStorage.getItem("anonCredits");
-          setCredits(anonCredits ? parseInt(anonCredits) : 100);
+          await handleAnonymousCredits();
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
         setUser(null);
-        const anonCredits = localStorage.getItem("anonCredits");
-        setCredits(anonCredits ? parseInt(anonCredits) : 100);
+        await handleAnonymousCredits();
       } finally {
         setLoading(false);
       }
     };
+
+    const handleAnonymousCredits = async () => {
+      const sessionId = localStorage.getItem("session_id");
+      if (sessionId) {
+        const { data } = await fetchAPI<{ credits: number }>("/v1/anonymous/credits");
+        setCredits(data?.credits ?? 100);
+      } else {
+        setCredits(100);
+      }
+    };
+
     checkAuth();
   }, []);
 
@@ -81,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push("/user/dashboard");
     }
   };
-  
+
   const logout = async () => {
     try {
       await fetchAPI("/v1/auth/logout", { method: "POST" });

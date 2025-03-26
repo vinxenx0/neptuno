@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from fastapi import Response
 
 logger = configure_logging()
+
 class UserContext(BaseModel):
     user_id: str
     email: str
@@ -22,10 +23,10 @@ class UserContext(BaseModel):
     subscription: str
     credits: int
     rol: str
-    session_id: str | None = None  # Campo opcional para sesiones anónimas
-    
+    session_id: str | None = None
+
     class Config:
-        from_attributes=True #orm_mode = True
+        from_attributes = True
 
 
 async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
@@ -84,7 +85,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             logger.info(f"Nueva sesión anónima creada ID {session_id} desde IP {client_ip}")
             return UserContext(
                 user_type="anonymous",
-                user_id=session_id,
+                user_id=session_id,  # user_id es el session_id para anónimos
                 email="anonymous@example.com",
                 username="anonymous",
                 credits=100,

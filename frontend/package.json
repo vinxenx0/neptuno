@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "DEBUG=next:* next start",
-    "lint": "next lint"
+    "build": "next build && next export",
+    "lint": "next lint",
+    "export": "next export",
+    "start": "npx http-server out/ -p 3000 --ssl --cert ../ssl/cert.pem --key ../ssl/key.pem --cors",
+    "clean": "rm -rf .next/ out/ node_modules/.cache/ && npm install"
+    
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -22,6 +25,7 @@
     "swr": "^2.3.3"
   },
   "devDependencies": {
+    "@types/estree": "^1.0.7",
     "@types/node": "^20",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19",

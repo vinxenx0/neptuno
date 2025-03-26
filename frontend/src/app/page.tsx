@@ -88,7 +88,7 @@ export default function LandingPage() {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
       } else {
-        setSnackbarMessage("Consulta restringida realizada: " + response.data.message);
+        setSnackbarMessage("Consulta restringida realizada: " + (response.data as { message: string }).message);
         setSnackbarSeverity("success");
       }
       setSnackbarOpen(true);

@@ -16,7 +16,12 @@ def reset_credits(db: Session, freemium_credits: int = 100, premium_credits: int
             if not user.renewal or user.renewal < datetime.utcnow() - timedelta(days=reset_interval):
                 user.credits = freemium_credits if user.subscription == subscriptionEnum.FREEMIUM else premium_credits
                 user.renewal = datetime.utcnow()
-                db.add(CreditTransaction(user_id=user.id, amount=user.credits, transaction_type="reset"))
+                db.add(CreditTransaction(
+                    user_id=user.id,
+                    user_type='registered',  # Corrección clave
+                    amount=user.credits,
+                    transaction_type="reset"
+                ))
         db.commit()
     except Exception as e:
         logger.error(f"Error al reiniciar créditos: {str(e)}")
@@ -30,7 +35,13 @@ def deduct_credit(db: Session, user_id: int, amount: int = 1):
         if user.credits < amount:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No te quedan suficientes créditos")
         user.credits -= amount
-        db.add(CreditTransaction(user_id=user_id, amount=-amount, transaction_type="usage"))
+        db.add(CreditTransaction(
+            user_id=user_id,
+            user_type='registered',  # Corrección clave
+            amount=-amount,
+            transaction_type="usage",
+            description="Consulta realizada"  # Opcional, para consistencia con los logs
+        ))
         db.commit()
         return user.credits
     except HTTPException as e:

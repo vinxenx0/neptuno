@@ -23,7 +23,7 @@ async def check_credits(user: UserContext = Depends(get_user_context), db: Sessi
                     raise HTTPException(status_code=404, detail="Usuario no encontrado")
                 credits = user_db.credits
             else:
-                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.session_id).first() # user.id
+                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
                 if not session_db:
                     raise HTTPException(status_code=404, detail="Sesión no encontrada")
                 credits = session_db.credits

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from models.session import AnonymousSession
 from schemas.anonymous_session import AnonymousSessionResponse  # Asegúrate de que este esquema existe
-from dependencies.auth import get_user_context
+from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
 from math import ceil
 
@@ -34,3 +34,12 @@ def get_anonymous_sessions(
         "total_pages": ceil(total_items / limit),
         "current_page": page
     }
+
+@router.get("/credits", response_model=dict)
+async def get_anonymous_credits(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.user_type != "anonymous":
+        raise HTTPException(status_code=403, detail="Solo para usuarios anónimos")
+    session = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
+    if not session:
+        raise HTTPException(status_code=404, detail="Sesión no encontrada")
+    return {"credits": session.credits}
