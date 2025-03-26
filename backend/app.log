@@ -6424,3 +6424,5 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-03-26 19:35:16,966 - NeptunO - DEBUG - Créditos actualizados para registered ID 4: 985
 2025-03-26 19:35:17,038 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-03-26 19:35:17,141 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-27 00:52:36,056 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-27 00:52:36,056 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
