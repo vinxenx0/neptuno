@@ -12,7 +12,7 @@ from models.credit_transaction import CreditTransaction
 from models.session import AnonymousSession
 from models.user import User
 from services.integration_service import trigger_webhook
-from middleware.credits import require_credits
+from middleware.credits_middleware import require_credits
 from middleware.logging import LoggingMiddleware
 from dependencies.auth import UserContext, get_user_context
 from services.settings_service import get_setting

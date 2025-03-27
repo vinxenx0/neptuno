@@ -7,7 +7,7 @@
     "build": "next build",
     "lint": "next lint",
     "export": "next export",
-    "start": "npx http-server out/ -p 3000 --ssl --cert ../ssl/cert.pem --key ../ssl/key.pem --cors",
+    "start": "npx http-server out/ -p 3000",
     "clean": "rm -rf .next/ out/ node_modules/.cache/ && npm install"
     
   },
