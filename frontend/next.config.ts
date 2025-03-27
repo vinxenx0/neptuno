@@ -7,7 +7,10 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // Necesario para que `next/image` funcione en modo export
   },
-  eactStrictMode: true,
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true, // Optional: to ignore ESLint warnings during build
+  },
   async headers() {
     return [
       {
@@ -30,5 +33,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
-

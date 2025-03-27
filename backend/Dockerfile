@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 # Define el directorio de trabajo en el contenedor
-WORKDIR /neptuno
+WORKDIR /app
 
 # Copia y instala las dependencias
 COPY requirements.txt .
