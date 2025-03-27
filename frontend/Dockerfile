@@ -13,6 +13,7 @@ RUN ls -la src/lib/ && \
 RUN npm run build
 
 FROM nginx:alpine
+
 # Copy from the correct output directory
 COPY --from=builder /app/.next/static /usr/share/nginx/html/_next/static
 COPY --from=builder /app/out /usr/share/nginx/html
