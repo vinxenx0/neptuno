@@ -38,8 +38,15 @@ logger = configure_logging()
 db = next(get_db())
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*" #
-        #"127.0.0.0.1",
+    allow_origins=["*", #
+        "https://172.18.0.2:8000",
+        "https://localhost:8000",
+        "https://localhost:3000",
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "https://neptuno.ciberpunk.es",
+        "http://neptuno.ciberpunk.es",
+        "127.0.0.0.1",
         #"194.164.164.177",
         #"neptuno.ciberpunk.es",
         #"172.18.0.3"
