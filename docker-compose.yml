@@ -1,23 +1,28 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   backend:
-    build: 
-      context: ./backend
+    build: ./backend
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Accesible en http://192.168.18.70:8000
     networks:
-      - mynetwork
+      vboxnet:
+        ipv4_address: 172.18.0.2  # IP fija para el backend
 
   frontend:
-    build: 
-      context: ./frontend
+    build: ./frontend
     ports:
-      - "80:80"
+      - "3000:3000"
     depends_on:
       - backend
     networks:
-      - mynetwork
+      vboxnet:
+        ipv4_address: 172.18.0.3  # IP fija para el frontend
 
 networks:
-  mynetwork:
+  vboxnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.0.0/16"
+          gateway: "172.18.0.1"
