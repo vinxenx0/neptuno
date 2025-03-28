@@ -35,7 +35,7 @@ def init_data():
             {"key": "cache_ttl", "value": 300, "description": "Tiempo de vida del caché en Redis (segundos)", "tag": "cache"},
             {"key": "cache_enabled", "value": True, "description": "Habilitar/deshabilitar el caché", "tag": "cache"},
             {"key": "cache_max_size", "value": 10000, "description": "Tamaño máximo del caché en entradas", "tag": "cache"},
-            {"key": "allowed_origins", "value": ["http://localhost:3000", "https://neptuno.app"], "description": "Orígenes permitidos para CORS", "tag": "cors"},
+            {"key": "allowed_origins", "value": ["https://localhost:3000", "https://neptuno.app"], "description": "Orígenes permitidos para CORS", "tag": "cors"},
             {"key": "cors_enabled", "value": True, "description": "Habilitar/deshabilitar CORS", "tag": "cors"},
             {"key": "celery_workers", "value": 4, "description": "Número de workers de Celery", "tag": "celery"},
             {"key": "celery_task_timeout", "value": 300, "description": "Tiempo máximo de ejecución de tareas Celery (segundos)", "tag": "celery"},

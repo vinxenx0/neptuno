@@ -26,9 +26,9 @@ const nextConfig: NextConfig = {
   },
   // Para desarrollo
   allowedDevOrigins: [
-    "*",
-    "http://localhost:3000",
-    "http://194.164.164.177:3000"
+    "*"
+   // "https://localhost:3000",
+    //"https://194.164.164.177:3000"
   ]
 };
 

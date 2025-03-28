@@ -20,6 +20,7 @@ logger = configure_logging()
 
 - el lio de los loggers
 
+-- hay partes de la pagina inseguraas
 
 -- error desconocido cuando el email es el mismo hay q revisarlo
 

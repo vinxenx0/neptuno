@@ -5,7 +5,7 @@ services:
     container_name: neptuno-stack
     build: ./backend
     ports:
-      - "8000:8000"  # Accesible en http://192.168.18.70:8000
+      - "8000:8000"  # Accesible en https://192.168.18.70:8000
     networks:
       vboxnet:
         ipv4_address: 172.18.0.2  # IP fija para el backend

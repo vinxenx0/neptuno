@@ -38,12 +38,13 @@ logger = configure_logging()
 db = next(get_db())
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*",
-        "http://localhost:3000",
-        "http://194.164.164.177:3000",
-        "http://neptuno.ciberpunk.es"
+    allow_origins=["*" #
+        #"127.0.0.0.1",
+        #"194.164.164.177",
+        #"neptuno.ciberpunk.es",
+        #"172.18.0.3"
     ],  # Lista explícita de dominios permitidos
-    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
+    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["https://localhost:3000"]  # Valor por defecto
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
