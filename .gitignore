@@ -12,6 +12,7 @@ ssl/*.pem
 .certs
 .logs
 .tools
+.copys
 dev.db
 
 
