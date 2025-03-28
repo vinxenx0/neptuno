@@ -32,30 +32,40 @@ app = FastAPI(
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url=None
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En desarrollo (en producción usa dominios exactos)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]  # Añade esto para headers personalizados
+)
+
 logger = configure_logging()
 # app.add_middleware(LoggingMiddleware)
 
 db = next(get_db())
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*", #
-        "https://172.18.0.2:8000",
-        "https://localhost:8000",
-        "https://localhost:3000",
-        "http://localhost:8000",
-        "http://localhost:3000",
-        "https://neptuno.ciberpunk.es",
-        "http://neptuno.ciberpunk.es",
-        "127.0.0.0.1",
+#app.add_middleware(
+#    CORSMiddleware,
+#    allow_origins=["*", #
+#        "https://172.18.0.2:8000",
+#        "https://localhost:8000",
+#        "https://localhost:3000",
+#        "http://localhost:8000",
+#        "http://localhost:3000",
+#        "https://neptuno.ciberpunk.es",
+#        "http://neptuno.ciberpunk.es",
+#        "127.0.0.0.1",
         #"194.164.164.177",
         #"neptuno.ciberpunk.es",
         #"172.18.0.3"
-    ],  # Lista explícita de dominios permitidos
+    #],  # Lista explícita de dominios permitidos
     #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["https://localhost:3000"]  # Valor por defecto
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    #allow_credentials=True,
+    #allow_methods=["*"],
+#    allow_headers=["*"]
+#)
 
 
 Base.metadata.create_all(bind=engine)
