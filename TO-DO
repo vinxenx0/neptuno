@@ -1,3 +1,8 @@
+El nombre de usuario del servidor es root.
+
+La contraseña para el acceso al servidor es BMJvOol1.
+
+
 - # Añadir logging a otras funciones de auth_service.py 
 
 - # Añadir manejo de errores y excepciones a otras funciones de auth_service.py 
