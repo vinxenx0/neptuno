@@ -7,14 +7,17 @@ WORKDIR /app
 # Copia y instala las dependencias
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-#RUN python3 initial_data.py
+
 
 # Copia el código fuente
 COPY . .
+
+RUN python3 initial_data.py
 
 # Exponer el puerto 8000
 EXPOSE 8000
 
 # Usar Gunicorn con Uvicorn para producción
-#CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "127.0.0.1:8000", "main:app"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "127.0.0.1:8000", "main:app"]
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+#ExecStart=/var/www/ciberpunk.es/backend/venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000

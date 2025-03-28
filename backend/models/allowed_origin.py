@@ -1,3 +1,4 @@
+#backend/models/allowed_origin.py
 from sqlalchemy import Column, Integer, String
 from models.user import Base
 
