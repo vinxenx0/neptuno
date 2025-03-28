@@ -30,7 +30,8 @@ from fastapi_limiter.depends import RateLimiter
 app = FastAPI(
     title=settings.PROJECT_NAME,
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
-    redoc_url=None
+    redoc_url=None,
+    proxy_headers=True  # Necesario para X-Forwarded-*
 )
 
 app.add_middleware(

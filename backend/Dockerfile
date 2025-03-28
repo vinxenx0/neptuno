@@ -18,7 +18,8 @@ COPY . .
 EXPOSE 8000
 
 # Usar Gunicorn con Uvicorn para producción
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "main:app"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "--forwarded-allow-ips", "*", "main:app"]
+#CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "main:app"]
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 #ExecStart=/var/www/ciberpunk.es/backend/venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
 #CMD ["sh", "-c", "python -m initial_data && uvicorn main:app --host 0.0.0.0 --port 8000"]
