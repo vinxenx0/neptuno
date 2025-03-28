@@ -27,6 +27,7 @@ logger = configure_logging()
 
 --- reset credits enchufa 2000 creditos y reset credits no me reconoce el tooken de admin
 
+--- allowed origin no va (no graba no muestra etc)
 
 todo: mejorar la configuración (  archivos o db para los limites?, ) hacerla mas escalable y desactivar features
 
