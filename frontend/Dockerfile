@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # Etapa de producción
-#FROM node:18-alpine AS production
+FROM node:18-alpine AS production
 
 WORKDIR /app
 # Copiamos solo lo necesario desde el builder
