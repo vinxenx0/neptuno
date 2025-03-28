@@ -6511,3 +6511,14 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-03-28 13:36:26,807 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
 2025-03-28 13:36:39,862 - NeptunO - INFO - Iniciando Neptuno en entorno development
 2025-03-28 13:36:39,863 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-28 14:00:18,602 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-28 14:00:18,602 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-28 14:03:57,223 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-28 14:03:57,601 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-28 14:03:59,074 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-28 14:03:59,335 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-28 14:03:59,408 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-28 14:03:59,518 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-28 14:04:03,674 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-28 14:04:03,838 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-28 14:04:03,949 - NeptunO - INFO - Integración asdfasdf añadida para usuario ID 4
