@@ -32,6 +32,7 @@ app = FastAPI(
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url=None,
     proxy_headers=True  # Necesario para X-Forwarded-*
+    #root_path="/api/"
 )
 
 app.add_middleware(
