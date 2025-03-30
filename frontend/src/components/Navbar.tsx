@@ -4,21 +4,72 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import fetchAPI from "@/lib/api";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; // Icono de moneda amarilla
-import Button from '@mui/material/Button'; // Botón estilizado de Material-UI
+import { 
+  Button, 
+  Avatar, 
+  Chip, 
+  IconButton, 
+  Menu, 
+  MenuItem, 
+  Divider, 
+  useTheme,
+  styled,
+  Box,
+  Typography
+} from "@mui/material";
+import {
+  MonetizationOn,
+  Settings,
+  ListAlt,
+  People,
+  Dashboard,
+  Login,
+  PersonAdd,
+  Person,
+  ArrowDropDown,
+  Home
+} from "@mui/icons-material";
+
+const GlassNavbar = styled('nav')(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  zIndex: 1100,
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+  boxShadow: theme.shadows[1]
+}));
+
+const NavContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: theme.spacing(2),
+  maxWidth: '1400px',
+  margin: '0 auto'
+}));
+
+const CreditsChip = styled(Chip)(({ theme }) => ({
+  fontWeight: 'bold',
+  borderRadius: '12px',
+  '& .MuiChip-icon': {
+    color: theme.palette.warning.main
+  }
+}));
 
 export default function Navbar() {
+  const theme = useTheme();
   const { user, credits, logout } = useAuth();
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    // Obtener anonUsername de localStorage
     const storedAnonUsername = localStorage.getItem("anonUsername");
     setAnonUsername(storedAnonUsername);
   }, []);
@@ -39,80 +90,158 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
-  return (
-    <nav className="nav-bar fixed top-0 left-0 w-full z-50">
-      <div className="container mx-auto flex justify-between items-center py-4">
-        <Link href="/" className="text-2xl font-bold">
-          Neptuno
-        </Link>
-        <div className="flex items-center space-x-4">
-          {!disableCredits && credits > 0 && (
-            <span className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm flex items-center">
-              <MonetizationOnIcon style={{ color: 'gold', marginRight: '4px' }} />
-              {credits}
-            </span>
-          )}
-          {user?.rol === "admin" && (
-            <div className="relative flex items-center">
-              <Link href="/admin/configure" className="flex items-center hover:underline">
-                ⚙️ Settings
-              </Link>
-              <button onClick={() => setSettingsOpen(!settingsOpen)} className="ml-1">
-                <span>▼</span>
-              </button>
-              {settingsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-10 right-0 w-48 submenu py-2 z-50"
-                >
-                  <Link
-                    href="/admin/registry"
-                    className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                    onClick={() => setSettingsOpen(false)}
-                  >
-                    📋 Registry
-                  </Link>
-                  <Link
-                    href="/admin/users"
-                    className="block px-4 py-2 hover:bg-gray-700 flex items-center"
-                    onClick={() => setSettingsOpen(false)}
-                  >
-                    👥 Users
-                  </Link>
-                </motion.div>
-              )}
-            </div>
-          )}
-          {user ? (
-            <Link href="/user/dashboard" className="flex items-center hover:underline">
-              👤 {user.username} 
-            </Link>
-          ) : anonUsername ? (
-            <div className="flex items-center gap-2">
-              <span className="flex items-center">
-                👤 {anonUsername} 
-              </span>
-              <Link href="/user/auth/#login" className="btn-primary text-white ml-2"> 
-                ¡Empezar!
-              </Link>
-            </div>
-          ) : (
-            <>
+  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
 
-              <Link href="/user/auth/#login" className="hover:underline">
-                Login
-              </Link>
-              {enableRegistration && (
-                <Link href="/user/auth/#register" className="hover:underline">
-                  Register
-                </Link>
-              )}
+  const handleSettingsMenuClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
+  return (
+    <GlassNavbar>
+      <NavContainer>
+        <Link href="/" passHref>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
+            <Home color="primary" />
+            <Typography 
+              variant="h6" 
+              component="span" 
+              sx={{ 
+                fontWeight: 'bold',
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              Neptuno
+            </Typography>
+          </Box>
+        </Link>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {!disableCredits && credits > 0 && (
+            <CreditsChip
+              icon={<MonetizationOn />}
+              label={credits}
+              color="primary"
+              variant="outlined"
+            />
+          )}
+
+          {user?.rol === "admin" && (
+            <>
+              <IconButton
+                onClick={handleSettingsMenuOpen}
+                sx={{ 
+                  color: 'inherit',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }}
+              >
+                <Settings />
+              </IconButton>
+              <Menu
+                anchorEl={settingsAnchorEl}
+                open={Boolean(settingsAnchorEl)}
+                onClose={handleSettingsMenuClose}
+                PaperProps={{
+                  sx: {
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: '12px',
+                    mt: 1,
+                    minWidth: '200px'
+                  }
+                }}
+              >
+                <MenuItem 
+                  onClick={handleSettingsMenuClose}
+                  component={Link}
+                  href="/admin/dashboard"
+                  sx={{ borderRadius: '8px', my: 0.5 }}
+                >
+                  <Dashboard sx={{ mr: 1 }} /> Dashboard
+                </MenuItem>
+                <MenuItem 
+                  onClick={handleSettingsMenuClose}
+                  component={Link}
+                  href="/admin/registry"
+                  sx={{ borderRadius: '8px', my: 0.5 }}
+                >
+                  <ListAlt sx={{ mr: 1 }} /> Registros
+                </MenuItem>
+                <MenuItem 
+                  onClick={handleSettingsMenuClose}
+                  component={Link}
+                  href="/admin/users"
+                  sx={{ borderRadius: '8px', my: 0.5 }}
+                >
+                  <People sx={{ mr: 1 }} /> Usuarios
+                </MenuItem>
+              </Menu>
             </>
           )}
-        </div>
-      </div>
-    </nav>
+
+          {user ? (
+            <Button
+              component={Link}
+              href="/user/dashboard"
+              startIcon={<Person />}
+              endIcon={<ArrowDropDown />}
+              sx={{
+                color: 'inherit',
+                textTransform: 'none',
+                fontWeight: 'medium'
+              }}
+            >
+              {user.username}
+            </Button>
+          ) : anonUsername ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Chip
+                avatar={<Avatar sx={{ width: 24, height: 24 }}><Person sx={{ fontSize: 14 }} /></Avatar>}
+                label={anonUsername}
+                variant="outlined"
+              />
+              <Button
+                component={Link}
+                href="/user/auth/#login"
+                variant="contained"
+                color="secondary"
+                startIcon={<Login />}
+                sx={{ borderRadius: '12px' }}
+              >
+                ¡Empezar!
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                component={Link}
+                href="/user/auth/#login"
+                startIcon={<Login />}
+                sx={{ borderRadius: '12px' }}
+              >
+                Iniciar Sesión
+              </Button>
+              {enableRegistration && (
+                <Button
+                  component={Link}
+                  href="/user/auth/#register"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PersonAdd />}
+                  sx={{ borderRadius: '12px' }}
+                >
+                  Registrarse
+                </Button>
+              )}
+            </Box>
+          )}
+        </Box>
+      </NavContainer>
+    </GlassNavbar>
   );
 }

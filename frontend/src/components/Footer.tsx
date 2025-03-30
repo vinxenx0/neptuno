@@ -3,17 +3,51 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaSun, FaMoon } from "react-icons/fa"; // Iconos para tema
+import { 
+  Box, 
+  Grid, 
+  Typography, 
+  IconButton, 
+  Divider, 
+  useTheme,
+  styled,
+  Container
+} from "@mui/material";
+import { 
+  Brightness4, 
+  Brightness7,
+  Info,
+  Gavel,
+  ContactSupport,
+  Home
+} from "@mui/icons-material";
+
+const GlassFooter = styled('footer')(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+  padding: theme.spacing(4),
+  marginTop: 'auto'
+}));
+
+const FooterLink = styled(Link)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  textDecoration: 'none',
+  transition: 'color 0.3s ease',
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}));
 
 export default function Footer() {
+  const theme = useTheme();
   const [loadTime, setLoadTime] = useState(0);
-  const [theme, setTheme] = useState("light");
+  const [currentTheme, setCurrentTheme] = useState(theme.palette.mode);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.body.setAttribute("data-theme", savedTheme);
-
     const startTime = performance.now();
     const handleLoad = () => {
       const endTime = performance.now();
@@ -25,46 +59,87 @@ export default function Footer() {
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setCurrentTheme(newTheme);
+    // Aquí deberías implementar la lógica para cambiar el tema globalmente
   };
 
   return (
-    <footer className="footer mt-4">
-      <div className="container mx-auto grid grid-cols-4 gap-8 py-8">
-        <div>
-          <h3 className="font-bold mb-2">Acerca de</h3>
-          <ul>
-            <li><Link href="/about/us" className="hover:underline">Sobre Nosotros</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="font-bold mb-2">Legal</h3>
-          <ul>
-            <li><Link href="/about/privacy" className="hover:underline">Privacidad</Link></li>
-            <li><Link href="/about/legal" className="hover:underline">Términos Legales</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="font-bold mb-2">Soporte</h3>
-          <ul>
-            <li><Link href="/about/contact" className="hover:underline">Contacto</Link></li>
-          </ul>
-        </div>
-        <div className="text-right">
-          <p className="text-sm">Tiempo de carga: {loadTime} ms</p>
-          <p className="text-sm">© 2025 Neptuno. Todos los derechos reservados.</p>
-          <button
-            onClick={toggleTheme}
-            className="mt-2 p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
-            aria-label="Alternar tema"
-          >
-            {theme === "light" ? <FaMoon /> : <FaSun />}
-          </button>
-        </div>
-      </div>
-    </footer>
+    <GlassFooter>
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={3}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Home color="primary" />
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  fontWeight: 'bold',
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                Neptuno
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="textSecondary">
+              Tu framework SaaS para gestión de créditos y APIs.
+            </Typography>
+          </Grid>
+
+          <Grid item xs={6} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Acerca de
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/us">
+                <Info fontSize="small" /> Sobre Nosotros
+              </FooterLink>
+            </Box>
+          </Grid>
+
+          <Grid item xs={6} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Legal
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/privacy">
+                <Gavel fontSize="small" /> Privacidad
+              </FooterLink>
+              <FooterLink href="/about/legal">
+                <Gavel fontSize="small" /> Términos Legales
+              </FooterLink>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Soporte
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/contact">
+                <ContactSupport fontSize="small" /> Contacto
+              </FooterLink>
+            </Box>
+            
+            <Divider sx={{ my: 2 }} />
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Typography variant="caption" color="textSecondary">
+                Tiempo de carga: {loadTime} ms
+              </Typography>
+              <IconButton onClick={toggleTheme} color="inherit">
+                {currentTheme === 'light' ? <Brightness4 /> : <Brightness7 />}
+              </IconButton>
+            </Box>
+            
+            <Typography variant="caption" color="textSecondary">
+              © {new Date().getFullYear()} Neptuno. Todos los derechos reservados.
+            </Typography>
+          </Grid>
+        </Grid>
+      </Container>
+    </GlassFooter>
   );
 }
