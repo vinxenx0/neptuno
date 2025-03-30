@@ -109,9 +109,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("session_id");  // Limpiar session_id al cerrar sesión
     setUser(null);
-    const anonCredits = localStorage.getItem("anonCredits");
-    setCredits(anonCredits ? parseInt(anonCredits) : 100);
-    router.push("/user/login");
+    // const anonCredits = localStorage.getItem("anonCredits");
+    // setCredits(anonCredits ? parseInt(anonCredits) : 100);
+    router.push("/");
   };
 
   const register = async (data: RegisterRequest) => {

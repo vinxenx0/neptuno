@@ -27,7 +27,7 @@ export default function PaymentMethodsPage() {
   // Cargar métodos de pago al iniciar
   useEffect(() => {
     if (!user) {
-      router.push("/user/login");
+      router.push("/user/auth/#login");
       return;
     }
 

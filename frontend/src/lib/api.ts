@@ -163,7 +163,7 @@ const fetchAPI = async <T>(
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("session_id");
           processQueue(refreshError, null);
-          window.location.href = "/user/login";
+          window.location.href = "/user/auth/#login";
           return normalizeResponse(undefined, {
             message: "Sesión expirada, por favor inicia sesión nuevamente",
           });

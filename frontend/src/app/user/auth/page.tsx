@@ -1,14 +1,18 @@
-// src/app/user/auth/page.tsx
+// src/app/user/auth/page.tsx..
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { RegisterRequest } from "@/lib/types";
 import fetchAPI from "@/lib/api";
 
 export default function AuthPage() {
+  const router = useRouter();
+  const pathname = usePathname();
   const [mode, setMode] = useState<"login" | "register" | "reset">("login");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -20,6 +24,31 @@ export default function AuthPage() {
   const [enableRegistration, setEnableRegistration] = useState(true);
   const { login, register } = useAuth();
 
+  // Efecto para sincronizar el hash con el modo
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1); // Elimina el #
+      if (hash === "register" && enableRegistration) {
+        setMode("register");
+      } else if (hash === "reset") {
+        setMode("reset");
+      } else {
+        setMode("login");
+      }
+    };
+
+    // Manejar el hash inicial
+    handleHashChange();
+
+    // Escuchar cambios en el hash
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [enableRegistration]);
+
+  // Efecto para obtener configuraciones
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -32,6 +61,16 @@ export default function AuthPage() {
     };
     fetchSettings();
   }, []);
+
+  // Función para cambiar el modo y actualizar el hash
+  const changeMode = (newMode: "login" | "register" | "reset") => {
+    setMode(newMode);
+    if (newMode === "login") {
+      router.replace(pathname); // Elimina el hash
+    } else {
+      window.location.hash = newMode; // Agrega el hash
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,14 +185,18 @@ export default function AuthPage() {
                   required
                 />
               </div>
-              <button type="submit" className="btn-primary w-full">
+              <button type="submit" 
+                className="btn-primary w-full">
                 Iniciar Sesión
               </button>
             </form>
             <p className="mt-4 text-center text-sm text-gray-600">
               ¿No tienes cuenta?{" "}
               {enableRegistration ? (
-                <button onClick={() => setMode("register")} className="text-[var(--secondary)] hover:underline">
+                <button
+                  onClick={() => changeMode("register")}
+                  className="text-[var(--secondary)] hover:underline"
+                >
                   Regístrate
                 </button>
               ) : (

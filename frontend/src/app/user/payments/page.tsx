@@ -22,7 +22,7 @@ export default function PaymentsPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/user/login");
+      router.push("/user/auth/#login");
       return;
     }
 

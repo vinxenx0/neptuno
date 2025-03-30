@@ -71,7 +71,7 @@ export default function UserDashboard() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/user/login");
+      router.push("/"); // router.push("/user/auth/#login");
       return;
     }
     setFormData({
@@ -173,7 +173,7 @@ export default function UserDashboard() {
       try {
         await fetchAPI("/v1/users/me", { method: "DELETE" });
         await logout();
-        router.push("/user/login");
+        router.push("/user/auth/#login");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al eliminar cuenta");
       }

@@ -1,5 +1,4 @@
 // src/components/Navbar.tsx
-// src/components/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,6 +6,8 @@ import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; // Icono de moneda amarilla
+import Button from '@mui/material/Button'; // Botón estilizado de Material-UI
 
 export default function Navbar() {
   const { user, credits, logout } = useAuth();
@@ -17,7 +18,6 @@ export default function Navbar() {
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
 
   useEffect(() => {
-
     // Obtener anonUsername de localStorage
     const storedAnonUsername = localStorage.getItem("anonUsername");
     setAnonUsername(storedAnonUsername);
@@ -39,7 +39,6 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
-
   return (
     <nav className="nav-bar fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center py-4">
@@ -49,7 +48,8 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {!disableCredits && credits > 0 && (
             <span className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm flex items-center">
-              💳 {credits} créditos
+              <MonetizationOnIcon style={{ color: 'gold', marginRight: '4px' }} />
+              {credits}
             </span>
           )}
           {user?.rol === "admin" && (
@@ -87,25 +87,30 @@ export default function Navbar() {
           )}
           {user ? (
             <Link href="/user/dashboard" className="flex items-center hover:underline">
-              👤 {user.username} (Registrado)
+              👤 {user.username} 
             </Link>
           ) : anonUsername ? (
-            <span className="flex items-center">
-              👤 {anonUsername} (Anónimo)
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="flex items-center">
+                👤 {anonUsername} 
+              </span>
+              <Link href="/user/auth/#login" className="btn-primary text-white ml-2"> 
+                ¡Empezar!
+              </Link>
+            </div>
           ) : (
             <>
-              <Link href="/user/login" className="hover:underline">
+
+              <Link href="/user/auth/#login" className="hover:underline">
                 Login
               </Link>
               {enableRegistration && (
-                <Link href="/user/register" className="hover:underline">
+                <Link href="/user/auth/#register" className="hover:underline">
                   Register
                 </Link>
               )}
             </>
           )}
-
         </div>
       </div>
     </nav>

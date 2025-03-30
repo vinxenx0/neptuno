@@ -124,7 +124,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-">
       <div className="bg-blue-600 text-white py-16 px-8 rounded-lg text-center mb-8">
         <h1 className="text-4xl font-bold mb-4">Bienvenido a Neptuno</h1>
         <p className="text-xl mb-6">
@@ -140,13 +140,13 @@ export default function LandingPage() {
         ) : (
           <div>
             <Link
-              href="/user/register"
+              href="/user/auth/#register"
               className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold mr-4 hover:bg-gray-200"
             >
               Registrarse
             </Link>
             <Link
-              href="/user/login"
+              href="/user/auth/#login"
               className="bg-transparent border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700"
             >
               Iniciar Sesión
