@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo } from "../types";
 import { motion } from "framer-motion";
 
 interface AuthContextType {
@@ -29,40 +29,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-          const { data } = await fetchAPI<User>("/info");
-          if (data) {
-            setUser(data);
+        const { data } = await fetchAPI<UserInfo>("/info");
+        if (data) {
+          if (data.user_type === "registered") {
+            setUser({
+              id: parseInt(data.user_id!),
+              email: data.email!,
+              username: data.username!,
+              rol: data.rol!,
+              activo: true,
+              subscription: data.subscription!,
+              credits: data.credits,
+              create_at: "", // Podrías añadir este campo en el backend si lo necesitas
+              last_ip: "",
+              last_login: "",
+              user_type: data.user_type,
+            });
             setCredits(data.credits);
-          } else {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("session_id");
+            localStorage.removeItem("anonUsername");
+          } else if (data.user_type === "anonymous") {
             setUser(null);
-            await handleAnonymousCredits();
+            setCredits(data.credits);
+            localStorage.setItem("session_id", data.session_id!);
+            localStorage.setItem("anonUsername", data.username!);
+          } else {
+            setUser(null);
+            setCredits(0);
+            localStorage.removeItem("session_id");
+            localStorage.removeItem("anonUsername");
           }
-        } else {
-          await handleAnonymousCredits();
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
         setUser(null);
-        await handleAnonymousCredits();
+        setCredits(0);
+        localStorage.removeItem("session_id");
+        localStorage.removeItem("anonUsername");
       } finally {
         setLoading(false);
-      }
-    };
-
-    const handleAnonymousCredits = async () => {
-      const sessionId = localStorage.getItem("session_id");
-      if (sessionId) {
-        const { data } = await fetchAPI<{ credits: number }>("/v1/anonymous/credits");
-        setCredits(data?.credits ?? 100);
-      } else {
-        setCredits(100);
       }
     };
 
