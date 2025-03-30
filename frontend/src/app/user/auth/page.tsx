@@ -1,5 +1,4 @@
 // src/app/user/auth/page.tsx..
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,8 +8,59 @@ import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { RegisterRequest } from "@/lib/types";
 import fetchAPI from "@/lib/api";
+import { 
+  Box, 
+  TextField, 
+  Button, 
+  Typography, 
+  Alert, 
+  AlertTitle,
+  Divider,
+  IconButton,
+  InputAdornment,
+  useTheme,
+  styled,
+  Paper
+} from "@mui/material";
+import { 
+  Email, 
+  Lock, 
+  Person, 
+  ArrowBack, 
+  CheckCircle,
+  Visibility,
+  VisibilityOff
+} from "@mui/icons-material";
+
+const AuthContainer = styled(Paper)(({ theme }) => ({
+  maxWidth: 450,
+  width: '100%',
+  padding: theme.spacing(4),
+  borderRadius: '16px',
+  background: 'rgba(255, 255, 255, 0.9)',
+  backdropFilter: 'blur(10px)',
+  boxShadow: theme.shadows[10],
+  overflow: 'hidden',
+  position: 'relative'
+}));
+
+const AuthCard = styled(motion.div)({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column'
+});
+
+const AuthButton = styled(Button)(({ theme }) => ({
+  padding: theme.spacing(1.5),
+  borderRadius: '12px',
+  fontWeight: 'bold',
+  fontSize: '1rem',
+  textTransform: 'none',
+  marginTop: theme.spacing(2)
+}));
 
 export default function AuthPage() {
+  const theme = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const [mode, setMode] = useState<"login" | "register" | "reset">("login");
@@ -22,12 +72,12 @@ export default function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [enableRegistration, setEnableRegistration] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const { login, register } = useAuth();
 
-  // Efecto para sincronizar el hash con el modo
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.substring(1); // Elimina el #
+      const hash = window.location.hash.substring(1);
       if (hash === "register" && enableRegistration) {
         setMode("register");
       } else if (hash === "reset") {
@@ -37,10 +87,7 @@ export default function AuthPage() {
       }
     };
 
-    // Manejar el hash inicial
     handleHashChange();
-
-    // Escuchar cambios en el hash
     window.addEventListener("hashchange", handleHashChange);
 
     return () => {
@@ -48,7 +95,6 @@ export default function AuthPage() {
     };
   }, [enableRegistration]);
 
-  // Efecto para obtener configuraciones
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -62,13 +108,12 @@ export default function AuthPage() {
     fetchSettings();
   }, []);
 
-  // Función para cambiar el modo y actualizar el hash
   const changeMode = (newMode: "login" | "register" | "reset") => {
     setMode(newMode);
     if (newMode === "login") {
-      router.replace(pathname); // Elimina el hash
+      router.replace(pathname);
     } else {
-      window.location.hash = newMode; // Agrega el hash
+      window.location.hash = newMode;
     }
   };
 
@@ -140,223 +185,385 @@ export default function AuthPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
-      className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg"
-    >
-      <AnimatePresence mode="wait">
-        {mode === "login" && (
-          <motion.div
-            key="login"
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h1 className="mb-6 text-center text-2xl font-bold">Iniciar Sesión</h1>
-            {error && <p className="mb-4 p-3 bg-red-500 text-white rounded-md text-center">{error}</p>}
-            {success && <p className="mb-4 p-3 bg-green-500 text-white rounded-md text-center">{success}</p>}
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
+    <Box sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+      p: 2
+    }}>
+      <AuthContainer elevation={3}>
+        <AnimatePresence mode="wait">
+          {mode === "login" && (
+            <AuthCard
+              key="login"
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 100, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Typography variant="h4" component="h1" sx={{ 
+                fontWeight: 'bold', 
+                mb: 4,
+                textAlign: 'center',
+                color: theme.palette.primary.main
+              }}>
+                Iniciar Sesión
+              </Typography>
+
+              {error && (
+                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Error</AlertTitle>
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Éxito</AlertTitle>
+                  {success}
+                </Alert>
+              )}
+
+              <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <TextField
+                  label="Email"
                   type="email"
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   required
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Email color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Contraseña
-                </label>
-                <input
-                  type="password"
-                  id="password"
+
+                <TextField
+                  label="Contraseña"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   required
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <button type="submit" 
-                className="btn-primary w-full">
-                Iniciar Sesión
-              </button>
-            </form>
-            <p className="mt-4 text-center text-sm text-gray-600">
-              ¿No tienes cuenta?{" "}
-              {enableRegistration ? (
-                <button
-                  onClick={() => changeMode("register")}
-                  className="text-[var(--secondary)] hover:underline"
+
+                <AuthButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
                 >
-                  Regístrate
-                </button>
-              ) : (
-                <span className="text-gray-500">Registro deshabilitado</span>
+                  Iniciar Sesión
+                </AuthButton>
+              </Box>
+
+              <Divider sx={{ my: 3 }} />
+
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                  ¿No tienes cuenta?{' '}
+                  {enableRegistration ? (
+                    <Button 
+                      onClick={() => changeMode("register")}
+                      sx={{ 
+                        textTransform: 'none',
+                        color: theme.palette.secondary.main,
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      Regístrate
+                    </Button>
+                  ) : (
+                    <Typography variant="caption" color="textSecondary">
+                      Registro deshabilitado
+                    </Typography>
+                  )}
+                </Typography>
+
+                <Button 
+                  onClick={() => changeMode("reset")}
+                  sx={{ 
+                    textTransform: 'none',
+                    color: theme.palette.text.secondary
+                  }}
+                >
+                  ¿Olvidaste tu contraseña?
+                </Button>
+              </Box>
+            </AuthCard>
+          )}
+
+          {mode === "register" && (
+            <AuthCard
+              key="register"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -100, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
+                  <ArrowBack />
+                </IconButton>
+                <Typography variant="h4" component="h1" sx={{ 
+                  fontWeight: 'bold',
+                  color: theme.palette.primary.main
+                }}>
+                  Crear Cuenta
+                </Typography>
+              </Box>
+
+              {!enableRegistration && (
+                <Alert severity="warning" sx={{ mb: 3, borderRadius: '12px' }}>
+                  El registro está deshabilitado en este momento.
+                </Alert>
               )}
-            </p>
-            <p className="mt-4 text-center text-sm text-gray-600">
-              ¿Olvidaste tu contraseña?{" "}
-              <button onClick={() => setMode("reset")} className="text-[var(--secondary)] hover:underline">
-                Recupérala aquí
-              </button>
-            </p>
-          </motion.div>
-        )}
-        {mode === "register" && (
-          <motion.div
-            key="register"
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h1 className="mb-6 text-center text-2xl font-bold">Registrarse</h1>
-            {!enableRegistration && (
-              <p className="mb-4 p-3 bg-yellow-500 text-white rounded-md text-center">
-                El registro está deshabilitado en este momento.
-              </p>
-            )}
-            {error && <p className="mb-4 p-3 bg-red-500 text-white rounded-md text-center">{error}</p>}
-            {success && <p className="mb-4 p-3 bg-green-500 text-white rounded-md text-center">{success}</p>}
-            <form onSubmit={handleRegister} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <input
+              {error && (
+                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Error</AlertTitle>
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Éxito</AlertTitle>
+                  {success}
+                </Alert>
+              )}
+
+              <Box component="form" onSubmit={handleRegister} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <TextField
+                  label="Email"
                   type="email"
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:bg-gray-200"
                   required
+                  fullWidth
                   disabled={!enableRegistration}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Email color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                  Nombre de usuario
-                </label>
-                <input
-                  type="text"
-                  id="username"
+
+                <TextField
+                  label="Nombre de usuario"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:bg-gray-200"
                   required
+                  fullWidth
                   disabled={!enableRegistration}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Contraseña
-                </label>
-                <input
-                  type="password"
-                  id="password"
+
+                <TextField
+                  label="Contraseña"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] disabled:bg-gray-200"
                   required
+                  fullWidth
                   disabled={!enableRegistration}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          disabled={!enableRegistration}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </div>
-              <button
-                type="submit"
-                className="btn-primary w-full disabled:bg-gray-400 disabled:cursor-not-allowed"
-                disabled={!enableRegistration}
-              >
-                Registrarse
-              </button>
-            </form>
-            <p className="mt-4 text-center text-sm text-gray-600">
-              ¿Ya tienes cuenta?{" "}
-              <button onClick={() => setMode("login")} className="text-[var(--secondary)] hover:underline">
-                Inicia sesión
-              </button>
-            </p>
-          </motion.div>
-        )}
-        {mode === "reset" && (
-          <motion.div
-            key="reset"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h1 className="mb-6 text-center text-2xl font-bold">Recuperar Contraseña</h1>
-            {error && <p className="mb-4 p-3 bg-red-500 text-white rounded-md text-center">{error}</p>}
-            {success && <p className="mb-4 p-3 bg-green-500 text-white rounded-md text-center">{success}</p>}
-            {!success ? (
-              <form onSubmit={handleResetPassword} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
+
+                <AuthButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={!enableRegistration}
+                >
+                  Registrarse
+                </AuthButton>
+              </Box>
+
+              <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
+                ¿Ya tienes cuenta?{' '}
+                <Button 
+                  onClick={() => changeMode("login")}
+                  sx={{ 
+                    textTransform: 'none',
+                    color: theme.palette.secondary.main,
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Inicia sesión
+                </Button>
+              </Typography>
+            </AuthCard>
+          )}
+
+          {mode === "reset" && (
+            <AuthCard
+              key="reset"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -100, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
+                  <ArrowBack />
+                </IconButton>
+                <Typography variant="h4" component="h1" sx={{ 
+                  fontWeight: 'bold',
+                  color: theme.palette.primary.main
+                }}>
+                  Recuperar Contraseña
+                </Typography>
+              </Box>
+
+              {error && (
+                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Error</AlertTitle>
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                  <AlertTitle>Éxito</AlertTitle>
+                  {success}
+                </Alert>
+              )}
+
+              {!success ? (
+                <Box component="form" onSubmit={handleResetPassword} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <TextField
+                    label="Email"
                     type="email"
-                    id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                     required
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Email color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                </div>
-                <button type="submit" className="btn-primary w-full">
-                  Solicitar Recuperación
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleConfirmReset} className="space-y-6">
-                <div>
-                  <label htmlFor="token" className="block text-sm font-medium text-gray-700">
-                    Token
-                  </label>
-                  <input
-                    type="text"
-                    id="token"
+
+                  <AuthButton
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
+                    Solicitar Recuperación
+                  </AuthButton>
+                </Box>
+              ) : (
+                <Box component="form" onSubmit={handleConfirmReset} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <TextField
+                    label="Token"
                     value={token}
                     onChange={(e) => setToken(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                     required
+                    fullWidth
                   />
-                </div>
-                <div>
-                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
-                    Nueva Contraseña
-                  </label>
-                  <input
-                    type="password"
-                    id="newPassword"
+
+                  <TextField
+                    label="Nueva Contraseña"
+                    type={showPassword ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                     required
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="action" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                </div>
-                <button type="submit" className="btn-primary w-full">
-                  Actualizar Contraseña
-                </button>
-              </form>
-            )}
-            <p className="mt-4 text-center text-sm text-gray-600">
-              <button onClick={() => setMode("login")} className="text-[var(--secondary)] hover:underline">
-                Volver a Iniciar Sesión
-              </button>
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+
+                  <AuthButton
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
+                    Actualizar Contraseña
+                  </AuthButton>
+                </Box>
+              )}
+
+              <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
+                <Button 
+                  onClick={() => changeMode("login")}
+                  sx={{ 
+                    textTransform: 'none',
+                    color: theme.palette.secondary.main,
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Volver a Iniciar Sesión
+                </Button>
+              </Typography>
+            </AuthCard>
+          )}
+        </AnimatePresence>
+      </AuthContainer>
+    </Box>
   );
 }

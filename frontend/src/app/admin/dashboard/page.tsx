@@ -47,10 +47,11 @@ import {
   Cancel,
   Security,
   PersonAdd,
-  LockPerson
+  LockPerson,
+  PeopleOutline,
+  AttachMoney
 } from "@mui/icons-material";
-import GroupOff from '@mui/icons-material/GroupOff';
-import MoneyOff from '@mui/icons-material/MoneyOff';
+
 
 import { SiteSetting, Integration } from "@/lib/types";
 
@@ -670,7 +671,7 @@ export default function ConfigurePage() {
                         }
                         label={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <GroupOff color={features.enable_social_login ? "primary" : "disabled"} />
+                            <PeopleOutline color={features.enable_social_login ? "primary" : "disabled"} />
                             <Typography variant="body1">
                               Habilitar Login Social
                               <Typography variant="caption" display="block" color="textSecondary">
@@ -718,7 +719,7 @@ export default function ConfigurePage() {
                         }
                         label={
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <MoneyOff color={features.disable_credits ? "error" : "disabled"} />
+                            <AttachMoney color={features.disable_credits ? "error" : "disabled"} />
                             <Typography variant="body1">
                               Desactivar Créditos
                               <Typography variant="caption" display="block" color="textSecondary">
