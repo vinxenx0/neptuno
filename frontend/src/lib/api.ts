@@ -35,8 +35,10 @@ const fetchAPI = async <T>(
   const sessionId = localStorage.getItem("session_id"); // Leer session_id de localStorage
   const headers = {
     "Content-Type": contentType,
-    ...(token && { Authorization: `Bearer ${token}` }),
-    ...(sessionId && { "X-Session-ID": sessionId }), // Incluir X-Session-ID si existe
+    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+    ...(sessionId ? { "X-Session-ID": sessionId } : {}),
+    //...(token && { Authorization: `Bearer ${token}` }),
+    //...(sessionId && { "X-Session-ID": sessionId }), // Incluir X-Session-ID si existe
     ...options.headers,
   };
 

@@ -12,7 +12,7 @@ from models.credit_transaction import CreditTransaction
 from models.session import AnonymousSession
 from models.user import User
 from services.integration_service import trigger_webhook
-from middleware.credits import require_credits
+from middleware.credits_middleware import require_credits
 from middleware.logging import LoggingMiddleware
 from dependencies.auth import UserContext, get_user_context
 from services.settings_service import get_setting
@@ -30,24 +30,52 @@ from fastapi_limiter.depends import RateLimiter
 app = FastAPI(
     title=settings.PROJECT_NAME,
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
-    redoc_url=None
-)
-logger = configure_logging()
-# app.add_middleware(LoggingMiddleware)
+    redoc_url=None,
+    proxy_headers=True  # Necesario para X-Forwarded-*
 
-db = next(get_db())
+    #servers=[{"url": "/api", "description": "Local server"}],
+    #root_path="/api"
+    #openapi_url="/api/openapi.json",
+
+    #swagger_ui_parameters={"url": "/api/openapi.json"}
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*",
-        "http://localhost:3000",
-        "http://194.164.164.177:3000",
-        "http://neptuno.ciberpunk.es"
-    ],  # Lista explícita de dominios permitidos
-    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["http://localhost:3000"]  # Valor por defecto
+    allow_origins=["*"],  # En desarrollo (en producción usa dominios exactos)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]  # Añade esto para headers personalizados
 )
+
+logger = configure_logging()
+# app.add_middleware(LoggingMiddleware)
+
+# Middleware para confiar en el proxy
+# app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+
+db = next(get_db())
+#app.add_middleware(
+#    CORSMiddleware,
+#    allow_origins=["*", #
+#        "https://172.18.0.2:8000",
+#        "https://localhost:8000",
+#        "https://localhost:3000",
+#        "http://localhost:8000",
+#        "http://localhost:3000",
+#        "https://neptuno.ciberpunk.es",
+#        "http://neptuno.ciberpunk.es",
+#        "127.0.0.0.1",
+        #"194.164.164.177",
+        #"neptuno.ciberpunk.es",
+        #"172.18.0.3"
+    #],  # Lista explícita de dominios permitidos
+    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["https://localhost:3000"]  # Valor por defecto
+    #allow_credentials=True,
+    #allow_methods=["*"],
+#    allow_headers=["*"]
+#)
 
 
 Base.metadata.create_all(bind=engine)

@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from services.settings_service import get_setting
-from middleware.credits import require_credits
+from middleware.credits_middleware import require_credits
 from dependencies.auth import UserContext, get_user_context
 from services.credits_service import reset_credits
 from core.database import get_db

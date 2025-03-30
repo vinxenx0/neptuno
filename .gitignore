@@ -9,6 +9,12 @@ build
 .rdb
 *.bak
 ssl/*.pem
+.certs
+.logs
+.tools
+.copys
+dev.db
+.etc
 
 
 # dependencies
@@ -42,7 +48,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
 
 # vercel
 .vercel

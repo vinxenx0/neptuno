@@ -2,12 +2,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+ // Specified "headers" will not automatically work with "output: export". See more info here: https://nextjs.org/docs/messages/export-no-custom-routes
   output: "export", // Habilita el modo estático para `next export`
+ 
   trailingSlash: true, // Asegura que los archivos se sirvan correctamente
   images: {
     unoptimized: true, // Necesario para que `next/image` funcione en modo export
   },
-  eactStrictMode: true,
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true, // Optional: to ignore ESLint warnings during build
+  },
+  
+  
   async headers() {
     return [
       {
@@ -23,12 +30,22 @@ const nextConfig: NextConfig = {
   },
   // Para desarrollo
   allowedDevOrigins: [
-    "*",
-    "http://localhost:3000",
-    "http://194.164.164.177:3000"
+    "*"
+   // "https://localhost:3000",
+    //"https://194.164.164.177:3000"
   ]
+
+  
+
+
 };
 
 export default nextConfig;
 
 
+
+//module.exports = {
+//  env: {
+//    NEXT_PUBLIC_API_URL: "https://172.20.0.4/api",
+//  },
+//};

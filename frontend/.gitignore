@@ -1,3 +1,20 @@
+#neptuno
+app.log
+.venv
+__pycache__
+.next
+node_modules
+.env
+build
+.rdb
+*.bak
+ssl/*.pem
+.certs
+.logs
+.tools
+.copys
+dev.db
+
 
 # dependencies
 /node_modules
@@ -30,7 +47,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
 
 # vercel
 .vercel

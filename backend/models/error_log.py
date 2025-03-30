@@ -1,3 +1,4 @@
+#backend/models/error_log.py
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text
 from models.user import Base
 from datetime import datetime
