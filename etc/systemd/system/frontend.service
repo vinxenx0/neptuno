@@ -1,0 +1,14 @@
+[Unit]
+Description=Next.js frontend for ciberpunk.es
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/ciberpunk.es/frontend
+Environment="NODE_ENV=production"
+ExecStart=/home/<TU_USUARIO>/.nvm/versions/node/v20.11.1/bin/npm run start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

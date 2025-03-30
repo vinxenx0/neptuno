@@ -1,0 +1,69 @@
+
+OK - Implentar el fine tuning de nginx
+OK - Implementar los ficheros .env
+OK - Implementar balanceo de carga (esta comentado en los archivos conf)
+OK - Implantar mysql en produccion (falta meter en el dockerfile)
+OK - Empaquetar y producir
+KO - Pruebas de carga
+
+===
+
+
+- AL PROMPT: Info el MVP ya esta desplegado en producción
+- Continuamos
+
+- Mejoras en los settings, vamos ampliar:
+  - nuevos modulos que activar o desactivar: pagos, suscripciones, etc
+  - nuevas features que puedes editar, añadir, etc : nombres roles, nombres susbcriptores, etc
+  - middleware: logging, hooks
+
+  - mejora control usuarios anonimos (tabla) -> nombre usuario y los endpoints
+  
+
+  -- en el prompnt:
+    -- ha quedado dpm las features vamos a profundizar: categorias, planes, creditos, ssl, crones
+    -- vamos añadir un modulo nuevo: type, schema, model, middleware, security 
+            -- modulo notificaciones, modulo gaming, modulo badges, 
+    -- añadir crud a las ventanas del registry
+
+    -- loading como cargando neptuno en todas las paginas
+    -- a futuro: panel de tracking de usuarios
+    -- avanzar en la configuracion modular del sitio para activar o desactivar features
+    -todo: mejorar la configuración (  archivos o db para los limites?, ) hacerla mas escalable y desactivar features
+
+
+
+
+- Nuevas plantillas para front:
+  - Login/register/ etc tiene otra base layout sin menu
+  - Menu superior mas robusto (iconos, opciones, etc  )
+  - Renderizar moviles
+  - Mejor mejor plantilla de profile
+  - Dashboard admin mas bonito, tarjetas, etc
+  - Añadir paginas de about/
+  - Ordenar la API abierta (whoamin,etc)
+
+- Nuevas caracteristicas:
+  - Modulo gamming: score y badges y completados o challgenges
+  - Modulo tracking: tiempo, clicks, usuario (middleware)
+  - Modulo noticias: tipo barra que se desplegaba en moonitor
+  - Modulo wallet/compras: items digitales comprados (ecommerce)
+  - Modulo SEO
+
+
+- Nuevas pantallas para esas nuevas caracteristicas
+  - Reorganizar profile de user
+  - Dejarlo todo en una opcion (auth/user/pagos/etc)
+
+
+- Agrupar los ficheros de la api, dejar espacio para lo nuevo, dejar listo para moonitor
+  (en que momento se le dice a la IA que es un nuevo proyecto)
+
+- Revisar nombres campos modelos principales (añadir?)
+
+
+- Detalles menores de interfaz
+  - Toggle theme en navbar pasa a footer
+  - El dashboard de admin pasa a tener tarjetas
+
+- Bugs de TODO

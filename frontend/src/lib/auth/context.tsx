@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const token = localStorage.getItem("accessToken");
         if (token) {
-          const { data } = await fetchAPI<User>("/v1/users/me");
+          const { data } = await fetchAPI<User>("/info");
           if (data) {
             setUser(data);
             setCredits(data.credits);

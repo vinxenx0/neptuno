@@ -1,5 +1,6 @@
 # backend/dependencies/auth.py
 # Módulo de dependencias de autenticación.
+# backend/dependencies/auth.py
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -12,6 +13,8 @@ from uuid import uuid4
 from datetime import datetime
 from pydantic import BaseModel
 from fastapi import Response
+import random
+import string
 
 logger = configure_logging()
 
@@ -28,6 +31,12 @@ class UserContext(BaseModel):
     class Config:
         from_attributes = True
 
+def generate_unique_username(db: Session) -> str:
+    while True:
+        random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+        username = f"Guest_{random_chars}"
+        if not db.query(AnonymousSession).filter(AnonymousSession.username == username).first():
+            return username
 
 async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -73,8 +82,10 @@ async def get_user_context(request: Request, response: Response, db: Session = D
         if not session_id:
             logger.info("No hay session_id en header, creando nueva sesión anónima")
             session_id = str(uuid4())
+            username = generate_unique_username(db)  # Generar apodo único
             new_session = AnonymousSession(
                 id=session_id,
+                username=username,  # Asignar el apodo
                 credits=100,
                 create_at=datetime.utcnow(),
                 ultima_actividad=datetime.utcnow(),
@@ -82,16 +93,16 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             )
             db.add(new_session)
             db.commit()
-            logger.info(f"Nueva sesión anónima creada ID {session_id} desde IP {client_ip}")
+            logger.info(f"Nueva sesión anónima creada ID {session_id} con username {username} desde IP {client_ip}")
             return UserContext(
                 user_type="anonymous",
-                user_id=session_id,  # user_id es el session_id para anónimos
+                user_id=session_id,
                 email="anonymous@example.com",
-                username="anonymous",
+                username=username,  # Usar el apodo generado
                 credits=100,
                 subscription="basic",
                 rol="anonymous",
-                session_id=session_id  # Añadir session_id al contexto
+                session_id=session_id
             )
         else:
             logger.info(f"Buscando sesión anónima con ID {session_id} desde header")
@@ -108,11 +119,11 @@ async def get_user_context(request: Request, response: Response, db: Session = D
                 user_type="anonymous",
                 user_id=session.id,
                 email="anonymous@example.com",
-                username="anonymous",
+                username=session.username,  # Usar el username de la sesión
                 credits=session.credits,
                 subscription="basic",
                 rol="anonymous",
-                session_id=session_id  # Añadir session_id al contexto
+                session_id=session_id
             )
 
         logger.error(f"No autorizado: sin token ni sesión válida desde IP {client_ip}")

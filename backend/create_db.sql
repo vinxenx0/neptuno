@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 -- Tabla de sesiones anónimas
 CREATE TABLE IF NOT EXISTS sesiones_anonimas (
     id VARCHAR(36) PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE
     credits INTEGER DEFAULT 100,
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     ultima_actividad DATETIME,

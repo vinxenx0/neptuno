@@ -1,5 +1,4 @@
 // src/components/Navbar.tsx
-// src/components/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,19 +6,13 @@ import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
+import { FaCoins } from "react-icons/fa";
 
 export default function Navbar() {
   const { user, credits, logout } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.body.setAttribute("data-theme", savedTheme);
-  }, []);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -37,13 +30,9 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
+  const isAnonymous = user?.rol === "anonymous";
+  console.log("User rol:", user?.rol);
+  
   return (
     <nav className="nav-bar fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center py-4">
@@ -53,7 +42,7 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {!disableCredits && credits > 0 && (
             <span className="bg-blue-500 text-white rounded-full px-3 py-1 text-sm flex items-center">
-              💳 {credits} créditos
+              <FaCoins className="mr-1" /> {credits} créditos
             </span>
           )}
           {user?.rol === "admin" && (
@@ -90,28 +79,28 @@ export default function Navbar() {
             </div>
           )}
           {user ? (
-            <Link href="/user/dashboard" className="flex items-center hover:underline">
-              👤 {user.username}
-            </Link>
+            isAnonymous ? (
+              <span className="flex items-center">
+                👤 {user.username}
+              </span>
+            ) : (
+              <Link href="/user/dashboard" className="flex items-center hover:underline">
+                👤 {user.username}
+              </Link>
+            )
           ) : (
             <>
-              <Link href="/user/login" className="hover:underline">
-                Login
+              <span className="flex items-center">
+                👤 Invitado
+              </span>
+              <Link
+                href="/user/auth"
+                className="bg-[var(--accent)] text-white px-4 py-2 rounded-md hover:bg-[var(--accent-dark)] transition-colors"
+              >
+                Empieza ahora
               </Link>
-              {enableRegistration && (
-                <Link href="/user/register" className="hover:underline">
-                  Register
-                </Link>
-              )}
             </>
           )}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
-            aria-label="Alternar tema"
-          >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
         </div>
       </div>
     </nav>

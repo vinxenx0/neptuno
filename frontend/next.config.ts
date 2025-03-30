@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // Optional: to ignore ESLint warnings during build
   },
+
+  
   
   
   async headers() {

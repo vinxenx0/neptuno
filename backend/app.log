@@ -6651,3 +6651,755 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-03-30 01:31:11,117 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
 2025-03-30 01:31:11,166 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-03-30 01:31:11,239 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:03:39,323 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 12:03:39,458 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 12:16:32,788 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:16:32,820 - NeptunO - WARNING - Token expirado
+2025-03-30 12:16:32,820 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-30 12:16:32,821 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/users/me: Token inválido o no es de acceso
+2025-03-30 12:16:33,112 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-03-30 12:16:33,116 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 12:16:33,277 - NeptunO - INFO - Refresco de token exitoso
+2025-03-30 12:16:33,346 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:16:33,466 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:20:12,282 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:20:12,283 - NeptunO - WARNING - Token expirado
+2025-03-30 12:20:12,284 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-30 12:20:12,284 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/users/me: Token inválido o no es de acceso
+2025-03-30 12:20:12,484 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-03-30 12:20:12,486 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 12:20:12,574 - NeptunO - INFO - Refresco de token exitoso
+2025-03-30 12:20:12,623 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:20:12,709 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:20:15,013 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:20:15,299 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:20:15,299 - NeptunO - INFO - Usuario registered ID 4 realiza consulta
+2025-03-30 12:20:15,300 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806da09060>, 'user_id': 4, 'user_type': 'registered', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada'}
+2025-03-30 12:20:15,649 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 12:20:15,649 - NeptunO - DEBUG - Créditos actualizados para registered ID 4: 999
+2025-03-30 12:20:15,699 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:20:15,785 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:32,741 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:32,837 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:37,403 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:37,590 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:37,599 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:37,740 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:37,750 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:37,868 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:37,919 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:38,033 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:39,481 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:39,535 - NeptunO - WARNING - Intento de uso de token revocado desde IP 127.0.0.1
+2025-03-30 12:26:39,536 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/settings/admin/config: Token revocado
+2025-03-30 12:26:39,730 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:39,735 - NeptunO - WARNING - Intento de uso de token revocado desde IP 127.0.0.1
+2025-03-30 12:26:39,737 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/settings/admin/config: Token revocado
+2025-03-30 12:26:39,882 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-03-30 12:26:39,884 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 12:26:40,000 - NeptunO - INFO - Refresco de token exitoso
+2025-03-30 12:26:40,059 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:40,264 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:40,275 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:40,410 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:40,591 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:40,699 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:47,239 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:47,323 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:52,548 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:52,676 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:53,640 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:53,889 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:57,491 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:57,647 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:57,648 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:57,736 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:57,751 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:57,854 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:26:57,854 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:26:57,953 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:27:02,232 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 12:27:02,232 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 12:27:02,345 - NeptunO - INFO - Nueva sesión anónima creada ID 5a2f2dac-901c-4274-b431-db2d9c46cf67 desde IP 127.0.0.1
+2025-03-30 12:28:48,879 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 12:28:48,880 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 12:28:48,881 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 12:28:48,932 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:28:49,031 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:28:49,226 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:28:49,398 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:28:49,402 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:28:49,565 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:28:49,565 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:28:49,655 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:28:49,656 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:28:49,753 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:29:19,509 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:29:19,587 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:29:19,587 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:29:19,685 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:29:19,693 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:29:19,809 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:29:19,809 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:29:19,921 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:10,240 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:10,240 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 12:48:10,359 - NeptunO - INFO - Nueva sesión anónima creada ID 6cbfd28c-60ea-4be3-bd8d-0ec89320494c desde IP 127.0.0.1
+2025-03-30 12:48:36,592 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 12:48:36,593 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 12:48:36,594 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 12:48:36,693 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:36,892 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:39,165 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:39,247 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:39,248 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:39,337 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:39,345 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:39,459 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:39,459 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:39,549 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:45,145 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:45,236 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:45,237 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:45,349 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:45,604 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:45,681 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:45,683 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:45,759 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:48,130 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:48,358 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:48,362 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:48,459 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:48,459 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:48,559 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:48:48,560 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 12:48:48,681 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 12:49:19,831 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 12:49:19,831 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 12:49:19,935 - NeptunO - INFO - Nueva sesión anónima creada ID 436f700d-1645-437b-b087-4424ba5f660b desde IP 127.0.0.1
+2025-03-30 12:51:53,345 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 12:51:53,346 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 12:51:53,455 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 12:52:12,626 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 12:52:12,626 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 12:52:12,710 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 12:53:29,199 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 12:53:29,200 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 12:53:29,331 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 12:53:29,333 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 12:53:29,333 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0c7100>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 12:53:29,750 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 12:53:29,750 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 99
+2025-03-30 12:53:33,251 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 12:53:33,252 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 12:53:33,319 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 12:56:45,166 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 12:56:45,167 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 12:56:45,238 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:05:52,700 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:05:52,701 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:05:52,816 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:05:55,196 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:05:55,197 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:05:55,283 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:05:55,285 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 14:05:55,285 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806da09480>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:05:56,089 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:05:56,089 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 98
+2025-03-30 14:05:56,091 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:05:56,091 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:05:56,216 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:05:56,218 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 14:05:56,218 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806e5220e0>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:05:56,624 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:05:56,625 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 97
+2025-03-30 14:05:56,807 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:05:56,807 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:05:56,916 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:05:56,922 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 14:05:56,922 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806e523dc0>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:05:57,331 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:05:57,332 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 96
+2025-03-30 14:10:17,901 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:17,901 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:17,902 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:17,902 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
+2025-03-30 14:10:19,046 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:19,046 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:19,047 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:19,048 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-03-30 14:10:20,547 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:20,548 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:20,549 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:20,550 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-03-30 14:10:21,507 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:21,507 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:21,508 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:21,509 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
+2025-03-30 14:10:25,949 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:25,949 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:25,950 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:25,951 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
+2025-03-30 14:10:37,527 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:10:37,527 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:10:37,529 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:10:37,530 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
+2025-03-30 14:11:03,343 - NeptunO - INFO - Procesando solicitud: token=False, session_id=92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9, ip=127.0.0.1
+2025-03-30 14:11:03,343 - NeptunO - INFO - Buscando sesión anónima con ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde header
+2025-03-30 14:11:03,345 - NeptunO - WARNING - Sesión anónima inválida ID 92fdaf9b-ac67-4b0f-b82d-a42e790fa6f9 desde IP 127.0.0.1
+2025-03-30 14:11:03,346 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-03-30 14:11:19,885 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:19,885 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 14:11:20,034 - NeptunO - INFO - Nueva sesión anónima creada ID bc06c625-892c-48f9-b78e-114605ec9af9 desde IP 127.0.0.1
+2025-03-30 14:11:20,035 - NeptunO - INFO - Usuario anonymous ID bc06c625-892c-48f9-b78e-114605ec9af9 realiza consulta
+2025-03-30 14:11:20,035 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0edba0>, 'session_id': 'bc06c625-892c-48f9-b78e-114605ec9af9', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:11:20,472 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:11:20,472 - NeptunO - DEBUG - Créditos actualizados para anonymous ID bc06c625-892c-48f9-b78e-114605ec9af9: 99
+2025-03-30 14:11:21,365 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:21,365 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 14:11:21,489 - NeptunO - INFO - Nueva sesión anónima creada ID 938e047d-2f5d-437e-814d-8cad59f99b31 desde IP 127.0.0.1
+2025-03-30 14:11:21,490 - NeptunO - INFO - Usuario anonymous ID 938e047d-2f5d-437e-814d-8cad59f99b31 realiza consulta
+2025-03-30 14:11:21,490 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0ede40>, 'session_id': '938e047d-2f5d-437e-814d-8cad59f99b31', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:11:21,884 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:11:21,886 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 938e047d-2f5d-437e-814d-8cad59f99b31: 99
+2025-03-30 14:11:22,325 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:22,326 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 14:11:22,400 - NeptunO - INFO - Nueva sesión anónima creada ID ca7a9375-e583-46fc-a53b-f4e12fd2d545 desde IP 127.0.0.1
+2025-03-30 14:11:45,924 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:11:45,925 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:11:45,926 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:11:45,934 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:46,381 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:11:49,370 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:49,457 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:11:49,458 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:49,567 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:11:49,573 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:49,667 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:11:49,670 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:11:49,778 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:03,010 - NeptunO - ERROR - HTTP Error 403 en POST http://localhost:8000/v1/auth/register: El registro de nuevos usuarios está deshabilitado
+2025-03-30 14:12:24,633 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:12:24,633 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:12:24,634 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:12:24,638 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:24,753 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:24,959 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:25,056 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:25,057 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:25,145 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:25,158 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:25,245 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:25,246 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:25,355 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:29,909 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:29,989 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:29,994 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:30,078 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:30,094 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:30,222 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:30,229 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:30,319 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:32,648 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:32,733 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:32,866 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: true
+2025-03-30 14:12:36,015 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:36,122 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:36,122 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:36,212 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:36,221 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:36,333 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:36,333 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:36,422 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:51,043 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:12:51,044 - NeptunO - INFO - Usuario registrado ID 7 con subscription freemium
+2025-03-30 14:12:51,355 - NeptunO - DEBUG - Usuario encontrado: ID=7, email=bastard@ciberpunk.es, subscription=subscriptionEnum.FREEMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:12:51,356 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:12:51,357 - NeptunO - INFO - Login exitoso para usuario ID 7 desde IP 127.0.0.1
+2025-03-30 14:12:51,408 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:51,511 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:51,692 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:51,797 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:51,799 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:51,922 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:51,929 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:52,042 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:52,042 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:52,131 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:56,969 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:57,053 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:57,054 - NeptunO - INFO - Usuario registered ID 7 realiza consulta
+2025-03-30 14:12:57,054 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0ed120>, 'user_id': 7, 'user_type': 'registered', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada'}
+2025-03-30 14:12:57,450 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:12:57,451 - NeptunO - DEBUG - Créditos actualizados para registered ID 7: 99
+2025-03-30 14:12:57,497 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:57,599 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:58,086 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:58,175 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:58,176 - NeptunO - INFO - Usuario registered ID 7 realiza consulta
+2025-03-30 14:12:58,176 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0edc00>, 'user_id': 7, 'user_type': 'registered', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada'}
+2025-03-30 14:12:58,573 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:12:58,573 - NeptunO - DEBUG - Créditos actualizados para registered ID 7: 98
+2025-03-30 14:12:58,577 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:58,664 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:12:59,656 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:12:59,744 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:03,553 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:03,655 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:03,656 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:03,744 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:03,753 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:03,864 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:03,864 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:03,975 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:07,137 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:07,264 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:11,010 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:11,098 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:11,099 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:11,177 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:11,187 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:11,288 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:11,289 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:13:11,397 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-03-30 14:13:29,926 - NeptunO - ERROR - HTTP Error 404 en POST http://localhost:8000/v1/auth/password-reset: Email no encontrado
+2025-03-30 14:14:50,211 - NeptunO - ERROR - HTTP Error 404 en POST http://localhost:8000/v1/auth/password-reset: Email no encontrado
+2025-03-30 14:15:05,653 - NeptunO - INFO - Token de reseteo generado para usuario ID 7: e50ead10-492f-49f9-bf7d-7a2f5ddeb973
+2025-03-30 14:15:20,444 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/auth/password-reset/confirm: confirm_password_reset() takes from 1 to 2 positional arguments but 3 were given
+2025-03-30 14:18:16,382 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:18:16,382 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:18:16,494 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:18:16,496 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 14:18:16,496 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0ecca0>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:18:16,895 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:18:16,895 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 95
+2025-03-30 14:18:17,642 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:18:17,642 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:18:17,717 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:18:22,451 - NeptunO - INFO - Procesando solicitud: token=False, session_id=436f700d-1645-437b-b087-4424ba5f660b, ip=127.0.0.1
+2025-03-30 14:18:22,451 - NeptunO - INFO - Buscando sesión anónima con ID 436f700d-1645-437b-b087-4424ba5f660b desde header
+2025-03-30 14:18:22,583 - NeptunO - INFO - Sesión anónima ID 436f700d-1645-437b-b087-4424ba5f660b actualizada desde IP 127.0.0.1
+2025-03-30 14:18:22,586 - NeptunO - INFO - Usuario anonymous ID 436f700d-1645-437b-b087-4424ba5f660b realiza consulta
+2025-03-30 14:18:22,587 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f806d0effa0>, 'session_id': '436f700d-1645-437b-b087-4424ba5f660b', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 14:18:22,974 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 14:18:22,975 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 436f700d-1645-437b-b087-4424ba5f660b: 94
+2025-03-30 14:35:13,884 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:35:13,894 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:35:13,895 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:35:14,013 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:14,125 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:16,086 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:16,159 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:16,162 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:16,270 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:16,270 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:16,370 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:16,370 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:16,459 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:18,605 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:19,148 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:19,197 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:19,392 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:19,517 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:19,659 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:19,663 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:19,792 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:22,050 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:22,170 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:22,269 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: false
+2025-03-30 14:35:25,717 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:25,847 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:25,848 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:25,981 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:25,984 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:26,070 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:35:26,070 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:35:26,159 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:13,970 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:37:13,970 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:37:13,971 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:37:13,981 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:14,057 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:14,947 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:15,101 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:15,103 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:15,215 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:15,226 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:15,314 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:15,315 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:15,436 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:17,780 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:17,880 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:17,880 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:17,981 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:18,085 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:18,179 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:18,181 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:18,268 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:21,422 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:21,501 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:21,590 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: true
+2025-03-30 14:37:25,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:25,979 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:25,982 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:26,080 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:26,081 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:26,190 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:37:26,191 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:37:26,301 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:11,729 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:39:11,729 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:39:11,730 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:39:11,739 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:11,830 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:12,297 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:12,444 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:12,445 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:12,568 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:12,586 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:12,689 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:12,689 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:12,811 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:13,860 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:13,998 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:13,999 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:14,099 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:14,213 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:14,300 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:14,301 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:14,388 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:21,134 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:21,388 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:21,466 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: false
+2025-03-30 14:39:25,681 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:25,766 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:25,767 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:25,876 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:25,885 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:25,988 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:25,989 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:26,078 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:57,644 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:39:57,644 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:39:57,645 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:39:57,653 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:57,733 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:58,297 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:58,377 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:58,380 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:58,499 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:58,502 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:58,585 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:58,586 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:58,686 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:59,769 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:59,855 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:39:59,855 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:39:59,955 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:00,022 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:00,108 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:00,108 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:00,199 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:02,425 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:02,521 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:02,610 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: true
+2025-03-30 14:40:07,216 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:07,299 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:07,302 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:07,388 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:07,388 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:07,489 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:07,489 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:07,578 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:24,962 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 14:40:24,963 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 14:40:24,964 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 14:40:24,972 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:25,055 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:25,319 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:25,421 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:25,423 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:25,545 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:25,550 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:25,655 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:25,655 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:25,754 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:27,301 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:27,421 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:27,421 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:27,512 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:27,599 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:27,710 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:27,712 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:27,788 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:29,578 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:40:29,674 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:40:29,762 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 4: false
+2025-03-30 14:48:37,986 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:38,158 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:38,159 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:38,325 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:38,545 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:38,659 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:38,660 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:38,745 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:41,682 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:41,767 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:41,768 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:41,856 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:41,861 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:41,978 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:48:41,979 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 14:48:42,070 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 14:52:11,371 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 14:52:11,371 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 14:52:11,502 - NeptunO - INFO - Nueva sesión anónima creada ID e9d62540-e749-46b2-b5d9-84a0a0506dad desde IP 127.0.0.1
+2025-03-30 15:30:34,730 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 15:30:34,739 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 15:32:35,417 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 15:32:35,417 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 15:38:40,844 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:38:40,845 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:38:40,845 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:38:40,846 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-03-30 15:38:43,129 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:38:43,129 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:38:43,129 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:38:43,130 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-03-30 15:44:01,635 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:44:01,635 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:44:01,635 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:44:01,636 - NeptunO - ERROR - HTTP Error 500 en GET http://127.0.0.1:8000/info: Error al procesar la autenticación
+2025-03-30 15:44:20,738 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:44:20,738 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:44:20,738 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:44:20,738 - NeptunO - ERROR - HTTP Error 500 en GET http://127.0.0.1:8000/info: Error al procesar la autenticación
+2025-03-30 15:45:50,540 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:45:50,540 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:45:50,541 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:45:50,541 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/test-credit-consumption: Error al procesar la autenticación
+2025-03-30 15:47:27,943 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:47:27,959 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:47:27,960 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:47:27,960 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/test-credit-consumption: Error al procesar la autenticación
+2025-03-30 15:47:29,198 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:47:29,198 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:47:29,199 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:47:29,199 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/test-credit-consumption: Error al procesar la autenticación
+2025-03-30 15:47:55,072 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:47:55,072 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:47:55,072 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:47:55,073 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/test-credit-consumption: Error al procesar la autenticación
+2025-03-30 15:48:01,812 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 15:48:01,812 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 15:48:40,708 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:48:40,709 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:48:40,710 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: 'username' is an invalid keyword argument for AnonymousSession
+2025-03-30 15:48:40,711 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/api/test-credit-consumption: Error al procesar la autenticación
+2025-03-30 15:49:38,315 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 15:49:38,315 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 15:49:42,029 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:49:42,029 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:49:42,145 - NeptunO - INFO - Nueva sesión anónima creada ID 589185cd-54c8-4262-8189-0c4e74001e03 desde IP 127.0.0.1
+2025-03-30 15:49:42,147 - NeptunO - INFO - Usuario anonymous ID 589185cd-54c8-4262-8189-0c4e74001e03 realiza consulta
+2025-03-30 15:49:42,147 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f240e63cca0>, 'session_id': '589185cd-54c8-4262-8189-0c4e74001e03', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 15:49:42,554 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 15:49:42,555 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 589185cd-54c8-4262-8189-0c4e74001e03: 99
+2025-03-30 15:49:43,490 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:49:43,490 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:49:43,578 - NeptunO - INFO - Nueva sesión anónima creada ID d82ed4aa-dc52-4698-8477-2647a71087b3 desde IP 127.0.0.1
+2025-03-30 15:49:43,579 - NeptunO - INFO - Usuario anonymous ID d82ed4aa-dc52-4698-8477-2647a71087b3 realiza consulta
+2025-03-30 15:49:43,580 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f240e652680>, 'session_id': 'd82ed4aa-dc52-4698-8477-2647a71087b3', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 15:49:43,961 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 15:49:43,961 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d82ed4aa-dc52-4698-8477-2647a71087b3: 99
+2025-03-30 15:49:45,139 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 15:49:45,139 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 15:49:45,245 - NeptunO - INFO - Nueva sesión anónima creada ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 desde IP 127.0.0.1
+2025-03-30 16:10:51,549 - NeptunO - INFO - Procesando solicitud: token=False, session_id=2c9f6529-2f60-4e2b-99a4-e03be56c7c15, ip=127.0.0.1
+2025-03-30 16:10:51,549 - NeptunO - INFO - Buscando sesión anónima con ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 desde header
+2025-03-30 16:10:51,629 - NeptunO - INFO - Sesión anónima ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 actualizada desde IP 127.0.0.1
+2025-03-30 16:10:51,633 - NeptunO - INFO - Usuario anonymous ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 realiza consulta
+2025-03-30 16:10:51,633 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f240e5872e0>, 'session_id': '2c9f6529-2f60-4e2b-99a4-e03be56c7c15', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 16:10:52,022 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 16:10:52,022 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15: 99
+2025-03-30 16:10:52,858 - NeptunO - INFO - Procesando solicitud: token=False, session_id=2c9f6529-2f60-4e2b-99a4-e03be56c7c15, ip=127.0.0.1
+2025-03-30 16:10:52,859 - NeptunO - INFO - Buscando sesión anónima con ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 desde header
+2025-03-30 16:10:52,940 - NeptunO - INFO - Sesión anónima ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 actualizada desde IP 127.0.0.1
+2025-03-30 16:28:17,931 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 16:28:17,931 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 17:10:22,096 - NeptunO - INFO - Procesando solicitud: token=False, session_id=2c9f6529-2f60-4e2b-99a4-e03be56c7c15, ip=127.0.0.1
+2025-03-30 17:10:22,096 - NeptunO - INFO - Buscando sesión anónima con ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 desde header
+2025-03-30 17:10:22,216 - NeptunO - INFO - Sesión anónima ID 2c9f6529-2f60-4e2b-99a4-e03be56c7c15 actualizada desde IP 127.0.0.1
+2025-03-30 17:27:22,141 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-03-30 17:27:22,142 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 17:27:22,143 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-03-30 17:27:22,148 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 17:27:22,238 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 17:27:26,661 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 17:27:26,770 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 17:27:26,770 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 17:27:26,881 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 17:27:26,899 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 17:27:27,014 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 17:27:27,015 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 17:27:27,645 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 17:29:50,858 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 17:29:50,858 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 17:29:51,392 - NeptunO - INFO - Nueva sesión anónima creada ID 68ba81f4-2ca0-42ae-b1b3-6587ee262972 desde IP 127.0.0.1
+2025-03-30 17:29:51,394 - NeptunO - INFO - Usuario anonymous ID 68ba81f4-2ca0-42ae-b1b3-6587ee262972 realiza consulta
+2025-03-30 17:29:51,394 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7fd5002ffee0>, 'session_id': '68ba81f4-2ca0-42ae-b1b3-6587ee262972', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 17:29:52,138 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 17:29:52,139 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 68ba81f4-2ca0-42ae-b1b3-6587ee262972: 99
+2025-03-30 17:47:11,491 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 17:47:11,491 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 17:47:24,640 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 17:47:24,640 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 17:47:24,731 - NeptunO - INFO - Nueva sesión anónima creada ID a0203fcc-ae48-4fdd-8e5c-cdbc64ba775c desde IP 127.0.0.1
+2025-03-30 17:47:24,733 - NeptunO - INFO - Usuario anonymous ID a0203fcc-ae48-4fdd-8e5c-cdbc64ba775c realiza consulta
+2025-03-30 17:47:24,733 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f4ab1b58100>, 'session_id': 'a0203fcc-ae48-4fdd-8e5c-cdbc64ba775c', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 17:47:25,172 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 17:47:25,172 - NeptunO - DEBUG - Créditos actualizados para anonymous ID a0203fcc-ae48-4fdd-8e5c-cdbc64ba775c: 99
+2025-03-30 17:47:27,336 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 17:47:27,336 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 17:47:27,409 - NeptunO - INFO - Nueva sesión anónima creada ID 8497ce69-3f67-4abb-bd58-78821a7f0eec desde IP 127.0.0.1
+2025-03-30 17:47:27,410 - NeptunO - INFO - Usuario anonymous ID 8497ce69-3f67-4abb-bd58-78821a7f0eec realiza consulta
+2025-03-30 17:47:27,410 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f4ab1b72920>, 'session_id': '8497ce69-3f67-4abb-bd58-78821a7f0eec', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 17:47:27,793 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 17:47:27,794 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 8497ce69-3f67-4abb-bd58-78821a7f0eec: 99
+2025-03-30 17:47:28,738 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 17:47:28,738 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 17:47:28,820 - NeptunO - INFO - Nueva sesión anónima creada ID 465771c9-66f4-4394-b1f8-d493c42a4d34 desde IP 127.0.0.1
+2025-03-30 17:47:28,821 - NeptunO - INFO - Usuario anonymous ID 465771c9-66f4-4394-b1f8-d493c42a4d34 realiza consulta
+2025-03-30 17:47:28,821 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f4ab1b71420>, 'session_id': '465771c9-66f4-4394-b1f8-d493c42a4d34', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 17:47:29,215 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 17:47:29,216 - NeptunO - DEBUG - Créditos actualizados para anonymous ID 465771c9-66f4-4394-b1f8-d493c42a4d34: 99
+2025-03-30 18:04:41,178 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:41,180 - NeptunO - WARNING - Token expirado
+2025-03-30 18:04:41,180 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-03-30 18:04:41,180 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/v1/users/me: Token inválido o no es de acceso
+2025-03-30 18:04:41,374 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-03-30 18:04:41,388 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-03-30 18:04:41,474 - NeptunO - INFO - Refresco de token exitoso
+2025-03-30 18:04:41,548 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:41,653 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:04:44,039 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:44,392 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:04:44,397 - NeptunO - INFO - Usuario registered ID 4 realiza consulta
+2025-03-30 18:04:44,397 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f4ab1aa6f20>, 'user_id': 4, 'user_type': 'registered', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada'}
+2025-03-30 18:04:44,801 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:04:44,802 - NeptunO - DEBUG - Créditos actualizados para registered ID 4: 998
+2025-03-30 18:04:44,868 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:44,972 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:04:46,008 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:46,096 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:04:49,126 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:49,239 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:04:49,242 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-03-30 18:04:49,332 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-03-30 18:16:10,389 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 18:16:10,389 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 18:16:59,375 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 18:16:59,375 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 18:17:39,852 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 18:17:39,852 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 18:20:37,533 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 18:20:37,534 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 18:20:45,231 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 18:20:45,231 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 18:20:45,362 - NeptunO - INFO - Nueva sesión anónima creada ID 3b095f1b-8207-4533-817f-3464fde2e6de con username Guest_o53f8 desde IP 127.0.0.1
+2025-03-30 18:25:22,106 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-03-30 18:25:22,106 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-03-30 18:29:02,064 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 18:29:02,064 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 18:29:02,156 - NeptunO - INFO - Nueva sesión anónima creada ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e con username Guest_zgcuq desde IP 127.0.0.1
+2025-03-30 18:30:52,966 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:30:52,966 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:30:53,046 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:31:13,884 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:31:13,884 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:31:13,968 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:33:57,737 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 18:33:57,737 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 18:33:57,841 - NeptunO - INFO - Nueva sesión anónima creada ID d463fc2a-7362-4b49-8924-a3f5f356f04b con username Guest_ttmc2 desde IP 127.0.0.1
+2025-03-30 18:40:07,008 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 18:40:07,008 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 18:40:07,103 - NeptunO - INFO - Nueva sesión anónima creada ID 161dd27e-83ce-4be5-bb19-7d3e9f173c0e con username Guest_b6do4 desde IP 127.0.0.1
+2025-03-30 18:40:07,104 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/users/me: Solo usuarios registrados
+2025-03-30 18:40:38,648 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:40:38,648 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:40:38,727 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:40:38,730 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:40:38,730 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f33547dbca0>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:40:39,168 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:40:39,169 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 99
+2025-03-30 18:40:40,290 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:40:40,290 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:40:40,382 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:40:44,560 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:40:44,560 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:40:44,683 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:41:12,383 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-03-30 18:41:12,383 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-03-30 18:41:12,491 - NeptunO - INFO - Nueva sesión anónima creada ID aba8e78e-a971-4ef6-8ff5-fef827347ba2 con username Guest_kzn19 desde IP 127.0.0.1
+2025-03-30 18:43:09,396 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:09,396 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:09,503 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:15,417 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:15,417 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:15,547 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:18,222 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:18,222 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:18,336 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:19,726 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:19,726 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:19,814 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:19,815 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:43:19,815 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f3353da1de0>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:43:20,244 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:43:20,244 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 98
+2025-03-30 18:43:20,249 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:20,250 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:20,336 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:20,338 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/users/me: Solo usuarios registrados
+2025-03-30 18:43:22,822 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:22,822 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:22,925 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:22,927 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:43:22,927 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f3353da2b00>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:43:23,321 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:43:23,322 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 97
+2025-03-30 18:43:23,326 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:23,327 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:23,414 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:23,415 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/users/me: Solo usuarios registrados
+2025-03-30 18:43:41,943 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:41,943 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:42,025 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:42,886 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:42,886 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:42,958 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:42,960 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:43:42,961 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f33547c6d40>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:43:43,377 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:43:43,377 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 96
+2025-03-30 18:43:44,095 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:43:44,095 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:43:44,180 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:43:44,182 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:43:44,182 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f3354a98ca0>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:43:44,563 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:43:44,563 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 95
+2025-03-30 18:44:26,999 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:44:26,999 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:44:27,080 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:44:27,081 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:44:27,081 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f33547c6d40>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:44:27,418 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:44:27,418 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 94
+2025-03-30 18:44:43,137 - NeptunO - INFO - Procesando solicitud: token=False, session_id=d7810fd8-6b51-44c3-b50b-ce60acd6b70e, ip=127.0.0.1
+2025-03-30 18:44:43,137 - NeptunO - INFO - Buscando sesión anónima con ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e desde header
+2025-03-30 18:44:43,257 - NeptunO - INFO - Sesión anónima ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e actualizada desde IP 127.0.0.1
+2025-03-30 18:44:43,260 - NeptunO - INFO - Usuario anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e realiza consulta
+2025-03-30 18:44:43,260 - NeptunO - DEBUG - Parámetros de la transacción: {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f33547d8ac0>, 'session_id': 'd7810fd8-6b51-44c3-b50b-ce60acd6b70e', 'user_type': 'anonymous', 'amount': -1, 'transaction_type': 'usage', 'description': 'Consulta realizada por anónimo'}
+2025-03-30 18:44:43,577 - NeptunO - WARNING - Webhook falló para integración ID 1: 404
+2025-03-30 18:44:43,577 - NeptunO - DEBUG - Créditos actualizados para anonymous ID d7810fd8-6b51-44c3-b50b-ce60acd6b70e: 93

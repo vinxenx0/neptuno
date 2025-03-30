@@ -152,6 +152,7 @@ def init_settings_and_users():
             session_id = str(uuid.uuid4())
             session = AnonymousSession(
                 id=session_id,
+                username=f"anon_user_{i+1}",
                 credits=100 - (i * 10),
                 create_at=datetime.utcnow() - timedelta(days=i),
                 ultima_actividad=datetime.utcnow() - timedelta(hours=i),
