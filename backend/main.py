@@ -32,7 +32,12 @@ app = FastAPI(
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url=None,
     proxy_headers=True  # Necesario para X-Forwarded-*
-    #root_path="/api/"
+
+    #servers=[{"url": "/api", "description": "Local server"}],
+    #root_path="/api"
+    #openapi_url="/api/openapi.json",
+
+    #swagger_ui_parameters={"url": "/api/openapi.json"}
 )
 
 app.add_middleware(
@@ -46,6 +51,9 @@ app.add_middleware(
 
 logger = configure_logging()
 # app.add_middleware(LoggingMiddleware)
+
+# Middleware para confiar en el proxy
+# app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
 db = next(get_db())
 #app.add_middleware(

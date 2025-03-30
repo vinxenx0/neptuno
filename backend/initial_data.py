@@ -1,3 +1,6 @@
+#backend/initial_data.py
+import uuid
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from core.database import SessionLocal, Base, engine
 from models.site_settings import SiteSettings
@@ -6,25 +9,21 @@ from models.allowed_origin import AllowedOrigin
 from models.credit_transaction import CreditTransaction
 from models.error_log import ErrorLog
 from models.integration import Integration
-from models.api_log import APILog
+from models.log import APILog
 from models.payment_method import PaymentMethod
 from models.session import AnonymousSession
 from models.token import RevokedToken, PasswordResetToken
 from core.security import hash_password
-from datetime import datetime, timedelta
 import json
-import uuid
 
-def create_tables():
+def init_db():
     """Crea todas las tablas en la base de datos"""
     Base.metadata.create_all(bind=engine)
-    print("Tablas creadas exitosamente.")
 
-def init_data():
-    """Carga datos iniciales en todas las tablas"""
+def init_settings_and_users():
     db = SessionLocal()
     try:
-        # Configuraciones iniciales del sitio
+        # Configuraciones iniciales con tags
         settings_data = [
             {"key": "token_expiration", "value": 60, "description": "Tiempo de vida del access token (segundos)", "tag": "auth"},
             {"key": "refresh_token_expiration", "value": 604800, "description": "Tiempo de vida del refresh token (7 días)", "tag": "auth"},
@@ -35,7 +34,7 @@ def init_data():
             {"key": "cache_ttl", "value": 300, "description": "Tiempo de vida del caché en Redis (segundos)", "tag": "cache"},
             {"key": "cache_enabled", "value": True, "description": "Habilitar/deshabilitar el caché", "tag": "cache"},
             {"key": "cache_max_size", "value": 10000, "description": "Tamaño máximo del caché en entradas", "tag": "cache"},
-            {"key": "allowed_origins", "value": ["https://localhost:3000", "https://neptuno.app"], "description": "Orígenes permitidos para CORS", "tag": "cors"},
+            {"key": "allowed_origins", "value": ["http://localhost:3000", "https://neptuno.app"], "description": "Orígenes permitidos para CORS", "tag": "cors"},
             {"key": "cors_enabled", "value": True, "description": "Habilitar/deshabilitar CORS", "tag": "cors"},
             {"key": "celery_workers", "value": 4, "description": "Número de workers de Celery", "tag": "celery"},
             {"key": "celery_task_timeout", "value": 300, "description": "Tiempo máximo de ejecución de tareas Celery (segundos)", "tag": "celery"},
@@ -133,70 +132,72 @@ def init_data():
                 db.add(user)
                 users.append(user)
 
-        db.flush()  # Para obtener los IDs de los usuarios
+        db.commit()  # Necesario para obtener los IDs de los usuarios
 
-        # Orígenes permitidos adicionales
-        origins_data = [
-            {"origin": "https://thirdparty.com"},
-            {"origin": "https://partner-app.com"},
-            {"origin": "https://mobile-app.neptuno.app"}
+        # Orígenes permitidos
+        origins = [
+            "http://localhost:3000",
+            "https://neptuno.app",
+            "https://api.example.com",
+            "https://app.example.com"
         ]
-
-        for origin_data in origins_data:
-            if not db.query(AllowedOrigin).filter(AllowedOrigin.origin == origin_data["origin"]).first():
-                db.add(AllowedOrigin(**origin_data))
+        
+        for origin in origins:
+            if not db.query(AllowedOrigin).filter(AllowedOrigin.origin == origin).first():
+                db.add(AllowedOrigin(origin=origin))
 
         # Sesiones anónimas
-        sessions_data = [
-            {"id": str(uuid.uuid4()), "credits": 50, "create_at": datetime.utcnow(), "last_ip": "192.168.1.100"},
-            {"id": str(uuid.uuid4()), "credits": 75, "create_at": datetime.utcnow() - timedelta(days=1), "last_ip": "10.0.0.15"},
-            {"id": str(uuid.uuid4()), "credits": 100, "create_at": datetime.utcnow() - timedelta(hours=2), "last_ip": "172.16.0.5"}
-        ]
-
-        for session_data in sessions_data:
-            if not db.query(AnonymousSession).filter(AnonymousSession.id == session_data["id"]).first():
-                db.add(AnonymousSession(**session_data))
+        anonymous_sessions = []
+        for i in range(3):
+            session_id = str(uuid.uuid4())
+            session = AnonymousSession(
+                id=session_id,
+                credits=100 - (i * 10),
+                create_at=datetime.utcnow() - timedelta(days=i),
+                ultima_actividad=datetime.utcnow() - timedelta(hours=i),
+                last_ip=f"192.168.1.{i+1}"
+            )
+            db.add(session)
+            anonymous_sessions.append(session)
 
         # Transacciones de créditos
-        credit_transactions = [
+        transactions = [
+            # Transacciones para usuarios registrados
             {
                 "user_id": users[0].id,
                 "user_type": "registered",
                 "amount": -10,
                 "transaction_type": "api_call",
-                "description": "Llamada a API de procesamiento",
-                "timestamp": datetime.utcnow() - timedelta(hours=3)
+                "description": "Llamada a API de procesamiento"
             },
             {
                 "user_id": users[1].id,
                 "user_type": "registered",
-                "amount": 100,
+                "amount": 500,
                 "transaction_type": "purchase",
                 "description": "Compra de créditos",
                 "payment_amount": 9.99,
                 "payment_method": "credit_card",
-                "payment_status": "completed",
-                "timestamp": datetime.utcnow() - timedelta(days=1)
+                "payment_status": "completed"
             },
+            # Transacciones para sesiones anónimas
             {
-                "session_id": sessions_data[0]["id"],
+                "session_id": anonymous_sessions[0].id,
                 "user_type": "anonymous",
                 "amount": -5,
                 "transaction_type": "api_call",
-                "description": "Llamada a API de prueba",
-                "timestamp": datetime.utcnow() - timedelta(hours=1)
+                "description": "Llamada a API demo"
             },
             {
-                "user_id": users[2].id,
-                "user_type": "registered",
-                "amount": 5000,
-                "transaction_type": "subscription_upgrade",
-                "description": "Actualización a plan corporativo",
-                "timestamp": datetime.utcnow() - timedelta(days=2)
+                "session_id": anonymous_sessions[1].id,
+                "user_type": "anonymous",
+                "amount": -15,
+                "transaction_type": "api_call",
+                "description": "Procesamiento de datos"
             }
         ]
 
-        for transaction in credit_transactions:
+        for transaction in transactions:
             db.add(CreditTransaction(**transaction))
 
         # Logs de errores
@@ -206,33 +207,30 @@ def init_data():
                 "user_type": "registered",
                 "error_code": 400,
                 "message": "Invalid request parameters",
-                "details": "Missing required field 'query'",
+                "details": "Missing required field 'email'",
+                "url": "/api/v1/users",
+                "method": "POST",
+                "ip_address": "192.168.1.100"
+            },
+            {
+                "session_id": anonymous_sessions[0].id,
+                "user_type": "anonymous",
+                "error_code": 429,
+                "message": "Rate limit exceeded",
+                "details": "Too many requests from this IP",
                 "url": "/api/v1/process",
                 "method": "POST",
-                "ip_address": "192.168.1.1",
-                "created_at": datetime.utcnow() - timedelta(hours=2)
+                "ip_address": "192.168.1.101"
             },
             {
-                "session_id": sessions_data[1]["id"],
-                "user_type": "anonymous",
-                "error_code": 403,
-                "message": "Credit limit exceeded",
-                "details": "User has insufficient credits for this operation",
-                "url": "/api/v1/generate",
-                "method": "POST",
-                "ip_address": "10.0.0.15",
-                "created_at": datetime.utcnow() - timedelta(days=1)
-            },
-            {
-                "user_id": users[3].id,
+                "user_id": users[2].id,
                 "user_type": "registered",
                 "error_code": 500,
                 "message": "Internal server error",
                 "details": "Database connection timeout",
-                "url": "/api/v1/admin/users",
+                "url": "/api/v1/credits",
                 "method": "GET",
-                "ip_address": "172.16.0.10",
-                "created_at": datetime.utcnow() - timedelta(hours=5)
+                "ip_address": "192.168.1.102"
             }
         ]
 
@@ -244,26 +242,24 @@ def init_data():
             {
                 "user_id": users[1].id,
                 "name": "slack",
-                "webhook_url": "https://hooks.slack.com/services/T1234567/B1234567/XXXXXXXXXXXXXXXX",
+                "webhook_url": "https://hooks.slack.com/services/TXXXXX/BXXXXX/XXXXX",
                 "event_type": "credit_usage",
                 "active": True,
-                "created_at": datetime.utcnow() - timedelta(days=10)
-            },
-            {
-                "user_id": users[2].id,
-                "name": "zapier",
-                "webhook_url": "https://hooks.zapier.com/hooks/catch/1234567/abcdefg/",
-                "event_type": "payment_added",
-                "active": True,
-                "created_at": datetime.utcnow() - timedelta(days=5)
+                "last_triggered": datetime.utcnow() - timedelta(hours=2)
             },
             {
                 "user_id": users[3].id,
-                "name": "crm_custom",
-                "webhook_url": "https://crm.example.com/api/webhook/neptuno/123456",
+                "name": "zapier",
+                "webhook_url": "https://hooks.zapier.com/hooks/catch/XXXXX/XXXXX",
                 "event_type": "user_login",
-                "active": False,
-                "created_at": datetime.utcnow() - timedelta(days=3)
+                "active": True
+            },
+            {
+                "user_id": users[2].id,
+                "name": "crm_custom",
+                "webhook_url": "https://api.crm.com/webhook/XXXXX",
+                "event_type": "payment_added",
+                "active": False
             }
         ]
 
@@ -274,30 +270,25 @@ def init_data():
         api_logs = [
             {
                 "user_id": users[0].id,
-                "endpoint": "/api/v1/process",
+                "endpoint": "/api/v1/auth/login",
                 "method": "POST",
                 "status_code": 200,
-                "request_data": json.dumps({"query": "sample text", "mode": "fast"}),
-                "response_data": json.dumps({"result": "processed", "credits_used": 5}),
-                "timestamp": datetime.utcnow() - timedelta(minutes=30)
+                "request_data": json.dumps({"email": "user@example.com", "password": "****"}),
+                "response_data": json.dumps({"token": "xxxx.yyyy.zzzz"})
             },
             {
-                "user_id": None,
-                "endpoint": "/api/v1/generate",
+                "endpoint": "/api/v1/process",
                 "method": "POST",
-                "status_code": 403,
-                "request_data": json.dumps({"query": "another text"}),
-                "response_data": json.dumps({"error": "Insufficient credits"}),
-                "timestamp": datetime.utcnow() - timedelta(hours=1)
+                "status_code": 201,
+                "request_data": json.dumps({"data": "sample data"}),
+                "response_data": json.dumps({"result": "processed", "credits_used": 5})
             },
             {
                 "user_id": users[3].id,
                 "endpoint": "/api/v1/admin/users",
                 "method": "GET",
                 "status_code": 200,
-                "request_data": None,
-                "response_data": json.dumps({"count": 6, "users": ["admin@example.com", "corporate@example.com"]}),
-                "timestamp": datetime.utcnow() - timedelta(hours=2)
+                "response_data": json.dumps({"count": 42, "users": []})
             }
         ]
 
@@ -309,23 +300,20 @@ def init_data():
             {
                 "user_id": users[1].id,
                 "payment_type": "credit_card",
-                "details": "VISA ****4242",
-                "is_default": True,
-                "created_at": datetime.utcnow() - timedelta(days=30)
+                "details": "VISA ending in 4242",
+                "is_default": True
             },
             {
                 "user_id": users[1].id,
                 "payment_type": "paypal",
                 "details": "user@example.com",
-                "is_default": False,
-                "created_at": datetime.utcnow() - timedelta(days=15)
+                "is_default": False
             },
             {
                 "user_id": users[2].id,
                 "payment_type": "bank_transfer",
-                "details": "ES12 3456 7890 1234 5678 9012",
-                "is_default": True,
-                "created_at": datetime.utcnow() - timedelta(days=20)
+                "details": "IBAN: ESXX XXXX XXXX XXXX XXXX",
+                "is_default": True
             }
         ]
 
@@ -334,16 +322,8 @@ def init_data():
 
         # Tokens revocados
         revoked_tokens = [
-            {
-                "token": "expired.token.123456",
-                "revoked_at": datetime.utcnow() - timedelta(days=5),
-                "user_id": users[0].id
-            },
-            {
-                "token": "old.token.789012",
-                "revoked_at": datetime.utcnow() - timedelta(days=10),
-                "user_id": users[1].id
-            }
+            {"token": "expired.token.xxxx", "revoked_at": datetime.utcnow() - timedelta(days=30), "user_id": users[0].id},
+            {"token": "compromised.token.yyyy", "revoked_at": datetime.utcnow() - timedelta(hours=2), "user_id": users[1].id}
         ]
 
         for token in revoked_tokens:
@@ -353,15 +333,13 @@ def init_data():
         reset_tokens = [
             {
                 "user_id": users[0].id,
-                "token": "reset_token_123456",
-                "created_at": datetime.utcnow(),
+                "token": "reset_token_123",
                 "expires_at": datetime.utcnow() + timedelta(hours=1)
             },
             {
-                "user_id": users[2].id,
-                "token": "reset_token_789012",
-                "created_at": datetime.utcnow() - timedelta(minutes=30),
-                "expires_at": datetime.utcnow() + timedelta(minutes=30)
+                "user_id": users[3].id,
+                "token": "reset_token_456",
+                "expires_at": datetime.utcnow() + timedelta(hours=1)
             }
         ]
 
@@ -369,14 +347,16 @@ def init_data():
             db.add(PasswordResetToken(**token))
 
         db.commit()
-        print("Datos iniciales cargados exitosamente en todas las tablas.")
+        print("✅ Base de datos inicializada con datos de ejemplo en todas las tablas.")
     except Exception as e:
         db.rollback()
-        print(f"Error al cargar datos iniciales: {str(e)}")
+        print(f"❌ Error al cargar datos iniciales: {str(e)}")
         raise
     finally:
         db.close()
 
 if __name__ == "__main__":
-    create_tables()
-    init_data()
+    print("Creando tablas en la base de datos...")
+    init_db()
+    print("Cargando datos iniciales...")
+    init_settings_and_users()

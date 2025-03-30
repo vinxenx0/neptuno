@@ -2,25 +2,125 @@
 
 services:
   backend:
+    #image: tucuenta/backend-fastapi:latest
     container_name: neptuno-stack
     build: ./backend
-    ports:
-      - "8000:8000"  # Accesible en https://192.168.18.70:8000
+    ports: "8000:8000" # Accesible en https://192.168.18.70:8000
+    #env_file: ./backend/.env  # Variables de entorno (base de datos, API keys, etc.)
+    environment:
+      - WORKERS_PER_CORE=0.5 # 1 worker para 2 CPUs
+      - MAX_WORKERS=2 # 2 workers
+      #- UVICORN_HOST=0.0.0.0
+      #- UVICORN_PORT=8000
+      #- MAX_THREADS=2  # 2 threads por worker
+      #- MAX_REQUESTS=1000  # 1000 peticiones por worker
+    volumes:
+      - backend_data:/app/data  # Persistencia de datos
+      - backend_logs:/app/logs  # Logs de backend
+    depends_on:
+      - db
+    restart: always
+    deploy: #  replicas: 2 # 2 instancias por defecto
+
+    #logging:
+    #  options:
+    #    max-size: "10m"
+    #    max-file: "3"
     networks:
       vboxnet:
-        ipv4_address: 172.18.0.2  # IP fija para el backend
+        ipv4_address: 172.18.0.2 # IP fija para el backend
 
   frontend:
+    #image: tucuenta/frontend-nextjs:latest
     container_name: neptuno-dashboard
     build: ./frontend
     ports:
       - "3000:3000"
+    #env_file: ./backend/.env  # Variables de entorno (base de datos, API keys, etc.)      
+    environment: #- NEXT_PUBLIC_API_URL=http://backend:8000
     depends_on:
       - backend
+    volumes:
+      - frontend_logs:/app/logs  # Logs de frontend
+    restart: always
+
+    deploy: #  replicas: 2 # 2 instancias por defecto docker-compose up -d --scale fastapi=2 --scale nextjs=2
+
+    #  resources:
+    #    limits:
+    #      cpus: '0.5'
+    #      memory: 512M
+
+    #logging:
+    #  options:
+    #    max-size: "10m"
+    #    max-file: "3"
+
+    #env_file: ./frontend/.env  # Cargar credenciales desde un archivo .env
+    
     networks:
       vboxnet:
-        ipv4_address: 172.18.0.3  # IP fija para el frontend
+        ipv4_address: 172.18.0.3 # IP fija para el frontend
 
+  db:
+    image: mariadb:10.11 # image: mysql:8.0
+    restart: always
+    command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M # alta demanda
+    container_name: neptuno-db
+    enviroment: 
+    #  - MYSQL_ROOT_PASSWORD: tu_contraseña_root
+    #  - MYSQL_DATABASE: ciberpunk_db
+    #  - MYSQL_USER: ciberpunk_user
+    #  - MYSQL_PASSWORD: tu_contraseña_usuario
+  #  env_file:
+  #    - ./backend/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql #- mysql_data:/var/lib/mysql  
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.4
+
+#mariadb-replica:
+#  image: mariadb:latest
+#  environment:
+#    MYSQL_REPLICATION_MODE: slave
+#    MYSQL_MASTER_HOST: mariadb
+#    MYSQL_ROOT_PASSWORD: tu_contraseña_root
+#  volumes:
+#    - mariadb-replica-data:/var/lib/mysql
+
+#  db:
+#    image: postgres:15
+#    restart: always
+#    env_file:
+#     - ./backend/.env  # Archivo con las credenciales de la DB
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data  # Persistencia de DB
+#    networks:
+#      mynetwork:
+#        ipv4_address: 172.18.0.4
+
+#  nginx:
+#    image: nginx:latest
+#    restart: always
+#    ports:
+#      - "80:80"   # HTTP
+#      - "443:443" # HTTPS
+#    volumes:
+#      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Configuración del proxy inverso
+#      - ssl_certs:/etc/nginx/certs  # Certificados SSL
+#      - ./ssl:/etc/nginx/certs:ro 
+#    depends_on:
+#     - frontend
+#      - backend
+#    networks:
+#      mynetwork:
+#        ipv4_address: 172.18.0.5
+#
 networks:
   vboxnet:
     driver: bridge
@@ -28,3 +128,10 @@ networks:
       config:
         - subnet: "172.18.0.0/16"
           gateway: "172.18.0.1"
+
+
+volumes:
+  backend_data:
+  backend_logs:
+  frontend_logs:
+  mariadb_data:

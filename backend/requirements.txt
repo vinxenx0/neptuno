@@ -17,10 +17,12 @@ exceptiongroup==1.2.2
 fastapi==0.115.11
 fastapi-limiter==0.1.6
 greenlet==3.1.1
+gunicorn==23.0.0
 h11==0.14.0
 idna==3.10
 kombu==5.5.0
 oauthlib==3.2.2
+packaging==24.2
 passlib==1.7.4
 prompt_toolkit==3.0.50
 pydantic==2.10.6
@@ -42,4 +44,3 @@ urllib3==2.3.0
 uvicorn==0.34.0
 vine==5.1.0
 wcwidth==0.2.13
-gunicorn
