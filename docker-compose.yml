@@ -5,7 +5,8 @@ services:
     #image: tucuenta/backend-fastapi:latest
     container_name: neptuno-stack
     build: ./backend
-    ports: "8000:8000" # Accesible en https://192.168.18.70:8000
+    ports: 
+      - "8000:8000" # Accesible en https://192.168.18.70:8000
     #env_file: ./backend/.env  # Variables de entorno (base de datos, API keys, etc.)
     environment:
       - WORKERS_PER_CORE=0.5 # 1 worker para 2 CPUs
@@ -37,7 +38,8 @@ services:
     ports:
       - "3000:3000"
     #env_file: ./backend/.env  # Variables de entorno (base de datos, API keys, etc.)      
-    environment: #- NEXT_PUBLIC_API_URL=http://backend:8000
+    #environment: 
+    # - NEXT_PUBLIC_API_URL=http://backend:8000
     depends_on:
       - backend
     volumes:
@@ -67,7 +69,7 @@ services:
     restart: always
     command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M # alta demanda
     container_name: neptuno-db
-    enviroment: 
+    #enviroment: 
     #  - MYSQL_ROOT_PASSWORD: tu_contraseña_root
     #  - MYSQL_DATABASE: ciberpunk_db
     #  - MYSQL_USER: ciberpunk_user
@@ -79,7 +81,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql #- mysql_data:/var/lib/mysql  
     networks:
-      mynetwork:
+      vboxnet:
         ipv4_address: 172.18.0.4
 
 #mariadb-replica:
