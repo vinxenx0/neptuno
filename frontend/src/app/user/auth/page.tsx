@@ -10,53 +10,56 @@ import { RegisterRequest } from "@/lib/types";
 import fetchAPI from "@/lib/api";
 import { 
   Box, 
+  Typography, 
   TextField, 
   Button, 
-  Typography, 
   Alert, 
-  AlertTitle,
-  Divider,
-  IconButton,
-  InputAdornment,
+  Snackbar, 
+  Divider, 
   useTheme,
   styled,
-  Paper
+  Container,
+  Avatar,
+  IconButton
 } from "@mui/material";
 import { 
-  Email, 
   Lock, 
   Person, 
-  ArrowBack, 
-  CheckCircle,
-  Visibility,
-  VisibilityOff
+  Email, 
+  ArrowBack,
+  VerifiedUser,
+  VpnKey,
+  PersonAdd
 } from "@mui/icons-material";
 
-const AuthContainer = styled(Paper)(({ theme }) => ({
-  maxWidth: 450,
-  width: '100%',
-  padding: theme.spacing(4),
-  borderRadius: '16px',
-  background: 'rgba(255, 255, 255, 0.9)',
+// Styled Components
+const AuthGlassCard = styled(Box)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  borderRadius: '24px',
   boxShadow: theme.shadows[10],
-  overflow: 'hidden',
-  position: 'relative'
+  padding: theme.spacing(6),
+  width: '100%',
+  maxWidth: '500px',
+  margin: '0 auto'
 }));
 
-const AuthCard = styled(motion.div)({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column'
-});
-
 const AuthButton = styled(Button)(({ theme }) => ({
-  padding: theme.spacing(1.5),
   borderRadius: '12px',
+  padding: theme.spacing(2),
   fontWeight: 'bold',
   fontSize: '1rem',
   textTransform: 'none',
   marginTop: theme.spacing(2)
+}));
+
+const AuthLayoutContainer = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
 }));
 
 export default function AuthPage() {
@@ -72,7 +75,6 @@ export default function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [enableRegistration, setEnableRegistration] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const { login, register } = useAuth();
 
   useEffect(() => {
@@ -185,385 +187,318 @@ export default function AuthPage() {
   };
 
   return (
-    <Box sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      p: 2
-    }}>
-      <AuthContainer elevation={3}>
-        <AnimatePresence mode="wait">
-          {mode === "login" && (
-            <AuthCard
-              key="login"
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+    <AuthLayoutContainer>
+      <Box component="header" sx={{ p: 4, textAlign: 'center' }}>
+        <Link href="/" passHref>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+              <VerifiedUser />
+            </Avatar>
+            <Typography 
+              variant="h4" 
+              component="span" 
+              sx={{ 
+                fontWeight: 'bold',
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
             >
-              <Typography variant="h4" component="h1" sx={{ 
-                fontWeight: 'bold', 
-                mb: 4,
-                textAlign: 'center',
-                color: theme.palette.primary.main
-              }}>
-                Iniciar Sesión
-              </Typography>
+              Neptuno
+            </Typography>
+          </Box>
+        </Link>
+      </Box>
 
-              {error && (
-                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
-              {success && (
-                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Éxito</AlertTitle>
-                  {success}
-                </Alert>
-              )}
+      <Box component="main" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+        <AuthGlassCard>
+          <AnimatePresence mode="wait">
+            {mode === "login" && (
+              <motion.div
+                key="login"
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 100, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                  <Lock color="primary" sx={{ fontSize: 48, mb: 2 }} />
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    Iniciar Sesión
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Accede a tu cuenta para continuar
+                  </Typography>
+                </Box>
 
-              <Box component="form" onSubmit={handleLogin} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <TextField
-                  label="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email color="action" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                {error && (
+                  <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {error}
+                  </Alert>
+                )}
+                {success && (
+                  <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {success}
+                  </Alert>
+                )}
 
-                <TextField
-                  label="Contraseña"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="action" />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <AuthButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Iniciar Sesión
-                </AuthButton>
-              </Box>
-
-              <Divider sx={{ my: 3 }} />
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
-                  ¿No tienes cuenta?{' '}
-                  {enableRegistration ? (
-                    <Button 
-                      onClick={() => changeMode("register")}
-                      sx={{ 
-                        textTransform: 'none',
-                        color: theme.palette.secondary.main,
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      Regístrate
-                    </Button>
-                  ) : (
-                    <Typography variant="caption" color="textSecondary">
-                      Registro deshabilitado
-                    </Typography>
-                  )}
-                </Typography>
-
-                <Button 
-                  onClick={() => changeMode("reset")}
-                  sx={{ 
-                    textTransform: 'none',
-                    color: theme.palette.text.secondary
-                  }}
-                >
-                  ¿Olvidaste tu contraseña?
-                </Button>
-              </Box>
-            </AuthCard>
-          )}
-
-          {mode === "register" && (
-            <AuthCard
-              key="register"
-              initial={{ x: 100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
-                  <ArrowBack />
-                </IconButton>
-                <Typography variant="h4" component="h1" sx={{ 
-                  fontWeight: 'bold',
-                  color: theme.palette.primary.main
-                }}>
-                  Crear Cuenta
-                </Typography>
-              </Box>
-
-              {!enableRegistration && (
-                <Alert severity="warning" sx={{ mb: 3, borderRadius: '12px' }}>
-                  El registro está deshabilitado en este momento.
-                </Alert>
-              )}
-              {error && (
-                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
-              {success && (
-                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Éxito</AlertTitle>
-                  {success}
-                </Alert>
-              )}
-
-              <Box component="form" onSubmit={handleRegister} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <TextField
-                  label="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  fullWidth
-                  disabled={!enableRegistration}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email color="action" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <TextField
-                  label="Nombre de usuario"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  fullWidth
-                  disabled={!enableRegistration}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Person color="action" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <TextField
-                  label="Contraseña"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  fullWidth
-                  disabled={!enableRegistration}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="action" />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                          disabled={!enableRegistration}
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <AuthButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  disabled={!enableRegistration}
-                >
-                  Registrarse
-                </AuthButton>
-              </Box>
-
-              <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
-                ¿Ya tienes cuenta?{' '}
-                <Button 
-                  onClick={() => changeMode("login")}
-                  sx={{ 
-                    textTransform: 'none',
-                    color: theme.palette.secondary.main,
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Inicia sesión
-                </Button>
-              </Typography>
-            </AuthCard>
-          )}
-
-          {mode === "reset" && (
-            <AuthCard
-              key="reset"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
-                  <ArrowBack />
-                </IconButton>
-                <Typography variant="h4" component="h1" sx={{ 
-                  fontWeight: 'bold',
-                  color: theme.palette.primary.main
-                }}>
-                  Recuperar Contraseña
-                </Typography>
-              </Box>
-
-              {error && (
-                <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
-              {success && (
-                <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
-                  <AlertTitle>Éxito</AlertTitle>
-                  {success}
-                </Alert>
-              )}
-
-              {!success ? (
-                <Box component="form" onSubmit={handleResetPassword} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
                   <TextField
+                    fullWidth
                     label="Email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
-                    fullWidth
+                    margin="normal"
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Email color="action" />
-                        </InputAdornment>
-                      ),
+                      startAdornment: <Email color="action" sx={{ mr: 1 }} />
                     }}
+                    sx={{ mb: 2 }}
                   />
-
+                  <TextField
+                    fullWidth
+                    label="Contraseña"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    margin="normal"
+                    InputProps={{
+                      startAdornment: <VpnKey color="action" sx={{ mr: 1 }} />
+                    }}
+                    sx={{ mb: 2 }}
+                  />
                   <AuthButton
+                    fullWidth
                     type="submit"
                     variant="contained"
                     color="primary"
-                    fullWidth
+                    size="large"
+                    startIcon={<Lock />}
                   >
-                    Solicitar Recuperación
+                    Iniciar Sesión
                   </AuthButton>
                 </Box>
-              ) : (
-                <Box component="form" onSubmit={handleConfirmReset} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <TextField
-                    label="Token"
-                    value={token}
-                    onChange={(e) => setToken(e.target.value)}
-                    required
-                    fullWidth
-                  />
 
+                <Divider sx={{ my: 3 }} />
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  {enableRegistration ? (
+                    <Button onClick={() => changeMode("register")} color="secondary">
+                      Crear una cuenta
+                    </Button>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Registro deshabilitado
+                    </Typography>
+                  )}
+                  <Button onClick={() => changeMode("reset")} color="inherit">
+                    ¿Olvidaste tu contraseña?
+                  </Button>
+                </Box>
+              </motion.div>
+            )}
+
+            {mode === "register" && (
+              <motion.div
+                key="register"
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -100, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                  <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
+                    <ArrowBack />
+                  </IconButton>
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+                    Crear Cuenta
+                  </Typography>
+                </Box>
+
+                {!enableRegistration && (
+                  <Alert severity="warning" sx={{ mb: 3, borderRadius: '12px' }}>
+                    El registro está deshabilitado en este momento.
+                  </Alert>
+                )}
+                {error && (
+                  <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {error}
+                  </Alert>
+                )}
+                {success && (
+                  <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {success}
+                  </Alert>
+                )}
+
+                <Box component="form" onSubmit={handleRegister} sx={{ mt: 2 }}>
                   <TextField
-                    label="Nueva Contraseña"
-                    type={showPassword ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
                     fullWidth
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    margin="normal"
+                    disabled={!enableRegistration}
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock color="action" />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                      startAdornment: <Email color="action" sx={{ mr: 1 }} />
                     }}
+                    sx={{ mb: 2 }}
                   />
-
+                  <TextField
+                    fullWidth
+                    label="Nombre de usuario"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    margin="normal"
+                    disabled={!enableRegistration}
+                    InputProps={{
+                      startAdornment: <Person color="action" sx={{ mr: 1 }} />
+                    }}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Contraseña"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    margin="normal"
+                    disabled={!enableRegistration}
+                    InputProps={{
+                      startAdornment: <VpnKey color="action" sx={{ mr: 1 }} />
+                    }}
+                    sx={{ mb: 2 }}
+                  />
                   <AuthButton
+                    fullWidth
                     type="submit"
                     variant="contained"
                     color="primary"
-                    fullWidth
+                    size="large"
+                    disabled={!enableRegistration}
+                    startIcon={<PersonAdd />}
                   >
-                    Actualizar Contraseña
+                    Registrarse
                   </AuthButton>
                 </Box>
-              )}
 
-              <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
-                <Button 
-                  onClick={() => changeMode("login")}
-                  sx={{ 
-                    textTransform: 'none',
-                    color: theme.palette.secondary.main,
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Volver a Iniciar Sesión
-                </Button>
-              </Typography>
-            </AuthCard>
-          )}
-        </AnimatePresence>
-      </AuthContainer>
-    </Box>
+                <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
+                  ¿Ya tienes una cuenta?{' '}
+                  <Button onClick={() => changeMode("login")} color="primary">
+                    Inicia sesión
+                  </Button>
+                </Typography>
+              </motion.div>
+            )}
+
+            {mode === "reset" && (
+              <motion.div
+                key="reset"
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -100, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                  <IconButton onClick={() => changeMode("login")} sx={{ mr: 1 }}>
+                    <ArrowBack />
+                  </IconButton>
+                  <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+                    Recuperar Contraseña
+                  </Typography>
+                </Box>
+
+                {error && (
+                  <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {error}
+                  </Alert>
+                )}
+                {success && (
+                  <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>
+                    {success}
+                  </Alert>
+                )}
+
+                {!success ? (
+                  <Box component="form" onSubmit={handleResetPassword} sx={{ mt: 2 }}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      margin="normal"
+                      InputProps={{
+                        startAdornment: <Email color="action" sx={{ mr: 1 }} />
+                      }}
+                      sx={{ mb: 2 }}
+                    />
+                    <AuthButton
+                      fullWidth
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      startIcon={<VpnKey />}
+                    >
+                      Solicitar Recuperación
+                    </AuthButton>
+                  </Box>
+                ) : (
+                  <Box component="form" onSubmit={handleConfirmReset} sx={{ mt: 2 }}>
+                    <TextField
+                      fullWidth
+                      label="Token"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                      margin="normal"
+                      InputProps={{
+                        startAdornment: <VerifiedUser color="action" sx={{ mr: 1 }} />
+                      }}
+                      sx={{ mb: 2 }}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Nueva Contraseña"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      margin="normal"
+                      InputProps={{
+                        startAdornment: <VpnKey color="action" sx={{ mr: 1 }} />
+                      }}
+                      sx={{ mb: 2 }}
+                    />
+                    <AuthButton
+                      fullWidth
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      startIcon={<Lock />}
+                    >
+                      Actualizar Contraseña
+                    </AuthButton>
+                  </Box>
+                )}
+
+                <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
+                  <Button onClick={() => changeMode("login")} color="primary">
+                    Volver a Iniciar Sesión
+                  </Button>
+                </Typography>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </AuthGlassCard>
+      </Box>
+
+      <Box component="footer" sx={{ p: 3, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary">
+          © {new Date().getFullYear()} Neptuno. Todos los derechos reservados.
+        </Typography>
+      </Box>
+    </AuthLayoutContainer>
   );
 }

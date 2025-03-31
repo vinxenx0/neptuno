@@ -1,3 +1,4 @@
+// frontend/src/app/about/[page]/page.tsx
 import { notFound } from "next/navigation";
 import dynamic from 'next/dynamic';
 
