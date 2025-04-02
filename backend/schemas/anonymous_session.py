@@ -4,6 +4,7 @@ from datetime import datetime
 
 class AnonymousSessionBase(BaseModel):
     id: str
+    username: str  # Nuevo campo
     credits: int
     create_at: datetime
     ultima_actividad: datetime | None

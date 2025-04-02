@@ -102,3 +102,16 @@ export interface FetchResponse<T> {
   error: string | HTTPValidationError | null;
   total_pages?: number;
 }
+
+
+// respuesta /info
+export interface UserInfo {
+  user_id: string | null;
+  email: string | null;
+  username: string | null;
+  user_type: string;
+  subscription: string | null;
+  credits: number;
+  rol: string | null;
+  session_id?: string; // Solo para anónimos
+ }

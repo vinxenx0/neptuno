@@ -1,0 +1,23 @@
+1. Why It’s a Boilerplate (Not a Framework)
+
+    Pre-configured Setup: It includes a backend (Python-based, likely FastAPI/Flask) and frontend (Next.js) with predefined routes, models, and services.
+
+    No Framework-like Abstraction:
+
+        A framework (e.g., Django, Next.js) provides rules, patterns, and extensibility (e.g., middleware systems, plugin architectures).
+
+        Your project is structured but doesn’t enforce a strict development paradigm (like MVC, Dependency Injection, etc.).
+
+    Reusable but Not Extensible:
+
+        Boilerplate = Ready-to-use code for quick starts.
+
+        Framework = Allows developers to extend core behavior (e.g., adding custom middleware in Express.js).
+
+        
+
+    A core SDK/API that others can extend,
+
+    Convention-over-configuration rules,
+
+    Custom tooling for scaffolding.

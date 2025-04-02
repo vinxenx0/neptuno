@@ -1,10 +1,16 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+// src/lib/api.ts
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
 import { HTTPValidationError, FetchResponse, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";
 
 // Extender AxiosRequestConfig para incluir _retry
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
+
+// Crear una instancia personalizada de Axios
+const api: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
 
 // Variables para manejar el estado de refresco
 let isRefreshing = false;
@@ -21,43 +27,47 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+// Agregar el interceptor de solicitudes
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  const sessionId = localStorage.getItem("session_id");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  } else if (sessionId) {
+    config.headers["X-Session-ID"] = sessionId;
+  }
+  return config;
+});
+
 const logRequest = (method: string, url: string, status: number, data?: unknown) => {
   console.log(`[${method}] ${url} - Status: ${status}`, data ?? "");
 };
 
 const fetchAPI = async <T>(
   endpoint: string,
-  options: CustomAxiosRequestConfig = {}, // Usar el tipo extendido
+  options: CustomAxiosRequestConfig = {},
   contentType: string = "application/json"
 ): Promise<FetchResponse<T>> => {
   console.log(`Iniciando fetchAPI para ${endpoint}`);
-  const token = localStorage.getItem("accessToken");
-  const sessionId = localStorage.getItem("session_id"); // Leer session_id de localStorage
-  const headers = {
-    "Content-Type": contentType,
-    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
-    ...(sessionId ? { "X-Session-ID": sessionId } : {}),
-    //...(token && { Authorization: `Bearer ${token}` }),
-    //...(sessionId && { "X-Session-ID": sessionId }), // Incluir X-Session-ID si existe
-    ...options.headers,
+
+  const config: CustomAxiosRequestConfig = {
+    ...options,
+    url: endpoint, // baseURL ya está configurado en la instancia
+    headers: {
+      "Content-Type": contentType,
+      ...options.headers,
+    },
+    data: options.data,
   };
 
   // Convertir datos a formato x-www-form-urlencoded si es necesario
-  let data = options.data;
-  if (contentType === "application/x-www-form-urlencoded" && data) {
+  if (contentType === "application/x-www-form-urlencoded" && config.data) {
     const formData = new URLSearchParams();
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(config.data).forEach(([key, value]) => {
       if (value !== undefined) formData.append(key, String(value));
     });
-    data = formData;
+    config.data = formData;
   }
-
-  const config: CustomAxiosRequestConfig = { // Usar el tipo extendido
-    ...options,
-    url: `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
-    headers,
-    data,
-  };
 
   const normalizeResponse = (
     response: AxiosResponse<T> | undefined,
@@ -85,10 +95,9 @@ const fetchAPI = async <T>(
   };
 
   try {
-    const response: AxiosResponse<T> = await axios(config);
+    const response: AxiosResponse<T> = await api(config); // Usar la instancia 'api'
     logRequest(config.method || "GET", config.url!, response.status, response.data);
 
-    // Usar aserción de tipo para acceder a session_id
     if (response.data && (response.data as any).session_id) {
       localStorage.setItem("session_id", (response.data as any).session_id);
     }
@@ -103,22 +112,20 @@ const fetchAPI = async <T>(
       axiosError.response?.data
     );
 
-    // Manejar error 401 (No autorizado)
     if (axiosError.response?.status === 401 && !config._retry) {
-      const originalRequest: CustomAxiosRequestConfig = config; // Usar el tipo extendido
+      const originalRequest: CustomAxiosRequestConfig = config;
       originalRequest._retry = true;
 
       const accessToken = localStorage.getItem("accessToken");
       const refreshToken = localStorage.getItem("refreshToken");
 
-      // Solo intentar refrescar o redirigir si el usuario está autenticado
       if (accessToken && refreshToken) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             failedQueue.push({
               resolve: (token) => {
                 originalRequest.headers.Authorization = `Bearer ${token}`;
-                axios(originalRequest)
+                api(originalRequest)
                   .then(response => resolve(normalizeResponse(response, null)))
                   .catch(error => reject(normalizeResponse(undefined, error)));
               },
@@ -131,8 +138,8 @@ const fetchAPI = async <T>(
 
         try {
           console.log("Intentando refrescar token de acceso");
-          const refreshResponse = await axios.post<TokenResponse>(
-            `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
+          const refreshResponse = await api.post<TokenResponse>(
+            "/v1/auth/refresh",
             { refresh_token: refreshToken },
             {
               headers: {
@@ -144,20 +151,19 @@ const fetchAPI = async <T>(
 
           localStorage.setItem("accessToken", refreshResponse.data.access_token);
           localStorage.setItem("refreshToken", refreshResponse.data.refresh_token);
-          // No eliminamos session_id aquí, ya que no es relevante para usuarios registrados
 
           originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
           processQueue(null, refreshResponse.data.access_token);
 
-          const retryResponse = await axios(originalRequest);
+          const retryResponse = await api(originalRequest);
           return normalizeResponse(retryResponse, null);
         } catch (refreshError) {
           console.error("Error al refrescar token:", refreshError);
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
-          localStorage.removeItem("session_id"); // Limpiar todo si falla el refresco
+          localStorage.removeItem("session_id");
           processQueue(refreshError, null);
-          window.location.href = "/user/login";
+          window.location.href = "/user/auth/#login";
           return normalizeResponse(undefined, {
             message: "Sesión expirada, por favor inicia sesión nuevamente",
           });
@@ -165,7 +171,6 @@ const fetchAPI = async <T>(
           isRefreshing = false;
         }
       } else {
-        // Para usuarios anónimos (sin accessToken), no eliminar session_id ni redirigir
         return normalizeResponse(undefined, { message: "No autorizado" });
       }
     }

@@ -1,0 +1,232 @@
+Neptuno
+
+es tu framework de marketing con autentificación (incluye oauth2), usuarios, subscripciones, medios de pago, creditos, roles,
+etc etc y todo lo que necesitas para seguir a tu lead desde que es anonimo hasta que convierte
+
+Conectalo a tu front favorito (react,angular), amplia con mas librerias fastapi, graphql usamos openapi
+
+utilizado en campañas, landing, microsites
+
+===
+
+Neptuno es el stack mas completo para marketing, gamificacion y monetizacion
+Neptuno es un starter kit full-stack diseñado para acelerar el desarrollo de campañas, landing pages y SaaS con autenticación, gamificación y pagos integrados.
+Olvídate de construir desde cero: Neptuno te proporciona toda la infraestructura necesaria para seguir el recorrido del usuario desde el anonimato hasta la conversión.
+Conectalo a tu frontend favorito (React, Angular, Vue, Svelte, Next.js) y expande su funcionalidad con librerías adicionales en FastAPI. 
+
+Neptuno es un boilerplate backend listo para producción, diseñado para campañas, landing pages y micrositios. Conéctalo a cualquier frontend y gestiona el ciclo de vida del usuario desde el anonimato hasta la conversión.
+
+
+✔️ Backend robusto en Python con FastAPI y OpenAPI
+✔️ Autenticación y gestión de usuarios (OAuth2, JWT, roles y permisos avanzados)
+✔️ Autenticación avanzada (OAuth2, JWT, roles y permisos)
+✔️ Gamificación nativa (score, créditos, badges, niveles, desafíos)
+✔️ Frontend Next.js optimizado para SEO y rendimiento
+✔️ Gamificación integrada (score, créditos, badges, niveles)
+
+
+LISTO PARA PRODUCCION
+- Autenticacion y gestion de usuarios (oauth2, jwt, roles y permisos avanzados)
+- Balanceo y escalabilidad (docker, nginx, gunicorn)
+. SSL y seguridad (https, cors, csrf)
+
+LISTO PARA DESARROLLO
+- API RESTful basada en FastAPI (documentada en OpenAPI)
+- Soporte para GraphQL y ampliable con más librerías
+- Arquitectura modular y escalable
+- Integración con cualquier frontend (React, Angular, Vue, Svelte, Next.js)
+- Webhooks y eventos para conectar con cualquier sistema externo
+- Integración con herramientas de marketing y CRM
+
+LISTO PARA EXTRAER
+- Usuario anonimo (lead) hasta cliente
+- Tracking y automatizacion (segmentacion, triggers de conversion)
+- Gamificacion nativa (score, creditos, badges, niveles, desafios)
+
+LISTO PARA MONETIZAR
+- Formas de pago, transacciones, suscripciones, modelos freemium
+
+
+
+
+- Journey desde anonimos
+
+curl -s -X GET 127.0.0.1:8000/info | jq
+{
+  "session_id": "441a7d2b-ba3d-4308-8b63-e827a8028698",
+  "user_id": "441a7d2b-ba3d-4308-8b63-e827a8028698",
+  "email": "anonymous@example.com",
+  "username": "anonymous",
+  "user_type": "anonymous",
+  "subscription": "basic",
+  "credits": 100,
+  "rol": "anonymous"
+}
+
+
+- Seguridad desde el inicio
+
+curl -X POST 127.0.0.1:8000/v1/auth/token -d 'grant_type=password&username=admin%40example.com&password=admin123'
+
+- Preparado para balancear y escalar en segundos
+
+upstream nextjs_backend {
+    least_conn; # Usa el servidor con menos conexiones
+    server 127.0.0.1:3000;
+    server 127.0.0.1:3001; # Añade más instancias cuando escales
+}
+
+
+services:
+  fastapi:
+    build: ./backend
+    deploy:
+      replicas: 2 # 2 instancias por defecto
+    ports:
+      - "8000-8001:8000" # Rango para múltiples instancias
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+
+
+🚀 Neptuno: El Starter Kit Full-Stack para Marketing, Gamificación y Monetización
+
+Preconfigurado con backend en Python y frontend en Next.js. Gratis, solo pagas por soporte, desarrollo a medida o consultoría.
+🔥 Lanza tu aplicación en minutos con una API lista para producción
+
+Neptuno es un starter kit full-stack diseñado para acelerar el desarrollo de campañas, landing pages y SaaS con autenticación, gamificación y pagos integrados.
+
+Olvídate de construir desde cero: Neptuno te proporciona toda la infraestructura necesaria para seguir el recorrido del usuario desde el anonimato hasta la conversión.
+
+✔️ Backend robusto en Python con FastAPI y OpenAPI
+✔️ Frontend Next.js optimizado para SEO y rendimiento
+✔️ Autenticación avanzada (OAuth2, JWT, roles y permisos)
+✔️ Gamificación integrada (score, créditos, badges, niveles)
+✔️ Pagos y monetización (suscripciones, pasarelas de pago, modelos freemium)
+✔️ Gestión de usuarios y leads con tracking y automatización
+🔗 100% modular e integrable con cualquier stack
+
+Neptuno está diseñado para funcionar con cualquier frontend y expandirse según las necesidades de tu negocio:
+
+🔹 Usa el frontend Next.js incluido o conéctalo a React, Angular, Vue o cualquier otro framework
+🔹 API documentada en OpenAPI con compatibilidad para REST y GraphQL
+🔹 Extiende el backend con FastAPI y otras librerías Python
+🔹 Webhooks y eventos para integraciones con CRM, automatización y analytics
+📡 Casos de uso ideales
+🎮 Campañas con gamificación y recompensas
+
+✔️ Atribuye puntos, créditos y badges en cada interacción
+✔️ Define niveles, incentivos y desafíos personalizados
+✔️ Automatiza la conversión de leads con triggers dinámicos
+📈 Landing pages y micrositios con autenticación y pagos
+
+✔️ Usuarios gestionados con OAuth2, JWT y roles avanzados
+✔️ Monetización lista para usar con suscripciones y pasarelas de pago
+✔️ Infraestructura optimizada para campañas de alto tráfico
+💻 SaaS con lógica de negocio lista para escalar
+
+✔️ Control total sobre usuarios, permisos y gestión de pagos
+✔️ Integración con herramientas de marketing y CRM vía API
+✔️ Modular y extensible para adaptarse a cualquier modelo de negocio
+💰 Gratis. Solo pagas por lo que necesitas.
+
+Neptuno es 100% gratuito. Solo pagas si necesitas:
+
+💡 Soporte técnico premium para optimizar tu implementación
+⚡ Desarrollo a medida para adaptar Neptuno a tu stack
+📊 Consultoría estratégica para mejorar la conversión y retención de usuarios
+🚀 Deja de perder tiempo en infraestructura y concéntrate en crecer
+
+Neptuno te da un backend sólido y un frontend potente desde el día uno, listo para escalar tu negocio.
+
+🔗 Descárgalo gratis y conecta tu frontend en minutos.
+
+=========================================================
+
+
+🚀 Neptuno: La API que Potencia Tu Marketing con Gamificación y Monetización
+
+Framework backend gratuito para autenticación, scoring, pagos y más. Solo pagas por soporte o desarrollo a medida.
+🔥 Levanta una API en minutos y controla toda la experiencia del usuario
+
+Neptuno es un boilerplate backend listo para producción, diseñado para campañas, landing pages y micrositios. Conéctalo a cualquier frontend y gestiona el ciclo de vida del usuario desde el anonimato hasta la conversión.
+
+✅ Autenticación y gestión de usuarios (OAuth2, roles, permisos)
+✅ Gamificación nativa (score, créditos, badges, niveles)
+✅ Monetización integrada (pagos, suscripciones, modelos freemium)
+✅ API flexible y escalable (FastAPI, OpenAPI, GraphQL-ready)
+🔗 100% integrable con tu stack
+
+Neptuno funciona con cualquier frontend moderno (React, Angular, Vue) y puede ampliarse con librerías adicionales en FastAPI. Su API RESTful documentada en OpenAPI te permite conectar fácilmente nuevas funciones o servicios externos.
+
+📡 Casos de uso:
+🔹 Campañas de marketing con incentivos y recompensas
+🔹 Micrositios con autenticación y monetización lista para usar
+🔹 Aplicaciones SaaS que necesitan control de usuarios, créditos y pagos
+💰 Gratis. Solo pagas por lo que necesitas.
+
+Neptuno es 100% gratuito. Solo pagas si requieres:
+💡 Soporte técnico premium
+⚡ Desarrollo a medida
+📊 Consultoría en integración y estrategia
+
+Empieza ahora y acelera el crecimiento de tu negocio sin reinventar la rueda. 🚀
+
+👉 Descarga Neptuno y conecta tu frontend en minutos.
+
+---------------
+
+🚀 Neptuno: La API de Backend para Gamificación, Monetización y Autenticación
+
+Framework backend gratuito para campañas de marketing, landing pages y SaaS. Solo pagas por soporte, desarrollo a medida o consultoría.
+🎯 Lanza tu backend en minutos y gestiona todo el ciclo de vida del usuario
+
+Neptuno es un boilerplate backend listo para producción, diseñado para campañas, landing pages y aplicaciones SaaS que requieren autenticación, gamificación y pagos.
+
+Te permite seguir a cada usuario desde que es un lead anónimo hasta que se convierte en cliente, sin necesidad de desarrollar un backend desde cero.
+
+✔️ Autenticación y gestión de usuarios (OAuth2, JWT, roles y permisos avanzados)
+✔️ Gamificación nativa (score, créditos, badges, niveles, desafíos)
+✔️ Monetización integrada (medios de pago, suscripciones, modelos freemium)
+✔️ Gestión avanzada de leads y clientes (segmentación, tracking y triggers de conversión)
+✔️ API flexible y escalable (FastAPI, OpenAPI, GraphQL-ready)
+✔️ Eventos y automatización (acciones basadas en interacciones del usuario)
+🛠 Conéctalo con cualquier frontend y amplíalo sin límites
+
+Neptuno está diseñado para integrarse fácilmente con cualquier frontend o stack tecnológico:
+
+🔹 Compatible con React, Angular, Vue, Svelte, Next.js y más
+🔹 API RESTful basada en FastAPI con documentación en OpenAPI
+🔹 Soporta GraphQL y se puede ampliar con más librerías según tus necesidades
+🔹 Arquitectura modular y escalable para adaptarse a proyectos de cualquier tamaño
+📡 Casos de uso ideales
+🎮 Campañas con gamificación y recompensas
+
+✔️ Atribuye puntos, créditos o logros a cada interacción del usuario
+✔️ Define niveles, badges o incentivos para mejorar la retención
+✔️ Automatiza la conversión de leads a clientes con triggers personalizados
+📈 Landing pages y micrositios con monetización integrada
+
+✔️ Control total sobre autenticación, pagos y suscripciones
+✔️ Modelo freemium o premium con créditos y desbloqueo de funciones
+✔️ Pagos con tarjeta, criptomonedas o wallets digitales
+💻 SaaS con lógica de negocio avanzada
+
+✔️ Roles y permisos personalizables para usuarios y administradores
+✔️ Integración con herramientas de marketing y CRM
+✔️ Webhooks y eventos para conectar con cualquier sistema externo
+💰 Gratis. Solo pagas por lo que necesitas.
+
+Neptuno es 100% gratuito y puedes empezar a usarlo hoy. Solo pagas si necesitas:
+
+💡 Soporte técnico premium para optimizar y escalar tu implementación
+⚡ Desarrollo a medida para adaptar Neptuno a tus necesidades específicas
+📊 Consultoría estratégica para mejorar la conversión y rentabilidad de tus campañas
+🚀 Ahorra meses de desarrollo y enfócate en crecer
+
+No reinventes la rueda. Neptuno ya tiene la infraestructura que necesitas para lanzar tu campaña, landing page o SaaS en tiempo récord.
+
+🔗 Descárgalo gratis y conecta tu frontend en minutos.
+
+------------
+

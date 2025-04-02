@@ -1,5 +1,4 @@
 // src/app/user/dashboard/page.tsx
-// src/app/user/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -23,6 +22,19 @@ import {
   Snackbar,
   Alert,
   MenuItem,
+  Avatar,
+  Chip,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Badge,
+  Paper,
+  Tabs,
+  Tab,
+  useTheme,
+  styled
 } from "@mui/material";
 import {
   AccountCircle,
@@ -32,9 +44,35 @@ import {
   AddCircle,
   Delete,
   ExpandMore,
+  Edit,
+  History,
+  AttachMoney,
+  Security,
+  Logout,
+  Person,
+  LocationOn,
+  Language,
+  Star,
+  StarBorder
 } from "@mui/icons-material";
 
-// Interfaces
+// Styled Components
+const GradientCard = styled(Card)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+  color: theme.palette.primary.contrastText,
+  borderRadius: '16px',
+  boxShadow: theme.shadows[10]
+}));
+
+const GlassCard = styled(Card)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.2)',
+  borderRadius: '16px',
+  boxShadow: theme.shadows[5]
+}));
+
+// Interfaces (same as before)
 interface PaymentMethod {
   id: number;
   payment_type: string;
@@ -55,6 +93,7 @@ interface CreditTransaction {
 export default function UserDashboard() {
   const { user, logout, updateProfile } = useAuth();
   const router = useRouter();
+  const theme = useTheme();
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", website: "" });
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
@@ -66,12 +105,11 @@ export default function UserDashboard() {
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [transactionsOpen, setTransactionsOpen] = useState(false);
-  const [methodsOpen, setMethodsOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
     if (!user) {
-      router.push("/user/login");
+      router.push("/");
       return;
     }
     setFormData({
@@ -95,6 +133,7 @@ export default function UserDashboard() {
     };
     fetchData();
   }, [user, router]);
+
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,277 +212,828 @@ export default function UserDashboard() {
       try {
         await fetchAPI("/v1/users/me", { method: "DELETE" });
         await logout();
-        router.push("/user/login");
+        router.push("/user/auth/#login");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al eliminar cuenta");
       }
     }
   };
 
-  if (!user) return <Box sx={{ textAlign: "center", p: 4 }}>Cargando...</Box>;
+
+  if (!user) return (
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+    }}>
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Typography variant="h6" color="textSecondary">Cargando tu perfil...</Typography>
+      </motion.div>
+    </Box>
+  );
 
   return (
-    <Box sx={{ p: 6, minHeight: "100vh" }} className="container mx-auto">
-      <Typography 
-        component={motion.h1}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        sx={{ 
-          fontSize: "2rem", 
-          fontWeight: "bold", 
-          mb: 6, 
-          textAlign: "center" 
-        }}
-      >
-        Dashboard de {user.username}
-      </Typography>
+    <Box sx={{ 
+      p: { xs: 2, md: 4 }, 
+      minHeight: "100vh",
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+    }}>
+      <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
+        {/* Header Section */}
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' }, 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mb: 4,
+          gap: 2
+        }}>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 'bold', 
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                display: 'inline-block'
+              }}
+            >
+              Hola, {user.username}!
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Bienvenido a tu panel de control
+            </Typography>
+          </motion.div>
+          
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <IconButton onClick={() => setEditMode(true)} size="small" sx={{ bgcolor: 'primary.main', color: 'white' }}>
+                <Edit fontSize="small" />
+              </IconButton>
+            }
+          >
+            <Avatar
+              sx={{ 
+                width: 80, 
+                height: 80, 
+                bgcolor: theme.palette.primary.main,
+                fontSize: '2rem',
+                boxShadow: theme.shadows[6]
+              }}
+            >
+              {user.username.charAt(0).toUpperCase()}
+            </Avatar>
+          </Badge>
+        </Box>
 
-      <Grid container spacing={4}>
-        {/* Perfil */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title="Perfil" avatar={<AccountCircle />} />
+        {/* Credits Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <GradientCard sx={{ mb: 4 }}>
             <CardContent>
-              <AnimatePresence mode="wait">
-                {editMode ? (
-                  <Box
-                    component={motion.form}
-                    key="edit"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onSubmit={handleUpdate}
-                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                  >
-                    <TextField
-                      label="Email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      fullWidth
-                    />
-                    <TextField
-                      label="Username"
-                      type="text"
-                      value={formData.username}
-                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                      fullWidth
-                    />
-                    <TextField
-                      label="Ciudad"
-                      type="text"
-                      value={formData.ciudad}
-                      onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
-                      fullWidth
-                    />
-                    <TextField
-                      label="Website"
-                      type="text"
-                      value={formData.website}
-                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                      fullWidth
-                    />
-                    <Box sx={{ display: "flex", gap: 2 }}>
-                      <Button type="submit" variant="contained" color="primary">
-                        Guardar
-                      </Button>
-                      <Button onClick={() => setEditMode(false)} variant="outlined">
-                        Cancelar
-                      </Button>
-                    </Box>
-                  </Box>
-                ) : (
-                  <Box
-                    component={motion.div}
-                    key="view"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
-                    <Typography><strong>Email:</strong> {user.email}</Typography>
-                    <Typography><strong>Username:</strong> {user.username}</Typography>
-                    <Typography><strong>Ciudad:</strong> {user.ciudad || "N/A"}</Typography>
-                    <Typography><strong>Website:</strong> {user.website || "N/A"}</Typography>
-                    <Typography><strong>Créditos:</strong> {user.credits ?? "N/A"}</Typography>
-                    <Button onClick={() => setEditMode(true)} variant="contained" color="primary" sx={{ mt: 2 }}>
-                      Editar Perfil
-                    </Button>
-                  </Box>
-                )}
-              </AnimatePresence>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Cambio de Contraseña */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title="Cambiar Contraseña" avatar={<Lock />} />
-            <CardContent>
-              <Box 
-                component="form" 
-                onSubmit={handleChangePassword} 
-                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-              >
-                <TextField
-                  label="Contraseña Actual"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  label="Nueva Contraseña"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  fullWidth
-                  required
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Cambiar Contraseña
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Transacciones */}
-        <Grid item xs={12}>
-          <Accordion expanded={transactionsOpen} onChange={() => setTransactionsOpen(!transactionsOpen)}>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography variant="h6">Transacciones</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {transactions.length === 0 ? (
-                <Typography>No hay transacciones.</Typography>
-              ) : (
-                transactions.map((t) => (
-                  <Box key={t.id} sx={{ p: 2, borderBottom: "1px solid #ddd" }}>
-                    <Typography><strong>{t.transaction_type}</strong> de {Math.abs(t.amount)} créditos</Typography>
-                    <Typography>Monto: ${t.payment_amount?.toFixed(2) || "N/A"}</Typography>
-                    <Typography>Método: {t.payment_method || "N/A"}</Typography>
-                    <Typography>Estado: {t.payment_status}</Typography>
-                    <Typography variant="caption">{new Date(t.timestamp).toLocaleString()}</Typography>
-                  </Box>
-                ))
-              )}
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-
-        {/* Métodos de Pago */}
-        <Grid item xs={12}>
-          <Accordion expanded={methodsOpen} onChange={() => setMethodsOpen(!methodsOpen)}>
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography variant="h6">Métodos de Pago</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {methods.map((m) => (
-                <Box key={m.id} sx={{ p: 2, borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between" }}>
-                  <Box>
-                    <Typography><strong>{m.payment_type}</strong></Typography>
-                    <Typography>{m.details}</Typography>
-                    {m.is_default && <Typography color="success.main">Predeterminado</Typography>}
-                  </Box>
-                  {!m.is_default && (
-                    <Button onClick={() => handleSetDefault(m.id)} variant="outlined">
-                      Hacer Predeterminado
-                    </Button>
-                  )}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                    Tus Créditos
+                  </Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                    {user.credits ?? 0}
+                  </Typography>
                 </Box>
-              ))}
-              <Box 
-                component="form" 
-                onSubmit={handleAddMethod} 
-                sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}
-              >
-                <TextField
-                  label="Tipo"
-                  select
-                  value={newMethod.payment_type}
-                  onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
-                  fullWidth
-                >
-                  <MenuItem value="stripe">Stripe</MenuItem>
-                </TextField>
-                <TextField
-                  label="Detalles"
-                  value={newMethod.details}
-                  onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
-                  fullWidth
-                  required
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Añadir Método
-                </Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-
-        {/* Compra de Créditos */}
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Comprar Créditos" avatar={<CreditCard />} />
-            <CardContent>
-              <Box 
-                component="form" 
-                onSubmit={handlePurchase} 
-                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-              >
-                <TextField
-                  label="Créditos"
-                  type="number"
-                  value={credits}
-                  onChange={(e) => setCredits(e.target.value)}
-                  fullWidth
-                  required
-                />
-                <TextField
-                  label="Monto (USD)"
-                  type="number"
-                  inputProps={{ step: "0.01" }}
-                  value={paymentAmount}
-                  onChange={(e) => setPaymentAmount(e.target.value)}
-                  fullWidth
-                  required
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Comprar
-                </Button>
+                <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
               </Box>
             </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+          </GradientCard>
+        </motion.div>
 
-      {/* Acciones */}
-      <Box sx={{ mt: 6, display: "flex", gap: 2 }}>
-        <Button onClick={logout} variant="outlined" color="secondary" fullWidth>
-          Cerrar Sesión
-        </Button>
-        <Button onClick={handleDeleteAccount} variant="contained" color="error" fullWidth>
-          Eliminar Cuenta
-        </Button>
+        {/* Tabs Navigation */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Paper sx={{ mb: 3, borderRadius: '12px', overflow: 'hidden' }}>
+            <Tabs
+              value={tabValue}
+              onChange={(_, newValue) => setTabValue(newValue)}
+              variant="scrollable"
+              scrollButtons="auto"
+              indicatorColor="primary"
+              textColor="primary"
+            >
+              <Tab label="Perfil" icon={<Person />} iconPosition="start" />
+              <Tab label="Seguridad" icon={<Security />} iconPosition="start" />
+              <Tab label="Transacciones" icon={<History />} iconPosition="start" />
+              <Tab label="Métodos de Pago" icon={<Payment />} iconPosition="start" />
+              <Tab label="Comprar Créditos" icon={<CreditCard />} iconPosition="start" />
+            </Tabs>
+          </Paper>
+        </motion.div>
+
+        {/* Tab Content */}
+        <Box sx={{ mb: 4 }}>
+          {/* Profile Tab */}
+          {tabValue === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Información Personal" 
+                      avatar={<AccountCircle color="primary" />}
+                      action={
+                        <IconButton onClick={() => setEditMode(!editMode)}>
+                          <Edit color="primary" />
+                        </IconButton>
+                      }
+                    />
+                    <CardContent>
+                      <AnimatePresence mode="wait">
+                        {editMode ? (
+                          <Box
+                            component={motion.form}
+                            key="edit"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onSubmit={handleUpdate}
+                            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                          >
+                            <TextField
+                              label="Email"
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                            />
+                            <TextField
+                              label="Username"
+                              type="text"
+                              value={formData.username}
+                              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                            />
+                            <TextField
+                              label="Ciudad"
+                              type="text"
+                              value={formData.ciudad}
+                              onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              InputProps={{
+                                startAdornment: <LocationOn color="action" sx={{ mr: 1 }} />
+                              }}
+                            />
+                            <TextField
+                              label="Website"
+                              type="text"
+                              value={formData.website}
+                              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              InputProps={{
+                                startAdornment: <Language color="action" sx={{ mr: 1 }} />
+                              }}
+                            />
+                            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                              <Button 
+                                type="submit" 
+                                variant="contained" 
+                                color="primary"
+                                sx={{ flex: 1 }}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button 
+                                onClick={() => setEditMode(false)} 
+                                variant="outlined"
+                                sx={{ flex: 1 }}
+                              >
+                                Cancelar
+                              </Button>
+                            </Box>
+                          </Box>
+                        ) : (
+                          <Box
+                            component={motion.div}
+                            key="view"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            <List>
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.primary.light }}>
+                                    <Person />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Username" 
+                                  secondary={user.username || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                                    <AccountCircle />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Email" 
+                                  secondary={user.email || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                                    <LocationOn />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Ciudad" 
+                                  secondary={user.ciudad || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                                    <Language />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Website" 
+                                  secondary={user.website || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                            </List>
+                          </Box>
+                        )}
+                      </AnimatePresence>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Actividad Reciente" 
+                      avatar={<History color="primary" />}
+                    />
+                    <CardContent>
+                      {transactions.slice(0, 3).length > 0 ? (
+                        <List>
+                          {transactions.slice(0, 3).map((t) => (
+                            <motion.div
+                              key={t.id}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ 
+                                    bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                                  }}>
+                                    {t.amount > 0 ? "+" : "-"}
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={`${t.transaction_type}`}
+                                  secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                                />
+                                <Typography variant="body2" color={t.amount > 0 ? "success.main" : "error.main"}>
+                                  {t.amount > 0 ? "+" : ""}{t.amount} créditos
+                                </Typography>
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                            </motion.div>
+                          ))}
+                        </List>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
+                          No hay actividad reciente
+                        </Typography>
+                      )}
+                      <Button 
+                        fullWidth 
+                        variant="outlined" 
+                        sx={{ mt: 2 }}
+                        onClick={() => setTabValue(2)}
+                      >
+                        Ver todas las transacciones
+                      </Button>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+            </motion.div>
+          )}
+
+          {/* Security Tab */}
+          {tabValue === 1 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Cambiar Contraseña" 
+                      avatar={<Lock color="primary" />}
+                    />
+                    <CardContent>
+                      <Box 
+                        component="form" 
+                        onSubmit={handleChangePassword} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Contraseña Actual"
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Lock color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <TextField
+                          label="Nueva Contraseña"
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Security color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          sx={{ mt: 1 }}
+                        >
+                          Actualizar Contraseña
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Métodos de Pago" 
+                      subheader={`${methods.length} configurados`}
+                      avatar={<Payment color="primary" />}
+                    />
+                    <CardContent>
+                      {methods.length > 0 ? (
+                        <List>
+                          {methods.slice(0, 2).map((m) => (
+                            <ListItem key={m.id}>
+                              <ListItemAvatar>
+                                <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.light : theme.palette.grey[300] }}>
+                                  {m.is_default ? <Star /> : <StarBorder />}
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={m.payment_type}
+                                secondary={m.details}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
+                          No hay métodos de pago configurados
+                        </Typography>
+                      )}
+                      <Button 
+                        fullWidth 
+                        variant="outlined" 
+                        sx={{ mt: 2 }}
+                        onClick={() => setTabValue(3)}
+                      >
+                        {methods.length > 0 ? 'Gestionar métodos' : 'Añadir método'}
+                      </Button>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+              
+              <GlassCard sx={{ mt: 3 }}>
+                <CardHeader 
+                  title="Zona Peligrosa" 
+                  avatar={<Security color="error" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    Estas acciones son irreversibles. Por favor, procede con precaución.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button 
+                      onClick={logout} 
+                      variant="outlined" 
+                      color="secondary" 
+                      startIcon={<Logout />}
+                      sx={{ flex: 1 }}
+                    >
+                      Cerrar Sesión
+                    </Button>
+                    <Button 
+                      onClick={handleDeleteAccount} 
+                      variant="contained" 
+                      color="error"
+                      startIcon={<Delete />}
+                      sx={{ flex: 1 }}
+                    >
+                      Eliminar Cuenta
+                    </Button>
+                  </Box>
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Transactions Tab */}
+          {tabValue === 2 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GlassCard>
+                <CardHeader 
+                  title="Historial de Transacciones" 
+                  avatar={<History color="primary" />}
+                  action={
+                    <Chip 
+                      label={`${transactions.length} transacciones`} 
+                      color="primary" 
+                      variant="outlined"
+                    />
+                  }
+                />
+                <CardContent>
+                  {transactions.length === 0 ? (
+                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 4 }}>
+                      No hay transacciones registradas
+                    </Typography>
+                  ) : (
+                    <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
+                      {transactions.map((t) => (
+                        <motion.div
+                          key={t.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar sx={{ 
+                                bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                              }}>
+                                {t.amount > 0 ? "+" : "-"}
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={t.transaction_type}
+                              secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                            />
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                              <Typography 
+                                variant="subtitle1" 
+                                color={t.amount > 0 ? "success.main" : "error.main"}
+                                fontWeight="bold"
+                              >
+                                {t.amount > 0 ? "+" : ""}{t.amount} créditos
+                              </Typography>
+                              <Typography variant="caption" color="textSecondary">
+                                {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : 'N/A'} via {t.payment_method || 'N/A'}
+                              </Typography>
+                            </Box>
+                          </ListItem>
+                          <Divider variant="inset" component="li" />
+                        </motion.div>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Payment Methods Tab */}
+          {tabValue === 3 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GlassCard>
+                <CardHeader 
+                  title="Métodos de Pago" 
+                  avatar={<Payment color="primary" />}
+                  subheader="Gestiona tus métodos de pago asociados"
+                />
+                <CardContent>
+                  {methods.length > 0 && (
+                    <List sx={{ mb: 3 }}>
+                      {methods.map((m) => (
+                        <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: '8px', overflow: 'hidden' }}>
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
+                                {m.is_default ? <Star /> : <CreditCard />}
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
+                                  {m.is_default && (
+                                    <Chip 
+                                      label="Predeterminado" 
+                                      size="small" 
+                                      color="success"
+                                      variant="outlined"
+                                    />
+                                  )}
+                                </Box>
+                              }
+                              secondary={m.details}
+                            />
+                            {!m.is_default && (
+                              <Button 
+                                onClick={() => handleSetDefault(m.id)} 
+                                variant="outlined" 
+                                size="small"
+                                sx={{ mr: 1 }}
+                              >
+                                Hacer Predeterminado
+                              </Button>
+                            )}
+                          </ListItem>
+                        </Paper>
+                      ))}
+                    </List>
+                  )}
+                  
+                  <Accordion sx={{ 
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                  }}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography>Añadir nuevo método de pago</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box 
+                        component="form" 
+                        onSubmit={handleAddMethod} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Tipo"
+                          select
+                          value={newMethod.payment_type}
+                          onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                        >
+                          <MenuItem value="stripe">Stripe</MenuItem>
+                        </TextField>
+                        <TextField
+                          label="Detalles"
+                          value={newMethod.details}
+                          onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          multiline
+                          rows={3}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          startIcon={<AddCircle />}
+                          sx={{ mt: 1 }}
+                        >
+                          Añadir Método
+                        </Button>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Buy Credits Tab */}
+          {tabValue === 4 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Comprar Créditos" 
+                      avatar={<AttachMoney color="primary" />}
+                      subheader="Recarga tu saldo de créditos"
+                    />
+                    <CardContent>
+                      <Box 
+                        component="form" 
+                        onSubmit={handlePurchase} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Cantidad de Créditos"
+                          type="number"
+                          value={credits}
+                          onChange={(e) => setCredits(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <TextField
+                          label="Monto a Pagar (USD)"
+                          type="number"
+                          inputProps={{ step: "0.01" }}
+                          value={paymentAmount}
+                          onChange={(e) => setPaymentAmount(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>
+                          }}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          size="large"
+                          sx={{ mt: 2 }}
+                        >
+                          Comprar Créditos
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Tarifas y Beneficios" 
+                      avatar={<CreditCard color="primary" />}
+                    />
+                    <CardContent>
+                      <List>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                              <Star />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="1 crédito = $1 USD"
+                            secondary="Tasa de cambio fija"
+                          />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                              <Payment />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="Múltiples métodos de pago"
+                            secondary="Tarjetas, PayPal y más"
+                          />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                              <Security />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="Transacciones seguras"
+                            secondary="Encriptación SSL"
+                          />
+                        </ListItem>
+                      </List>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+            </motion.div>
+          )}
+        </Box>
       </Box>
 
+      {/* Notifications */}
       <AnimatePresence>
         {error && (
-          <Snackbar open autoHideDuration={3000} onClose={() => setError(null)}>
-            <Alert severity="error" onClose={() => setError(null)}>
-              {error}
-            </Alert>
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
+            onClose={() => setError(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              <Alert 
+                severity="error" 
+                onClose={() => setError(null)}
+                sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
+              >
+                {error}
+              </Alert>
+            </motion.div>
           </Snackbar>
         )}
         {success && (
-          <Snackbar open autoHideDuration={3000} onClose={() => setSuccess(null)}>
-            <Alert severity="success" onClose={() => setSuccess(null)}>
-              {success}
-            </Alert>
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
+            onClose={() => setSuccess(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              <Alert 
+                severity="success" 
+                onClose={() => setSuccess(null)}
+                sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
+              >
+                {success}
+              </Alert>
+            </motion.div>
           </Snackbar>
         )}
       </AnimatePresence>
