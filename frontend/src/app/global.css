@@ -28,9 +28,7 @@
   --foreground: var(--black-soft);
   --border: var(--gray-light);
   --secondary: var(--gray);
-
 }
-
 
 /* Tema oscuro */
 [data-theme="dark"] {
@@ -94,20 +92,17 @@ body {
 .btn-primary {
   background-color: var(--primary);
   color: white;
-
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
-  
 }
 
 .btn-outline {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--foreground);
-
 }
 
 .btn-outline:hover {

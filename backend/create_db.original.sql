@@ -5,7 +5,7 @@
 -- sqlite3 dev.db < create_db.sql
 -- mysql -u tu_usuario -p neptuno_db < ruta/al/script.sql
 
--- Script adaptado exclusivamente para SQLite3
+-- SQLite version of the database script
 
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS allowed_origins (
     origin TEXT NOT NULL UNIQUE
 );
 
--- Tabla de tipos de eventos (adaptada para SQLite)
+-- Tabla de tipos de eventos
 CREATE TABLE IF NOT EXISTS event_types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
@@ -193,9 +193,7 @@ CREATE TABLE IF NOT EXISTS user_gamification (
     FOREIGN KEY (badge_id) REFERENCES badges(id)
 );
 
----------------------------------------------------------------------
 -- Insertar datos iniciales
----------------------------------------------------------------------
 
 -- Configuraciones iniciales con tags
 INSERT OR IGNORE INTO site_settings (key, value, description, tag) VALUES
@@ -247,12 +245,12 @@ INSERT OR IGNORE INTO sesiones_anonimas (id, username, credits, create_at, ultim
 (hex(randomblob(16)), 'anon_user_2', 90, datetime('now', '-1 day'), datetime('now', '-1 hour'), '192.168.1.2'),
 (hex(randomblob(16)), 'anon_user_3', 80, datetime('now', '-2 days'), datetime('now', '-2 hours'), '192.168.1.3');
 
--- Transacciones de créditos (usuarios registrados)
+-- Transacciones de créditos (para usuarios registrados)
 INSERT OR IGNORE INTO credit_transactions (user_id, user_type, amount, transaction_type, description, timestamp) VALUES
 ((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), 'registered', -10, 'api_call', 'Llamada a API de procesamiento', datetime('now')),
 ((SELECT id FROM usuarios WHERE email = 'premium@example.com'), 'registered', 500, 'purchase', 'Compra de créditos', datetime('now'));
 
--- Transacciones de créditos (sesiones anónimas)
+-- Transacciones de créditos (para sesiones anónimas)
 INSERT OR IGNORE INTO credit_transactions (session_id, user_type, amount, transaction_type, description, timestamp) VALUES
 ((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 'anonymous', -5, 'api_call', 'Llamada a API demo', datetime('now')),
 ((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_2'), 'anonymous', -15, 'api_call', 'Procesamiento de datos', datetime('now'));
@@ -291,16 +289,11 @@ INSERT OR IGNORE INTO password_reset_tokens (user_id, token, created_at, expires
 ((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), 'reset_token_123', datetime('now'), datetime('now', '+1 hour')),
 ((SELECT id FROM usuarios WHERE email = 'admin@example.com'), 'reset_token_456', datetime('now'), datetime('now', '+1 hour'));
 
----------------------------------------------------------------------
--- Datos iniciales para gamificación
----------------------------------------------------------------------
-
--- Insertar tipos de eventos
+-- Insertar datos iniciales para gamificación
 INSERT OR IGNORE INTO event_types (name, description, points_per_event) VALUES
 ('api_usage', 'Eventos por uso de la API', 5),
 ('test_api', 'Eventos de prueba', 10);
 
--- Insertar badges
 INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points, user_type) VALUES
 ('Novato', 'Primeros pasos en la API', 1, 5, 'both'),
 ('Becario', 'Uso intermedio de la API', 1, 100, 'both'),
@@ -308,19 +301,102 @@ INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points,
 ('Senior', 'Maestro de la API', 1, 1000, 'registered'),
 ('Tester', 'Participante en pruebas', 2, 10, 'both');
 
--- Insertar eventos de gamificación sin variables ni NOW()
+-- Insertar eventos de prueba
+INSERT OR IGNORE INTO gamification_events (event_type_id, user_id, timestamp) VALUES
+(2, (SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), datetime('now'));
+
+INSERT OR IGNORE INTO gamification_events (event_type_id, session_id, timestamp) VALUES
+(2, (SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), datetime('now'));
+
+-- Actualizar gamificación de usuarios de prueba
+INSERT OR IGNORE INTO user_gamification (user_id, event_type_id, points, badge_id) VALUES
+((SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
+
+INSERT OR IGNORE INTO user_gamification (session_id, event_type_id, points, badge_id) VALUES
+((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
+
+
+-- Script universal para SQLite, MySQL/MariaDB y PostgreSQL
+
+-- ... (Tablas existentes como usuarios, sesiones_anonimas, etc., se mantienen igual hasta api_logs)
+
+-- Tabla de tipos de eventos
+CREATE TABLE IF NOT EXISTS event_types (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(255),
+    points_per_event INTEGER DEFAULT 0
+);
+
+-- Tabla de badges
+CREATE TABLE IF NOT EXISTS badges (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description VARCHAR(255),
+    event_type_id INTEGER NOT NULL,
+    required_points INTEGER NOT NULL,
+    user_type VARCHAR(20) DEFAULT 'both',
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id)
+);
+
+-- Tabla de eventos de gamificación
+CREATE TABLE IF NOT EXISTS gamification_events (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    event_type_id INTEGER NOT NULL,
+    user_id INTEGER,
+    session_id VARCHAR(36),
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id),
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id)
+);
+
+-- Tabla de gamificación del usuario
+CREATE TABLE IF NOT EXISTS user_gamification (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    user_id INTEGER,
+    session_id VARCHAR(36),
+    event_type_id INTEGER NOT NULL,
+    points INTEGER DEFAULT 0,
+    badge_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id),
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id),
+    FOREIGN KEY (badge_id) REFERENCES badges(id)
+);
+
+-- ... (Resto de las tablas existentes como payment_methods, allowed_origins, etc.)
+
+-- Insertar datos iniciales para gamificación
+INSERT OR IGNORE INTO event_types (name, description, points_per_event) VALUES
+('api_usage', 'Eventos por uso de la API', 5),
+('test_api', 'Eventos de prueba', 10);
+
+INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points, user_type) VALUES
+('Novato', 'Primeros pasos en la API', 1, 5, 'both'),
+('Becario', 'Uso intermedio de la API', 1, 100, 'both'),
+('Junior', 'Uso avanzado de la API', 1, 500, 'registered'),
+('Senior', 'Maestro de la API', 1, 1000, 'registered'),
+('Tester', 'Participante en pruebas', 2, 10, 'both');
+
+-- Insertar eventos de prueba sin usar variables ni NOW()
+
 INSERT OR IGNORE INTO gamification_events (event_type_id, user_id, timestamp)
 VALUES (2, (SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), datetime('now'));
 
 INSERT OR IGNORE INTO gamification_events (event_type_id, session_id, timestamp)
 VALUES (2, (SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), datetime('now'));
 
--- Actualizar gamificación de usuarios de prueba
+-- Actualizar gamificación de usuarios de prueba sin variables
 INSERT OR IGNORE INTO user_gamification (user_id, event_type_id, points, badge_id)
 VALUES ((SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
 
 INSERT OR IGNORE INTO user_gamification (session_id, event_type_id, points, badge_id)
 VALUES ((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
+
+-- Mensaje final
+SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;
+
 
 -- Mensaje final
 SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;

@@ -4,8 +4,8 @@
 import { ReactNode } from "react";
 import { usePathname } from 'next/navigation';
 import { AuthProvider } from "@/lib/auth/context";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "@/components/web/Navbar";
+import Footer from "@/components/web/Footer";
 import "../app/global.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest, UserInfo, Gamification  } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge  } from "../types";
 import { motion } from "framer-motion";
 import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
 
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               activo: true,
               subscription: data.subscription!,
               credits: data.credits,
-              create_at: "", // Podrías añadir este campo en el backend si lo necesitas
+              create_at: "",
               last_ip: "",
               last_login: "",
               user_type: data.user_type,
@@ -66,7 +66,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("session_id");
             localStorage.removeItem("anonUsername");
           }
-
+  
+          // Procesar datos de gamificación
           const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
           if (gamificationData && Array.isArray(gamificationData)) {
             const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
@@ -75,8 +76,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } else {
             setGamification({ points: 0, badges: [] });
           }
-
-          
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
@@ -89,7 +88,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
       }
     };
-
+  
     checkAuth();
   }, []);
 

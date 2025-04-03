@@ -1,3 +1,4 @@
+# backend/services/gamification_service.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
@@ -126,3 +127,6 @@ def calculate_points(api_usages: int) -> int:
     elif api_usages >= 1:
         return 5
     return 0
+
+
+

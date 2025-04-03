@@ -95,8 +95,8 @@ def require_credits(func):
                 logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits - 1}")
                 
                 # Registrar evento de gamificación
-                # event = GamificationEventCreate(event_type="api_usage")
-                # register_event(db, event, user)
+                #event = GamificationEventCreate(event_type="api_usage")
+                #register_event(db, event, user)
                 
                 return response
             except HTTPException as e:

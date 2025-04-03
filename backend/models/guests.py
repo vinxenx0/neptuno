@@ -1,4 +1,4 @@
-# backend/models/session.py
+# backend/models/guests.py
 # Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
 from sqlalchemy import Column, String, Integer, DateTime, Float
 from sqlalchemy.orm import relationship
