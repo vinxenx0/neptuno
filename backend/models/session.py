@@ -1,16 +1,28 @@
 # backend/models/session.py
 # Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
-# backend/models/session.py
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Float
+from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 
 class AnonymousSession(Base):
     __tablename__ = "sesiones_anonimas"
     
-    id = Column(String(36), primary_key=True, index=True)  # UUID como string
-    username = Column(String(50), unique=True, nullable=False)  # Nuevo campo para el apodo
-    credits = Column(Integer, default=100)  # Créditos disponibles
-    create_at = Column(DateTime, default=datetime.utcnow)  # Fecha de creación
-    ultima_actividad = Column(DateTime, nullable=True)  # Última interacción
-    last_ip = Column(String(45), nullable=True)  # Última IP conocida
+    id = Column(String(36), primary_key=True, index=True)  
+    username = Column(String(50), unique=True, nullable=False)  
+    credits = Column(Integer, default=100)  
+    create_at = Column(DateTime, default=datetime.utcnow)  
+    ultima_actividad = Column(DateTime, nullable=True)  
+    last_ip = Column(String(45), nullable=True)  
+
+    # 📌 Información Inferida
+    probable_pais = Column(String(100), nullable=True)  
+    probable_industria = Column(String(100), nullable=True)  
+    probable_num_empleados = Column(Integer, nullable=True)  
+    probable_ingresos_anuales = Column(Float, nullable=True)  
+    probable_tecnologias_usadas = Column(String(255), nullable=True)  
+    engagement_anonimo = Column(Float, nullable=True)  # % de uso en la sesión  
+
+    # Relación con gamificación
+    gamification_events = relationship("GamificationEvent", back_populates="session")
+    gamification = relationship("UserGamification", back_populates="session")

@@ -6,70 +6,26 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  TextField,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  IconButton,
-  Snackbar,
-  Alert,
-  MenuItem,
-  Avatar,
-  Chip,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Badge,
-  Paper,
-  Tabs,
-  Tab,
-  useTheme,
-  styled
+import { Box,  Grid,  Card,  CardContent,  CardHeader,  TextField,  Button,  Accordion,  AccordionSummary,  AccordionDetails,  Typography,  IconButton,
+  Snackbar,  Alert,  MenuItem,  Avatar,  Chip,  Divider,  List,  ListItem,  ListItemAvatar,  ListItemText,  Badge,  Paper,  Tabs,  Tab,  useTheme,  styled
 } from "@mui/material";
-import {
-  AccountCircle,
-  Lock,
-  Payment,
-  CreditCard,
-  AddCircle,
-  Delete,
-  ExpandMore,
-  Edit,
-  History,
-  AttachMoney,
-  Security,
-  Logout,
-  Person,
-  LocationOn,
-  Language,
-  Star,
-  StarBorder
-} from "@mui/icons-material";
+import {  AccountCircle,  Lock,  Payment,  CreditCard,  AddCircle,  Delete,  ExpandMore,  Edit,  History,  AttachMoney,  Security,  Logout,  Person,
+  LocationOn,  Language,  Star,  StarBorder} from "@mui/icons-material";
 
 // Styled Components
 const GradientCard = styled(Card)(({ theme }) => ({
-  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-  color: theme.palette.primary.contrastText,
+  background: `linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)`,
+  color: 'white',
   borderRadius: '16px',
-  boxShadow: theme.shadows[10]
+  boxShadow: theme.shadows[4]
 }));
 
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
+  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
   borderRadius: '16px',
-  boxShadow: theme.shadows[5]
+  boxShadow: theme.shadows[2]
 }));
 
 // Interfaces (same as before)

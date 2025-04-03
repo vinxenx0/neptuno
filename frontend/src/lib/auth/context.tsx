@@ -4,12 +4,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest, UserInfo } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo, Gamification  } from "../types";
 import { motion } from "framer-motion";
+import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
 
 interface AuthContextType {
   user: User | null;
   credits: number;
+  gamification: Gamification | null; // Añadimos gamificación al contexto
   setCredits: (credits: number) => void; // Añadido
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -26,6 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [credits, setCredits] = useState<number>(100); // Valor por defecto para anónimos
+  const [gamification, setGamification] = useState<Gamification | null>(null); // Estado para gamificación
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -63,11 +66,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("session_id");
             localStorage.removeItem("anonUsername");
           }
+
+          const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
+          if (gamificationData && Array.isArray(gamificationData)) {
+            const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
+            const badges = gamificationData.map(g => g.badge).filter(b => b !== null) as Badge[];
+            setGamification({ points: totalPoints, badges });
+          } else {
+            setGamification({ points: 0, badges: [] });
+          }
+
+          
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
         setUser(null);
         setCredits(0);
+        setGamification({ points: 0, badges: [] });
         localStorage.removeItem("session_id");
         localStorage.removeItem("anonUsername");
       } finally {
@@ -213,7 +228,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits,gamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

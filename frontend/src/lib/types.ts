@@ -21,6 +21,8 @@ export interface TokenResponse {
   token_type: string;
 }
 
+
+
 export interface RegisterRequest {
   email: string;
   username: string;
@@ -115,3 +117,24 @@ export interface UserInfo {
   rol: string | null;
   session_id?: string; // Solo para anónimos
  }
+
+ export interface EventType {
+  id: number;
+  name: string;
+  description?: string;
+  points_per_event: number;
+}
+
+export interface Badge {
+  id: number;
+  name: string;
+  description?: string;
+  event_type_id: number;
+  required_points: number;
+  user_type: string; // "anonymous", "registered", "both"
+}
+
+export interface Gamification {
+  points: number;
+  badges: Badge[]; // Ahora es una lista de badges
+}

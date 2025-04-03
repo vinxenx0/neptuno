@@ -4,172 +4,178 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tema claro (valores por defecto) */
+/* ========== PALETA DE COLORES ========== */
 :root {
-  --background: #ffffff; /* Blanco puro */
-  --foreground: #1f2937; /* Gris oscuro */
-  --primary: #2563eb; /* Azul profesional */
-  --primary-hover: #1d4ed8; /* Azul más oscuro */
-  --secondary: #6b7280; /* Gris medio */
-  --secondary-hover: #4b5563; /* Gris más oscuro */
-  --accent: #10b981; /* Verde esmeralda */
-  --accent-hover: #059669; /* Verde más oscuro */
-  --border: #d1d5db; /* Gris claro */
-  --danger: #ef4444; /* Rojo suave */
-  --danger-hover: #dc2626; /* Rojo intenso */
-  --success: #22c55e; /* Verde éxito */
-  --success-hover: #16a34a; /* Verde más oscuro */
+  /* Colores base */
+  --white-soft: #f8f9fa;        /* Casi blanco - Fondos */
+  --black-soft: #212529;        /* Casi negro - Textos */
+  --primary: #0d6efd;           /* Azul - Acento principal */
+  --primary-hover: #0b5ed7;     /* Azul más oscuro */
+  --gray: #adb5bd;              /* Gris - Sombras/bordes */
+  --gray-light: #dee2e6;        /* Gris claro - Bordes */
+  --gray-dark: #495057;         /* Gris oscuro */
+  
+  /* Estados */
+  --success: #198754;           /* Verde - Éxito */
+  --success-hover: #157347;
+  --warning: #ffc107;           /* Amarillo - Advertencia */
+  --warning-hover: #ffca2c;
+  --danger: #dc3545;            /* Rojo - Error/Peligro */
+  --danger-hover: #bb2d3b;
+  
+  /* Asignación de variables funcionales */
+  --background: var(--white-soft);
+  --foreground: var(--black-soft);
+  --border: var(--gray-light);
+  --secondary: var(--gray);
+
 }
+
 
 /* Tema oscuro */
 [data-theme="dark"] {
-  --background: #111827; /* Gris oscuro profundo */
-  --foreground: #e5e7eb; /* Gris claro */
-  --primary: #3b82f6; /* Azul claro */
-  --primary-hover: #60a5fa; /* Azul más claro */
-  --secondary: #9ca3af; /* Gris claro */
-  --secondary-hover: #d1d5db; /* Gris medio */
-  --accent: #34d399; /* Verde claro */
-  --accent-hover: #6ee7b7; /* Verde más claro */
-  --border: #374151; /* Gris medio oscuro */
-  --danger: #f87171; /* Rojo claro */
-  --danger-hover: #fca5a5; /* Rojo más claro */
-  --success: #4ade80; /* Verde claro */
-  --success-hover: #86efac; /* Verde más claro */
+  --background: var(--black-soft);
+  --foreground: var(--white-soft);
+  --border: var(--gray-dark);
+  --secondary: var(--gray);
+  --primary: #3d8bfd;
+  --primary-hover: #4d9cfe;
 }
 
-/* Estilos base */
+/* ========== ESTILOS BASE ========== */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
+  line-height: 1.5;
 }
 
-/* Navbar */
-.nav-bar {
+/* ========== COMPONENTES ========== */
+/* Tarjetas */
+.card {
   background: var(--background);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.nav-bar a {
-  color: var(--foreground);
-}
-
-/* Submenús */
-.submenu {
-  background: var(--background);
-  color: var(--foreground);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Controls */
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-  color: var(--foreground);
-  background-color: var(--background);
-  border: 1px solid var(--border);
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  color: white;
+  border-radius: 0.75rem;
+}
+
+/* Botones */
+.btn {
+  padding: 0.5rem 1.25rem;
   border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* Buttons */
 .btn-primary {
   background-color: var(--primary);
   color: white;
-  font-weight: bold;
-  padding: 0.75rem 1.75rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
+
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+  
 }
 
-.btn-secondary {
-  background-color: var(--secondary);
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 1.75rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--foreground);
+
 }
 
-.btn-secondary:hover {
-  background-color: var(--secondary-hover);
+.btn-outline:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.btn-danger {
-  background-color: var(--danger);
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 1.75rem;
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-}
-
-.btn-danger:hover {
-  background-color: var(--danger-hover);
-}
-
-/* Container */
-.container {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-/* Cards */
-.card {
+/* Formularios */
+.input {
   background: var(--background);
   border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
 }
 
-/* Footer */
-.footer {
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+/* Barras de navegación */
+.navbar {
   background: var(--background);
-  border-top: 1px solid var(--border);
-  color: var(--foreground);
-  padding: 2rem;
-  text-align: center;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Animaciones */
+/* Notificaciones */
+.alert {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.alert-error {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+/* ========== UTILIDADES ========== */
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+/* ========== ANIMACIONES ========== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid var(--primary);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes spin {
@@ -177,14 +183,11 @@ select:focus {
   100% { transform: rotate(360deg); }
 }
 
-
-:root {
-  --background: #f9fafb;
-  --foreground: #1f2937;
-  --accent: #3b82f6;
-  --accent-light: #dbeafe;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.loading-spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
 }

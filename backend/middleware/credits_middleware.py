@@ -1,4 +1,6 @@
 # backend/middleware/credits.py
+from schemas.gamification import GamificationEventCreate
+from services.gamification_service import register_event
 from fastapi import Depends, HTTPException
 from functools import wraps
 from sqlalchemy.orm import Session
@@ -10,6 +12,7 @@ from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
 from services.settings_service import get_setting
+from dependencies.auth import UserContext
 
 logger = configure_logging()
 
@@ -90,6 +93,11 @@ def require_credits(func):
                 })
 
                 logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits - 1}")
+                
+                # Registrar evento de gamificación
+                # event = GamificationEventCreate(event_type="api_usage")
+                # register_event(db, event, user)
+                
                 return response
             except HTTPException as e:
                 raise e

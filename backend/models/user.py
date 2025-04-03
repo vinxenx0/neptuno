@@ -3,6 +3,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, Enum
 from core.database import Base
+from sqlalchemy.orm import relationship
 import enum
 
 class subscriptionEnum(enum.Enum):
@@ -30,3 +31,7 @@ class User(Base):
     last_ip = Column(String(45), nullable=True)  # Última IP conocida (IPv4/IPv6)
     last_login = Column(DateTime, nullable=True)  # Último inicio de sesión
     token_valid_until = Column(DateTime, nullable=True)  # Fecha de expiración del token actual
+    
+    
+    gamification_events = relationship("GamificationEvent", back_populates="user")
+    gamification = relationship("UserGamification", back_populates="user")
