@@ -2894,3 +2894,17 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-04-03 12:58:36,860 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
 2025-04-03 12:58:36,878 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-03 12:58:36,890 - NeptunO - INFO - Usuario registrado ID 7 autenticado desde IP 127.0.0.1
+2025-04-03 13:01:56,944 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-03 13:01:56,944 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-03 13:02:02,377 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6242ef5-a1f0-4a96-bb31-5d824f6cee4a, ip=127.0.0.1
+2025-04-03 13:02:02,377 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
+2025-04-03 13:02:02,382 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
+2025-04-03 13:02:02,384 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-04-03 13:02:08,701 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6242ef5-a1f0-4a96-bb31-5d824f6cee4a, ip=127.0.0.1
+2025-04-03 13:02:08,701 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
+2025-04-03 13:02:08,703 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
+2025-04-03 13:02:08,704 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-04-03 13:02:14,033 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6242ef5-a1f0-4a96-bb31-5d824f6cee4a, ip=127.0.0.1
+2025-04-03 13:02:14,034 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
+2025-04-03 13:02:14,037 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
+2025-04-03 13:02:14,039 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
