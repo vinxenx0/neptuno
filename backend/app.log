@@ -2908,3 +2908,11 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-04-03 13:02:14,034 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
 2025-04-03 13:02:14,037 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
 2025-04-03 13:02:14,039 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/api/test-credit-consumption: Sesión anónima inválida
+2025-04-03 13:02:39,069 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6242ef5-a1f0-4a96-bb31-5d824f6cee4a, ip=127.0.0.1
+2025-04-03 13:02:39,069 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
+2025-04-03 13:02:39,070 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
+2025-04-03 13:02:39,071 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/info: Sesión anónima inválida
+2025-04-03 13:02:39,113 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6242ef5-a1f0-4a96-bb31-5d824f6cee4a, ip=127.0.0.1
+2025-04-03 13:02:39,114 - NeptunO - INFO - Buscando sesión anónima con ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde header
+2025-04-03 13:02:39,116 - NeptunO - WARNING - Sesión anónima inválida ID e6242ef5-a1f0-4a96-bb31-5d824f6cee4a desde IP 127.0.0.1
+2025-04-03 13:02:39,118 - NeptunO - ERROR - HTTP Error 400 en GET http://localhost:8000/v1/gamification/me: Sesión anónima inválida
