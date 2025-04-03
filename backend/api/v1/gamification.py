@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from dependencies.auth import get_user_context, UserContext
 from core.database import get_db
 from services.gamification_service import (
+    get_rankings,
     register_event,
     get_user_gamification,
     get_user_events,
@@ -13,6 +14,7 @@ from services.gamification_service import (
 from schemas.gamification import (
     GamificationEventCreate,
     GamificationEventResponse,
+    RankingResponse,
     UserGamificationResponse,
     EventTypeResponse,
     BadgeResponse
@@ -21,9 +23,17 @@ from typing import List
 
 router = APIRouter(tags=["Gamification"])
 
-@router.post("/events", response_model=GamificationEventResponse)
-def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    """Registra un nuevo evento de gamificación."""
+#@router.post("/events", response_model=GamificationEventResponse)
+#def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+#    """Registra un nuevo evento de gamificación."""
+#    return register_event(db, event, user)
+
+@router.get("/rankings", response_model=List[RankingResponse])
+def get_rankings_endpoint(db: Session = Depends(get_db)):
+    return get_rankings(db)
+
+@router.post("/events")
+async def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     return register_event(db, event, user)
 
 @router.get("/me", response_model=List[UserGamificationResponse])

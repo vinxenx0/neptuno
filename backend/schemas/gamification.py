@@ -62,3 +62,13 @@ class UserGamificationResponse(UserGamificationBase):
 
     class Config:
         from_attributes = True
+        
+        
+class RankingResponse(BaseModel):
+    username: str
+    points: int
+    badges_count: int
+    user_type: str
+
+    class Config:
+        from_attributes = True

@@ -15,6 +15,7 @@ interface AuthContextType {
   setCredits: (credits: number) => void; // Añadido
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setGamification: (gamification: Gamification) => void; // Añadido
   register: (data: RegisterRequest) => Promise<void>;
   loginWithGoogle: () => void;
   refreshToken: () => Promise<string | null>;
@@ -22,6 +23,8 @@ interface AuthContextType {
   deleteProfile: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
+
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -227,7 +230,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits,gamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits,gamification, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

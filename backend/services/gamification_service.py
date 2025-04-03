@@ -1,10 +1,13 @@
 # backend/services/gamification_service.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
+from models.guests import GuestsSession
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
-from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate
+from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
 from dependencies.auth import UserContext
-
+from sqlalchemy import func
+from models.user import User
+import logging
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
@@ -65,8 +68,10 @@ def get_user_progress_for_event(db: Session, user: UserContext, event_type_id: i
         UserGamification.event_type_id == event_type_id
     ).first()
 
+
+
 def update_user_gamification(db: Session, user: UserContext, event_type_id: int) -> UserGamification:
-    """Actualiza los puntos y badges del usuario para un tipo de evento."""
+    logging.info(f"Actualizando gamificación para user_type={user.user_type}, user_id={user.user_id}, session_id={user.session_id}, event_type_id={event_type_id}")
     user_id = int(user.user_id) if user.user_type == "registered" else None
     session_id = user.session_id if user.user_type == "anonymous" else None
 
@@ -79,6 +84,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
             points=0
         )
         db.add(gamification)
+        logging.info("Creado nuevo registro de UserGamification")
 
     event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
     if not event_type:
@@ -88,6 +94,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
         GamificationEvent.event_type_id == event_type_id,
         (GamificationEvent.user_id == user_id) if user_id else (GamificationEvent.session_id == session_id)
     ).count()
+    logging.info(f"Contados {events_count} eventos para event_type_id={event_type_id}")
 
     gamification.points = events_count * event_type.points_per_event
 
@@ -96,6 +103,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
         Badge.user_type.in_([user.user_type, "both"]),
         Badge.required_points <= gamification.points
     ).order_by(Badge.required_points.desc()).first()
+    logging.info(f"Badge encontrado: {badge.id if badge else 'None'}")
 
     gamification.badge_id = badge.id if badge else None
     db.commit()
@@ -130,3 +138,29 @@ def calculate_points(api_usages: int) -> int:
 
 
 
+def get_rankings(db: Session) -> List[RankingResponse]:
+    # Rankings para usuarios registrados
+    registered = db.query(
+        User.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, User.id == UserGamification.user_id
+    ).group_by(User.id).all()
+
+    # Rankings para usuarios anónimos
+    anonymous = db.query(
+        GuestsSession.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, GuestsSession.id == UserGamification.session_id
+    ).group_by(GuestsSession.id).all()
+
+    all_rankings = [
+        RankingResponse(
+            username=r.username,
+            points=r.total_points,
+            badges_count=r.badges_count,
+            user_type="registered" if r in registered else "anonymous"
+        ) for r in registered + anonymous
+    ]
+    return sorted(all_rankings, key=lambda x: x.points, reverse=True)

@@ -322,5 +322,18 @@ VALUES ((SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), 2, 10, 
 INSERT OR IGNORE INTO user_gamification (session_id, event_type_id, points, badge_id)
 VALUES ((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
 
+INSERT OR IGNORE INTO event_types (name, description, points_per_event) VALUES
+('survey_question', 'Responder una pregunta de la encuesta', 1),
+('survey_completed', 'Completar la encuesta', 0),
+('registration_field', 'Rellenar un campo de registro', 1),
+('registration_completed', 'Completar el registro', 0),
+('subscription_list', 'Suscribirse a una lista', 1),
+('all_subscriptions', 'Suscribirse a todas las listas', 0);
+
+INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points, user_type) VALUES
+('Encuestador', 'Completar una encuesta', (SELECT id FROM event_types WHERE name='survey_completed'), 0, 'both'),
+('Registrado', 'Completar el registro', (SELECT id FROM event_types WHERE name='registration_completed'), 0, 'both'),
+('Suscriptor', 'Suscribirse a todas las listas', (SELECT id FROM event_types WHERE name='all_subscriptions'), 0, 'both');
+
 -- Mensaje final
 SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;

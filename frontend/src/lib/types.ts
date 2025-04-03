@@ -105,8 +105,7 @@ export interface FetchResponse<T> {
   total_pages?: number;
 }
 
-
-// respuesta /info
+// src/lib/types.ts
 export interface UserInfo {
   user_id: string | null;
   email: string | null;
@@ -115,10 +114,11 @@ export interface UserInfo {
   subscription: string | null;
   credits: number;
   rol: string | null;
-  session_id?: string; // Solo para anónimos
- }
+  session_id?: string;
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+}
 
- export interface EventType {
+export interface EventType {
   id: number;
   name: string;
   description?: string;
@@ -136,5 +136,33 @@ export interface Badge {
 
 export interface Gamification {
   points: number;
-  badges: Badge[]; // Ahora es una lista de badges
+  badges: Badge[];
+}
+
+export interface GamificationEventCreate {
+  event_type_id: number;
+}
+
+export interface GamificationEventResponse {
+  id: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  timestamp: string; // ISO string
+}
+
+export interface UserGamificationResponse {
+  points: number;
+  badge_id?: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  event_type: EventType;
+  badge?: Badge;
+}
+export interface RankingResponse {
+  username: string;
+  points: number;
+  badges_count: number;
+  user_type: string;
 }
