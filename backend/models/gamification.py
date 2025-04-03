@@ -1,3 +1,4 @@
+# backend/models/gamification.py
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from core.database import Base

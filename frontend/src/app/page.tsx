@@ -189,6 +189,25 @@ export default function LandingPage() {
     }
   };
 
+  const handleProgress = async () => {
+    try {
+      const response = await fetchAPI("/v1/gamification/me", { method: "GET" });
+      if (response.error) {
+        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarSeverity("error");
+      } else {
+        setSnackbarMessage("Información obtenida: " + JSON.stringify(response.data));
+        setSnackbarSeverity("success");
+      }
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Error al obtener información:", err);
+      setSnackbarMessage("Error al obtener información");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -477,6 +496,18 @@ export default function LandingPage() {
                 startIcon={<Info />}
               >
                 /v1/api/info
+              </EndpointButton>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <EndpointButton
+                fullWidth
+                variant="contained"
+                color="secondary"
+                onClick={handleProgress}
+                startIcon={<Info />}
+              >
+                /progress
               </EndpointButton>
             </Grid>
           </Grid>
