@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging
@@ -35,7 +35,7 @@ def generate_unique_username(db: Session) -> str:
     while True:
         random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
         username = f"Guest_{random_chars}"
-        if not db.query(AnonymousSession).filter(AnonymousSession.username == username).first():
+        if not db.query(GuestsSession).filter(GuestsSession.username == username).first():
             return username
 
 async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
@@ -83,7 +83,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             logger.info("No hay session_id en header, creando nueva sesión anónima")
             session_id = str(uuid4())
             username = generate_unique_username(db)  # Generar apodo único
-            new_session = AnonymousSession(
+            new_session = GuestsSession(
                 id=session_id,
                 username=username,  # Asignar el apodo
                 credits=100,
@@ -106,7 +106,7 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             )
         else:
             logger.info(f"Buscando sesión anónima con ID {session_id} desde header")
-            session = db.query(AnonymousSession).filter(AnonymousSession.id == session_id).first()
+            session = db.query(GuestsSession).filter(GuestsSession.id == session_id).first()
             if not session:
                 logger.warning(f"Sesión anónima inválida ID {session_id} desde IP {client_ip}")
                 raise HTTPException(status_code=400, detail="Sesión anónima inválida")

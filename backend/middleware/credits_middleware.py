@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
@@ -44,7 +44,7 @@ def require_credits(func):
                         raise HTTPException(status_code=404, detail="Usuario no encontrado")
                     credits = user_db.credits
                 else:
-                    session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.session_id).first()
+                    session_db = db.query(GuestsSession).filter(GuestsSession.id == user.session_id).first()
                     if not session_db:
                         raise HTTPException(status_code=404, detail="Sesión no encontrada")
                     credits = session_db.credits

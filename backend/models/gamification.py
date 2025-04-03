@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 from models.user import User
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 
 class EventType(Base):
     __tablename__ = "event_types"
@@ -42,7 +42,7 @@ class GamificationEvent(Base):
     
     event_type = relationship("EventType", back_populates="gamification_events")
     user = relationship("User", back_populates="gamification_events")
-    session = relationship("AnonymousSession", back_populates="gamification_events")
+    session = relationship("GuestsSession", back_populates="gamification_events")
 
 class UserGamification(Base):
     __tablename__ = "user_gamification"
@@ -57,4 +57,4 @@ class UserGamification(Base):
     event_type = relationship("EventType", back_populates="user_gamification")
     badge = relationship("Badge", back_populates="user_gamification")
     user = relationship("User", back_populates="gamification")
-    session = relationship("AnonymousSession", back_populates="gamification")
+    session = relationship("GuestsSession", back_populates="gamification")

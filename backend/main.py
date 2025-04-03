@@ -13,7 +13,7 @@ from api.v1 import users
 from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits
@@ -211,7 +211,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
                 )
                 credits_remaining = user_db.credits
             else:
-                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
+                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
                 session_db.credits -= 1
                 transaction = CreditTransaction(
                     session_id=session_db.id,

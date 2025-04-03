@@ -1,12 +1,12 @@
-# backend/models/guests.py
+# backend/models/session.py
 # Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
 from sqlalchemy import Column, String, Integer, DateTime, Float
 from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 
-class Guests(Base):
-    __tablename__ = "guests"
+class GuestsSession(Base):
+    __tablename__ = "sesiones_anonimas"
     
     id = Column(String(36), primary_key=True, index=True)  
     username = Column(String(50), unique=True, nullable=False)  
@@ -18,7 +18,7 @@ class Guests(Base):
     # 📌 Información Inferida
     #probable_pais = Column(String(100), nullable=True)  
     #probable_industria = Column(String(100), nullable=True)  
-    ##probable_num_empleados = Column(Integer, nullable=True)  
+    #probable_num_empleados = Column(Integer, nullable=True)  
     #probable_ingresos_anuales = Column(Float, nullable=True)  
     #probable_tecnologias_usadas = Column(String(255), nullable=True)  
     #engagement_anonimo = Column(Float, nullable=True)  # % de uso en la sesión  

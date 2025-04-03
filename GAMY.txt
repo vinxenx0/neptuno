@@ -236,7 +236,7 @@ from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 
-class AnonymousSession(Base):
+class GuestsSession(Base):
     __tablename__ = "sesiones_anonimas"
     
     id = Column(String(36), primary_key=True, index=True)  # UUID como string

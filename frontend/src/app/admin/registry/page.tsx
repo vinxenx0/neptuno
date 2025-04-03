@@ -93,7 +93,7 @@ interface APILog {
   timestamp: string;
 }
 
-interface AnonymousSession {
+interface GuestsSession {
   id: string;
   credits: number;
   create_at: string;
