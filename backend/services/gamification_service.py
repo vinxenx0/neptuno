@@ -6,6 +6,9 @@ from models.gamification import GamificationEvent, UserGamification, EventType, 
 from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
 from dependencies.auth import UserContext
 from sqlalchemy import func
+from models.gamification import EventType, Badge, GamificationEvent, UserGamification
+from schemas.gamification import EventTypeCreate, BadgeCreate
+from fastapi import HTTPException
 from models.user import User
 import logging
 from typing import List, Optional
@@ -13,6 +16,9 @@ from sqlalchemy.orm import Session
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
 from schemas.gamification import GamificationEventCreate
 from dependencies.auth import UserContext
+
+
+# backend/services/gamification_service.py
 
 def register_event(db: Session, event: GamificationEventCreate, user: UserContext) -> GamificationEvent:
     """Registra un evento de gamificación y actualiza los puntos del usuario."""
@@ -109,7 +115,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
     db.commit()
     db.refresh(gamification)
     return gamification
-
+# Funciones para EventType
 def create_event_type(db: Session, event_type: EventTypeCreate):
     db_event_type = EventType(**event_type.dict())
     db.add(db_event_type)
@@ -117,12 +123,55 @@ def create_event_type(db: Session, event_type: EventTypeCreate):
     db.refresh(db_event_type)
     return db_event_type
 
+def get_event_types(db: Session) -> List[EventType]:
+    return db.query(EventType).all()
+
+def update_event_type(db: Session, event_type_id: int, event_type_update: EventTypeCreate):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    for key, value in event_type_update.dict().items():
+        setattr(event_type, key, value)
+    db.commit()
+    db.refresh(event_type)
+    return event_type
+
+def delete_event_type(db: Session, event_type_id: int):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    db.delete(event_type)
+    db.commit()
+    return {"message": "Event type deleted"}
+
+# Funciones para Badge
 def create_badge(db: Session, badge: BadgeCreate):
     db_badge = Badge(**badge.dict())
     db.add(db_badge)
     db.commit()
     db.refresh(db_badge)
     return db_badge
+
+def get_badges(db: Session) -> List[Badge]:
+    return db.query(Badge).all()
+
+def update_badge(db: Session, badge_id: int, badge_update: BadgeCreate):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    for key, value in badge_update.dict().items():
+        setattr(badge, key, value)
+    db.commit()
+    db.refresh(badge)
+    return badge
+
+def delete_badge(db: Session, badge_id: int):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    db.delete(badge)
+    db.commit()
+    return {"message": "Badge deleted"}
 
 def calculate_points(api_usages: int) -> int:
     """Calcula los puntos según el número de usos de la API."""
@@ -164,3 +213,46 @@ def get_rankings(db: Session) -> List[RankingResponse]:
         ) for r in registered + anonymous
     ]
     return sorted(all_rankings, key=lambda x: x.points, reverse=True)
+
+
+def get_event_types(db: Session) -> List[EventType]:
+    return db.query(EventType).all()
+
+def update_event_type(db: Session, event_type_id: int, event_type_update: EventTypeCreate):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    for key, value in event_type_update.dict().items():
+        setattr(event_type, key, value)
+    db.commit()
+    db.refresh(event_type)
+    return event_type
+
+def delete_event_type(db: Session, event_type_id: int):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    db.delete(event_type)
+    db.commit()
+    return {"message": "Event type deleted"}
+
+def get_badges(db: Session) -> List[Badge]:
+    return db.query(Badge).all()
+
+def update_badge(db: Session, badge_id: int, badge_update: BadgeCreate):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    for key, value in badge_update.dict().items():
+        setattr(badge, key, value)
+    db.commit()
+    db.refresh(badge)
+    return badge
+
+def delete_badge(db: Session, badge_id: int):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    db.delete(badge)
+    db.commit()
+    return {"message": "Badge deleted"}

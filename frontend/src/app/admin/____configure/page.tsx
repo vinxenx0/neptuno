@@ -40,6 +40,8 @@ export default function ConfigurePage() {
     enable_social_login: true,
     disable_anonymous_users: false,
     disable_credits: false,
+    enable_payment_methods: true,
+    enable_gamification: true,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,12 +76,16 @@ export default function ConfigurePage() {
           fetchAPI("/v1/settings/enable_social_login"),
           fetchAPI("/v1/settings/disable_anonymous_users"),
           fetchAPI("/v1/settings/disable_credits"),
+          fetchAPI("/v1/settings/enable_payment_methods"),
+          fetchAPI("/v1/settings/enable_gamification"),
         ]);
         setFeatures({
           enable_registration: featuresRes[0].data === "true",
           enable_social_login: featuresRes[1].data === "true",
           disable_anonymous_users: featuresRes[2].data === "true",
           disable_credits: featuresRes[3].data === "true",
+          enable_payment_methods: featuresRes[4].data === "true",
+          enable_gamification: featuresRes[5].data === "true",
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
@@ -311,59 +317,41 @@ export default function ConfigurePage() {
           </div>
         )}
 
-        {activeTab === 3 && (
-          <div className="space-y-4">
-            <Card>
-              <CardContent>
-                <Typography variant="h6" className="mb-4">
-                  Control de Funcionalidades
-                </Typography>
-                <div className="space-y-4">
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.enable_registration}
-                        onChange={(e) => handleToggleFeature("enable_registration", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Habilitar Registro"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.enable_social_login}
-                        onChange={(e) => handleToggleFeature("enable_social_login", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Habilitar Login Social"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.disable_anonymous_users}
-                        onChange={(e) => handleToggleFeature("disable_anonymous_users", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Deshabilitar Usuarios Anónimos"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.disable_credits}
-                        onChange={(e) => handleToggleFeature("disable_credits", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Desactivar Créditos"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+{activeTab === 3 && (
+        <div className="space-y-4">
+          <Card>
+            <CardContent>
+              <Typography variant="h6" className="mb-4">Control de Funcionalidades</Typography>
+              <div className="space-y-4">
+                <FormControlLabel
+                  control={<Switch checked={features.enable_registration} onChange={(e) => handleToggleFeature("enable_registration", e.target.checked)} color="primary" />}
+                  label="Habilitar Registro"
+                />
+                <FormControlLabel
+                  control={<Switch checked={features.enable_social_login} onChange={(e) => handleToggleFeature("enable_social_login", e.target.checked)} color="primary" />}
+                  label="Habilitar Login Social"
+                />
+                <FormControlLabel
+                  control={<Switch checked={features.disable_anonymous_users} onChange={(e) => handleToggleFeature("disable_anonymous_users", e.target.checked)} color="primary" />}
+                  label="Deshabilitar Usuarios Anónimos"
+                />
+                <FormControlLabel
+                  control={<Switch checked={features.disable_credits} onChange={(e) => handleToggleFeature("disable_credits", e.target.checked)} color="primary" />}
+                  label="Desactivar Créditos"
+                />
+                <FormControlLabel
+                  control={<Switch checked={features.enable_payment_methods} onChange={(e) => handleToggleFeature("enable_payment_methods", e.target.checked)} color="primary" />}
+                  label="Habilitar Medios de Pago"
+                />
+                <FormControlLabel
+                  control={<Switch checked={features.enable_gamification} onChange={(e) => handleToggleFeature("enable_gamification", e.target.checked)} color="primary" />}
+                  label="Habilitar Gamificación"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
       </motion.div>
     </div>
   );

@@ -20,8 +20,6 @@ import {
   IconButton,
   Snackbar,
   Alert,
-  Switch,
-  FormControlLabel,
 } from "@mui/material";
 import { AddCircle, Delete, ExpandMore } from "@mui/icons-material";
 import { SiteSetting, Integration } from "@/lib/types";
@@ -35,12 +33,6 @@ export default function ConfigurePage() {
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [newOrigin, setNewOrigin] = useState("");
   const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
-  const [features, setFeatures] = useState({
-    enable_registration: true,
-    enable_social_login: true,
-    disable_anonymous_users: false,
-    disable_credits: false,
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -62,25 +54,11 @@ export default function ConfigurePage() {
         }, {} as Record<string, SiteSetting[]>);
         setSettingsByTag(grouped || {});
 
-        const originsRes = await fetchAPI<string[]>("/v1/settings/allowed-origins");
+        const originsRes = await fetchAPI<string[]>("/v1/settings/allowed_origins");
         setOrigins(originsRes.data || []);
 
         const integrationsRes = await fetchAPI<Integration[]>("/v1/integrations/");
         setIntegrations(integrationsRes.data || []);
-
-        // Cargar el estado inicial de las funcionalidades
-        const featuresRes = await Promise.all([
-          fetchAPI("/v1/settings/enable_registration"),
-          fetchAPI("/v1/settings/enable_social_login"),
-          fetchAPI("/v1/settings/disable_anonymous_users"),
-          fetchAPI("/v1/settings/disable_credits"),
-        ]);
-        setFeatures({
-          enable_registration: featuresRes[0].data === "true",
-          enable_social_login: featuresRes[1].data === "true",
-          disable_anonymous_users: featuresRes[2].data === "true",
-          disable_credits: featuresRes[3].data === "true",
-        });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
       } finally {
@@ -146,20 +124,6 @@ export default function ConfigurePage() {
     }
   };
 
-  const handleToggleFeature = async (feature: string, enabled: boolean) => {
-    try {
-      await fetchAPI("/v1/settings/admin/config", {
-        method: "POST",
-        data: { key: feature, value: enabled.toString() },
-      });
-      setFeatures((prev) => ({ ...prev, [feature]: enabled }));
-      setSuccess(`Funcionalidad ${enabled ? "activada" : "desactivada"} con éxito`);
-      setTimeout(() => setSuccess(null), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al actualizar funcionalidad");
-    }
-  };
-
   if (loading) return <div className="text-center p-4 text-xl">Cargando Dashboard...</div>;
 
   return (
@@ -193,7 +157,6 @@ export default function ConfigurePage() {
         <Tab label="Configuraciones" />
         <Tab label="Orígenes Permitidos" />
         <Tab label="Integraciones" />
-        <Tab label="Funcionalidades" />
       </Tabs>
 
       <motion.div
@@ -308,60 +271,6 @@ export default function ConfigurePage() {
                 </Card>
               ))}
             </div>
-          </div>
-        )}
-
-        {activeTab === 3 && (
-          <div className="space-y-4">
-            <Card>
-              <CardContent>
-                <Typography variant="h6" className="mb-4">
-                  Control de Funcionalidades
-                </Typography>
-                <div className="space-y-4">
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.enable_registration}
-                        onChange={(e) => handleToggleFeature("enable_registration", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Habilitar Registro"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.enable_social_login}
-                        onChange={(e) => handleToggleFeature("enable_social_login", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Habilitar Login Social"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.disable_anonymous_users}
-                        onChange={(e) => handleToggleFeature("disable_anonymous_users", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Deshabilitar Usuarios Anónimos"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={features.disable_credits}
-                        onChange={(e) => handleToggleFeature("disable_credits", e.target.checked)}
-                        color="primary"
-                      />
-                    }
-                    label="Desactivar Créditos"
-                  />
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
       </motion.div>

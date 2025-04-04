@@ -6,6 +6,8 @@ from datetime import datetime
 from models.user import User
 from models.guests import GuestsSession
 
+
+# backend/models/gamification.py
 class EventType(Base):
     __tablename__ = "event_types"
     

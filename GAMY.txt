@@ -1,39 +1,2237 @@
-Excelente , pero te has dejado muchas cosas por el camino que estan provocando algunos bugs:
+Excelente, ahora vamos a seguir avanzando en la gestión y administración de la gamificación.
 
-- 1- Con los nuevos cambios no se actualizan el numero de insignias ni el numero de puntos, ademas el json con la info del usuario devuelve gamification vacio, por ejemplo: 
+Para ello ya es momento de crear un panel de administración para el administrador, donde pueda ajustar los badges y puntos para cada evento que quiera dar de alta el admin para la gamificación.
 
-Información obtenida: {"user_id":"a50a0b78-e23b-4ab8-a14f-3d01096a492c","email":"anonymous@example.com","username":"Guest_k19uy","user_type":"anonymous","subscription":"basic","credits":100,"rol":"anonymous","session_id":"a50a0b78-e23b-4ab8-a14f-3d01096a492c","gamification":[]}
+Vamos a realizar los siguientes cambios en el dashboard de amin:
 
-- 2 - Tu solución para refrescar los badges no funciona y no me gusta, debe ser en tiempo real al igual que sucede con los creditos
+1- Añade la pestaña Gamificación al dashboard de admin: el administrador podrá en el futuro desde el panel de control crear eventos (p.e api_usage) y los badges que se consiguen en ese evento (novato, becario, junior, senior), los puntos para cada badge, el tipo de usuario que lo puede lograr (anonymous, registered, both) etc.
 
-Console Error
+aqui tienes los modelos de datos, tipados y el dashboard de admin donde hacer los cambios, respeta la logica actual del dashboard, sin omitir nada y añadiendo la nueva pestaña de gamificación
 
-Error: setGamification is not a function
-
-src/components/web/Navbar.tsx (127:11) @ Navbar.useEffect.interval
-
-  125 |           }
-  126 |
-> 127 |           setGamification({ points: totalPoints, badges });
-      |           ^
-  128 |         }
-  129 |       } catch (err) {
-  130 |         console.error("Error al actualizar datos:", err);
-
-Call Stack 1
-Navbar.useEffect.interval
-src/components/web/Navbar.tsx (127:11)
-
-Implanta una solución para que se actualicen los puntos e insignias conforme se van consiguiendo al igual que sucede con los creitos
-
--3 - No has creado los nuevos tipados de datos que has utilizado en tu codigo en context.tsx
-
-import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
-
-aqui tienes los tipados actuales relacionados con los tipados:
+aqui tienes la api actual de gamificación:
 
 
-// respuesta /info
+# backend/api/v1/gamification.py
+@router.get("/rankings", response_model=List[RankingResponse])
+def get_rankings_endpoint(db: Session = Depends(get_db)):
+    return get_rankings(db)
+
+@router.post("/events")
+async def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return register_event(db, event, user)
+
+@router.get("/me", response_model=List[UserGamificationResponse])
+def get_my_gamification(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    """Obtiene los puntos e insignias del usuario actual para todos los eventos."""
+    return get_user_gamification(db, user)
+
+@router.get("/events", response_model=List[GamificationEventResponse])
+def get_my_events(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    """Obtiene todos los eventos de gamificación del usuario actual."""
+    return get_user_events(db, user)
+
+@router.get("/events/{event_id}", response_model=GamificationEventResponse)
+def get_event_details_endpoint(event_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    """Obtiene detalles de un evento específico del usuario."""
+    event = get_event_details(db, event_id, user)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
+
+@router.get("/event-types/{event_type_id}/badges", response_model=List[BadgeResponse])
+def get_badges_for_event_endpoint(event_type_id: int, db: Session = Depends(get_db)):
+    """Obtiene la lista de badges disponibles para un tipo de evento."""
+    badges = get_badges_for_event(db, event_type_id)
+    if not badges:
+        raise HTTPException(status_code=404, detail="No badges found for this event type")
+    return badges
+
+@router.get("/progress/{event_type_id}", response_model=UserGamificationResponse)
+def get_user_progress_for_event_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    """Obtiene el progreso del usuario en un evento específico."""
+    progress = get_user_progress_for_event(db, user, event_type_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found for this event")
+    return progress
+
+
+Aqui tienes el middleware que solo debe funcionar si la gamificación esta activa
+
+# backend/models/gamification.py
+def track_gamification_event(event_type_name: str):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db), *args, **kwargs):
+            event_type = db.query(EventType).filter(EventType.name == event_type_name).first()
+            if not event_type:
+                raise ValueError(f"Event type '{event_type_name}' not found")
+
+            event = GamificationEventCreate(event_type_id=event_type.id)
+            register_event(db, event, user)
+
+            return await func(user=user, db=db, *args, **kwargs)
+        return wrapper
+    return decorator
+
+aqui tienes el modelo actual de gamificación
+
+# backend/models/gamification.py
+class EventType(Base):
+    __tablename__ = "event_types"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False)  # Ej: "api_usage"
+    description = Column(String(255), nullable=True)
+    points_per_event = Column(Integer, default=0)  # Puntos por ocurrencia del evento
+
+    badges = relationship("Badge", back_populates="event_type")
+    gamification_events = relationship("GamificationEvent", back_populates="event_type")
+    user_gamification = relationship("UserGamification", back_populates="event_type")
+
+class Badge(Base):
+    __tablename__ = "badges"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False)  # Ej: "Novato", "Becario"
+    description = Column(String(255), nullable=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    required_points = Column(Integer, nullable=False)  # Puntos necesarios para el badge
+    user_type = Column(String(20), default="both")  # "anonymous", "registered", "both"
+
+    event_type = relationship("EventType", back_populates="badges")
+    user_gamification = relationship("UserGamification", back_populates="badge")
+
+class GamificationEvent(Base):
+    __tablename__ = "gamification_events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
+    event_type = relationship("EventType", back_populates="gamification_events")
+    user = relationship("User", back_populates="gamification_events")
+    session = relationship("GuestsSession", back_populates="gamification_events")
+
+class UserGamification(Base):
+    __tablename__ = "user_gamification"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    points = Column(Integer, default=0)
+    badge_id = Column(Integer, ForeignKey("badges.id"), nullable=True)
+    
+    event_type = relationship("EventType", back_populates="user_gamification")
+    badge = relationship("Badge", back_populates="user_gamification")
+    user = relationship("User", back_populates="gamification")
+    session = relationship("GuestsSession", back_populates="gamification")
+
+los esquemas
+
+# backend/schemas/gamification.py
+
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional, List
+
+class EventTypeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    points_per_event: int = 0
+
+class EventTypeCreate(EventTypeBase):
+    pass
+
+class EventTypeResponse(EventTypeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class BadgeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    event_type_id: int
+    required_points: int
+    user_type: str = "both"
+
+class BadgeCreate(BadgeBase):
+    pass
+
+class BadgeResponse(BadgeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class GamificationEventBase(BaseModel):
+    event_type_id: int
+
+class GamificationEventCreate(GamificationEventBase):
+    pass
+
+class GamificationEventResponse(GamificationEventBase):
+    id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+
+class UserGamificationBase(BaseModel):
+    points: int
+    badge_id: Optional[int]
+
+class UserGamificationResponse(UserGamificationBase):
+    event_type_id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    event_type: EventTypeResponse
+    badge: Optional[BadgeResponse]
+
+    class Config:
+        from_attributes = True
+        
+        
+class RankingResponse(BaseModel):
+    username: str
+    points: int
+    badges_count: int
+    user_type: str
+
+    class Config:
+        from_attributes = True
+
+los servicios de gamificación:
+
+# backend/services/gamification_service.py
+
+def register_event(db: Session, event: GamificationEventCreate, user: UserContext) -> GamificationEvent:
+    """Registra un evento de gamificación y actualiza los puntos del usuario."""
+    user_id = int(user.user_id) if user.user_type == "registered" else None
+    session_id = user.session_id if user.user_type == "anonymous" else None
+
+    db_event = GamificationEvent(
+        event_type_id=event.event_type_id,
+        user_id=user_id,
+        session_id=session_id
+    )
+    db.add(db_event)
+    db.commit()
+    db.refresh(db_event)
+    update_user_gamification(db, user, event.event_type_id)
+    return db_event
+
+def get_user_gamification(db: Session, user: UserContext) -> List[UserGamification]:
+    """Obtiene todos los registros de gamificación del usuario."""
+    if user.user_type == "registered":
+        return db.query(UserGamification).filter(UserGamification.user_id == int(user.user_id)).all()
+    return db.query(UserGamification).filter(UserGamification.session_id == user.session_id).all()
+
+def get_user_events(db: Session, user: UserContext) -> List[GamificationEvent]:
+    """Obtiene todos los eventos de gamificación del usuario."""
+    if user.user_type == "registered":
+        return db.query(GamificationEvent).filter(GamificationEvent.user_id == int(user.user_id)).all()
+    return db.query(GamificationEvent).filter(GamificationEvent.session_id == user.session_id).all()
+
+def get_event_details(db: Session, event_id: int, user: UserContext) -> Optional[GamificationEvent]:
+    """Obtiene los detalles de un evento específico si pertenece al usuario."""
+    event = db.query(GamificationEvent).filter(GamificationEvent.id == event_id).first()
+    if not event:
+        return None
+    if (user.user_type == "registered" and event.user_id == int(user.user_id)) or \
+       (user.user_type == "anonymous" and event.session_id == user.session_id):
+        return event
+    return None
+
+def get_badges_for_event(db: Session, event_type_id: int) -> List[Badge]:
+    """Obtiene todos los badges asociados a un tipo de evento."""
+    return db.query(Badge).filter(Badge.event_type_id == event_type_id).all()
+
+def get_user_progress_for_event(db: Session, user: UserContext, event_type_id: int) -> Optional[UserGamification]:
+    """Obtiene el progreso del usuario para un tipo de evento específico."""
+    if user.user_type == "registered":
+        return db.query(UserGamification).filter(
+            UserGamification.user_id == int(user.user_id),
+            UserGamification.event_type_id == event_type_id
+        ).first()
+    return db.query(UserGamification).filter(
+        UserGamification.session_id == user.session_id,
+        UserGamification.event_type_id == event_type_id
+    ).first()
+
+
+
+def update_user_gamification(db: Session, user: UserContext, event_type_id: int) -> UserGamification:
+    logging.info(f"Actualizando gamificación para user_type={user.user_type}, user_id={user.user_id}, session_id={user.session_id}, event_type_id={event_type_id}")
+    user_id = int(user.user_id) if user.user_type == "registered" else None
+    session_id = user.session_id if user.user_type == "anonymous" else None
+
+    gamification = get_user_progress_for_event(db, user, event_type_id)
+    if not gamification:
+        gamification = UserGamification(
+            user_id=user_id,
+            session_id=session_id,
+            event_type_id=event_type_id,
+            points=0
+        )
+        db.add(gamification)
+        logging.info("Creado nuevo registro de UserGamification")
+
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise ValueError("Event type not found")
+
+    events_count = db.query(GamificationEvent).filter(
+        GamificationEvent.event_type_id == event_type_id,
+        (GamificationEvent.user_id == user_id) if user_id else (GamificationEvent.session_id == session_id)
+    ).count()
+    logging.info(f"Contados {events_count} eventos para event_type_id={event_type_id}")
+
+    gamification.points = events_count * event_type.points_per_event
+
+    badge = db.query(Badge).filter(
+        Badge.event_type_id == event_type_id,
+        Badge.user_type.in_([user.user_type, "both"]),
+        Badge.required_points <= gamification.points
+    ).order_by(Badge.required_points.desc()).first()
+    logging.info(f"Badge encontrado: {badge.id if badge else 'None'}")
+
+    gamification.badge_id = badge.id if badge else None
+    db.commit()
+    db.refresh(gamification)
+    return gamification
+
+def create_event_type(db: Session, event_type: EventTypeCreate):
+    db_event_type = EventType(**event_type.dict())
+    db.add(db_event_type)
+    db.commit()
+    db.refresh(db_event_type)
+    return db_event_type
+
+def create_badge(db: Session, badge: BadgeCreate):
+    db_badge = Badge(**badge.dict())
+    db.add(db_badge)
+    db.commit()
+    db.refresh(db_badge)
+    return db_badge
+
+def calculate_points(api_usages: int) -> int:
+    """Calcula los puntos según el número de usos de la API."""
+    if api_usages >= 30:
+        return 1000
+    elif api_usages >= 20:
+        return 500
+    elif api_usages >= 10:
+        return 100
+    elif api_usages >= 1:
+        return 5
+    return 0
+
+
+
+def get_rankings(db: Session) -> List[RankingResponse]:
+    # Rankings para usuarios registrados
+    registered = db.query(
+        User.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, User.id == UserGamification.user_id
+    ).group_by(User.id).all()
+
+    # Rankings para usuarios anónimos
+    anonymous = db.query(
+        GuestsSession.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, GuestsSession.id == UserGamification.session_id
+    ).group_by(GuestsSession.id).all()
+
+    all_rankings = [
+        RankingResponse(
+            username=r.username,
+            points=r.total_points,
+            badges_count=r.badges_count,
+            user_type="registered" if r in registered else "anonymous"
+        ) for r in registered + anonymous
+    ]
+    return sorted(all_rankings, key=lambda x: x.points, reverse=True)
+
+y por ultimo la pagina del dashboard que debes modificar
+
+// src/app/admin/dashboard/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth/context";
+import { useRouter } from "next/navigation";
+import fetchAPI from "@/lib/api";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Tabs,
+  Tab,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  IconButton,
+  Snackbar,
+  Alert,
+  Switch,
+  FormControlLabel,
+} from "@mui/material";
+import { AddCircle, Delete, ExpandMore } from "@mui/icons-material";
+import { SiteSetting, Integration } from "@/lib/types";
+
+export default function ConfigurePage() {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState(0);
+  const [settingsByTag, setSettingsByTag] = useState<Record<string, SiteSetting[]>>({});
+  const [origins, setOrigins] = useState<string[]>([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [newOrigin, setNewOrigin] = useState("");
+  const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
+  const [features, setFeatures] = useState({
+    enable_registration: true,
+    enable_social_login: true,
+    disable_anonymous_users: false,
+    disable_credits: false,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user || user.rol !== "admin") {
+      router.push("/");
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const settingsRes = await fetchAPI<SiteSetting[]>("/v1/settings/admin/config");
+        const grouped = settingsRes.data?.reduce((acc, setting) => {
+          const tag = setting.tag || "General";
+          if (!acc[tag]) acc[tag] = [];
+          acc[tag].push(setting);
+          return acc;
+        }, {} as Record<string, SiteSetting[]>);
+        setSettingsByTag(grouped || {});
+
+        const originsRes = await fetchAPI<string[]>("/v1/settings/allowed-origins");
+        setOrigins(originsRes.data || []);
+
+        const integrationsRes = await fetchAPI<Integration[]>("/v1/integrations/");
+        setIntegrations(integrationsRes.data || []);
+
+        // Cargar el estado inicial de las funcionalidades
+        const featuresRes = await Promise.all([
+          fetchAPI("/v1/settings/enable_registration"),
+          fetchAPI("/v1/settings/enable_social_login"),
+          fetchAPI("/v1/settings/disable_anonymous_users"),
+          fetchAPI("/v1/settings/disable_credits"),
+        ]);
+        setFeatures({
+          enable_registration: featuresRes[0].data === "true",
+          enable_social_login: featuresRes[1].data === "true",
+          disable_anonymous_users: featuresRes[2].data === "true",
+          disable_credits: featuresRes[3].data === "true",
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar datos");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [user, router]);
+
+  const handleSaveSetting = async (key: string, newValue: string) => {
+    try {
+      await fetchAPI("/v1/settings/admin/config", {
+        method: "POST",
+        data: { key, value: newValue },
+      });
+      setSettingsByTag((prev) => {
+        const updated = { ...prev };
+        for (const tag in updated) {
+          updated[tag] = updated[tag].map((s) => (s.key === key ? { ...s, value: newValue } : s));
+        }
+        return updated;
+      });
+      setSuccess("Configuración actualizada");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al guardar configuración");
+    }
+  };
+
+  const handleAddOrigin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await fetchAPI("/v1/settings/allowed-origins", {
+        method: "POST",
+        data: { origin: newOrigin },
+      });
+      setOrigins([...origins, newOrigin]);
+      setNewOrigin("");
+      setSuccess("Origen añadido con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al añadir origen");
+    }
+  };
+
+  const handleAddIntegration = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<Integration>("/v1/integrations/", {
+        method: "POST",
+        data: {
+          name: newIntegration.name,
+          webhook_url: newIntegration.webhook_url,
+          event_type: newIntegration.event_type,
+        },
+      });
+      setIntegrations([...integrations, data!]);
+      setNewIntegration({ name: "", webhook_url: "", event_type: "" });
+      setSuccess("Integración creada con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear integración");
+    }
+  };
+
+  const handleToggleFeature = async (feature: string, enabled: boolean) => {
+    try {
+      await fetchAPI("/v1/settings/admin/config", {
+        method: "POST",
+        data: { key: feature, value: enabled.toString() },
+      });
+      setFeatures((prev) => ({ ...prev, [feature]: enabled }));
+      setSuccess(`Funcionalidad ${enabled ? "activada" : "desactivada"} con éxito`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar funcionalidad");
+    }
+  };
+
+  if (loading) return <div className="text-center p-4 text-xl">Cargando Dashboard...</div>;
+
+  return (
+    <div className="container mx-auto p-6 min-h-screen">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl font-bold text-center mb-8"
+      >
+        Dashboard de Administración
+      </motion.h1>
+
+      <AnimatePresence>
+        {error && (
+          <Snackbar open autoHideDuration={3000} onClose={() => setError(null)}>
+            <Alert severity="error" onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          </Snackbar>
+        )}
+        {success && (
+          <Snackbar open autoHideDuration={3000} onClose={() => setSuccess(null)}>
+            <Alert severity="success" onClose={() => setSuccess(null)}>
+              {success}
+            </Alert>
+          </Snackbar>
+        )}
+      </AnimatePresence>
+
+      <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)} centered>
+        <Tab label="Configuraciones" />
+        <Tab label="Orígenes Permitidos" />
+        <Tab label="Integraciones" />
+        <Tab label="Funcionalidades" />
+      </Tabs>
+
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mt-6"
+      >
+        {activeTab === 0 && (
+          <div className="space-y-4">
+            {Object.entries(settingsByTag).map(([tag, settings]) => (
+              <Accordion key={tag}>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                  <Typography variant="h6">{tag}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {settings.map((setting) => (
+                      <TextField
+                        key={setting.key}
+                        label={setting.key}
+                        defaultValue={setting.value}
+                        onBlur={(e) => handleSaveSetting(setting.key, e.target.value)}
+                        fullWidth
+                        variant="outlined"
+                        helperText={setting.description}
+                      />
+                    ))}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 1 && (
+          <div className="space-y-4">
+            <Card>
+              <CardContent>
+                <form onSubmit={handleAddOrigin} className="flex space-x-4">
+                  <TextField
+                    label="Nuevo Origen"
+                    value={newOrigin}
+                    onChange={(e) => setNewOrigin(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    placeholder="https://example.com"
+                  />
+                  <Button type="submit" variant="contained" color="primary">
+                    Añadir
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {origins.map((origin, index) => (
+                <Card key={index}>
+                  <CardContent className="flex justify-between items-center">
+                    <Typography>{origin}</Typography>
+                    <IconButton color="error">
+                      <Delete />
+                    </IconButton>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 2 && (
+          <div className="space-y-4">
+            <Card>
+              <CardContent>
+                <form onSubmit={handleAddIntegration} className="space-y-4">
+                  <TextField
+                    label="Nombre"
+                    value={newIntegration.name}
+                    onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Webhook URL"
+                    value={newIntegration.webhook_url}
+                    onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Tipo de Evento"
+                    value={newIntegration.event_type}
+                    onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <Button type="submit" variant="contained" color="primary" fullWidth>
+                    Crear Integración
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {integrations.map((integration) => (
+                <Card key={integration.id}>
+                  <CardContent>
+                    <Typography variant="h6">{integration.name}</Typography>
+                    <Typography>Webhook: {integration.webhook_url}</Typography>
+                    <Typography>Evento: {integration.event_type}</Typography>
+                    <Typography>Activo: {integration.active ? "Sí" : "No"}</Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 3 && (
+          <div className="space-y-4">
+            <Card>
+              <CardContent>
+                <Typography variant="h6" className="mb-4">
+                  Control de Funcionalidades
+                </Typography>
+                <div className="space-y-4">
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={features.enable_registration}
+                        onChange={(e) => handleToggleFeature("enable_registration", e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label="Habilitar Registro"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={features.enable_social_login}
+                        onChange={(e) => handleToggleFeature("enable_social_login", e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label="Habilitar Login Social"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={features.disable_anonymous_users}
+                        onChange={(e) => handleToggleFeature("disable_anonymous_users", e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label="Deshabilitar Usuarios Anónimos"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={features.disable_credits}
+                        onChange={(e) => handleToggleFeature("disable_credits", e.target.checked)}
+                        color="primary"
+                      />
+                    }
+                    label="Desactivar Créditos"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
+
+
+
+2 - Aprovecha que vas hacer cambios en el dashboard de admin para añadir la pestaña: Medios de pago.
+
+Actualmente es el usuario el que escoge los medios de pago asociados a su cuenta, pero actualmente para nuestro MVP solo puede elegir "Stripe" como medio de pago por defecto. Vamos a crear una nueva pestaña en el dashboard de admin donde podamos añadir los medios de pago que el usuario puede elegir: Stripe, Paypal, Bank Transfer, Credit Card
+
+Ademas de añadirlos a la base de datos, el admin podrá activar o desactivar medios de pago.
+
+Te paso los archivos del backend relacionados con los medios de pago
+
+# backend/api/v1/payments.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from dependencies.auth import UserContext, get_user_context
+from services.payment_service import add_payment_method, get_credit_transactions, get_payment_methods, purchase_credits, set_default_payment_method
+from core.database import get_db
+from core.logging import configure_logging
+from schemas.payment import CreditTransactionResponse, PurchaseRequest, PaymentMethodCreate, PaymentMethodResponse, PurchaseResponse
+
+router = APIRouter(tags=["payments"])
+logger = configure_logging()
+
+@router.post("/purchase", response_model=PurchaseResponse)
+async def buy_credits(
+    request: PurchaseRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden comprar créditos")
+    return purchase_credits(db, int(user.user_id), request.credits, request.payment_amount, request.payment_method)
+
+@router.post("/methods", response_model=PaymentMethodResponse)
+def add_method(
+    method: PaymentMethodCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden añadir métodos de pago")
+    return add_payment_method(db, int(user.user_id), method.payment_type, method.details, method.is_default)
+
+@router.get("/methods", response_model=list[PaymentMethodResponse])
+def list_methods(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden ver sus métodos de pago")
+    return get_payment_methods(db, int(user.user_id))
+
+@router.put("/methods/{method_id}/default", response_model=PaymentMethodResponse)
+def set_default(
+    method_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden establecer un método de pago por defecto")
+    return set_default_payment_method(db, int(user.user_id), method_id)
+
+@router.get("/transactions", response_model=list[CreditTransactionResponse])
+def list_transactions(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden ver sus transacciones")
+    return get_credit_transactions(db, int(user.user_id))
+
+# backend/models/payment_method.py
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from models.user import Base
+from datetime import datetime
+
+class PaymentMethod(Base):
+    __tablename__ = "payment_methods"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)  # Vinculado a un usuario
+    payment_type = Column(String(20), nullable=False)  # "credit_card", "paypal", "bank_transfer"
+    details = Column(String(255), nullable=False)  # Datos encriptados (ej. últimos 4 dígitos, email PayPal)
+    is_default = Column(Boolean, default=False)  # Método favorito
+    created_at = Column(DateTime, default=datetime.utcnow)  # Fecha de creación
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Última actualización
+
+#backend/schemas/payment.py
+
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
+
+
+class PurchaseRequest(BaseModel):
+    credits: int
+    payment_amount: float
+    payment_method: Optional[str] = "stripe"
+
+class PurchaseResponse(BaseModel):
+    transaction_id: int
+    credits_added: int
+    new_balance: int
+
+class PaymentMethodCreate(BaseModel):
+    payment_type: str
+    details: str
+    is_default: bool = False
+
+class PaymentMethodResponse(BaseModel):
+    id: int
+    payment_type: str
+    details: str
+    is_default: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True  # Permite mapear desde objetos SQLAlchemy
+        
+class CreditTransactionResponse(BaseModel):
+    id: int
+    amount: int
+    transaction_type: str
+    payment_amount: Optional[float] = None
+    payment_method: Optional[str] = None
+    payment_status: Optional[str] = None
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True  # Permite mapear desde objetos SQLAlchemy
+
+# backend/services/payment_service.py
+from sqlalchemy.orm import Session
+from models.payment_method import PaymentMethod
+from models.user import User
+from core.logging import configure_logging
+from models.credit_transaction import CreditTransaction
+from fastapi import HTTPException, status
+
+logger = configure_logging()
+
+class StripeSimulator:
+    @staticmethod
+    def create_payment_intent(amount: float, currency: str = "usd"):
+        return {"id": "pi_simulated", "status": "succeeded"}
+
+stripe = StripeSimulator()
+
+def purchase_credits(db: Session, user_id: int, credits: int, payment_amount: float, payment_method: str = "stripe"):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+        transaction = CreditTransaction(
+            user_type="registered",  # ¡Añadimos esto explícitamente!
+            user_id=user_id,
+            amount=credits,
+            transaction_type="purchase",
+            payment_amount=payment_amount,
+            payment_method=payment_method,
+            payment_status="pending"
+        )
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+
+        payment_intent = stripe.create_payment_intent(payment_amount)
+        if payment_intent["status"] == "succeeded":
+            transaction.payment_status = "completed"
+            user.credits += credits
+            db.commit()
+            logger.info(f"Compra de {credits} créditos completada para usuario {user_id}")
+            return {"transaction_id": transaction.id, "credits_added": credits, "new_balance": user.credits}
+        else:
+            transaction.payment_status = "failed"
+            db.commit()
+            raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Error al procesar el pago")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al procesar compra de créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al procesar compra")
+
+def add_payment_method(db: Session, user_id: int, payment_type: str, details: str, is_default: bool = False):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        if is_default:
+            db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id, PaymentMethod.is_default == True).update({"is_default": False})
+        
+        payment_method = PaymentMethod(
+            user_id=user_id,
+            payment_type=payment_type,
+            details=details,
+            is_default=is_default
+        )
+        db.add(payment_method)
+        db.commit()
+        logger.info(f"Método de pago añadido para usuario ID {user_id}: {payment_type}")
+        return payment_method
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al añadir método de pago para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al añadir método de pago")
+
+def get_payment_methods(db: Session, user_id: int):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        return db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id).all()
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al listar métodos de pago para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al listar métodos de pago")
+
+def set_default_payment_method(db: Session, user_id: int, payment_method_id: int):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        payment_method = db.query(PaymentMethod).filter(PaymentMethod.id == payment_method_id, PaymentMethod.user_id == user_id).first()
+        if not payment_method:
+            raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+        
+        db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id, PaymentMethod.is_default == True).update({"is_default": False})
+        payment_method.is_default = True
+        db.commit()
+        logger.info(f"Método de pago ID {payment_method_id} establecido como predeterminado para usuario ID {user_id}")
+        return payment_method
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al establecer método de pago predeterminado para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al establecer método de pago")
+
+def get_credit_transactions(db: Session, user_id: int):
+    try:
+        return db.query(CreditTransaction).filter(CreditTransaction.user_id == user_id).all()
+    except Exception as e:
+        logger.error(f"Error al obtener transacciones de créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al obtener transacciones")
+
+Para los nuevos medios de pago por ahora no es necesario conectarlos, solo para el MVP como se ha hecho con stripe.
+
+Ademas de añadir la pestaña en el dashboard de admiun, Aqui tienes el dashboard del usuario donde puede elegir su medio de pago preferido
+
+// src/app/user/dashboard/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth/context";
+import { useRouter } from "next/navigation";
+import fetchAPI from "@/lib/api";
+import { motion, AnimatePresence } from "framer-motion";
+import { Box,  Grid,  Card,  CardContent,  CardHeader,  TextField,  Button,  Accordion,  AccordionSummary,  AccordionDetails,  Typography,  IconButton,
+  Snackbar,  Alert,  MenuItem,  Avatar,  Chip,  Divider,  List,  ListItem,  ListItemAvatar,  ListItemText,  Badge,  Paper,  Tabs,  Tab,  useTheme,  styled
+} from "@mui/material";
+import {  AccountCircle,  Lock,  Payment,  CreditCard,  AddCircle,  Delete,  ExpandMore,  Edit,  History,  AttachMoney,  Security,  Logout,  Person,
+  LocationOn,  Language,  Star,  StarBorder} from "@mui/icons-material";
+
+// Styled Components
+const GradientCard = styled(Card)(({ theme }) => ({
+  background: `linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)`,
+  color: 'white',
+  borderRadius: '16px',
+  boxShadow: theme.shadows[4]
+}));
+
+const GlassCard = styled(Card)(({ theme }) => ({
+  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
+  borderRadius: '16px',
+  boxShadow: theme.shadows[2]
+}));
+
+
+interface PaymentMethod {
+  id: number;
+  payment_type: string;
+  details: string;
+  is_default: boolean;
+}
+
+interface CreditTransaction {
+  id: number;
+  amount: number;
+  transaction_type: string;
+  payment_amount?: number;
+  payment_method?: string;
+  payment_status: string;
+  timestamp: string;
+}
+
+export default function UserDashboard() {
+  const { user, logout, updateProfile } = useAuth();
+  const router = useRouter();
+  const theme = useTheme();
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", website: "" });
+  const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [newMethod, setNewMethod] = useState({ payment_type: "stripe", details: "", is_default: false });
+  const [credits, setCredits] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [tabValue, setTabValue] = useState(0);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+      return;
+    }
+    setFormData({
+      email: user.email || "",
+      username: user.username || "",
+      ciudad: user.ciudad || "",
+      website: user.website || "",
+    });
+
+    const fetchData = async () => {
+      try {
+        const [transRes, methRes] = await Promise.all([
+          fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
+          fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
+        ]);
+        setTransactions(transRes.data || []);
+        setMethods(methRes.data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar datos");
+      }
+    };
+    fetchData();
+  }, [user, router]);
+
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await updateProfile(formData);
+      setSuccess("Perfil actualizado");
+      setEditMode(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar perfil");
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<{ message: string }>("/v1/auth/me/password", {
+        method: "PUT",
+        data: { current_password: currentPassword, new_password: newPassword },
+      });
+      setSuccess(data?.message || "Contraseña actualizada");
+      setCurrentPassword("");
+      setNewPassword("");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al cambiar contraseña");
+    }
+  };
+
+  const handlePurchase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<CreditTransaction>("/v1/payments/purchase", {
+        method: "POST",
+        data: { credits: parseInt(credits), payment_amount: parseFloat(paymentAmount), payment_method: "stripe" },
+      });
+      setTransactions([data!, ...transactions]);
+      setCredits("");
+      setPaymentAmount("");
+      setSuccess("Créditos comprados");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al comprar créditos");
+    }
+  };
+
+  const handleAddMethod = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<PaymentMethod>("/v1/payments/methods", {
+        method: "POST",
+        data: newMethod,
+      });
+      setMethods([...methods, data!]);
+      setNewMethod({ payment_type: "stripe", details: "", is_default: false });
+      setSuccess("Método añadido");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al añadir método");
+    }
+  };
+
+  const handleSetDefault = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/payments/methods/${id}/default`, { method: "PUT" });
+      setMethods(methods.map((m) => ({ ...m, is_default: m.id === id })));
+      setSuccess("Método predeterminado actualizado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al establecer predeterminado");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm("¿Estás seguro de eliminar tu cuenta? Esta acción es irreversible.")) {
+      try {
+        await fetchAPI("/v1/users/me", { method: "DELETE" });
+        await logout();
+        router.push("/user/auth/#login");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al eliminar cuenta");
+      }
+    }
+  };
+
+
+  if (!user) return (
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+    }}>
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Typography variant="h6" color="textSecondary">Cargando tu perfil...</Typography>
+      </motion.div>
+    </Box>
+  );
+
+  return (
+    <Box sx={{ 
+      p: { xs: 2, md: 4 }, 
+      minHeight: "100vh",
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+    }}>
+      <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
+        {/* Header Section */}
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' }, 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mb: 4,
+          gap: 2
+        }}>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 'bold', 
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                display: 'inline-block'
+              }}
+            >
+              Hola, {user.username}!
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Bienvenido a tu panel de control
+            </Typography>
+          </motion.div>
+          
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <IconButton onClick={() => setEditMode(true)} size="small" sx={{ bgcolor: 'primary.main', color: 'white' }}>
+                <Edit fontSize="small" />
+              </IconButton>
+            }
+          >
+            <Avatar
+              sx={{ 
+                width: 80, 
+                height: 80, 
+                bgcolor: theme.palette.primary.main,
+                fontSize: '2rem',
+                boxShadow: theme.shadows[6]
+              }}
+            >
+              {user.username.charAt(0).toUpperCase()}
+            </Avatar>
+          </Badge>
+        </Box>
+
+        {/* Credits Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <GradientCard sx={{ mb: 4 }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                    Tus Créditos
+                  </Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                    {user.credits ?? 0}
+                  </Typography>
+                </Box>
+                <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </GradientCard>
+        </motion.div>
+
+        {/* Tabs Navigation */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Paper sx={{ mb: 3, borderRadius: '12px', overflow: 'hidden' }}>
+            <Tabs
+              value={tabValue}
+              onChange={(_, newValue) => setTabValue(newValue)}
+              variant="scrollable"
+              scrollButtons="auto"
+              indicatorColor="primary"
+              textColor="primary"
+            >
+              <Tab label="Perfil" icon={<Person />} iconPosition="start" />
+              <Tab label="Seguridad" icon={<Security />} iconPosition="start" />
+              <Tab label="Transacciones" icon={<History />} iconPosition="start" />
+              <Tab label="Métodos de Pago" icon={<Payment />} iconPosition="start" />
+              <Tab label="Comprar Créditos" icon={<CreditCard />} iconPosition="start" />
+            </Tabs>
+          </Paper>
+        </motion.div>
+
+        {/* Tab Content */}
+        <Box sx={{ mb: 4 }}>
+          {/* Profile Tab */}
+          {tabValue === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Información Personal" 
+                      avatar={<AccountCircle color="primary" />}
+                      action={
+                        <IconButton onClick={() => setEditMode(!editMode)}>
+                          <Edit color="primary" />
+                        </IconButton>
+                      }
+                    />
+                    <CardContent>
+                      <AnimatePresence mode="wait">
+                        {editMode ? (
+                          <Box
+                            component={motion.form}
+                            key="edit"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onSubmit={handleUpdate}
+                            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                          >
+                            <TextField
+                              label="Email"
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                            />
+                            <TextField
+                              label="Username"
+                              type="text"
+                              value={formData.username}
+                              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                            />
+                            <TextField
+                              label="Ciudad"
+                              type="text"
+                              value={formData.ciudad}
+                              onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              InputProps={{
+                                startAdornment: <LocationOn color="action" sx={{ mr: 1 }} />
+                              }}
+                            />
+                            <TextField
+                              label="Website"
+                              type="text"
+                              value={formData.website}
+                              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              InputProps={{
+                                startAdornment: <Language color="action" sx={{ mr: 1 }} />
+                              }}
+                            />
+                            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                              <Button 
+                                type="submit" 
+                                variant="contained" 
+                                color="primary"
+                                sx={{ flex: 1 }}
+                              >
+                                Guardar Cambios
+                              </Button>
+                              <Button 
+                                onClick={() => setEditMode(false)} 
+                                variant="outlined"
+                                sx={{ flex: 1 }}
+                              >
+                                Cancelar
+                              </Button>
+                            </Box>
+                          </Box>
+                        ) : (
+                          <Box
+                            component={motion.div}
+                            key="view"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            <List>
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.primary.light }}>
+                                    <Person />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Username" 
+                                  secondary={user.username || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                                    <AccountCircle />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Email" 
+                                  secondary={user.email || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                                    <LocationOn />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Ciudad" 
+                                  secondary={user.ciudad || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                                    <Language />
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText 
+                                  primary="Website" 
+                                  secondary={user.website || "No especificado"} 
+                                  secondaryTypographyProps={{ color: "textPrimary" }}
+                                />
+                              </ListItem>
+                            </List>
+                          </Box>
+                        )}
+                      </AnimatePresence>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Actividad Reciente" 
+                      avatar={<History color="primary" />}
+                    />
+                    <CardContent>
+                      {transactions.slice(0, 3).length > 0 ? (
+                        <List>
+                          {transactions.slice(0, 3).map((t) => (
+                            <motion.div
+                              key={t.id}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <ListItem>
+                                <ListItemAvatar>
+                                  <Avatar sx={{ 
+                                    bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                                  }}>
+                                    {t.amount > 0 ? "+" : "-"}
+                                  </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={`${t.transaction_type}`}
+                                  secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                                />
+                                <Typography variant="body2" color={t.amount > 0 ? "success.main" : "error.main"}>
+                                  {t.amount > 0 ? "+" : ""}{t.amount} créditos
+                                </Typography>
+                              </ListItem>
+                              <Divider variant="inset" component="li" />
+                            </motion.div>
+                          ))}
+                        </List>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
+                          No hay actividad reciente
+                        </Typography>
+                      )}
+                      <Button 
+                        fullWidth 
+                        variant="outlined" 
+                        sx={{ mt: 2 }}
+                        onClick={() => setTabValue(2)}
+                      >
+                        Ver todas las transacciones
+                      </Button>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+            </motion.div>
+          )}
+
+          {/* Security Tab */}
+          {tabValue === 1 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Cambiar Contraseña" 
+                      avatar={<Lock color="primary" />}
+                    />
+                    <CardContent>
+                      <Box 
+                        component="form" 
+                        onSubmit={handleChangePassword} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Contraseña Actual"
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Lock color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <TextField
+                          label="Nueva Contraseña"
+                          type="password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Security color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          sx={{ mt: 1 }}
+                        >
+                          Actualizar Contraseña
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Métodos de Pago" 
+                      subheader={`${methods.length} configurados`}
+                      avatar={<Payment color="primary" />}
+                    />
+                    <CardContent>
+                      {methods.length > 0 ? (
+                        <List>
+                          {methods.slice(0, 2).map((m) => (
+                            <ListItem key={m.id}>
+                              <ListItemAvatar>
+                                <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.light : theme.palette.grey[300] }}>
+                                  {m.is_default ? <Star /> : <StarBorder />}
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={m.payment_type}
+                                secondary={m.details}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 2 }}>
+                          No hay métodos de pago configurados
+                        </Typography>
+                      )}
+                      <Button 
+                        fullWidth 
+                        variant="outlined" 
+                        sx={{ mt: 2 }}
+                        onClick={() => setTabValue(3)}
+                      >
+                        {methods.length > 0 ? 'Gestionar métodos' : 'Añadir método'}
+                      </Button>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+              
+              <GlassCard sx={{ mt: 3 }}>
+                <CardHeader 
+                  title="Zona Peligrosa" 
+                  avatar={<Security color="error" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    Estas acciones son irreversibles. Por favor, procede con precaución.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button 
+                      onClick={logout} 
+                      variant="outlined" 
+                      color="secondary" 
+                      startIcon={<Logout />}
+                      sx={{ flex: 1 }}
+                    >
+                      Cerrar Sesión
+                    </Button>
+                    <Button 
+                      onClick={handleDeleteAccount} 
+                      variant="contained" 
+                      color="error"
+                      startIcon={<Delete />}
+                      sx={{ flex: 1 }}
+                    >
+                      Eliminar Cuenta
+                    </Button>
+                  </Box>
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Transactions Tab */}
+          {tabValue === 2 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GlassCard>
+                <CardHeader 
+                  title="Historial de Transacciones" 
+                  avatar={<History color="primary" />}
+                  action={
+                    <Chip 
+                      label={`${transactions.length} transacciones`} 
+                      color="primary" 
+                      variant="outlined"
+                    />
+                  }
+                />
+                <CardContent>
+                  {transactions.length === 0 ? (
+                    <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'center', py: 4 }}>
+                      No hay transacciones registradas
+                    </Typography>
+                  ) : (
+                    <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
+                      {transactions.map((t) => (
+                        <motion.div
+                          key={t.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar sx={{ 
+                                bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                              }}>
+                                {t.amount > 0 ? "+" : "-"}
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={t.transaction_type}
+                              secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                            />
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                              <Typography 
+                                variant="subtitle1" 
+                                color={t.amount > 0 ? "success.main" : "error.main"}
+                                fontWeight="bold"
+                              >
+                                {t.amount > 0 ? "+" : ""}{t.amount} créditos
+                              </Typography>
+                              <Typography variant="caption" color="textSecondary">
+                                {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : 'N/A'} via {t.payment_method || 'N/A'}
+                              </Typography>
+                            </Box>
+                          </ListItem>
+                          <Divider variant="inset" component="li" />
+                        </motion.div>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Payment Methods Tab */}
+          {tabValue === 3 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GlassCard>
+                <CardHeader 
+                  title="Métodos de Pago" 
+                  avatar={<Payment color="primary" />}
+                  subheader="Gestiona tus métodos de pago asociados"
+                />
+                <CardContent>
+                  {methods.length > 0 && (
+                    <List sx={{ mb: 3 }}>
+                      {methods.map((m) => (
+                        <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: '8px', overflow: 'hidden' }}>
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
+                                {m.is_default ? <Star /> : <CreditCard />}
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
+                                  {m.is_default && (
+                                    <Chip 
+                                      label="Predeterminado" 
+                                      size="small" 
+                                      color="success"
+                                      variant="outlined"
+                                    />
+                                  )}
+                                </Box>
+                              }
+                              secondary={m.details}
+                            />
+                            {!m.is_default && (
+                              <Button 
+                                onClick={() => handleSetDefault(m.id)} 
+                                variant="outlined" 
+                                size="small"
+                                sx={{ mr: 1 }}
+                              >
+                                Hacer Predeterminado
+                              </Button>
+                            )}
+                          </ListItem>
+                        </Paper>
+                      ))}
+                    </List>
+                  )}
+                  
+                  <Accordion sx={{ 
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    boxShadow: 'none',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                  }}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography>Añadir nuevo método de pago</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box 
+                        component="form" 
+                        onSubmit={handleAddMethod} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Tipo"
+                          select
+                          value={newMethod.payment_type}
+                          onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                        >
+                          <MenuItem value="stripe">Stripe</MenuItem>
+                        </TextField>
+                        <TextField
+                          label="Detalles"
+                          value={newMethod.details}
+                          onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          multiline
+                          rows={3}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          startIcon={<AddCircle />}
+                          sx={{ mt: 1 }}
+                        >
+                          Añadir Método
+                        </Button>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </CardContent>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Buy Credits Tab */}
+          {tabValue === 4 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Comprar Créditos" 
+                      avatar={<AttachMoney color="primary" />}
+                      subheader="Recarga tu saldo de créditos"
+                    />
+                    <CardContent>
+                      <Box 
+                        component="form" 
+                        onSubmit={handlePurchase} 
+                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      >
+                        <TextField
+                          label="Cantidad de Créditos"
+                          type="number"
+                          value={credits}
+                          onChange={(e) => setCredits(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} />
+                          }}
+                        />
+                        <TextField
+                          label="Monto a Pagar (USD)"
+                          type="number"
+                          inputProps={{ step: "0.01" }}
+                          value={paymentAmount}
+                          onChange={(e) => setPaymentAmount(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>
+                          }}
+                        />
+                        <Button 
+                          type="submit" 
+                          variant="contained" 
+                          color="primary"
+                          size="large"
+                          sx={{ mt: 2 }}
+                        >
+                          Comprar Créditos
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+                
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader 
+                      title="Tarifas y Beneficios" 
+                      avatar={<CreditCard color="primary" />}
+                    />
+                    <CardContent>
+                      <List>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                              <Star />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="1 crédito = $1 USD"
+                            secondary="Tasa de cambio fija"
+                          />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                              <Payment />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="Múltiples métodos de pago"
+                            secondary="Tarjetas, PayPal y más"
+                          />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                              <Security />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary="Transacciones seguras"
+                            secondary="Encriptación SSL"
+                          />
+                        </ListItem>
+                      </List>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+            </motion.div>
+          )}
+        </Box>
+      </Box>
+
+      {/* Notifications */}
+      <AnimatePresence>
+        {error && (
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
+            onClose={() => setError(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              <Alert 
+                severity="error" 
+                onClose={() => setError(null)}
+                sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
+              >
+                {error}
+              </Alert>
+            </motion.div>
+          </Snackbar>
+        )}
+        {success && (
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
+            onClose={() => setSuccess(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+            >
+              <Alert 
+                severity="success" 
+                onClose={() => setSuccess(null)}
+                sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
+              >
+                {success}
+              </Alert>
+            </motion.div>
+          </Snackbar>
+        )}
+      </AnimatePresence>
+    </Box>
+  );
+}
+
+
+
+
+3 - Por ultimo, y de nuevo en el dashboard de admin, vamos añadir dos nuevas opciones a la pestaña "FUNCIONALIDADES" que será: Medios de pago y Gamificación, permitiendo activar o desactivar ambas caracteristicas en el sitio.
+
+4- La pagina de ejemplos que has creado esta bien, pero es muy pobre y no parece real. Debe parecer una pagina con ejemplos reales donde se identifiquen los futuros usuarios de nuestro MVP.
+
+La pagina debe mostrar con un buen diseño premium  los siguientes ejemplos de gamificación:
+
+- un formulario de registro
+- una suscripción a varias newsletter
+- una encuesta de satisfacción
+- un boton de checkin horario para control horario de entradas y salidas
+- un formulario para ampliar datos personales (por ejemplo con campos para crear un ICP = ideal customer profile)
+- Una lista de lecciones de un tutorial
+
+// frontend/src/app/ejemplos/page.tsx
+"use client";
+
+import { useState } from "react";
+import { Box, Typography, Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
+import fetchAPI from "@/lib/api";
+import { useAuth } from "@/lib/auth/context";
+
+export default function Ejemplos() {
+  const { setGamification } = useAuth();
+  const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
+  const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
+  const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
+
+  const updateGamification = async () => {
+    const { data } = await fetchAPI<UserInfo>("/info");
+    if (data?.gamification) {
+      const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
+      const badges = data.gamification.map(g => g.badge).filter(b => b !== null) as Badge[];
+      setGamification({ points: totalPoints, badges });
+    }
+  };
+
+  const handleSurveyAnswer = async (answer: number) => {
+    setSurveyAnswers(prev => [...prev, answer]);
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 1 } // survey_question
+    });
+    updateGamification();
+  };
+
+  const handleSurveyComplete = async () => {
+    if (surveyAnswers.length === 3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 2 } // survey_completed
+      });
+      updateGamification();
+    }
+  };
+
+  const handleFormChange = async (field: keyof typeof formFields, value: string) => {
+    setFormFields(prev => ({ ...prev, [field]: value }));
+    if (value) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 3 } // registration_field
+      });
+      updateGamification();
+    }
+    if (formFields.name && formFields.email && formFields.phone) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 4 } // registration_completed
+      });
+      updateGamification();
+    }
+  };
+
+  const handleSubscriptionChange = async (list: keyof typeof subscriptions) => {
+    setSubscriptions(prev => ({ ...prev, [list]: !prev[list] }));
+    if (!subscriptions[list]) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 5 } // subscription_list
+      });
+      updateGamification();
+    }
+    if (subscriptions.list1 && subscriptions.list2 && subscriptions.list3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 6 } // all_subscriptions
+      });
+      updateGamification();
+    }
+  };
+
+  return (
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4">Ejemplos</Typography>
+
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Encuesta</Typography>
+        <Button onClick={() => handleSurveyAnswer(1)}>Pregunta 1</Button>
+        <Button onClick={() => handleSurveyAnswer(2)}>Pregunta 2</Button>
+        <Button onClick={() => handleSurveyAnswer(3)}>Pregunta 3</Button>
+        <Button onClick={handleSurveyComplete} disabled={surveyAnswers.length !== 3}>Completar</Button>
+      </Box>
+
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Formulario de Registro</Typography>
+        <TextField label="Nombre" onChange={(e) => handleFormChange("name", e.target.value)} />
+        <TextField label="Email" onChange={(e) => handleFormChange("email", e.target.value)} />
+        <TextField label="Teléfono" onChange={(e) => handleFormChange("phone", e.target.value)} />
+      </Box>
+
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6">Suscripciones</Typography>
+        <FormControlLabel
+          control={<Checkbox checked={subscriptions.list1} onChange={() => handleSubscriptionChange("list1")} />}
+          label="Lista 1"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={subscriptions.list2} onChange={() => handleSubscriptionChange("list2")} />}
+          label="Lista 2"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={subscriptions.list3} onChange={() => handleSubscriptionChange("list3")} />}
+          label="Lista 3"
+        />
+      </Box>
+    </Box>
+  );
+}
+
+Tendras que actualizar las recompensas y los eventos para la pagina.
+Divide cada ejemplo en bloques con cards, con textos explicativos acerca de cada ejemplo, añade mensajes con snack etc. haz un diseño elegante y competitivo
+
+Te paso algunos archivos mas de la aplicación que puede que sean necesarios para aplicar todos los cambios, si necesitas algun archivo mas solicitalo.
+
+// src/lib/types.ts
+export interface User {
+  id: number;
+  email: string;
+  username: string;
+  rol: string;
+  activo: boolean;
+  subscription: string;
+  ciudad?: string;
+  website?: string;
+  credits: number;
+  create_at: string;  // ISO string (e.g., "2023-10-01T12:00:00Z")
+  last_ip?: string;
+  last_login: string;
+  user_type: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+}
+
+
+
+export interface RegisterRequest {
+  email: string;
+  username: string;
+  password: string;
+  ciudad?: string;
+  website?: string;
+}
+
+export interface UpdateProfileRequest {
+  email?: string;
+  username?: string;
+  ciudad?: string;
+  website?: string;
+}
+
+export interface PurchaseRequest {
+  credits: number;
+  payment_amount: number;
+  payment_method?: string;
+}
+
+export interface PurchaseResponse {
+  transaction_id: string;
+  credits_added: number;
+  new_balance: number;
+}
+
+export interface PaymentMethod {
+  id: number;
+  payment_type: string;
+  details: string;
+  is_default: boolean;
+  created_at: string;  // ISO string
+  updated_at: string;  // ISO string
+}
+
+export interface HTTPValidationError {
+  detail: ValidationError[];
+}
+
+export interface ValidationError {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+}
+
+export interface CreditTransaction {
+  id: number;
+  amount: number;
+  transaction_type: string;
+  payment_amount?: number;
+  payment_method?: string;
+  payment_status?: string;
+  timestamp: string; // ISO string
+}
+
+export interface Integration {
+  id: number;
+  name: string;
+  webhook_url: string;
+  event_type: string;
+  active: boolean;
+  created_at: string;
+  last_triggered: string | null;
+}
+
+export interface SiteSetting {
+    id: number;
+    key: string;
+    value: string;
+    description?: string;
+    tag?: string;
+    updated_by?: number;
+    updated_at: string; // ISO string
+}
+
+export interface FetchResponse<T> {
+  data: T | null;
+  error: string | HTTPValidationError | null;
+  total_pages?: number;
+}
+
+// src/lib/types.ts
 export interface UserInfo {
   user_id: string | null;
   email: string | null;
@@ -42,10 +2240,11 @@ export interface UserInfo {
   subscription: string | null;
   credits: number;
   rol: string | null;
-  session_id?: string; // Solo para anónimos
- }
+  session_id?: string;
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+}
 
- export interface EventType {
+export interface EventType {
   id: number;
   name: string;
   description?: string;
@@ -63,125 +2262,269 @@ export interface Badge {
 
 export interface Gamification {
   points: number;
-  badges: Badge[]; // Ahora es una lista de badges
+  badges: Badge[];
+}
 
+export interface GamificationEventCreate {
+  event_type_id: number;
+}
 
-- 4- La solución al navbar devuelve muchos errores de propiedades que no existen en el archivo
+export interface GamificationEventResponse {
+  id: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  timestamp: string; // ISO string
+}
 
-./src/components/web/Navbar.tsx:76:52
-Type error: Property 'setGamification' does not exist on type 'AuthContextType'.
+export interface UserGamificationResponse {
+  points: number;
+  badge_id?: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  event_type: EventType;
+  badge?: Badge;
+}
+export interface RankingResponse {
+  username: string;
+  points: number;
+  badges_count: number;
+  user_type: string;
+}
 
-  74 | export default function Navbar() {
-  75 |   const theme = useTheme();
-> 76 |   const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
-     |                                                                                                              ^
+// src/lib/api.ts
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
+import { HTTPValidationError, FetchResponse, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";
 
+// Extender AxiosRequestConfig para incluir _retry
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 
-UserInfo tampoco me lo reconoce en esta linea :         const { data: infoData } = await fetchAPI<UserInfo>("/info");
+// Crear una instancia personalizada de Axios
+const api: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
 
-UserGamificationResponse tampoco me lo reconoce en el contexto del archivo:         const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
+// Variables para manejar el estado de refresco
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (error: any) => void }> = [];
 
-Aqui tienes un resumen de todas las definiciones que dan error en tu codigo junto con el modulo o archivo donde aparece
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
 
-[{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/lib/auth/context.tsx",
-	"owner": "typescript",
-	"code": "2305",
-	"severity": 8,
-	"message": "Module '\"../types\"' has no exported member 'UserGamificationResponse'.",
-	"source": "ts",
-	"startLineNumber": 9,
-	"startColumn": 62,
-	"endLineNumber": 9,
-	"endColumn": 86
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/lib/auth/context.tsx",
-	"owner": "typescript",
-	"code": "2305",
-	"severity": 8,
-	"message": "Module '\"../types\"' has no exported member 'GamificationEventResponse'.",
-	"source": "ts",
-	"startLineNumber": 9,
-	"startColumn": 35,
-	"endLineNumber": 9,
-	"endColumn": 60
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/lib/auth/context.tsx",
-	"owner": "typescript",
-	"code": "2305",
-	"severity": 8,
-	"message": "Module '\"../types\"' has no exported member 'GamificationEventCreate'.",
-	"source": "ts",
-	"startLineNumber": 9,
-	"startColumn": 10,
-	"endLineNumber": 9,
-	"endColumn": 33
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/components/web/Navbar.tsx",
-	"owner": "typescript",
-	"code": "2304",
-	"severity": 8,
-	"message": "Cannot find name 'Badge'.",
-	"source": "ts",
-	"startLineNumber": 114,
-	"startColumn": 88,
-	"endLineNumber": 114,
-	"endColumn": 93
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/components/web/Navbar.tsx",
-	"owner": "typescript",
-	"code": "2304",
-	"severity": 8,
-	"message": "Cannot find name 'UserGamificationResponse'.",
-	"source": "ts",
-	"startLineNumber": 111,
-	"startColumn": 59,
-	"endLineNumber": 111,
-	"endColumn": 83
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/components/web/Navbar.tsx",
-	"owner": "typescript",
-	"code": "2304",
-	"severity": 8,
-	"message": "Cannot find name 'UserInfo'.",
-	"source": "ts",
-	"startLineNumber": 106,
-	"startColumn": 51,
-	"endLineNumber": 106,
-	"endColumn": 59
-},{
-	"resource": "/home/vinxenxo/netptuno/neptuno/frontend/src/components/web/Navbar.tsx",
-	"owner": "typescript",
-	"code": "2339",
-	"severity": 8,
-	"message": "Property 'setGamification' does not exist on type 'AuthContextType'.",
-	"source": "ts",
-	"startLineNumber": 76,
-	"startColumn": 52,
-	"endLineNumber": 76,
-	"endColumn": 67
-}]
+// Agregar el interceptor de solicitudes
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  const sessionId = localStorage.getItem("session_id");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  } else if (sessionId) {
+    config.headers["X-Session-ID"] = sessionId;
+  }
+  return config;
+});
 
--5- Vamos a crear una pagina que se llame "Rankings",vamos a crear una nueva pagina en /src/app/rankings donde aparezca el listado de usuarios (registrados u anonimos) con los datos de puntos conseguidos, insignias obtenidas, nombre de usuario, y que se pueda ordenar tanto por puntos conseguidos como por insignias conseguidas.
+const logRequest = (method: string, url: string, status: number, data?: unknown) => {
+  console.log(`[${method}] ${url} - Status: ${status}`, data ?? "");
+};
 
+const fetchAPI = async <T>(
+  endpoint: string,
+  options: CustomAxiosRequestConfig = {},
+  contentType: string = "application/json"
+): Promise<FetchResponse<T>> => {
+  console.log(`Iniciando fetchAPI para ${endpoint}`);
 
--6-  - Por ultimo vamos a crear una pagina con ejemplos muy afinados y exclusivos e ilustrativos de nuestra nueva función de puntos y badges. En esta nueva pagina que se llamará "Ejemplos" habrán los siguientes componentes:
+  const config: CustomAxiosRequestConfig = {
+    ...options,
+    url: endpoint, // baseURL ya está configurado en la instancia
+    headers: {
+      "Content-Type": contentType,
+      ...options.headers,
+    },
+    data: options.data,
+  };
 
-- Una encuesta con varias opciones (cada pregunta que responda el usuario será 1 punto), si responde toda la encuesta le daremos un badge
+  // Convertir datos a formato x-www-form-urlencoded si es necesario
+  if (contentType === "application/x-www-form-urlencoded" && config.data) {
+    const formData = new URLSearchParams();
+    Object.entries(config.data).forEach(([key, value]) => {
+      if (value !== undefined) formData.append(key, String(value));
+    });
+    config.data = formData;
+  }
 
-- Un formulario de registro con varios campos (cada campo rellenado será un punto) si responde todos los campos obtendrá insignia
+  const normalizeResponse = (
+    response: AxiosResponse<T> | undefined,
+    error: unknown
+  ): FetchResponse<T> => {
+    if (response && response.status >= 200 && response.status < 300) {
+      return { data: response.data, error: null };
+    }
 
-- Un formulario donde el usuario podrá subscribirse a varias listas de correo ficticias (por cada lista que se apunte será un punto) si se apunta a todas será un badge.
+    if (axios.isAxiosError(error)) {
+      const errorData = error.response?.data;
+      if (errorData && errorData.detail) {
+        if (typeof errorData.detail === "string") {
+          return { data: null, error: errorData.detail };
+        } else if (Array.isArray(errorData.detail)) {
+          const messages = errorData.detail
+            .map((err: ValidationError) => err.msg)
+            .join(", ");
+          return { data: null, error: messages };
+        }
+      }
+    }
 
+    return { data: null, error: "Error desconocido" };
+  };
 
-Crea los modelos de datos, esquemas pydantic, interfaces, servicios, middleware etc para que todo encaje a la perfeción con el codigo actua y mantener separación de responsabilidades (modelos, servicios y rutas en archivos independientes). Piensa en nuestra aplicación y recuerdala todo lo posible para realizar una implantación lo mas profesional posible y que se adapte con la menor fricción posible a lo que ya hay hecho.Crea los modelos de datos, esquemas pydantic, interfaces, servicios, middleware etc para que todo encaje a la perfeción con el codigo actua y mantener separación de responsabilidades (modelos, servicios y rutas en archivos independientes).
+  try {
+    const response: AxiosResponse<T> = await api(config); // Usar la instancia 'api'
+    logRequest(config.method || "GET", config.url!, response.status, response.data);
 
-Recuerda que gestionamos usuarios anonimos almacenando en localstorage y usuarios registrados, ambos tienen su persistencia en la db.
+    if (response.data && (response.data as any).session_id) {
+      localStorage.setItem("session_id", (response.data as any).session_id);
+    }
 
+    return normalizeResponse(response, null);
+  } catch (err: unknown) {
+    const axiosError = err as AxiosError;
+    logRequest(
+      config.method || "GET",
+      config.url!,
+      axiosError.response?.status || 500,
+      axiosError.response?.data
+    );
 
-Recuerda que hemos implantado en el paso anterior un modelado más complejo para badges y eventos que no depende de enums hardcodeados, sino que use la base de datos para almacenar esta información
+    if (axiosError.response?.status === 401 && !config._retry) {
+      const originalRequest: CustomAxiosRequestConfig = config;
+      originalRequest._retry = true;
 
-Te paso archivos que puede ser de tu interes que reviseses para aplicar los cambios solicitadores
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (accessToken && refreshToken) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({
+              resolve: (token) => {
+                originalRequest.headers.Authorization = `Bearer ${token}`;
+                api(originalRequest)
+                  .then(response => resolve(normalizeResponse(response, null)))
+                  .catch(error => reject(normalizeResponse(undefined, error)));
+              },
+              reject: (error) => reject(normalizeResponse(undefined, error)),
+            });
+          });
+        }
+
+        isRefreshing = true;
+
+        try {
+          console.log("Intentando refrescar token de acceso");
+          const refreshResponse = await api.post<TokenResponse>(
+            "/v1/auth/refresh",
+            { refresh_token: refreshToken },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          localStorage.setItem("accessToken", refreshResponse.data.access_token);
+          localStorage.setItem("refreshToken", refreshResponse.data.refresh_token);
+
+          originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
+          processQueue(null, refreshResponse.data.access_token);
+
+          const retryResponse = await api(originalRequest);
+          return normalizeResponse(retryResponse, null);
+        } catch (refreshError) {
+          console.error("Error al refrescar token:", refreshError);
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("session_id");
+          processQueue(refreshError, null);
+          window.location.href = "/user/auth/#login";
+          return normalizeResponse(undefined, {
+            message: "Sesión expirada, por favor inicia sesión nuevamente",
+          });
+        } finally {
+          isRefreshing = false;
+        }
+      } else {
+        return normalizeResponse(undefined, { message: "No autorizado" });
+      }
+    }
+
+    return normalizeResponse(undefined, err);
+  }
+};
+
+// Funciones específicas de la API
+export const getAllUsers = async (
+  page: number = 1,
+  limit: number = 10
+): Promise<FetchResponse<{
+  data: User[],
+  total_items: number,
+  total_pages: number,
+  current_page: number
+}>> => {
+  return fetchAPI(`/v1/users/admin/users?page=${page}&limit=${limit}`, {
+    method: "GET"
+  });
+};
+
+export const getUserById = async (
+  userId: number
+): Promise<FetchResponse<User>> => {
+  return fetchAPI<User>(`/v1/users/${userId}`, {
+    method: "GET"
+  });
+};
+
+export const updateUser = async (
+  userId: number,
+  data: UpdateProfileRequest
+): Promise<FetchResponse<User>> => {
+  return fetchAPI<User>(`/v1/users/${userId}`, {
+    method: "PUT",
+    data
+  });
+};
+
+export const deleteUser = async (
+  userId: number
+): Promise<FetchResponse<void>> => {
+  return fetchAPI<void>(`/v1/users/${userId}`, {
+    method: "DELETE"
+  });
+};
+
+export const createUser = async (
+  data: RegisterRequest
+): Promise<FetchResponse<TokenResponse>> => {
+  return fetchAPI<TokenResponse>("/v1/auth/register", {
+    method: "POST",
+    data
+  });
+};
+
+export default fetchAPI;
 
 // src/lib/auth/context.tsx
 "use client";
@@ -200,6 +2543,7 @@ interface AuthContextType {
   setCredits: (credits: number) => void; // Añadido
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setGamification: (gamification: Gamification) => void; // Añadido
   register: (data: RegisterRequest) => Promise<void>;
   loginWithGoogle: () => void;
   refreshToken: () => Promise<string | null>;
@@ -207,6 +2551,8 @@ interface AuthContextType {
   deleteProfile: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
+
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -412,7 +2758,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits,gamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits,gamification, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>
@@ -425,613 +2771,271 @@ export const useAuth = () => {
   return context;
 };
 
-// src/components/web/Navbar.tsx
-"use client";
-
-import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth/context";
-import Link from "next/link";
-import fetchAPI from "@/lib/api";
-import { 
-  Button, 
-  Avatar, 
-  Chip, 
-  IconButton, 
-  Menu, 
-  MenuItem, 
-  Divider, 
-  useTheme,
-  styled,
-  Box,
-  Typography,
-  Snackbar,
-  Alert
-} from "@mui/material";
-import {
-  MonetizationOn,
-  Settings,
-  ListAlt,
-  People,
-  Dashboard,
-  Login,
-  PersonAdd,
-  Person,
-  ArrowDropDown,
-  Home,
-  Star,
-  EmojiEvents
-} from "@mui/icons-material";
-
-const GlassNavbar = styled('nav')(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-  padding: theme.spacing(1, 2),
-  position: 'sticky',
-  top: 0,
-  zIndex: 1000,
-}));
-
-const NavContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  maxWidth: '1200px',
-  margin: '0 auto',
-}));
-
-const CreditsChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(255, 165, 0, 0.2)', // Fondo naranja claro
-  color: '#FFA500', // Texto naranja
-  borderColor: '#FFA500',
-}));
-
-const PointsChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(255, 215, 0, 0.2)', // Fondo dorado claro
-  color: '#FFD700', // Texto dorado
-  borderColor: '#FFD700',
-}));
-
-const BadgesChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(0, 128, 0, 0.2)', // Fondo verde claro
-  color: '#008000', // Texto verde
-  borderColor: '#008000',
-}));
-
-export default function Navbar() {
-  const theme = useTheme();
-  const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
-  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
-  const [disableCredits, setDisableCredits] = useState(false);
-  const [enableRegistration, setEnableRegistration] = useState(true);
-  const [anonUsername, setAnonUsername] = useState<string | null>(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [newBadge, setNewBadge] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedAnonUsername = localStorage.getItem("anonUsername");
-    setAnonUsername(storedAnonUsername);
-  }, []);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const disableCreditsRes = await fetchAPI("/v1/settings/disable_credits");
-        const enableRegistrationRes = await fetchAPI("/v1/settings/enable_registration");
-        setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
-        setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
-      } catch (err) {
-        console.error("Error al obtener configuraciones:", err);
-      }
-    };
-    fetchSettings();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const { data: infoData } = await fetchAPI<UserInfo>("/info");
-        if (infoData) {
-          setCredits(infoData.credits);
-        }
-
-        const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
-        if (gamificationData && Array.isArray(gamificationData)) {
-          const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
-          const badges = gamificationData.map(g => g.badge).filter(b => b !== null) as Badge[];
-          
-          // Detectar nuevos badges
-          const previousBadges = JSON.parse(localStorage.getItem("badges") || "[]");
-          const currentBadgeIds = badges.map(b => b.id);
-          const newBadges = currentBadgeIds.filter(id => !previousBadges.includes(id));
-          if (newBadges.length > 0) {
-            const badge = badges.find(b => b.id === newBadges[0]);
-            setNewBadge(badge?.name || "Nuevo badge");
-            setSnackbarOpen(true);
-            localStorage.setItem("badges", JSON.stringify(currentBadgeIds));
-          }
-
-          setGamification({ points: totalPoints, badges });
-        }
-      } catch (err) {
-        console.error("Error al actualizar datos:", err);
-      }
-    }, 30000); // Cada 30 segundos
-
-    return () => clearInterval(interval);
-  }, [setCredits, setGamification]);
-
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setSettingsAnchorEl(event.currentTarget);
-  };
-
-  const handleSettingsMenuClose = () => {
-    setSettingsAnchorEl(null);
-  };
-
-  return (
-    <GlassNavbar>
-      <NavContainer>
-        <Link href="/" passHref>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
-            <Home color="primary" />
-            <Typography 
-              variant="h6" 
-              component="span" 
-              sx={{ 
-                fontWeight: 'bold',
-                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              Neptuno
-            </Typography>
-          </Box>
-        </Link>
-
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {!disableCredits && credits > 0 && (
-            <CreditsChip
-              icon={<MonetizationOn />}
-              label={credits}
-              variant="outlined"
-            />
-          )}
-
-          {gamification && (
-            <>
-              <PointsChip
-                icon={<Star />}
-                label={gamification.points}
-                variant="outlined"
-              />
-              <BadgesChip
-                icon={<EmojiEvents />}
-                label={gamification.badges.length}
-                variant="outlined"
-              />
-            </>
-          )}
-
-          {user?.rol === "admin" && (
-            <>
-              <IconButton
-                onClick={handleSettingsMenuOpen}
-                sx={{ color: 'inherit', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
-              >
-                <Settings />
-              </IconButton>
-              <Menu
-                anchorEl={settingsAnchorEl}
-                open={Boolean(settingsAnchorEl)}
-                onClose={handleSettingsMenuClose}
-                PaperProps={{
-                  sx: {
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '12px',
-                    mt: 1,
-                    minWidth: '200px'
-                  }
-                }}
-              >
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
-                  <Dashboard sx={{ mr: 1 }} /> Dashboard
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
-                  <ListAlt sx={{ mr: 1 }} /> Registros
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
-                  <People sx={{ mr: 1 }} /> Usuarios
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-
-          {user ? (
-            <Button
-              component={Link}
-              href="/user/dashboard"
-              startIcon={<Person />}
-              endIcon={<ArrowDropDown />}
-              sx={{ color: 'inherit', textTransform: 'none', fontWeight: 'medium' }}
-            >
-              {user.username}
-            </Button>
-          ) : anonUsername ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Chip
-                avatar={<Avatar sx={{ width: 24, height: 24 }}><Person sx={{ fontSize: 14 }} /></Avatar>}
-                label={anonUsername}
-                variant="outlined"
-              />
-              <Button
-                component={Link}
-                href="/user/auth/#login"
-                variant="contained"
-                color="secondary"
-                startIcon={<Login />}
-                sx={{ borderRadius: '12px' }}
-              >
-                ¡Empezar!
-              </Button>
-            </Box>
-          ) : (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={Link} href="/user/auth/#login" startIcon={<Login />} sx={{ borderRadius: '12px' }}>
-                Iniciar Sesión
-              </Button>
-              {enableRegistration && (
-                <Button
-                  component={Link}
-                  href="/user/auth/#register"
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PersonAdd />}
-                  sx={{ borderRadius: '12px' }}
-                >
-                  Registrarse
-                </Button>
-              )}
-            </Box>
-          )}
-        </Box>
-      </NavContainer>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
-          ¡Felicidades! Has obtenido el badge: {newBadge}
-        </Alert>
-      </Snackbar>
-    </GlassNavbar>
-  );
-}
-
-# backend/services/gamification_service.py
-from typing import List, Optional
+# backend/dependencies/auth.py
+# Módulo de dependencias de autenticación.
+# backend/dependencies/auth.py
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from models.gamification import GamificationEvent, UserGamification, EventType, Badge
-from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate
-from dependencies.auth import UserContext
-
-from typing import List, Optional
-from sqlalchemy.orm import Session
-from models.gamification import GamificationEvent, UserGamification, EventType, Badge
-from schemas.gamification import GamificationEventCreate
-from dependencies.auth import UserContext
-
-def register_event(db: Session, event: GamificationEventCreate, user: UserContext) -> GamificationEvent:
-    """Registra un evento de gamificación y actualiza los puntos del usuario."""
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-
-    db_event = GamificationEvent(
-        event_type_id=event.event_type_id,
-        user_id=user_id,
-        session_id=session_id
-    )
-    db.add(db_event)
-    db.commit()
-    db.refresh(db_event)
-    update_user_gamification(db, user, event.event_type_id)
-    return db_event
-
-def get_user_gamification(db: Session, user: UserContext) -> List[UserGamification]:
-    """Obtiene todos los registros de gamificación del usuario."""
-    if user.user_type == "registered":
-        return db.query(UserGamification).filter(UserGamification.user_id == int(user.user_id)).all()
-    return db.query(UserGamification).filter(UserGamification.session_id == user.session_id).all()
-
-def get_user_events(db: Session, user: UserContext) -> List[GamificationEvent]:
-    """Obtiene todos los eventos de gamificación del usuario."""
-    if user.user_type == "registered":
-        return db.query(GamificationEvent).filter(GamificationEvent.user_id == int(user.user_id)).all()
-    return db.query(GamificationEvent).filter(GamificationEvent.session_id == user.session_id).all()
-
-def get_event_details(db: Session, event_id: int, user: UserContext) -> Optional[GamificationEvent]:
-    """Obtiene los detalles de un evento específico si pertenece al usuario."""
-    event = db.query(GamificationEvent).filter(GamificationEvent.id == event_id).first()
-    if not event:
-        return None
-    if (user.user_type == "registered" and event.user_id == int(user.user_id)) or \
-       (user.user_type == "anonymous" and event.session_id == user.session_id):
-        return event
-    return None
-
-def get_badges_for_event(db: Session, event_type_id: int) -> List[Badge]:
-    """Obtiene todos los badges asociados a un tipo de evento."""
-    return db.query(Badge).filter(Badge.event_type_id == event_type_id).all()
-
-def get_user_progress_for_event(db: Session, user: UserContext, event_type_id: int) -> Optional[UserGamification]:
-    """Obtiene el progreso del usuario para un tipo de evento específico."""
-    if user.user_type == "registered":
-        return db.query(UserGamification).filter(
-            UserGamification.user_id == int(user.user_id),
-            UserGamification.event_type_id == event_type_id
-        ).first()
-    return db.query(UserGamification).filter(
-        UserGamification.session_id == user.session_id,
-        UserGamification.event_type_id == event_type_id
-    ).first()
-
-def update_user_gamification(db: Session, user: UserContext, event_type_id: int) -> UserGamification:
-    """Actualiza los puntos y badges del usuario para un tipo de evento."""
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-
-    gamification = get_user_progress_for_event(db, user, event_type_id)
-    if not gamification:
-        gamification = UserGamification(
-            user_id=user_id,
-            session_id=session_id,
-            event_type_id=event_type_id,
-            points=0
-        )
-        db.add(gamification)
-
-    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
-    if not event_type:
-        raise ValueError("Event type not found")
-
-    events_count = db.query(GamificationEvent).filter(
-        GamificationEvent.event_type_id == event_type_id,
-        (GamificationEvent.user_id == user_id) if user_id else (GamificationEvent.session_id == session_id)
-    ).count()
-
-    gamification.points = events_count * event_type.points_per_event
-
-    badge = db.query(Badge).filter(
-        Badge.event_type_id == event_type_id,
-        Badge.user_type.in_([user.user_type, "both"]),
-        Badge.required_points <= gamification.points
-    ).order_by(Badge.required_points.desc()).first()
-
-    gamification.badge_id = badge.id if badge else None
-    db.commit()
-    db.refresh(gamification)
-    return gamification
-
-def create_event_type(db: Session, event_type: EventTypeCreate):
-    db_event_type = EventType(**event_type.dict())
-    db.add(db_event_type)
-    db.commit()
-    db.refresh(db_event_type)
-    return db_event_type
-
-def create_badge(db: Session, badge: BadgeCreate):
-    db_badge = Badge(**badge.dict())
-    db.add(db_badge)
-    db.commit()
-    db.refresh(db_badge)
-    return db_badge
-
-def calculate_points(api_usages: int) -> int:
-    """Calcula los puntos según el número de usos de la API."""
-    if api_usages >= 30:
-        return 1000
-    elif api_usages >= 20:
-        return 500
-    elif api_usages >= 10:
-        return 100
-    elif api_usages >= 1:
-        return 5
-    return 0
-
-
-# backend/schemas/gamification.py
-
-from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional, List
-
-class EventTypeBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-    points_per_event: int = 0
-
-class EventTypeCreate(EventTypeBase):
-    pass
-
-class EventTypeResponse(EventTypeBase):
-    id: int
-
-    class Config:
-        from_attributes = True
-
-class BadgeBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-    event_type_id: int
-    required_points: int
-    user_type: str = "both"
-
-class BadgeCreate(BadgeBase):
-    pass
-
-class BadgeResponse(BadgeBase):
-    id: int
-
-    class Config:
-        from_attributes = True
-
-class GamificationEventBase(BaseModel):
-    event_type_id: int
-
-class GamificationEventCreate(GamificationEventBase):
-    pass
-
-class GamificationEventResponse(GamificationEventBase):
-    id: int
-    user_id: Optional[int]
-    session_id: Optional[str]
-    timestamp: datetime
-
-    class Config:
-        from_attributes = True
-
-class UserGamificationBase(BaseModel):
-    points: int
-    badge_id: Optional[int]
-
-class UserGamificationResponse(UserGamificationBase):
-    event_type_id: int
-    user_id: Optional[int]
-    session_id: Optional[str]
-    event_type: EventTypeResponse
-    badge: Optional[BadgeResponse]
-
-    class Config:
-        from_attributes = True
-
-# backend/models/guests.py (antes era sessions.py)
-# Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
-from sqlalchemy import Column, String, Integer, DateTime, Float
-from sqlalchemy.orm import relationship
-from core.database import Base
-from datetime import datetime
-
-class GuestsSession(Base):
-    __tablename__ = "sesiones_anonimas"
-    
-    id = Column(String(36), primary_key=True, index=True)  
-    username = Column(String(50), unique=True, nullable=False)  
-    credits = Column(Integer, default=100)  
-    create_at = Column(DateTime, default=datetime.utcnow)  
-    ultima_actividad = Column(DateTime, nullable=True)  
-    last_ip = Column(String(45), nullable=True)  
-
-    # 📌 Información Inferida
-    #probable_pais = Column(String(100), nullable=True)  
-    #probable_industria = Column(String(100), nullable=True)  
-    #probable_num_empleados = Column(Integer, nullable=True)  
-    #probable_ingresos_anuales = Column(Float, nullable=True)  
-    #probable_tecnologias_usadas = Column(String(255), nullable=True)  
-    #engagement_anonimo = Column(Float, nullable=True)  # % de uso en la sesión  
-
-    # Relación con gamificación
-    gamification_events = relationship("GamificationEvent", back_populates="session")
-    gamification = relationship("UserGamification", back_populates="session")
-
-# backend/models/gamification.py
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
-from core.database import Base
-from datetime import datetime
+from core.database import get_db
 from models.user import User
 from models.guests import GuestsSession
+from models.token import RevokedToken
+from core.security import decode_token
+from core.logging import configure_logging
+from uuid import uuid4
+from datetime import datetime
+from pydantic import BaseModel
+from fastapi import Response
+import random
+import string
 
-class EventType(Base):
-    __tablename__ = "event_types"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False)  # Ej: "api_usage"
-    description = Column(String(255), nullable=True)
-    points_per_event = Column(Integer, default=0)  # Puntos por ocurrencia del evento
+logger = configure_logging()
 
-    badges = relationship("Badge", back_populates="event_type")
-    gamification_events = relationship("GamificationEvent", back_populates="event_type")
-    user_gamification = relationship("UserGamification", back_populates="event_type")
+class UserContext(BaseModel):
+    user_id: str
+    email: str
+    username: str
+    user_type: str  # "registered" o "anonymous"
+    subscription: str
+    credits: int
+    rol: str
+    session_id: str | None = None
 
-class Badge(Base):
-    __tablename__ = "badges"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False)  # Ej: "Novato", "Becario"
-    description = Column(String(255), nullable=True)
-    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
-    required_points = Column(Integer, nullable=False)  # Puntos necesarios para el badge
-    user_type = Column(String(20), default="both")  # "anonymous", "registered", "both"
+    class Config:
+        from_attributes = True
 
-    event_type = relationship("EventType", back_populates="badges")
-    user_gamification = relationship("UserGamification", back_populates="badge")
+def generate_unique_username(db: Session) -> str:
+    while True:
+        random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+        username = f"Guest_{random_chars}"
+        if not db.query(GuestsSession).filter(GuestsSession.username == username).first():
+            return username
 
-class GamificationEvent(Base):
-    __tablename__ = "gamification_events"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-    
-    event_type = relationship("EventType", back_populates="gamification_events")
-    user = relationship("User", back_populates="gamification_events")
-    session = relationship("GuestsSession", back_populates="gamification_events")
+async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    session_id = request.headers.get("X-Session-ID")  # Leer de header en lugar de cookie
+    client_ip = request.client.host
+    logger.info(f"Procesando solicitud: token={bool(token)}, session_id={session_id}, ip={client_ip}")
 
-class UserGamification(Base):
-    __tablename__ = "user_gamification"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
-    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
-    points = Column(Integer, default=0)
-    badge_id = Column(Integer, ForeignKey("badges.id"), nullable=True)
-    
-    event_type = relationship("EventType", back_populates="user_gamification")
-    badge = relationship("Badge", back_populates="user_gamification")
-    user = relationship("User", back_populates="gamification")
-    session = relationship("GuestsSession", back_populates="gamification")
+    try:
+        if token:
+            # Lógica para usuarios registrados (sin cambios)
+            if db.query(RevokedToken).filter(RevokedToken.token == token).first():
+                logger.warning(f"Intento de uso de token revocado desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token revocado")
+            payload = decode_token(token)
+            if not payload or payload.get("type") != "access":
+                logger.error(f"Token inválido recibido desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token inválido o no es de acceso")
+            user = db.query(User).filter(User.id == int(payload["sub"])).first()
+            if not user:
+                logger.error(f"Usuario no encontrado para token desde IP {client_ip}")
+                raise HTTPException(status_code=404, detail="Usuario no encontrado")
+            if not user.activo:
+                logger.warning(f"Intento de acceso con usuario inactivo ID {user.id} desde IP {client_ip}")
+                raise HTTPException(status_code=403, detail="Usuario inactivo")
+            if user.token_valid_until and user.token_valid_until < datetime.utcnow():
+                logger.warning(f"Token expirado manualmente para usuario ID {user.id} desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token no válido")
+            
+            user.last_ip = client_ip
+            user.last_login = datetime.utcnow()
+            db.commit()
+            logger.info(f"Usuario registrado ID {user.id} autenticado desde IP {client_ip}")
+            return UserContext(
+                user_type="registered",
+                user_id=str(user.id),
+                email=user.email,
+                username=user.username,
+                credits=user.credits,
+                subscription=user.subscription.value,
+                rol=user.rol
+            )
 
+        if not session_id:
+            logger.info("No hay session_id en header, creando nueva sesión anónima")
+            session_id = str(uuid4())
+            username = generate_unique_username(db)  # Generar apodo único
+            new_session = GuestsSession(
+                id=session_id,
+                username=username,  # Asignar el apodo
+                credits=100,
+                create_at=datetime.utcnow(),
+                ultima_actividad=datetime.utcnow(),
+                last_ip=client_ip
+            )
+            db.add(new_session)
+            db.commit()
+            logger.info(f"Nueva sesión anónima creada ID {session_id} con username {username} desde IP {client_ip}")
+            return UserContext(
+                user_type="anonymous",
+                user_id=session_id,
+                email="anonymous@example.com",
+                username=username,  # Usar el apodo generado
+                credits=100,
+                subscription="basic",
+                rol="anonymous",
+                session_id=session_id
+            )
+        else:
+            logger.info(f"Buscando sesión anónima con ID {session_id} desde header")
+            session = db.query(GuestsSession).filter(GuestsSession.id == session_id).first()
+            if not session:
+                logger.warning(f"Sesión anónima inválida ID {session_id} desde IP {client_ip}")
+                raise HTTPException(status_code=400, detail="Sesión anónima inválida")
+            
+            session.last_ip = client_ip
+            session.ultima_actividad = datetime.utcnow()
+            db.commit()
+            logger.info(f"Sesión anónima ID {session_id} actualizada desde IP {client_ip}")
+            return UserContext(
+                user_type="anonymous",
+                user_id=session.id,
+                email="anonymous@example.com",
+                username=session.username,  # Usar el username de la sesión
+                credits=session.credits,
+                subscription="basic",
+                rol="anonymous",
+                session_id=session_id
+            )
 
+        logger.error(f"No autorizado: sin token ni sesión válida desde IP {client_ip}")
+        raise HTTPException(status_code=401, detail="No autorizado")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.critical(f"Error inesperado en get_user_context desde IP {client_ip}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al procesar la autenticación")
 
-#backend/main.py
+# backend/core/security.py
+# Usar OAuth2 con Password Flow para autenticación segur
 
-@app.get("/info")
-async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    disable_anonymous = get_setting(db, "disable_anonymous_users")
-    base_info = {
-        "user_id": user.user_id,
-        "email": user.email,
-        "username": user.username,
-        "user_type": user.user_type,
-        "subscription": user.subscription,
-        "credits": user.credits,
-        "rol": user.rol,
-        "session_id": user.session_id if user.user_type == "anonymous" else None
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import jwt
+from oauthlib.oauth2 import WebApplicationClient
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
+from jwt import encode, decode, PyJWTError
+from os import getenv
+from datetime import datetime, timedelta
+from typing import Optional
+from core.logging import configure_logging
+from core.database import get_db
+from services.settings_service import get_setting
+
+logger = configure_logging()
+
+# Configuración de OAuth2
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
+google_client = WebApplicationClient(getenv("GOOGLE_CLIENT_ID"))
+meta_client = WebApplicationClient(getenv("META_CLIENT_ID"))
+
+# Configuración de hash de contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+def create_token(user_id: str, user_type: str = "registered"):
+    payload = {
+        "sub": str(user_id),
+        "type": user_type,
+        "exp": datetime.utcnow() + timedelta(hours=24)
     }
+    return jwt.encode(payload, getenv("SECRET_KEY"), algorithm="HS256")
 
-    gamification = get_user_gamification(db, user)
-    gamification_data = [
-        UserGamificationResponse.from_orm(g) for g in gamification
-    ]
+def decode_token(token: str) -> Optional[dict]:
+    try:
+        payload = jwt.decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
+        # Validación adicional del payload
+        if not payload.get("sub") or not payload.get("type"):
+            logger.warning(f"Token inválido: falta sub o type en el payload")
+            return None
+        return payload
+    except jwt.ExpiredSignatureError:
+        logger.warning("Token expirado")
+        return None
+    except jwt.InvalidTokenError as e:
+        logger.warning(f"Token inválido: {str(e)}")
+        return None
+    except Exception as e:
+        logger.error(f"Error inesperado al decodificar token: {str(e)}")
+        return None
 
-    return {**base_info, "gamification": gamification_data}
+def create_access_token(data: dict):
+    db = next(get_db())
+    try:
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "token_expiration") or "3600")
+        if expiration < 300:  # Mínimo 5 minutos
+            expiration = 3600
+            logger.warning("Token expiration too low, using default 1h")
+    except Exception as e:
+        logger.error(f"Error token_expiration: {str(e)}")
+        expiration = 3600
+    
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "type": "access"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
-Tomate tu tiempo,  Y recuerda que cualquier archivo que eches en falta te lo puedo facilitar
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    try:
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "refresh_token_expiration") or "604800")
+        if expiration < 86400:  # Mínimo 1 día
+            expiration = 604800
+            logger.warning("Refresh token expiration too low, using default 7d")
+    except Exception as e:
+        logger.error(f"Error refresh_token_expiration: {str(e)}")
+        expiration = 604800
+    
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
- gracias.
+
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    expiration_str = get_setting(db, "refresh_token_expiration") or "604800"  # Valor por defecto: 7 días
+    try:
+        expiration = int(str(expiration_str))  # Convertir a cadena primero y luego a entero
+    except ValueError:
+        logger.error(f"Valor inválido para refresh_token_expiration: {expiration_str}")
+        expiration = 604800  # Valor por defecto si falla
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
+    
+def get_oauth2_redirect_url(provider: str) -> str:
+    if provider == "google":
+        return google_client.prepare_request_uri(
+            "https://accounts.google.com/o/oauth2/v2/auth",
+            redirect_uri=getenv("GOOGLE_REDIRECT_URI"),
+            scope=["openid", "email", "profile"]
+        )
+    elif provider == "meta":
+        return meta_client.prepare_request_uri(
+            "https://www.facebook.com/v13.0/dialog/oauth",
+            redirect_uri=getenv("META_REDIRECT_URI"),
+            scope=["email"]
+        )
+    raise ValueError("Proveedor no soportado")
 
 
-Se que es muchiiiisima información, por favor leela toda con detenimiento. Si es mucho separa tu respuesta en partes. Solicitame los archivos que necesites ver. Respeta la logica actual para no romper ningun servicio activo. Es importante esta parte de la gamificación, tomate tu tiempo.
+Se que es muchiiiisima información, por favor leela toda con detenimiento. Si es mucho separa tu respuesta en partes. Solicitame los archivos que necesites ver. Respeta la logica actual para no romper ningun servicio activo. Es importante esta parte que salga bien, tomate tu tiempo.
 
-
-
+Pideme los archivos que necesites ver para una mejor implantación.Si te parece mejor por motivos de capacidad generame la respuesta en varias partes, lo dejo a tu elección.
 
 
 

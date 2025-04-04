@@ -225,6 +225,12 @@ INSERT OR IGNORE INTO site_settings (key, value, description, tag) VALUES
 ('maintenance_mode', 'false', 'Activar/desactivar modo mantenimiento', 'system'),
 ('api_version', '"1.0.0"', 'Versión actual de la API', 'system');
 
+INSERT OR IGNORE INTO  site_settings (key, value, description, tag) VALUES
+('enable_payment_methods', 'true', 'Activar o desactivar medios de pago', 'Funcionalidades'),
+('enable_gamification', 'true', 'Activar o desactivar gamificación', 'Funcionalidades');
+
+
+
 -- Usuarios iniciales
 INSERT OR IGNORE INTO usuarios (email, username, password_hash, subscription, credits, rol, create_at, activo) VALUES
 ('freemium@example.com', 'freemium_user', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'FREEMIUM', 100, 'user', datetime('now'), 1),
@@ -334,6 +340,18 @@ INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points,
 ('Encuestador', 'Completar una encuesta', (SELECT id FROM event_types WHERE name='survey_completed'), 0, 'both'),
 ('Registrado', 'Completar el registro', (SELECT id FROM event_types WHERE name='registration_completed'), 0, 'both'),
 ('Suscriptor', 'Suscribirse a todas las listas', (SELECT id FROM event_types WHERE name='all_subscriptions'), 0, 'both');
+
+INSERT OR IGNORE INTO event_types (id, name, description, points_per_event) VALUES
+(1, 'registro_campo', 'Puntos por completar cada campo del registro', 1),
+(2, 'registro_completo', 'Puntos por completar el registro completo', 10),
+(3, 'suscripcion_newsletter', 'Puntos por cada suscripción a newsletter', 2),
+(4, 'todas_suscripciones', 'Puntos por suscribirse a todas las newsletters', 15),
+(5, 'encuesta_pregunta', 'Puntos por cada pregunta de encuesta respondida', 1),
+(6, 'encuesta_completa', 'Puntos por completar la encuesta', 10),
+(7, 'checkin_horario', 'Puntos por hacer check-in en horario', 5),
+(8, 'icp_campo', 'Puntos por completar cada campo del ICP', 1),
+(9, 'icp_completo', 'Puntos por completar el ICP completo', 10),
+(10, 'leccion_completada', 'Puntos por completar cada lección', 3);
 
 -- Mensaje final
 SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;

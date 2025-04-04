@@ -1,5 +1,6 @@
 # backend/main.py
 # Punto de entrada principal de la aplicación.
+from api.v1 import payment_providers
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
 from services.gamification_service import get_user_gamification, register_event
@@ -122,6 +123,7 @@ app.include_router(anonymous_sessions.router, prefix="/v1/sessions", tags=["Sess
 app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=["Transactions"])
 app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
 app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
+app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 
 
 

@@ -28,7 +28,7 @@ const GlassCard = styled(Card)(({ theme }) => ({
   boxShadow: theme.shadows[2]
 }));
 
-// Interfaces (same as before)
+
 interface PaymentMethod {
   id: number;
   payment_type: string;

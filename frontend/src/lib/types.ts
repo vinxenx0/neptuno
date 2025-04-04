@@ -166,3 +166,9 @@ export interface RankingResponse {
   badges_count: number;
   user_type: string;
 }
+
+export interface PaymentProvider {
+  id: number;
+  name: string;
+  active: boolean;
+}
