@@ -5,20 +5,20 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import fetchAPI from "@/lib/api";
-import { 
-  Button, 
-  Avatar, 
-  Chip, 
-  IconButton, 
-  Menu, 
-  MenuItem, 
-  Divider, 
+import {
+  Button,
+  Avatar,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
   useTheme,
   styled,
   Box,
   Typography,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -32,43 +32,45 @@ import {
   ArrowDropDown,
   Home,
   Star,
-  EmojiEvents
+  EmojiEvents,
+  Leaderboard,
+  School,
 } from "@mui/icons-material";
 
-const GlassNavbar = styled('nav')(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
+const GlassNavbar = styled("nav")(({ theme }) => ({
+  background: "rgba(255, 255, 255, 0.1)",
+  backdropFilter: "blur(10px)",
   borderBottom: `1px solid ${theme.palette.divider}`,
   padding: theme.spacing(1, 2),
-  position: 'sticky',
+  position: "sticky",
   top: 0,
   zIndex: 1000,
 }));
 
 const NavContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  maxWidth: '1200px',
-  margin: '0 auto',
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  maxWidth: "1200px",
+  margin: "0 auto",
 }));
 
 const CreditsChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(255, 165, 0, 0.2)', // Fondo naranja claro
-  color: '#FFA500', // Texto naranja
-  borderColor: '#FFA500',
+  background: "rgba(255, 165, 0, 0.2)",
+  color: "#FFA500",
+  borderColor: "#FFA500",
 }));
 
 const PointsChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(255, 215, 0, 0.2)', // Fondo dorado claro
-  color: '#FFD700', // Texto dorado
-  borderColor: '#FFD700',
+  background: "rgba(255, 215, 0, 0.2)",
+  color: "#FFD700",
+  borderColor: "#FFD700",
 }));
 
 const BadgesChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(0, 128, 0, 0.2)', // Fondo verde claro
-  color: '#008000', // Texto verde
-  borderColor: '#008000',
+  background: "rgba(0, 128, 0, 0.2)",
+  color: "#008000",
+  borderColor: "#008000",
 }));
 
 export default function Navbar() {
@@ -77,22 +79,42 @@ export default function Navbar() {
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
+  const [enablePoints, setEnablePoints] = useState(true);
+  const [enableBadges, setEnableBadges] = useState(true);
+  const [enablePaymentMethods, setEnablePaymentMethods] = useState(true);
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [newBadge, setNewBadge] = useState<string | null>(null);
 
+  
   useEffect(() => {
     const storedAnonUsername = localStorage.getItem("anonUsername");
     setAnonUsername(storedAnonUsername);
   }, []);
 
+
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const disableCreditsRes = await fetchAPI("/v1/settings/disable_credits");
-        const enableRegistrationRes = await fetchAPI("/v1/settings/enable_registration");
+        const [
+          disableCreditsRes,
+          enableRegistrationRes,
+          enablePointsRes,
+          enableBadgesRes,
+          enablePaymentMethodsRes,
+        ] = await Promise.all([
+          fetchAPI("/v1/settings/disable_credits"),
+          fetchAPI("/v1/settings/enable_registration"),
+          fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_badges"),
+          fetchAPI("/v1/settings/enable_payment_methods"),
+        ]);
         setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
         setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
+        setEnablePoints(enablePointsRes.data === "true" || enablePointsRes.data === true);
+        setEnableBadges(enableBadgesRes.data === "true" || enableBadgesRes.data === true);
+        setEnablePaymentMethods(enablePaymentMethodsRes.data === "true" || enablePaymentMethodsRes.data === true);
       } catch (err) {
         console.error("Error al obtener configuraciones:", err);
       }
@@ -100,25 +122,35 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
+
+  interface InfoData {
+    credits: number;
+  }
+  
   useEffect(() => {
+    if (!enablePoints && !enableBadges) return;
+
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<UserInfo>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/info");
         if (infoData) {
           setCredits(infoData.credits);
         }
 
-        const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
+        const { data: gamificationData } = await fetchAPI("/v1/gamification/me");
         if (gamificationData && Array.isArray(gamificationData)) {
-          const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
-          const badges = gamificationData.map(g => g.badge).filter(b => b !== null) as Badge[];
-          
-          // Detectar nuevos badges
+          const totalPoints = enablePoints
+            ? gamificationData.reduce((sum, g) => sum + g.points, 0)
+            : 0;
+          const badges = enableBadges
+            ? gamificationData.map((g) => g.badge).filter((b) => b !== null)
+            : [];
+
           const previousBadges = JSON.parse(localStorage.getItem("badges") || "[]");
-          const currentBadgeIds = badges.map(b => b.id);
-          const newBadges = currentBadgeIds.filter(id => !previousBadges.includes(id));
-          if (newBadges.length > 0) {
-            const badge = badges.find(b => b.id === newBadges[0]);
+          const currentBadgeIds = badges.map((b) => b.id);
+          const newBadges = currentBadgeIds.filter((id) => !previousBadges.includes(id));
+          if (newBadges.length > 0 && enableBadges) {
+            const badge = badges.find((b) => b.id === newBadges[0]);
             setNewBadge(badge?.name || "Nuevo badge");
             setSnackbarOpen(true);
             localStorage.setItem("badges", JSON.stringify(currentBadgeIds));
@@ -129,10 +161,10 @@ export default function Navbar() {
       } catch (err) {
         console.error("Error al actualizar datos:", err);
       }
-    }, 30000); // Cada 30 segundos
+    }, 30000);
 
     return () => clearInterval(interval);
-  }, [setCredits, setGamification]);
+  }, [setCredits, setGamification, enablePoints, enableBadges]);
 
   const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setSettingsAnchorEl(event.currentTarget);
@@ -146,16 +178,16 @@ export default function Navbar() {
     <GlassNavbar>
       <NavContainer>
         <Link href="/" passHref>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
             <Home color="primary" />
-            <Typography 
-              variant="h6" 
-              component="span" 
-              sx={{ 
-                fontWeight: 'bold',
+            <Typography
+              variant="h6"
+              component="span"
+              sx={{
+                fontWeight: "bold",
                 background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
               }}
             >
               Neptuno
@@ -163,35 +195,33 @@ export default function Navbar() {
           </Box>
         </Link>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {!disableCredits && credits > 0 && (
-            <CreditsChip
-              icon={<MonetizationOn />}
-              label={credits}
-              variant="outlined"
-            />
-          )}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    {!disableCredits && credits > 0 && (
+      <Link href="/user/transactions" passHref>
+        <CreditsChip icon={<MonetizationOn />} label={credits} variant="outlined" clickable />
+      </Link>
+    )}
 
-          {gamification && (
-            <>
-              <PointsChip
-                icon={<Star />}
-                label={gamification.points}
-                variant="outlined"
-              />
-              <BadgesChip
-                icon={<EmojiEvents />}
-                label={gamification.badges.length}
-                variant="outlined"
-              />
-            </>
-          )}
+    {gamification && (
+      <>
+        {enablePoints && (
+          <Link href="/user/points" passHref>
+            <PointsChip icon={<Star />} label={gamification.points} variant="outlined" clickable />
+          </Link>
+        )}
+        {enableBadges && (
+          <Link href="/user/badges" passHref>
+            <BadgesChip icon={<EmojiEvents />} label={gamification.badges.length} variant="outlined" clickable />
+          </Link>
+        )}
+      </>
+    )}
 
           {user?.rol === "admin" && (
             <>
               <IconButton
                 onClick={handleSettingsMenuOpen}
-                sx={{ color: 'inherit', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
+                sx={{ color: "inherit", "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" } }}
               >
                 <Settings />
               </IconButton>
@@ -201,12 +231,12 @@ export default function Navbar() {
                 onClose={handleSettingsMenuClose}
                 PaperProps={{
                   sx: {
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '12px',
+                    background: "rgba(255, 255, 255, 0.9)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "12px",
                     mt: 1,
-                    minWidth: '200px'
-                  }
+                    minWidth: "200px",
+                  },
                 }}
               >
                 <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
@@ -218,6 +248,12 @@ export default function Navbar() {
                 <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
                   <People sx={{ mr: 1 }} /> Usuarios
                 </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/rankings">
+                  <Leaderboard sx={{ mr: 1 }} /> Rankings
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/ejemplos">
+                  <School sx={{ mr: 1 }} /> Ejemplos
+                </MenuItem>
               </Menu>
             </>
           )}
@@ -228,12 +264,12 @@ export default function Navbar() {
               href="/user/dashboard"
               startIcon={<Person />}
               endIcon={<ArrowDropDown />}
-              sx={{ color: 'inherit', textTransform: 'none', fontWeight: 'medium' }}
+              sx={{ color: "inherit", textTransform: "none", fontWeight: "medium" }}
             >
               {user.username}
             </Button>
           ) : anonUsername ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Chip
                 avatar={<Avatar sx={{ width: 24, height: 24 }}><Person sx={{ fontSize: 14 }} /></Avatar>}
                 label={anonUsername}
@@ -245,14 +281,14 @@ export default function Navbar() {
                 variant="contained"
                 color="secondary"
                 startIcon={<Login />}
-                sx={{ borderRadius: '12px' }}
+                sx={{ borderRadius: "12px" }}
               >
                 ¡Empezar!
               </Button>
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={Link} href="/user/auth/#login" startIcon={<Login />} sx={{ borderRadius: '12px' }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button component={Link} href="/user/auth/#login" startIcon={<Login />} sx={{ borderRadius: "12px" }}>
                 Iniciar Sesión
               </Button>
               {enableRegistration && (
@@ -262,7 +298,7 @@ export default function Navbar() {
                   variant="contained"
                   color="primary"
                   startIcon={<PersonAdd />}
-                  sx={{ borderRadius: '12px' }}
+                  sx={{ borderRadius: "12px" }}
                 >
                   Registrarse
                 </Button>
@@ -272,12 +308,8 @@ export default function Navbar() {
         </Box>
       </NavContainer>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
           ¡Felicidades! Has obtenido el badge: {newBadge}
         </Alert>
       </Snackbar>

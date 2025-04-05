@@ -172,3 +172,15 @@ export interface PaymentProvider {
   name: string;
   active: boolean;
 }
+
+
+
+export interface InfoResponse {
+  credits: number;
+  gamification: { points: number; badge: Badge | null }[];
+}
+
+
+export interface BadgeWithEventType extends Badge {
+  event_type: EventType;
+}

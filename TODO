@@ -1,3 +1,5 @@
+-- En la gamificacion no se pueden crear nuevos eventos
+
 - LOGS
 
     - arreglar esto en main: logger = configure_logging()

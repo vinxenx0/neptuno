@@ -1,5 +1,6 @@
 # backend/services/payment_service.py
 from sqlalchemy.orm import Session
+from schemas.payment import PaymentMethodResponse
 from models.payment_method import PaymentMethod
 from models.user import User
 from core.logging import configure_logging
@@ -115,3 +116,23 @@ def get_credit_transactions(db: Session, user_id: int):
     except Exception as e:
         logger.error(f"Error al obtener transacciones de créditos para usuario {user_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al obtener transacciones")
+    
+    
+def update_payment_method(db: Session, user_id: int, method_id: int, payment_type: str, details: str) -> PaymentMethodResponse:
+    method = db.query(PaymentMethod).filter(PaymentMethod.id == method_id, PaymentMethod.user_id == user_id).first()
+    if not method:
+        raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+    method.payment_type = payment_type
+    method.details = details
+    db.commit()
+    db.refresh(method)
+    return PaymentMethodResponse.from_orm(method)
+
+def delete_payment_method(db: Session, user_id: int, method_id: int):
+    method = db.query(PaymentMethod).filter(PaymentMethod.id == method_id, PaymentMethod.user_id == user_id).first()
+    if not method:
+        raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+    if method.is_default:
+        raise HTTPException(status_code=400, detail="No se puede eliminar el método de pago predeterminado")
+    db.delete(method)
+    db.commit()

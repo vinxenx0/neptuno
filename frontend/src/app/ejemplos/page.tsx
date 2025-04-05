@@ -1,13 +1,12 @@
 // frontend/src/app/ejemplos/page.tsx
-// src/app/ejemplos/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, Button, TextField, Checkbox, FormControlLabel, Card, CardContent, Snackbar, Alert, Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
-import { Badge, UserGamificationResponse } from "@/lib/types";
+import { UserGamificationResponse, Badge, InfoResponse } from "@/lib/types";
 
 export default function Ejemplos() {
   const { setGamification } = useAuth();
@@ -18,15 +17,26 @@ export default function Ejemplos() {
   const [checkinDone, setCheckinDone] = useState(false);
   const [icpFields, setIcpFields] = useState({ company: "", role: "", industry: "" });
   const [tutorialLessons, setTutorialLessons] = useState([false, false, false]);
+  // Nuevos estados para corregir los errores
+  const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
+  const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
+  const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
 
+  // Resto del código...
+
+  // Actualizar gamificación al cargar la página y después de cada acción relevante
   const updateGamification = async () => {
-    const { data } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
-    if (data) {
-      const totalPoints = data.reduce((sum, g) => sum + g.points, 0);
-      const badges = data.map(g => g.badge).filter(b => b !== null) as Badge[];
+    const { data } = await fetchAPI<InfoResponse>("/info");
+    if (data?.gamification) {
+      const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
+      const badges = data.gamification.map(g => g.badge).filter(b => b !== null) as Badge[];
       setGamification({ points: totalPoints, badges });
     }
   };
+  // Ejecutar updateGamification al montar el componente
+  useEffect(() => {
+    updateGamification();
+  }, []);
 
   const handleRegistroChange = async (field: keyof typeof registroFields, value: string) => {
     setRegistroFields(prev => ({ ...prev, [field]: value }));
@@ -89,6 +99,62 @@ export default function Ejemplos() {
       await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 9 } });
       updateGamification();
       setSnackMessage("¡Completaste tu ICP y ganaste 10 puntos!");
+    }
+  };
+
+
+  const handleFormChange = async (field: keyof typeof formFields, value: string) => {
+    setFormFields(prev => ({ ...prev, [field]: value }));
+    if (value) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 3 } // registration_field
+      });
+      updateGamification();
+    }
+    if (formFields.name && formFields.email && formFields.phone) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 4 } // registration_completed
+      });
+      updateGamification();
+    }
+  };
+
+  const handleSubscriptionChange = async (list: keyof typeof subscriptions) => {
+    setSubscriptions(prev => ({ ...prev, [list]: !prev[list] }));
+    if (!subscriptions[list]) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 5 } // subscription_list
+      });
+      updateGamification();
+    }
+    if (subscriptions.list1 && subscriptions.list2 && subscriptions.list3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 6 } // all_subscriptions
+      });
+      updateGamification();
+    }
+  };
+
+  const handleSurveyAnswer = async (answer: number) => {
+    setSurveyAnswers(prev => [...prev, answer]);
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 1 } // survey_question
+    });
+    updateGamification();
+  };
+
+  const handleSurveyComplete = async () => {
+    if (surveyAnswers.length === 3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 2 } // survey_completed
+      });
+      updateGamification();
     }
   };
 

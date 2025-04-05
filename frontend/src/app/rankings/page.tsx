@@ -1,55 +1,88 @@
+// frontend/src/app/rankings/page.tsx
+// src/app/admin/rankings/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth/context";
+import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { RankingResponse } from "@/lib/types";
+import { motion } from "framer-motion";
+import { Box, Typography, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 
-export default function Rankings() {
+interface RankingResponse {
+  username: string;
+  points: number;
+  badges_count: number;
+  user_type: string;
+}
+
+export default function RankingsPage() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [rankings, setRankings] = useState<RankingResponse[]>([]);
-  const [sortBy, setSortBy] = useState<"points" | "badges_count">("points");
+  const [enablePoints, setEnablePoints] = useState<boolean | null>(null);
+  const [enableBadges, setEnableBadges] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRankings = async () => {
-      const { data } = await fetchAPI<RankingResponse[]>("/v1/gamification/rankings");
-      if (data) setRankings(data);
-    };
-    fetchRankings();
-  }, []);
+    if (!user || user.rol !== "admin") {
+      router.push("/");
+      return;
+    }
 
-  const sortedRankings = [...rankings].sort((a, b) =>
-    sortBy === "points" ? b.points - a.points : b.badges_count - a.badges_count
-  );
+    const fetchData = async () => {
+      try {
+        const [pointsRes, badgesRes, rankingsRes] = await Promise.all([
+          fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_badges"),
+          fetchAPI<RankingResponse[]>("/v1/admin/rankings"),
+        ]);
+        setEnablePoints(pointsRes.data === "true" || pointsRes.data === true);
+        setEnableBadges(badgesRes.data === "true" || badgesRes.data === true);
+        setRankings(rankingsRes.data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar datos");
+      }
+    };
+    fetchData();
+  }, [user, router]);
+
+  if (!user || enablePoints === null || enableBadges === null) return null;
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>Rankings</Typography>
-      <Box sx={{ mb: 2 }}>
-        <Button onClick={() => setSortBy("points")} variant={sortBy === "points" ? "contained" : "outlined"}>Por Puntos</Button>
-        <Button onClick={() => setSortBy("badges_count")} variant={sortBy === "badges_count" ? "contained" : "outlined"} sx={{ ml: 2 }}>Por Insignias</Button>
-      </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Usuario</TableCell>
-              <TableCell>Puntos</TableCell>
-              <TableCell>Insignias</TableCell>
-              <TableCell>Tipo</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedRankings.map((rank, index) => (
-              <TableRow key={index}>
-                <TableCell>{rank.username}</TableCell>
-                <TableCell>{rank.points}</TableCell>
-                <TableCell>{rank.badges_count}</TableCell>
-                <TableCell>{rank.user_type}</TableCell>
+    <Box sx={{ p: 4, minHeight: "100vh" }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <Typography variant="h4" sx={{ mb: 4 }}>
+          Rankings
+        </Typography>
+
+        {(!enablePoints && !enableBadges) ? (
+          <Typography variant="body1" color="textSecondary">
+            La gamificación está deshabilitada.
+          </Typography>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Usuario</TableCell>
+                {enablePoints && <TableCell>Puntos</TableCell>}
+                {enableBadges && <TableCell>Insignias</TableCell>}
+                <TableCell>Tipo</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {rankings.map((entry) => (
+                <TableRow key={entry.username}>
+                  <TableCell>{entry.username}</TableCell>
+                  {enablePoints && <TableCell>{entry.points}</TableCell>}
+                  {enableBadges && <TableCell>{entry.badges_count}</TableCell>}
+                  <TableCell>{entry.user_type}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </motion.div>
     </Box>
   );
 }

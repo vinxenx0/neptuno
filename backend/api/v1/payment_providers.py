@@ -11,11 +11,12 @@ from typing import List
 
 router = APIRouter(tags=["Payment Providers"])
 
-@router.post("/", response_model=PaymentProviderResponse)
-def create_provider(provider: PaymentProviderCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
+@router.get("/", response_model=List[PaymentProviderResponse])
+def get_providers(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    # Permitir acceso a usuarios registrados y administradores
+    if user.user_type != "registered" and user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
-    return create_payment_provider(db, provider)
+    return get_payment_providers(db)
 
 @router.get("/", response_model=List[PaymentProviderResponse])
 def get_providers(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
