@@ -50,7 +50,7 @@ export default function PointsPage() {
     
     const fetchPoints = async () => {
       try {
-        const { data } = await fetchAPI("/v1/gamification/me");
+        const { data }: { data: any[] } = await fetchAPI("/v1/gamification/me");
         setPointsHistory(data || []);
       } catch (err) {
         console.error("Error al obtener historial de puntos:", err);

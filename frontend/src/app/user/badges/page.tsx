@@ -103,15 +103,17 @@ export default function Badges() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <GradientText
+          <Box
             sx={{
               fontSize: "2.5rem",
               fontWeight: "bold",
               mb: 4
             }}
           >
-            Mis Logros
-          </GradientText>
+            <GradientText>
+              Mis Logros
+            </GradientText>
+          </Box>
         </motion.div>
 
         <Tabs
@@ -156,18 +158,20 @@ export default function Badges() {
                       >
                         <BadgeIcon
                           type={badge.event_type.name}
-                          sx={{ fontSize: "3rem", color: theme.palette.primary.main }}
+                         // sx={{ fontSize: "3rem", color: theme.palette.primary.main }}
                         />
                         <Box>
-                          <GradientText
+                          <Box
                             sx={{
                               fontSize: "1.5rem",
                               fontWeight: "bold",
                               lineHeight: 1.2
                             }}
                           >
-                            {badge.name}
-                          </GradientText>
+                            <GradientText>
+                              {badge.name}
+                            </GradientText>
+                          </Box>
                           <Typography variant="caption" color="textSecondary">
                             {badge.event_type.name.replace(/_/g, ' ')}
                           </Typography>
