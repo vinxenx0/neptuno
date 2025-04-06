@@ -68,3 +68,20 @@ Tema badges y points estan bajo user pero lo deben ver anonimos tb
 
 
 
+UserWarning: Duplicate Operation ID create_event_type_endpoint_v1_gamification_event_types_post for function create_event_type_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID get_event_types_endpoint_v1_gamification_event_types_get for function get_event_types_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID update_event_type_endpoint_v1_gamification_event_types__event_type_id__put for function update_event_type_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID delete_event_type_endpoint_v1_gamification_event_types__event_type_id__delete for function delete_event_type_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID create_badge_endpoint_v1_gamification_badges_post for function create_badge_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID get_badges_endpoint_v1_gamification_badges_get for function get_badges_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID update_badge_endpoint_v1_gamification_badges__badge_id__put for function update_badge_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID delete_badge_endpoint_v1_gamification_badges__badge_id__delete for function delete_badge_endpoint at /app/api/v1/gamification.py
+neptuno-stack      |   warnings.warn(message, stacklevel=1)
+neptuno-db         | 2025-04-06 22:49:20+00:00 [ERROR] [Entrypoint]: Database is uninitialized and password option is not specified
