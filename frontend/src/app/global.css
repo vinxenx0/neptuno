@@ -186,3 +186,174 @@ body {
   height: 24px;
   animation: spin 1s linear infinite;
 }
+
+
+
+/* ========== NAVBAR ========== */
+.app-logo {
+  background: linear-gradient(45deg, var(--primary) 30%, var(--secondary) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.notification-icon {
+  position: relative;
+  padding: 8px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.75rem;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 1px solid;
+}
+
+.credits-badge {
+  background: rgba(255, 165, 0, 0.2);
+  color: #FFA500;
+  border-color: #FFA500;
+}
+
+.points-badge {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  border-color: #FFD700;
+}
+
+.badges-badge {
+  background: rgba(0, 128, 0, 0.2);
+  color: #008000;
+  border-color: #008000;
+}
+
+.user-avatar .MuiAvatar-root {
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover .MuiAvatar-root {
+  transform: scale(1.1);
+}
+
+.start-button {
+  border-radius: 20px;
+  padding: 8px 20px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+
+/* Mejoras de responsive */
+@media (max-width: 768px) {
+  .notification-icon {
+    padding: 6px;
+  }
+  
+  .notification-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+  
+  .nav-link {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Efectos hover para enlaces */
+.nav-link {
+  transition: all 0.2s ease;
+  transform-origin: center;
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Ajustes de espaciado */
+.MuiDrawer-paper {
+  width: 250px;
+  padding: 16px 0;
+  background: rgba(255, 255, 255, 0.95) !important;
+
+}
+
+
+/* Resaltar enlace activo */
+.active-link {
+  position: relative;
+  color: var(--primary) !important;
+}
+
+.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Ajustes responsive iconos */
+@media (max-width: 768px) {
+  .notification-icon {
+    padding: 6px;
+  }
+  
+  .notification-badge {
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+  }
+  
+  .user-avatar .MuiAvatar-root {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+
+/* Resaltar enlace activo */
+.active-link {
+  position: relative;
+  color: var(--primary) !important;
+}
+
+.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .notification-icon {
+    padding: 6px;
+  }
+  
+  .notification-badge {
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+  }
+  
+  .MuiButton-root {
+    min-width: auto;
+    padding: 6px 12px;
+  }
+}

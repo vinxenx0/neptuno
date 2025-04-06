@@ -2147,7 +2147,8 @@ Si necesitas más ayuda o necesitas código adicional que ver, no dudes en decí
 Se que es muchiiiisima información, por favor leela toda con detenimiento. Si es mucho separa tu respuesta en partes. Solicitame los archivos que necesites ver. 
 
 
-Respeta la logica actual para no romper ningun servicio activo. Es importante esta parte que salga bien, tomate tu tiempo.Pideme los archivos que necesites ver para una mejor implantación.Si te parece mejor por motivos de capacidad generame la respuesta en varias partes, lo dejo a tu elección.
+Respeta la logica actual para no romper ningun servicio activo. 
+Es importante esta parte que salga bien, tomate tu tiempo.Pideme los archivos que necesites ver para una mejor implantación.Si te parece mejor por motivos de capacidad generame la respuesta en varias partes, lo dejo a tu elección.
 
 
 
