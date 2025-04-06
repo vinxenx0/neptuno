@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { GlassCard, GradientText, TimelineIcon, EmptyState } from "@/components/ui";
+import { Box, Typography } from "@mui/material";
 
 const TimelineItem = ({ entry }: { entry: any }) => (
   <motion.div
@@ -22,10 +23,10 @@ const TimelineItem = ({ entry }: { entry: any }) => (
           +{entry.points} puntos
         </span>
         <span className="text-sm text-gray-400">
-          {new Date(entry.created_at).toLocaleDateString('es-ES', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
+          {new Date(entry.created_at).toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
           })}
         </span>
       </div>
@@ -41,25 +42,54 @@ export default function PointsPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [pointsHistory, setPointsHistory] = useState<any[]>([]);
+  const [enablePoints, setEnablePoints] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!user) {
       router.push("/user/auth/#login");
       return;
     }
-    
-    const fetchPoints = async () => {
+
+    const checkSettingsAndFetchPoints = async () => {
       try {
-        const { data }: { data: any[] } = await fetchAPI("/v1/gamification/me");
-        setPointsHistory(data || []);
+        // Verificar si el módulo de puntos está habilitado
+        const { data: settingsData } = await fetchAPI("/v1/settings/enable_points");
+        const isEnabled = settingsData === "true" || settingsData === true;
+        setEnablePoints(isEnabled);
+
+        if (!isEnabled) {
+          return; // Si no está habilitado, no cargamos datos
+        }
+
+        // Cargar el historial de puntos si el módulo está habilitado
+        const { data } = await fetchAPI("/v1/gamification/me");
+        setPointsHistory((data as any[]) || []);
       } catch (err) {
         console.error("Error al obtener historial de puntos:", err);
       }
     };
-    fetchPoints();
+    checkSettingsAndFetchPoints();
   }, [user, router]);
 
-  if (!user) return null;
+  if (!user || enablePoints === null) return null; // Mientras se carga usuario o configuración
+
+  if (!enablePoints) {
+    return (
+      <Box
+        className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 8,
+        }}
+      >
+        <Typography variant="h6" color="textSecondary">
+          Esta funcionalidad no está habilitada en este momento.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-8">

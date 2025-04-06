@@ -36,6 +36,7 @@ import {
 } from "@mui/icons-material";
 import { User } from "@/lib/types";
 import { motion, AnimatePresence } from "framer-motion";
+import SEO from "@/components/seo/MetaTags";
 
 
 // Styled Components
@@ -214,6 +215,12 @@ export default function LandingPage() {
   };
 
   return (
+    <>
+    <SEO
+    title="Neptuno - SaaS para gestionar créditos y APIs de forma sencilla y escalable"
+    description="Explora tus insignias ganadas y desbloquea logros en nuestra plataforma de gamificación."
+    keywords="gamificación, insignias, logros, engagement"
+    />
     <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
@@ -553,5 +560,6 @@ export default function LandingPage() {
         )}
       </AnimatePresence>
     </Box>
+    </>
   );
 }

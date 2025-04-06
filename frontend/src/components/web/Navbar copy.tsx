@@ -19,11 +19,6 @@ import {
   Typography,
   Snackbar,
   Alert,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -40,7 +35,6 @@ import {
   EmojiEvents,
   Leaderboard,
   School,
-  Menu as MenuIcon,
 } from "@mui/icons-material";
 
 const GlassNavbar = styled("nav")(({ theme }) => ({
@@ -59,10 +53,6 @@ const NavContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   maxWidth: "1200px",
   margin: "0 auto",
-  [theme.breakpoints.down("md")]: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
 }));
 
 const CreditsChip = styled(Chip)(({ theme }) => ({
@@ -87,7 +77,6 @@ export default function Navbar() {
   const theme = useTheme();
   const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
   const [enablePoints, setEnablePoints] = useState(true);
@@ -97,10 +86,13 @@ export default function Navbar() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [newBadge, setNewBadge] = useState<string | null>(null);
 
+  
   useEffect(() => {
     const storedAnonUsername = localStorage.getItem("anonUsername");
     setAnonUsername(storedAnonUsername);
   }, []);
+
+
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -130,10 +122,11 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
+
   interface InfoData {
     credits: number;
   }
-
+  
   useEffect(() => {
     if (!enablePoints && !enableBadges) return;
 
@@ -181,64 +174,48 @@ export default function Navbar() {
     setSettingsAnchorEl(null);
   };
 
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setDrawerOpen(false);
-  };
-
   return (
     <GlassNavbar>
       <NavContainer>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton
-            onClick={handleDrawerOpen}
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Link href="/" passHref>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
-              <Home color="primary" />
-              <Typography
-                variant="h6"
-                component="span"
-                sx={{
-                  fontWeight: "bold",
-                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Neptuno
-              </Typography>
-            </Box>
+        <Link href="/" passHref>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
+            <Home color="primary" />
+            <Typography
+              variant="h6"
+              component="span"
+              sx={{
+                fontWeight: "bold",
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Neptuno
+            </Typography>
+          </Box>
+        </Link>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    {!disableCredits && credits > 0 && (
+      <Link href="/user/transactions" passHref>
+        <CreditsChip icon={<MonetizationOn />} label={credits} variant="outlined" clickable />
+      </Link>
+    )}
+
+    {gamification && (
+      <>
+        {enablePoints && (
+          <Link href="/user/points" passHref>
+            <PointsChip icon={<Star />} label={gamification.points} variant="outlined" clickable />
           </Link>
-        </Box>
-
-        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
-          {!disableCredits && credits > 0 && (
-            <Link href="/user/transactions" passHref>
-              <CreditsChip icon={<MonetizationOn />} label={credits} variant="outlined" clickable />
-            </Link>
-          )}
-
-          {gamification && (
-            <>
-              {enablePoints && (
-                <Link href="/user/points" passHref>
-                  <PointsChip icon={<Star />} label={gamification.points} variant="outlined" clickable />
-                </Link>
-              )}
-              {enableBadges && (
-                <Link href="/user/badges" passHref>
-                  <BadgesChip icon={<EmojiEvents />} label={gamification.badges.length} variant="outlined" clickable />
-                </Link>
-              )}
-            </>
-          )}
+        )}
+        {enableBadges && (
+          <Link href="/user/badges" passHref>
+            <BadgesChip icon={<EmojiEvents />} label={gamification.badges.length} variant="outlined" clickable />
+          </Link>
+        )}
+      </>
+    )}
 
           {user?.rol === "admin" && (
             <>
@@ -329,58 +306,6 @@ export default function Navbar() {
             </Box>
           )}
         </Box>
-
-        <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
-          <List>
-            <ListItem component={Link} href="/">
-              <ListItemIcon><Home /></ListItemIcon>
-              <ListItemText primary="Inicio" />
-            </ListItem>
-            {user?.rol === "admin" && (
-              <>
-                <ListItem component={Link} href="/admin/dashboard">
-                  <ListItemIcon><Dashboard /></ListItemIcon>
-                  <ListItemText primary="Dashboard" />
-                </ListItem>
-                <ListItem component={Link} href="/admin/registry">
-                  <ListItemIcon><ListAlt /></ListItemIcon>
-                  <ListItemText primary="Registros" />
-                </ListItem>
-                <ListItem component={Link} href="/admin/users">
-                  <ListItemIcon><People /></ListItemIcon>
-                  <ListItemText primary="Usuarios" />
-                </ListItem>
-                <ListItem component={Link} href="/rankings">
-                  <ListItemIcon><Leaderboard /></ListItemIcon>
-                  <ListItemText primary="Rankings" />
-                </ListItem>
-                <ListItem component={Link} href="/ejemplos">
-                  <ListItemIcon><School /></ListItemIcon>
-                  <ListItemText primary="Ejemplos" />
-                </ListItem>
-              </>
-            )}
-            {user ? (
-              <ListItem component={Link} href="/user/dashboard">
-                <ListItemIcon><Person /></ListItemIcon>
-                <ListItemText primary={user.username} />
-              </ListItem>
-            ) : (
-              <>
-                <ListItem component={Link} href="/user/auth/#login">
-                  <ListItemIcon><Login /></ListItemIcon>
-                  <ListItemText primary="Iniciar Sesión" />
-                </ListItem>
-                {enableRegistration && (
-                  <ListItem component={Link} href="/user/auth/#register">
-                    <ListItemIcon><PersonAdd /></ListItemIcon>
-                    <ListItemText primary="Registrarse" />
-                  </ListItem>
-                )}
-              </>
-            )}
-          </List>
-        </Drawer>
       </NavContainer>
 
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>

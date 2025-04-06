@@ -2,7 +2,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Box, Typography, Button, TextField, Checkbox, FormControlLabel, Card, CardContent, Snackbar, Alert, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Card,
+  CardContent,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
@@ -17,29 +28,25 @@ export default function Ejemplos() {
   const [checkinDone, setCheckinDone] = useState(false);
   const [icpFields, setIcpFields] = useState({ company: "", role: "", industry: "" });
   const [tutorialLessons, setTutorialLessons] = useState([false, false, false]);
-  // Nuevos estados para corregir los errores
   const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
   const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
 
-  // Resto del código...
-
-  // Actualizar gamificación al cargar la página y después de cada acción relevante
   const updateGamification = async () => {
     const { data } = await fetchAPI<InfoResponse>("/info");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
-      const badges = data.gamification.map(g => g.badge).filter(b => b !== null) as Badge[];
+      const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
       setGamification({ points: totalPoints, badges });
     }
   };
-  // Ejecutar updateGamification al montar el componente
+
   useEffect(() => {
     updateGamification();
   }, []);
 
   const handleRegistroChange = async (field: keyof typeof registroFields, value: string) => {
-    setRegistroFields(prev => ({ ...prev, [field]: value }));
+    setRegistroFields((prev) => ({ ...prev, [field]: value }));
     if (value) {
       await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 1 } });
       updateGamification();
@@ -53,7 +60,7 @@ export default function Ejemplos() {
   };
 
   const handleNewsletterChange = async (newsletter: keyof typeof newsletterSubs) => {
-    setNewsletterSubs(prev => ({ ...prev, [newsletter]: !prev[newsletter] }));
+    setNewsletterSubs((prev) => ({ ...prev, [newsletter]: !prev[newsletter] }));
     if (!newsletterSubs[newsletter]) {
       await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 3 } });
       updateGamification();
@@ -67,7 +74,7 @@ export default function Ejemplos() {
   };
 
   const handleEncuestaAnswer = async (answer: number) => {
-    setEncuestaAnswers(prev => [...prev, answer]);
+    setEncuestaAnswers((prev) => [...prev, answer]);
     await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 5 } });
     updateGamification();
     setSnackMessage("¡Ganaste 1 punto por responder una pregunta!");
@@ -89,7 +96,7 @@ export default function Ejemplos() {
   };
 
   const handleIcpChange = async (field: keyof typeof icpFields, value: string) => {
-    setIcpFields(prev => ({ ...prev, [field]: value }));
+    setIcpFields((prev) => ({ ...prev, [field]: value }));
     if (value) {
       await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 8 } });
       updateGamification();
@@ -102,48 +109,47 @@ export default function Ejemplos() {
     }
   };
 
-
   const handleFormChange = async (field: keyof typeof formFields, value: string) => {
-    setFormFields(prev => ({ ...prev, [field]: value }));
+    setFormFields((prev) => ({ ...prev, [field]: value }));
     if (value) {
       await fetchAPI("/v1/gamification/events", {
         method: "POST",
-        data: { event_type_id: 3 } // registration_field
+        data: { event_type_id: 3 },
       });
       updateGamification();
     }
     if (formFields.name && formFields.email && formFields.phone) {
       await fetchAPI("/v1/gamification/events", {
         method: "POST",
-        data: { event_type_id: 4 } // registration_completed
+        data: { event_type_id: 4 },
       });
       updateGamification();
     }
   };
 
   const handleSubscriptionChange = async (list: keyof typeof subscriptions) => {
-    setSubscriptions(prev => ({ ...prev, [list]: !prev[list] }));
+    setSubscriptions((prev) => ({ ...prev, [list]: !prev[list] }));
     if (!subscriptions[list]) {
       await fetchAPI("/v1/gamification/events", {
         method: "POST",
-        data: { event_type_id: 5 } // subscription_list
+        data: { event_type_id: 5 },
       });
       updateGamification();
     }
     if (subscriptions.list1 && subscriptions.list2 && subscriptions.list3) {
       await fetchAPI("/v1/gamification/events", {
         method: "POST",
-        data: { event_type_id: 6 } // all_subscriptions
+        data: { event_type_id: 6 },
       });
       updateGamification();
     }
   };
 
   const handleSurveyAnswer = async (answer: number) => {
-    setSurveyAnswers(prev => [...prev, answer]);
+    setSurveyAnswers((prev) => ({ ...prev, answer }));
     await fetchAPI("/v1/gamification/events", {
       method: "POST",
-      data: { event_type_id: 1 } // survey_question
+      data: { event_type_id: 1 },
     });
     updateGamification();
   };
@@ -152,14 +158,14 @@ export default function Ejemplos() {
     if (surveyAnswers.length === 3) {
       await fetchAPI("/v1/gamification/events", {
         method: "POST",
-        data: { event_type_id: 2 } // survey_completed
+        data: { event_type_id: 2 },
       });
       updateGamification();
     }
   };
 
   const handleLessonComplete = async (index: number) => {
-    setTutorialLessons(prev => {
+    setTutorialLessons((prev) => {
       const newLessons = [...prev];
       newLessons[index] = true;
       return newLessons;
@@ -170,138 +176,207 @@ export default function Ejemplos() {
   };
 
   return (
-    <Box sx={{ p: 4, bgcolor: "#f5f7fa", minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 2, sm: 4 }, bgcolor: "#f5f7fa", minHeight: "100vh" }}>
+      {/* Hero Section */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
-          Ejemplos de Gamificación
+          ¡Transforma tu Negocio con Gamificación!
         </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" sx={{ mb: 4 }}>
-          Descubre cómo puedes ganar puntos y badges interactuando con nuestra plataforma.
+        <Typography variant="h6" align="center" color="textSecondary" sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}>
+          Aumenta el engagement, dispara tus conversiones y fideliza a tus clientes con nuestra API SaaS de gamificación y scoring. ¡Prueba cómo funciona y descubre el poder de las recompensas hoy mismo!
         </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 6 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{ borderRadius: 2, px: 4, py: 1.5 }}
+            onClick={() => document.getElementById("registro")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            ¡Prueba Gratis Ahora!
+          </Button>
+        </Box>
       </motion.div>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Formulario de Registro</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Regístrate completando tus datos y gana puntos por cada campo. ¡Completa todo para un bonus!
-                </Typography>
-                <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <TextField label="Nombre" value={registroFields.name} onChange={(e) => handleRegistroChange("name", e.target.value)} variant="outlined" />
-                  <TextField label="Email" value={registroFields.email} onChange={(e) => handleRegistroChange("email", e.target.value)} variant="outlined" />
-                  <TextField label="Teléfono" value={registroFields.phone} onChange={(e) => handleRegistroChange("phone", e.target.value)} variant="outlined" />
-                </Box>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
+      {/* Main Content */}
+      <Box sx={{ maxWidth: "800px", mx: "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }} id="registro">
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Regístrate y Gana Recompensas Instantáneas
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Completa tus datos y empieza a acumular puntos que potencian tu experiencia. ¡Tu primer paso hacia un engagement imparable!
+            </Typography>
+            <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Nombre"
+                value={registroFields.name}
+                onChange={(e) => handleRegistroChange("name", e.target.value)}
+                variant="outlined"
+              />
+              <TextField
+                label="Email"
+                value={registroFields.email}
+                onChange={(e) => handleRegistroChange("email", e.target.value)}
+                variant="outlined"
+              />
+              <TextField
+                label="Teléfono"
+                value={registroFields.phone}
+                onChange={(e) => handleRegistroChange("phone", e.target.value)}
+                variant="outlined"
+              />
+            </Box>
+          </CardContent>
+        </Card>
 
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Suscripción a Newsletters</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Suscríbete a nuestras newsletters y gana puntos por cada una. ¡Todas te dan un badge especial!
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  <FormControlLabel
-                    control={<Checkbox checked={newsletterSubs.tech} onChange={() => handleNewsletterChange("tech")} />}
-                    label="Tecnología"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox checked={newsletterSubs.marketing} onChange={() => handleNewsletterChange("marketing")} />}
-                    label="Marketing"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox checked={newsletterSubs.design} onChange={() => handleNewsletterChange("design")} />}
-                    label="Diseño"
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Suscríbete y Desbloquea Estrategias Ganadoras
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Únete a nuestras newsletters y recibe contenido exclusivo para maximizar tus conversiones mientras ganas puntos.
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <FormControlLabel
+                control={<Checkbox checked={newsletterSubs.tech} onChange={() => handleNewsletterChange("tech")} />}
+                label="Tecnología"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={newsletterSubs.marketing} onChange={() => handleNewsletterChange("marketing")} />}
+                label="Marketing"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={newsletterSubs.design} onChange={() => handleNewsletterChange("design")} />}
+                label="Diseño"
+              />
+            </Box>
+          </CardContent>
+        </Card>
 
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Encuesta de Satisfacción</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Responde preguntas y gana puntos por cada una. ¡Completa la encuesta para más recompensas!
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(1)}>Pregunta 1</Button>
-                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(2)}>Pregunta 2</Button>
-                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(3)}>Pregunta 3</Button>
-                  <Button variant="contained" onClick={handleEncuestaComplete} disabled={encuestaAnswers.length !== 3}>Completar</Button>
-                </Box>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Comparte tu Opinión y Sube de Nivel
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Responde preguntas y acumula puntos que destacan tu perfil en nuestra plataforma. ¡Tu feedback cuenta!
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Button variant="outlined" onClick={() => handleEncuestaAnswer(1)}>
+                Pregunta 1
+              </Button>
+              <Button variant="outlined" onClick={() => handleEncuestaAnswer(2)}>
+                Pregunta 2
+              </Button>
+              <Button variant="outlined" onClick={() => handleEncuestaAnswer(3)}>
+                Pregunta 3
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleEncuestaComplete}
+                disabled={encuestaAnswers.length !== 3}
+              >
+                Completar Encuesta
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Check-in Horario</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Registra tu entrada o salida y gana puntos por mantener tu horario.
-                </Typography>
-                <Button variant="contained" onClick={handleCheckin} disabled={checkinDone}>
-                  {checkinDone ? "Check-in Realizado" : "Hacer Check-in"}
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Haz Check-in y Destaca
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Registra tu actividad y gana puntos para posicionarte como líder en tu industria.
+            </Typography>
+            <Button variant="contained" onClick={handleCheckin} disabled={checkinDone}>
+              {checkinDone ? "Check-in Realizado" : "Hacer Check-in"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Define tu Perfil y Maximiza Resultados
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Completa tu ICP y desbloquea puntos para personalizar tu experiencia y crecer con nuestra API.
+            </Typography>
+            <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Empresa"
+                value={icpFields.company}
+                onChange={(e) => handleIcpChange("company", e.target.value)}
+                variant="outlined"
+              />
+              <TextField
+                label="Rol"
+                value={icpFields.role}
+                onChange={(e) => handleIcpChange("role", e.target.value)}
+                variant="outlined"
+              />
+              <TextField
+                label="Industria"
+                value={icpFields.industry}
+                onChange={(e) => handleIcpChange("industry", e.target.value)}
+                variant="outlined"
+              />
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <CardContent>
+            <Typography variant="h6" color="primary">
+              Aprende, Gana y Lidera
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+              Completa lecciones rápidas, domina nuestra plataforma y acumula puntos para destacar.
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {tutorialLessons.map((completed, index) => (
+                <Button
+                  key={index}
+                  variant="outlined"
+                  onClick={() => handleLessonComplete(index)}
+                  disabled={completed}
+                >
+                  {completed ? `Lección ${index + 1} Completada` : `Completar Lección ${index + 1}`}
                 </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
 
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Perfil de Cliente Ideal (ICP)</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Amplía tus datos personales y gana puntos por cada campo. ¡Completa todo para un bonus!
-                </Typography>
-                <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <TextField label="Empresa" value={icpFields.company} onChange={(e) => handleIcpChange("company", e.target.value)} variant="outlined" />
-                  <TextField label="Rol" value={icpFields.role} onChange={(e) => handleIcpChange("role", e.target.value)} variant="outlined" />
-                  <TextField label="Industria" value={icpFields.industry} onChange={(e) => handleIcpChange("industry", e.target.value)} variant="outlined" />
-                </Box>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardContent>
-                <Typography variant="h6" color="primary">Tutorial Interactivo</Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                  Completa lecciones y gana puntos por cada una que termines.
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {tutorialLessons.map((completed, index) => (
-                    <Button key={index} variant="outlined" onClick={() => handleLessonComplete(index)} disabled={completed}>
-                      {completed ? `Lección ${index + 1} Completada` : `Completar Lección ${index + 1}`}
-                    </Button>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </Grid>
-      </Grid>
+      {/* CTA Final */}
+      <Box sx={{ mt: 6, textAlign: "center" }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold", color: "#1976d2" }}>
+          ¿Listo para revolucionar tu engagement?
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ mb: 3, maxWidth: "600px", mx: "auto" }}>
+          Únete a cientos de negocios que ya están aumentando sus conversiones con nuestra solución de gamificación. ¡Empieza gratis hoy!
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          sx={{ borderRadius: 2, px: 4, py: 1.5 }}
+          onClick={() => window.location.href = "/signup"} // Ajusta la URL según tu flujo
+        >
+          Comienza Gratis
+        </Button>
+      </Box>
 
       <Snackbar open={!!snackMessage} autoHideDuration={3000} onClose={() => setSnackMessage(null)}>
-        <Alert severity="success" onClose={() => setSnackMessage(null)}>{snackMessage}</Alert>
+        <Alert severity="success" onClose={() => setSnackMessage(null)}>
+          {snackMessage}
+        </Alert>
       </Snackbar>
     </Box>
   );
