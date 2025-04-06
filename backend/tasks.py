@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from celery import Celery
-from backend.models.session import AnonymousSession
+from models.guests import GuestsSession
 from core.config import settings
 from core.database import SessionLocal
 from services.credits_service import deduct_credit
@@ -21,5 +21,5 @@ def async_deduct_credit(user_id: int, amount: int = 1):
 def cleanup_anonymous_sessions():
     db = SessionLocal()
     threshold = datetime.utcnow() - timedelta(days=30)
-    db.query(AnonymousSession).filter(AnonymousSession.ultima_actividad < threshold).delete()
+    db.query(GuestsSession).filter(GuestsSession.ultima_actividad < threshold).delete()
     db.commit()

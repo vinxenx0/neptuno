@@ -1,4 +1,5 @@
 // src/app/page.tsx
+// src/app/page.tsx
 "use client";
 
 import { useAuth } from "@/lib/auth/context";
@@ -35,6 +36,7 @@ import {
 } from "@mui/icons-material";
 import { User } from "@/lib/types";
 import { motion, AnimatePresence } from "framer-motion";
+import SEO from "@/components/seo/MetaTags";
 
 
 // Styled Components
@@ -189,11 +191,36 @@ export default function LandingPage() {
     }
   };
 
+  const handleProgress = async () => {
+    try {
+      const response = await fetchAPI("/v1/gamification/me", { method: "GET" });
+      if (response.error) {
+        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarSeverity("error");
+      } else {
+        setSnackbarMessage("Información obtenida: " + JSON.stringify(response.data));
+        setSnackbarSeverity("success");
+      }
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Error al obtener información:", err);
+      setSnackbarMessage("Error al obtener información");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
   return (
+    <>
+    <SEO
+    title="Neptuno - SaaS para gestionar créditos y APIs de forma sencilla y escalable"
+    description="Explora tus insignias ganadas y desbloquea logros en nuestra plataforma de gamificación."
+    keywords="gamificación, insignias, logros, engagement"
+    />
     <Box sx={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
@@ -479,6 +506,18 @@ export default function LandingPage() {
                 /v1/api/info
               </EndpointButton>
             </Grid>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <EndpointButton
+                fullWidth
+                variant="contained"
+                color="secondary"
+                onClick={handleProgress}
+                startIcon={<Info />}
+              >
+                /progress
+              </EndpointButton>
+            </Grid>
           </Grid>
 
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
@@ -521,5 +560,6 @@ export default function LandingPage() {
         )}
       </AnimatePresence>
     </Box>
+    </>
   );
 }

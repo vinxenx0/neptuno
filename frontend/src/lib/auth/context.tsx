@@ -4,15 +4,18 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest, UserInfo } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge  } from "../types";
 import { motion } from "framer-motion";
+import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
 
 interface AuthContextType {
   user: User | null;
   credits: number;
+  gamification: Gamification | null; // Añadimos gamificación al contexto
   setCredits: (credits: number) => void; // Añadido
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setGamification: (gamification: Gamification) => void; // Añadido
   register: (data: RegisterRequest) => Promise<void>;
   loginWithGoogle: () => void;
   refreshToken: () => Promise<string | null>;
@@ -21,11 +24,14 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
 }
 
+
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [credits, setCredits] = useState<number>(100); // Valor por defecto para anónimos
+  const [gamification, setGamification] = useState<Gamification | null>(null); // Estado para gamificación
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -44,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               activo: true,
               subscription: data.subscription!,
               credits: data.credits,
-              create_at: "", // Podrías añadir este campo en el backend si lo necesitas
+              create_at: "",
               last_ip: "",
               last_login: "",
               user_type: data.user_type,
@@ -63,18 +69,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("session_id");
             localStorage.removeItem("anonUsername");
           }
+  
+          // Procesar datos de gamificación
+          const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
+          if (gamificationData && Array.isArray(gamificationData)) {
+            const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
+            const badges = gamificationData.map(g => g.badge).filter(b => b !== null) as Badge[];
+            setGamification({ points: totalPoints, badges });
+          } else {
+            setGamification({ points: 0, badges: [] });
+          }
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
         setUser(null);
         setCredits(0);
+        setGamification({ points: 0, badges: [] });
         localStorage.removeItem("session_id");
         localStorage.removeItem("anonUsername");
       } finally {
         setLoading(false);
       }
     };
-
+  
     checkAuth();
   }, []);
 
@@ -213,7 +230,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits,gamification, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

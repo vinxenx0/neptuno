@@ -1,5 +1,9 @@
 # backend/main.py
 # Punto de entrada principal de la aplicación.
+from api.v1 import payment_providers
+from models.gamification import EventType
+from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
+from services.gamification_service import get_user_gamification, register_event
 from fastapi import Depends, FastAPI, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
@@ -7,9 +11,10 @@ from api.v1 import auth, endpoints, payments, site_settings, integrations, payme
 from api.v1 import anonymous_sessions, credit_transactions, error_logs
 from api.v1 import api_logs
 from api.v1 import users
+from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.session import AnonymousSession
+from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits
@@ -117,6 +122,8 @@ app.include_router(error_logs.router, prefix="/v1/errors", tags=["Errors"])
 app.include_router(anonymous_sessions.router, prefix="/v1/sessions", tags=["Sessions"])
 app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=["Transactions"])
 app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
+app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
+app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 
 
 
@@ -206,7 +213,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
                 )
                 credits_remaining = user_db.credits
             else:
-                session_db = db.query(AnonymousSession).filter(AnonymousSession.id == user.user_id).first()
+                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
                 session_db.credits -= 1
                 transaction = CreditTransaction(
                     session_id=session_db.id,
@@ -274,44 +281,30 @@ async def restricted_test(user: UserContext = Depends(check_credits), db: Sessio
 
 @app.get("/info")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    """
-    Endpoint para obtener información del usuario basado en el contexto actual.
-    - Si el usuario está registrado, muestra la info de la base de datos.
-    - Si no está registrado y se permiten usuarios anónimos, muestra su contexto.
-    - Si no está registrado y no se permiten usuarios anónimos, muestra un contexto vacío.
-    """
     disable_anonymous = get_setting(db, "disable_anonymous_users")
-    if user.user_type == "registered":
-        # Información del usuario registrado
-        return {
-            "user_id": user.user_id,
-            "email": user.email,
-            "username": user.username,
-            "user_type": user.user_type,
-            "subscription": user.subscription,
-            "credits": user.credits,
-            "rol": user.rol
-        }
-    elif user.user_type == "anonymous" and disable_anonymous != "true":
-        # Información del usuario anónimo (si están permitidos)
-        return {
-            "session_id": user.session_id,
-            "user_id": user.user_id,
-            "email": user.email,
-            "username": user.username,
-            "user_type": user.user_type,
-            "subscription": user.subscription,
-            "credits": user.credits,
-            "rol": user.rol
-        }
-    else:
-        # Contexto vacío si no se permiten usuarios anónimos y no está autenticado
-        return {
-            "user_id": None,
-            "email": None,
-            "username": None,
-            "user_type": "none",
-            "subscription": None,
-            "credits": 0,
-            "rol": None
-        }
+    base_info = {
+        "user_id": user.user_id,
+        "email": user.email,
+        "username": user.username,
+        "user_type": user.user_type,
+        "subscription": user.subscription,
+        "credits": user.credits,
+        "rol": user.rol,
+        "session_id": user.session_id if user.user_type == "anonymous" else None
+    }
+
+    gamification = get_user_gamification(db, user)
+    gamification_data = [
+        UserGamificationResponse.from_orm(g) for g in gamification
+    ]
+
+    return {**base_info, "gamification": gamification_data}
+
+
+@app.post("/test-event", response_model=GamificationEventResponse)
+def test_gamification_event(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    event_type = db.query(EventType).filter(EventType.name == "test_api").first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type 'test_api' not found")
+    event = GamificationEventCreate(event_type_id=event_type.id)
+    return register_event(db, event, user)

@@ -20,7 +20,8 @@ import {
   styled,
   Container,
   Avatar,
-  IconButton
+  IconButton,
+  Chip
 } from "@mui/material";
 import { 
   Lock, 
@@ -29,7 +30,9 @@ import {
   ArrowBack,
   VerifiedUser,
   VpnKey,
-  PersonAdd
+  PersonAdd,
+  EmojiEvents,
+  Stars
 } from "@mui/icons-material";
 
 // Styled Components
@@ -125,7 +128,18 @@ export default function AuthPage() {
     setSuccess(null);
     try {
       await login(email, password);
-      setSuccess("¡Inicio de sesión exitoso! Redirigiendo...");
+      
+      // Gamificación: Punto por login exitoso
+      try {
+        await fetchAPI("/v1/gamification/events", {
+          method: "POST",
+          data: { event_type_id: 100 } // ID del evento de login
+        });
+        setSuccess("¡Inicio de sesión exitoso! Redirigiendo... (+1 punto 🎉)");
+      } catch (gamErr) {
+        setSuccess("¡Inicio de sesión exitoso! Redirigiendo...");
+      }
+      
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al iniciar sesión");
     }
@@ -139,7 +153,36 @@ export default function AuthPage() {
     try {
       const data: RegisterRequest = { email, username, password };
       await register(data);
-      setSuccess("¡Registro exitoso! Redirigiendo...");
+
+      // Gamificación: Eventos de progreso y badge
+      try {
+        // Registrar progreso por cada campo completado
+        await Promise.all([
+          fetchAPI("/v1/gamification/events", { 
+            method: "POST",
+            data: { event_type_id: 101 } // Email completado
+          }),
+          fetchAPI("/v1/gamification/events", { 
+            method: "POST",
+            data: { event_type_id: 102 } // Username completado
+          }),
+          fetchAPI("/v1/gamification/events", { 
+            method: "POST",
+            data: { event_type_id: 103 } // Password completado
+          })
+        ]);
+        
+        // Otorgar badge por registro completo
+        await fetchAPI("/v1/gamification/events", { 
+          method: "POST",
+          data: { event_type_id: 104 } // Badge de registro completo
+        });
+        
+        setSuccess("¡Registro exitoso! 🏆 ¡Insignia obtenida! Redirigiendo...");
+      } catch (gamErr) {
+        setSuccess("¡Registro exitoso! Redirigiendo...");
+      }
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Error al registrarse";
       if (errorMessage.includes("email")) {
@@ -279,6 +322,15 @@ export default function AuthPage() {
                   </AuthButton>
                 </Box>
 
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                  <Chip 
+                    icon={<EmojiEvents />}
+                    label="+1 punto por cada login"
+                    color="warning"
+                    variant="outlined"
+                  />
+                </Box>
+
                 <Divider sx={{ my: 3 }} />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -330,6 +382,15 @@ export default function AuthPage() {
                     {success}
                   </Alert>
                 )}
+
+                <Box sx={{ textAlign: 'center', mt: 2, mb: 3 }}>
+                  <Chip 
+                    icon={<Stars />}
+                    label="¡Gana 3 puntos + insignia al registrarte!"
+                    color="secondary"
+                    variant="outlined"
+                  />
+                </Box>
 
                 <Box component="form" onSubmit={handleRegister} sx={{ mt: 2 }}>
                   <TextField

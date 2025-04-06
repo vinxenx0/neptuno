@@ -5,74 +5,31 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
+import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  TextField,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  IconButton,
-  Snackbar,
-  Alert,
-  MenuItem,
-  Avatar,
-  Chip,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Badge,
-  Paper,
-  Tabs,
-  Tab,
-  useTheme,
-  styled
+import { Box,  Grid,  Card,  CardContent,  CardHeader,  TextField,  Button,  Accordion,  AccordionSummary,  AccordionDetails,  Typography,  IconButton,
+  Snackbar,  Alert,  MenuItem,  Avatar,  Chip,  Divider,  List,  ListItem,  ListItemAvatar,  ListItemText,  Badge,  Paper,  Tabs,  Tab,  useTheme,  styled
 } from "@mui/material";
-import {
-  AccountCircle,
-  Lock,
-  Payment,
-  CreditCard,
-  AddCircle,
-  Delete,
-  ExpandMore,
-  Edit,
-  History,
-  AttachMoney,
-  Security,
-  Logout,
-  Person,
-  LocationOn,
-  Language,
-  Star,
-  StarBorder
-} from "@mui/icons-material";
+import {  AccountCircle,  Lock,  Payment,  CreditCard,  AddCircle,  Delete,  ExpandMore,  Edit,  History,  AttachMoney,  Security,  Logout,  Person,
+  LocationOn,  Language,  Star,  StarBorder} from "@mui/icons-material";
 
 // Styled Components
 const GradientCard = styled(Card)(({ theme }) => ({
-  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-  color: theme.palette.primary.contrastText,
+  background: `linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)`,
+  color: 'white',
   borderRadius: '16px',
-  boxShadow: theme.shadows[10]
+  boxShadow: theme.shadows[4]
 }));
 
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
+  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
   borderRadius: '16px',
-  boxShadow: theme.shadows[5]
+  boxShadow: theme.shadows[2]
 }));
 
-// Interfaces (same as before)
+
 interface PaymentMethod {
   id: number;
   payment_type: string;
@@ -90,6 +47,12 @@ interface CreditTransaction {
   timestamp: string;
 }
 
+interface PaymentProvider {
+  id: number;
+  name: string;
+  active: boolean;
+}
+
 export default function UserDashboard() {
   const { user, logout, updateProfile } = useAuth();
   const router = useRouter();
@@ -98,7 +61,8 @@ export default function UserDashboard() {
   const [formData, setFormData] = useState({ email: "", username: "", ciudad: "", website: "" });
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
-  const [newMethod, setNewMethod] = useState({ payment_type: "stripe", details: "", is_default: false });
+  const [newMethod, setNewMethod] = useState({ payment_type: "", details: "", is_default: false });
+  const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
   const [credits, setCredits] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -106,6 +70,8 @@ export default function UserDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [tabValue, setTabValue] = useState(0);
+  const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
+  const [deleteMethodId, setDeleteMethodId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -121,18 +87,53 @@ export default function UserDashboard() {
 
     const fetchData = async () => {
       try {
-        const [transRes, methRes] = await Promise.all([
+        const [transRes, methRes, providersRes] = await Promise.all([
           fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
           fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
+          fetchAPI<PaymentProvider[]>("/v1/payment-providers"), // Nueva llamada
         ]);
         setTransactions(transRes.data || []);
         setMethods(methRes.data || []);
+        setPaymentProviders(providersRes.data?.filter(p => p.active) || []);
+        // Establecer el primer proveedor activo como predeterminado
+        if (providersRes.data && providersRes.data.length > 0) {
+          setNewMethod(prev => ({ ...prev, payment_type: providersRes.data.find(p => p.active)?.name || "" }));
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
       }
     };
     fetchData();
   }, [user, router]);
+
+  const handleEditMethod = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editMethod) return;
+    try {
+      const { data } = await fetchAPI<PaymentMethod>(`/v1/payments/methods/${editMethod.id}`, {
+        method: "PUT",
+        data: editMethod,
+      });
+      setMethods(methods.map((m) => (m.id === data!.id ? data! : m)));
+      setEditMethod(null);
+      setSuccess("Método actualizado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar método");
+    }
+  };
+
+  const handleDeleteMethod = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/payments/methods/${id}`, { method: "DELETE" });
+      setMethods(methods.filter((m) => m.id !== id));
+      setDeleteMethodId(null);
+      setSuccess("Método eliminado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar método");
+    }
+  };
 
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -188,13 +189,14 @@ export default function UserDashboard() {
         data: newMethod,
       });
       setMethods([...methods, data!]);
-      setNewMethod({ payment_type: "stripe", details: "", is_default: false });
+      setNewMethod({ payment_type: paymentProviders[0]?.name || "", details: "", is_default: false });
       setSuccess("Método añadido");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al añadir método");
     }
   };
+
 
   const handleSetDefault = async (id: number) => {
     try {
@@ -767,226 +769,282 @@ export default function UserDashboard() {
           )}
 
           {/* Payment Methods Tab */}
-          {tabValue === 3 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <GlassCard>
-                <CardHeader 
-                  title="Métodos de Pago" 
-                  avatar={<Payment color="primary" />}
-                  subheader="Gestiona tus métodos de pago asociados"
-                />
-                <CardContent>
-                  {methods.length > 0 && (
-                    <List sx={{ mb: 3 }}>
-                      {methods.map((m) => (
-                        <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: '8px', overflow: 'hidden' }}>
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
-                                {m.is_default ? <Star /> : <CreditCard />}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
-                                  {m.is_default && (
-                                    <Chip 
-                                      label="Predeterminado" 
-                                      size="small" 
-                                      color="success"
-                                      variant="outlined"
-                                    />
-                                  )}
-                                </Box>
-                              }
-                              secondary={m.details}
-                            />
-                            {!m.is_default && (
-                              <Button 
-                                onClick={() => handleSetDefault(m.id)} 
-                                variant="outlined" 
-                                size="small"
-                                sx={{ mr: 1 }}
-                              >
-                                Hacer Predeterminado
-                              </Button>
-                            )}
-                          </ListItem>
-                        </Paper>
-                      ))}
-                    </List>
-                  )}
-                  
-                  <Accordion sx={{ 
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    boxShadow: 'none',
-                    border: '1px solid rgba(255, 255, 255, 0.2)'
-                  }}>
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                      <Typography>Añadir nuevo método de pago</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Box 
-                        component="form" 
-                        onSubmit={handleAddMethod} 
-                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                      >
-                        <TextField
-                          label="Tipo"
-                          select
-                          value={newMethod.payment_type}
-                          onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
-                          fullWidth
+ {tabValue === 3 && (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+      <GlassCard>
+        <CardHeader
+          title="Métodos de Pago"
+          avatar={<Payment color="primary" />}
+          subheader="Gestiona tus métodos de pago asociados"
+        />
+        <CardContent>
+          {methods.length > 0 && (
+            <List sx={{ mb: 3 }}>
+              {methods.map((m) => (
+                <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: "8px", overflow: "hidden" }}>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
+                        {m.is_default ? <Star /> : <CreditCard />}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
+                          {m.is_default && (
+                            <Chip label="Predeterminado" size="small" color="success" variant="outlined" />
+                          )}
+                        </Box>
+                      }
+                      secondary={m.details}
+                    />
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <IconButton onClick={() => setEditMethod(m)} color="primary">
+                        <Edit />
+                      </IconButton>
+                      <IconButton onClick={() => setDeleteMethodId(m.id)} color="error">
+                        <Delete />
+                      </IconButton>
+                      {!m.is_default && (
+                        <Button
+                          onClick={() => handleSetDefault(m.id)}
                           variant="outlined"
                           size="small"
                         >
-                          <MenuItem value="stripe">Stripe</MenuItem>
-                        </TextField>
-                        <TextField
-                          label="Detalles"
-                          value={newMethod.details}
-                          onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
-                          fullWidth
-                          required
-                          variant="outlined"
-                          size="small"
-                          multiline
-                          rows={3}
-                        />
-                        <Button 
-                          type="submit" 
-                          variant="contained" 
-                          color="primary"
-                          startIcon={<AddCircle />}
-                          sx={{ mt: 1 }}
-                        >
-                          Añadir Método
+                          Hacer Predeterminado
                         </Button>
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
-                </CardContent>
-              </GlassCard>
-            </motion.div>
+                      )}
+                    </Box>
+                  </ListItem>
+                </Paper>
+              ))}
+            </List>
           )}
+
+          {/* Formulario para añadir método */}
+          <Accordion
+            sx={{
+              background: "rgba(255, 255, 255, 0.05)",
+              boxShadow: "none",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography>Añadir nuevo método de pago</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box component="form" onSubmit={handleAddMethod} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <TextField
+                  label="Tipo"
+                  select
+                  value={newMethod.payment_type}
+                  onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                >
+                  {paymentProviders.map((provider) => (
+                    <MenuItem key={provider.id} value={provider.name}>
+                      {provider.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  label="Detalles"
+                  value={newMethod.details}
+                  onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                  fullWidth
+                  required
+                  variant="outlined"
+                  size="small"
+                  multiline
+                  rows={3}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircle />}
+                  sx={{ mt: 1 }}
+                >
+                  Añadir Método
+                </Button>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </CardContent>
+      </GlassCard>
+
+      {/* Diálogo para editar método */}
+      <Dialog open={!!editMethod} onClose={() => setEditMethod(null)}>
+        <DialogTitle>Editar Método de Pago</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            onSubmit={handleEditMethod}
+            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
+          >
+            <TextField
+              label="Tipo"
+              select
+              value={editMethod?.payment_type || ""}
+              onChange={(e) => setEditMethod({ ...editMethod!, payment_type: e.target.value })}
+              fullWidth
+              variant="outlined"
+              size="small"
+            >
+              {paymentProviders.map((provider) => (
+                <MenuItem key={provider.id} value={provider.name}>
+                  {provider.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="Detalles"
+              value={editMethod?.details || ""}
+              onChange={(e) => setEditMethod({ ...editMethod!, details: e.target.value })}
+              fullWidth
+              required
+              variant="outlined"
+              size="small"
+              multiline
+              rows={3}
+            />
+            <DialogActions>
+              <Button onClick={() => setEditMethod(null)} variant="outlined">
+                Cancelar
+              </Button>
+              <Button type="submit" variant="contained" color="primary">
+                Guardar
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
+
+      {/* Diálogo para confirmar eliminación */}
+      <Dialog open={!!deleteMethodId} onClose={() => setDeleteMethodId(null)}>
+        <DialogTitle>¿Eliminar Método de Pago?</DialogTitle>
+        <DialogContent>
+          <Typography>Esta acción es irreversible. ¿Estás seguro de eliminar este método?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteMethodId(null)} variant="outlined">
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => handleDeleteMethod(deleteMethodId!)}
+            variant="contained"
+            color="error"
+          >
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </motion.div>
+  )}
 
           {/* Buy Credits Tab */}
           {tabValue === 4 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <GlassCard>
-                    <CardHeader 
-                      title="Comprar Créditos" 
-                      avatar={<AttachMoney color="primary" />}
-                      subheader="Recarga tu saldo de créditos"
-                    />
-                    <CardContent>
-                      <Box 
-                        component="form" 
-                        onSubmit={handlePurchase} 
-                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                      >
-                        <TextField
-                          label="Cantidad de Créditos"
-                          type="number"
-                          value={credits}
-                          onChange={(e) => setCredits(e.target.value)}
-                          fullWidth
-                          required
-                          variant="outlined"
-                          size="small"
-                          InputProps={{
-                            startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} />
-                          }}
-                        />
-                        <TextField
-                          label="Monto a Pagar (USD)"
-                          type="number"
-                          inputProps={{ step: "0.01" }}
-                          value={paymentAmount}
-                          onChange={(e) => setPaymentAmount(e.target.value)}
-                          fullWidth
-                          required
-                          variant="outlined"
-                          size="small"
-                          InputProps={{
-                            startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>
-                          }}
-                        />
-                        <Button 
-                          type="submit" 
-                          variant="contained" 
-                          color="primary"
-                          size="large"
-                          sx={{ mt: 2 }}
-                        >
-                          Comprar Créditos
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </GlassCard>
-                </Grid>
-                
-                <Grid item xs={12} md={6}>
-                  <GlassCard>
-                    <CardHeader 
-                      title="Tarifas y Beneficios" 
-                      avatar={<CreditCard color="primary" />}
-                    />
-                    <CardContent>
-                      <List>
-                        <ListItem>
-                          <ListItemAvatar>
-                            <Avatar sx={{ bgcolor: theme.palette.success.light }}>
-                              <Star />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary="1 crédito = $1 USD"
-                            secondary="Tasa de cambio fija"
-                          />
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                        <ListItem>
-                          <ListItemAvatar>
-                            <Avatar sx={{ bgcolor: theme.palette.info.light }}>
-                              <Payment />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary="Múltiples métodos de pago"
-                            secondary="Tarjetas, PayPal y más"
-                          />
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                        <ListItem>
-                          <ListItemAvatar>
-                            <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
-                              <Security />
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary="Transacciones seguras"
-                            secondary="Encriptación SSL"
-                          />
-                        </ListItem>
-                      </List>
-                    </CardContent>
-                  </GlassCard>
-                </Grid>
-              </Grid>
-            </motion.div>
-          )}
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <GlassCard>
+          <CardHeader title="Comprar Créditos" avatar={<AttachMoney color="primary" />} subheader="Recarga tu saldo de créditos" />
+          <CardContent>
+            <Box component="form" onSubmit={handlePurchase} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Cantidad de Créditos"
+                type="number"
+                value={credits}
+                onChange={(e) => setCredits(e.target.value)}
+                fullWidth
+                required
+                variant="outlined"
+                size="small"
+                InputProps={{ startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} /> }}
+              />
+              <TextField
+                label="Monto a Pagar (USD)"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                value={paymentAmount}
+                onChange={(e) => setPaymentAmount(e.target.value)}
+                fullWidth
+                required
+                variant="outlined"
+                size="small"
+                InputProps={{ startAdornment: <Typography sx={{ mr: 1 }}>$</Typography> }}
+              />
+              <TextField
+                label="Método de Pago"
+                select
+                value={methods.find((m) => m.is_default)?.id || methods[0]?.id || ""}
+                onChange={(e) => {
+                  const selectedMethod = methods.find((m) => m.id === parseInt(e.target.value));
+                  if (selectedMethod) {
+                    handleSetDefault(selectedMethod.id); // Actualiza el método predeterminado al seleccionarlo
+                  }
+                }}
+                fullWidth
+                variant="outlined"
+                size="small"
+                disabled={methods.length === 0}
+                helperText={methods.length === 0 ? "No hay métodos de pago disponibles" : "Selecciona un método de pago"}
+              >
+                {methods.map((method) => (
+                  <MenuItem key={method.id} value={method.id}>
+                    {method.payment_type} - {method.details} {method.is_default ? "(Predeterminado)" : ""}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button type="submit" variant="contained" color="primary" size="large" sx={{ mt: 2 }} disabled={methods.length === 0}>
+                Comprar Créditos
+              </Button>
+            </Box>
+          </CardContent>
+        </GlassCard>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <GlassCard>
+          <CardHeader title="Tarifas y Beneficios" avatar={<CreditCard color="primary" />} />
+          <CardContent>
+            <List>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                    <Star />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="1 crédito = $1 USD" secondary="Tasa de cambio fija" />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                    <Payment />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Múltiples métodos de pago" secondary="Tarjetas, PayPal y más" />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                    <Security />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Transacciones seguras" secondary="Encriptación SSL" />
+              </ListItem>
+            </List>
+          </CardContent>
+        </GlassCard>
+      </Grid>
+    </Grid>
+  </motion.div>
+)}
         </Box>
       </Box>
 

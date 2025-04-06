@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from dependencies.auth import UserContext, get_user_context
-from services.payment_service import add_payment_method, get_credit_transactions, get_payment_methods, purchase_credits, set_default_payment_method
+from services.payment_service import add_payment_method, delete_payment_method, get_credit_transactions, get_payment_methods, purchase_credits, set_default_payment_method, update_payment_method
 from core.database import get_db
 from core.logging import configure_logging
 from schemas.payment import CreditTransactionResponse, PurchaseRequest, PaymentMethodCreate, PaymentMethodResponse, PurchaseResponse
@@ -57,3 +57,26 @@ def list_transactions(
     if user.user_type != "registered":
         raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden ver sus transacciones")
     return get_credit_transactions(db, int(user.user_id))
+
+
+@router.put("/methods/{method_id}", response_model=PaymentMethodResponse)
+def update_method(
+    method_id: int,
+    method: PaymentMethodCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db),
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden actualizar métodos de pago")
+    return update_payment_method(db, int(user.user_id), method_id, method.payment_type, method.details)
+
+@router.delete("/methods/{method_id}")
+def delete_method(
+    method_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db),
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden eliminar métodos de pago")
+    delete_payment_method(db, int(user.user_id), method_id)
+    return {"message": "Método de pago eliminado"}

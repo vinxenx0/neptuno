@@ -21,6 +21,8 @@ export interface TokenResponse {
   token_type: string;
 }
 
+
+
 export interface RegisterRequest {
   email: string;
   username: string;
@@ -103,8 +105,7 @@ export interface FetchResponse<T> {
   total_pages?: number;
 }
 
-
-// respuesta /info
+// src/lib/types.ts
 export interface UserInfo {
   user_id: string | null;
   email: string | null;
@@ -113,5 +114,73 @@ export interface UserInfo {
   subscription: string | null;
   credits: number;
   rol: string | null;
-  session_id?: string; // Solo para anónimos
- }
+  session_id?: string;
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+}
+
+export interface EventType {
+  id: number;
+  name: string;
+  description?: string;
+  points_per_event: number;
+}
+
+export interface Badge {
+  id: number;
+  name: string;
+  description?: string;
+  event_type_id: number;
+  required_points: number;
+  user_type: string; // "anonymous", "registered", "both"
+}
+
+export interface Gamification {
+  points: number;
+  badges: Badge[];
+}
+
+export interface GamificationEventCreate {
+  event_type_id: number;
+}
+
+export interface GamificationEventResponse {
+  id: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  timestamp: string; // ISO string
+}
+
+export interface UserGamificationResponse {
+  points: number;
+  badge_id?: number;
+  event_type_id: number;
+  user_id?: number;
+  session_id?: string;
+  event_type: EventType;
+  badge?: Badge;
+}
+export interface RankingResponse {
+  username: string;
+  points: number;
+  badges_count: number;
+  user_type: string;
+}
+
+export interface PaymentProvider {
+  id: number;
+  name: string;
+  active: boolean;
+}
+
+
+
+export interface InfoResponse {
+  credits: number;
+  gamification: { points: number; badge: Badge | null }[];
+}
+
+
+export interface BadgeWithEventType extends Badge {
+  event_type: EventType;
+}

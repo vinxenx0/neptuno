@@ -11,7 +11,8 @@ from models.error_log import ErrorLog
 from models.integration import Integration
 from models.log import APILog
 from models.payment_method import PaymentMethod
-from models.session import AnonymousSession
+from models.gamification import EventType, Badge, GamificationEvent, UserGamification
+from models.guests import GuestsSession
 from models.token import RevokedToken, PasswordResetToken
 from core.security import hash_password
 import json
@@ -150,7 +151,7 @@ def init_settings_and_users():
         anonymous_sessions = []
         for i in range(3):
             session_id = str(uuid.uuid4())
-            session = AnonymousSession(
+            session = GuestsSession(
                 id=session_id,
                 username=f"anon_user_{i+1}",
                 credits=100 - (i * 10),
@@ -346,6 +347,55 @@ def init_settings_and_users():
 
         for token in reset_tokens:
             db.add(PasswordResetToken(**token))
+
+
+        # Inicializar eventos de gamificación
+        event_types = [
+            {"name": "api_usage", "description": "Uso de la API", "points_per_event": 10},
+            {"name": "login", "description": "Inicio de sesión exitoso", "points_per_event": 5},
+            {"name": "purchase", "description": "Compra de créditos", "points_per_event": 50},
+        ]
+
+        event_type_objects = []
+        for event in event_types:
+            if not db.query(EventType).filter(EventType.name == event["name"]).first():
+                event_type = EventType(**event)
+                db.add(event_type)
+                event_type_objects.append(event_type)
+
+        db.commit()
+
+        # Inicializar insignias (badges)
+        badges = [
+            {"name": "Novato", "description": "Primer uso de la API", "event_type_id": event_type_objects[0].id, "required_points": 10, "user_type": "both"},
+            {"name": "Experto", "description": "Más de 100 usos de la API", "event_type_id": event_type_objects[0].id, "required_points": 100, "user_type": "both"},
+            {"name": "Comprador", "description": "Primera compra de créditos", "event_type_id": event_type_objects[2].id, "required_points": 50, "user_type": "registered"},
+        ]
+
+        for badge in badges:
+            if not db.query(Badge).filter(Badge.name == badge["name"]).first():
+                db.add(Badge(**badge))
+
+        db.commit()
+
+        # Agregar eventos de gamificación
+        gamification_events = [
+            {"event_type_id": event_type_objects[0].id, "user_id": users[0].id, "timestamp": datetime.utcnow()},
+            {"event_type_id": event_type_objects[1].id, "user_id": users[1].id, "timestamp": datetime.utcnow()},
+            {"event_type_id": event_type_objects[2].id, "user_id": users[1].id, "timestamp": datetime.utcnow()},
+        ]
+
+        for event in gamification_events:
+            db.add(GamificationEvent(**event))
+
+        # Asignar puntos a usuarios
+        user_gamification_data = [
+            {"user_id": users[0].id, "event_type_id": event_type_objects[0].id, "points": 10, "badge_id": None},
+            {"user_id": users[1].id, "event_type_id": event_type_objects[1].id, "points": 5, "badge_id": None},
+        ]
+
+        for ug in user_gamification_data:
+            db.add(UserGamification(**ug))
 
         db.commit()
         print("✅ Base de datos inicializada con datos de ejemplo en todas las tablas.")

@@ -28,12 +28,12 @@ COPY --from=builder /app/node_modules ./node_modules
 RUN npm install -g serve
 
 EXPOSE 3000
-CMD ["serve", "-s", "out", "-l", "3000"]
+#CMD ["serve", "-s", "out", "-l", "3000"]
 #EXPOSE 3000
 #EXPOSE 80
 #CMD ["npm", "run", "start"]
 #CMD ["nginx", "-g", "daemon off;"]
-
+CMD ["npx", "next", "start"]
 
 
 

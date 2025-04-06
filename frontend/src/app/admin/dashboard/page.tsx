@@ -26,13 +26,21 @@ import {
   List,
   ListItem,
   ListItemText,
-  Badge,
+  Badge as MuiBadge,
   Paper,
   useTheme,
   styled,
   Box,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { 
@@ -49,13 +57,13 @@ import {
   PersonAdd,
   LockPerson,
   PeopleOutline,
-  AttachMoney
+  AttachMoney,
+  Edit,
+  EmojiEvents,
+  MonetizationOn
 } from "@mui/icons-material";
+import { SiteSetting, Integration, EventType, Badge, PaymentProvider } from "@/lib/types";
 
-
-import { SiteSetting, Integration } from "@/lib/types";
-
-// Styled Components (se mantienen igual)
 const AdminGradientCard = styled(Card)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
   color: theme.palette.primary.contrastText,
@@ -90,7 +98,16 @@ export default function ConfigurePage() {
     enable_social_login: true,
     disable_anonymous_users: false,
     disable_credits: false,
+    enable_payment_methods: true,
+    enable_points: true,
+    enable_badges: true,
   });
+  const [eventTypes, setEventTypes] = useState<EventType[]>([]);
+  const [badges, setBadges] = useState<Badge[]>([]);
+  const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
+  const [editEventType, setEditEventType] = useState<EventType | null>(null);
+  const [editBadge, setEditBadge] = useState<Badge | null>(null);
+  const [editPaymentProvider, setEditPaymentProvider] = useState<PaymentProvider | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -118,18 +135,32 @@ export default function ConfigurePage() {
         const integrationsRes = await fetchAPI<Integration[]>("/v1/integrations/");
         setIntegrations(integrationsRes.data || []);
 
-        // Cargar el estado inicial de las funcionalidades
+        const eventTypesRes = await fetchAPI<EventType[]>("/v1/gamification/event-types");
+        setEventTypes(eventTypesRes.data || []);
+
+        const badgesRes = await fetchAPI<Badge[]>("/v1/gamification/badges");
+        setBadges(badgesRes.data || []);
+
+        const paymentProvidersRes = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
+        setPaymentProviders(paymentProvidersRes.data || []);
+
         const featuresRes = await Promise.all([
           fetchAPI("/v1/settings/enable_registration"),
           fetchAPI("/v1/settings/enable_social_login"),
           fetchAPI("/v1/settings/disable_anonymous_users"),
           fetchAPI("/v1/settings/disable_credits"),
+          fetchAPI("/v1/settings/enable_payment_methods"),
+          fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_badges"),
         ]);
         setFeatures({
           enable_registration: featuresRes[0].data === "true",
           enable_social_login: featuresRes[1].data === "true",
           disable_anonymous_users: featuresRes[2].data === "true",
           disable_credits: featuresRes[3].data === "true",
+          enable_payment_methods: featuresRes[4].data === "true",
+          enable_points: featuresRes[5].data === "true",
+          enable_badges: featuresRes[6].data === "true",
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
@@ -140,13 +171,16 @@ export default function ConfigurePage() {
     fetchData();
   }, [user, router]);
 
-  // Handler functions (se mantienen igual)
+  const groupedBadges = badges.reduce((acc, badge) => {
+    const key = badge.event_type_id;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(badge);
+    return acc;
+  }, {} as Record<number, Badge[]>);
+
   const handleSaveSetting = async (key: string, newValue: string) => {
     try {
-      await fetchAPI("/v1/settings/admin/config", {
-        method: "POST",
-        data: { key, value: newValue },
-      });
+      await fetchAPI("/v1/settings/admin/config", { method: "POST", data: { key, value: newValue } });
       setSettingsByTag((prev) => {
         const updated = { ...prev };
         for (const tag in updated) {
@@ -164,10 +198,7 @@ export default function ConfigurePage() {
   const handleAddOrigin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetchAPI("/v1/settings/allowed-origins", {
-        method: "POST",
-        data: { origin: newOrigin },
-      });
+      await fetchAPI("/v1/settings/allowed-origins", { method: "POST", data: { origin: newOrigin } });
       setOrigins([...origins, newOrigin]);
       setNewOrigin("");
       setSuccess("Origen añadido con éxito");
@@ -182,11 +213,7 @@ export default function ConfigurePage() {
     try {
       const { data } = await fetchAPI<Integration>("/v1/integrations/", {
         method: "POST",
-        data: {
-          name: newIntegration.name,
-          webhook_url: newIntegration.webhook_url,
-          event_type: newIntegration.event_type,
-        },
+        data: { name: newIntegration.name, webhook_url: newIntegration.webhook_url, event_type: newIntegration.event_type },
       });
       setIntegrations([...integrations, data!]);
       setNewIntegration({ name: "", webhook_url: "", event_type: "" });
@@ -199,15 +226,140 @@ export default function ConfigurePage() {
 
   const handleToggleFeature = async (feature: string, enabled: boolean) => {
     try {
-      await fetchAPI("/v1/settings/admin/config", {
-        method: "POST",
-        data: { key: feature, value: enabled.toString() },
-      });
+      await fetchAPI("/v1/settings/admin/config", { method: "POST", data: { key: feature, value: enabled.toString() } });
       setFeatures((prev) => ({ ...prev, [feature]: enabled }));
       setSuccess(`Funcionalidad ${enabled ? "activada" : "desactivada"} con éxito`);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al actualizar funcionalidad");
+    }
+  };
+
+  const handleCreateEventType = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<EventType>("/v1/gamification/event-types", { method: "POST", data: editEventType });
+      setEventTypes([...eventTypes, data!]);
+      setEditEventType(null);
+      setSuccess("Tipo de evento creado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear tipo de evento");
+    }
+  };
+
+  const handleUpdateEventType = async (e: React.FormEvent) => {
+    if (!editEventType?.id) return;
+    try {
+      const { data } = await fetchAPI<EventType>(`/v1/gamification/event-types/${editEventType.id}`, { method: "PUT", data: editEventType });
+      setEventTypes(eventTypes.map((et) => (et.id === data!.id ? data! : et)));
+      setEditEventType(null);
+      setSuccess("Tipo de evento actualizado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar tipo de evento");
+    }
+  };
+
+  const handleDeleteEventType = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/gamification/event-types/${id}`, { method: "DELETE" });
+      setEventTypes(eventTypes.filter((et) => et.id !== id));
+      setSuccess("Tipo de evento eliminado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar tipo de evento");
+    }
+  };
+
+  const handleCreateBadge = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<Badge>("/v1/gamification/badges", { method: "POST", data: editBadge });
+      setBadges([...badges, data!]);
+      setEditBadge(null);
+      setSuccess("Badge creado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear badge");
+    }
+  };
+
+  const handleUpdateBadge = async (e: React.FormEvent) => {
+    if (!editBadge?.id) return;
+    try {
+      const { data } = await fetchAPI<Badge>(`/v1/gamification/badges/${editBadge.id}`, { method: "PUT", data: editBadge });
+      setBadges(badges.map((b) => (b.id === data!.id ? data! : b)));
+      setEditBadge(null);
+      setSuccess("Badge actualizado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar badge");
+    }
+  };
+
+  const handleDeleteBadge = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/gamification/badges/${id}`, { method: "DELETE" });
+      setBadges(badges.filter((b) => b.id !== id));
+      setSuccess("Badge eliminado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar badge");
+    }
+  };
+
+  const handleTogglePaymentProvider = async (id: number, active: boolean) => {
+    try {
+      const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${id}`, {
+        method: "PUT",
+        data: { active },
+      });
+      setPaymentProviders(paymentProviders.map((p) => (p.id === id ? data! : p)));
+      setSuccess(`Proveedor ${active ? "activado" : "desactivado"}`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar proveedor");
+    }
+  };
+
+  const handleCreatePaymentProvider = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<PaymentProvider>("/v1/payment-providers", { method: "POST", data: editPaymentProvider });
+      setPaymentProviders([...paymentProviders, data!]);
+      setEditPaymentProvider(null);
+      setSuccess("Proveedor creado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear proveedor");
+    }
+  };
+
+  const handleUpdatePaymentProvider = async (e: React.FormEvent) => {
+    if (!editPaymentProvider?.id) return;
+    try {
+      const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${editPaymentProvider.id}`, {
+        method: "PUT",
+        data: editPaymentProvider,
+      });
+      setPaymentProviders(paymentProviders.map((p) => (p.id === data!.id ? data! : p)));
+      setEditPaymentProvider(null);
+      setSuccess("Proveedor actualizado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar proveedor");
+    }
+  };
+
+  const handleDeletePaymentProvider = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/payment-providers/${id}`, { method: "DELETE" });
+      setPaymentProviders(paymentProviders.filter((p) => p.id !== id));
+      setSuccess("Proveedor eliminado");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar proveedor");
     }
   };
 
@@ -236,7 +388,6 @@ export default function ConfigurePage() {
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
       <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
-        {/* Header Section (se mantiene igual) */}
         <Box sx={{ 
           display: 'flex', 
           flexDirection: { xs: 'column', md: 'row' }, 
@@ -267,7 +418,7 @@ export default function ConfigurePage() {
             </Typography>
           </motion.div>
           
-          <Badge
+          <MuiBadge
             overlap="circular"
             badgeContent={
               <Chip 
@@ -294,10 +445,10 @@ export default function ConfigurePage() {
             >
               {user?.username?.charAt(0).toUpperCase()}
             </Avatar>
-          </Badge>
+            </MuiBadge>
         </Box>
 
-        {/* Stats Cards - Se añade tarjeta para funcionalidades */}
+        {/* Stats Cards */}
         <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
           <AdminGradientCard sx={{ flex: 1, minWidth: '200px' }}>
             <CardContent>
@@ -352,19 +503,35 @@ export default function ConfigurePage() {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
                   <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                    Funcionalidades
+                    Gamificación
                   </Typography>
                   <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-                    4
+                    {eventTypes.length}
                   </Typography>
                 </Box>
-                <LockPerson sx={{ fontSize: 40, opacity: 0.8 }} />
+                <EmojiEvents sx={{ fontSize: 40, opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </AdminGradientCard>
+
+          <AdminGradientCard sx={{ flex: 1, minWidth: '200px' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                    Pagos
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                    {paymentProviders.length}
+                  </Typography>
+                </Box>
+                <MonetizationOn sx={{ fontSize: 40, opacity: 0.8 }} />
               </Box>
             </CardContent>
           </AdminGradientCard>
         </Box>
 
-        {/* Tabs Navigation - Se añade pestaña de Funcionalidades */}
+        {/* Tabs Navigation */}
         <Paper sx={{ mb: 3, borderRadius: '12px', overflow: 'hidden' }}>
           <Tabs
             value={activeTab}
@@ -375,46 +542,34 @@ export default function ConfigurePage() {
             textColor="primary"
           >
             <Tab label="Configuraciones" icon={<Settings />} iconPosition="start" />
-            <Tab label="Orígenes Permitidos" icon={<Security />} iconPosition="start" />
+            <Tab label="Orígenes" icon={<Security />} iconPosition="start" />
             <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
             <Tab label="Funcionalidades" icon={<LockPerson />} iconPosition="start" />
+            <Tab label="Gamificación" icon={<EmojiEvents />} iconPosition="start" />
+            <Tab label="Pagos" icon={<MonetizationOn />} iconPosition="start" />
           </Tabs>
         </Paper>
 
-        {/* Tab Content - Se añade contenido para pestaña de Funcionalidades */}
+        {/* Tab Content */}
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Configurations Tab (se mantiene igual) */}
+          {/* Configuraciones Tab */}
           {activeTab === 0 && (
             <Box sx={{ mb: 4 }}>
               {Object.entries(settingsByTag).map(([tag, settings]) => (
                 <ConfigGlassCard key={tag} sx={{ mb: 2 }}>
-                  <Accordion 
-                    sx={{ 
-                      background: 'transparent',
-                      boxShadow: 'none'
-                    }}
-                  >
+                  <Accordion sx={{ background: 'transparent', boxShadow: 'none' }}>
                     <AccordionSummary expandIcon={<ExpandMore />}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Avatar sx={{ 
-                          bgcolor: theme.palette.primary.main,
-                          width: 32, 
-                          height: 32 
-                        }}>
+                        <Avatar sx={{ bgcolor: theme.palette.primary.main, width: 32, height: 32 }}>
                           <Settings sx={{ fontSize: 16 }} />
                         </Avatar>
                         <Typography variant="h6">{tag}</Typography>
-                        <Chip 
-                          label={`${settings.length} configs`} 
-                          size="small" 
-                          color="primary" 
-                          variant="outlined"
-                        />
+                        <Chip label={`${settings.length} configs`} size="small" color="primary" variant="outlined" />
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -429,9 +584,7 @@ export default function ConfigurePage() {
                               variant="outlined"
                               size="small"
                               helperText={setting.description}
-                              InputProps={{
-                                sx: { borderRadius: '12px' }
-                              }}
+                              InputProps={{ sx: { borderRadius: '12px' } }}
                             />
                           </Grid>
                         ))}
@@ -443,16 +596,12 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Allowed Origins Tab (se mantiene igual) */}
+          {/* Orígenes Permitidos Tab */}
           {activeTab === 1 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
                 <CardContent>
-                  <Box 
-                    component="form" 
-                    onSubmit={handleAddOrigin} 
-                    sx={{ display: 'flex', gap: 2 }}
-                  >
+                  <Box component="form" onSubmit={handleAddOrigin} sx={{ display: 'flex', gap: 2 }}>
                     <TextField
                       label="Nuevo Origen Permitido"
                       value={newOrigin}
@@ -461,13 +610,11 @@ export default function ConfigurePage() {
                       variant="outlined"
                       size="small"
                       placeholder="https://example.com"
-                      InputProps={{
-                        startAdornment: <Public color="action" sx={{ mr: 1 }} />
-                      }}
+                      InputProps={{ startAdornment: <Public color="action" sx={{ mr: 1 }} /> }}
                     />
-                    <Button 
-                      type="submit" 
-                      variant="contained" 
+                    <Button
+                      type="submit"
+                      variant="contained"
                       color="primary"
                       startIcon={<AddCircle />}
                       sx={{ minWidth: '120px' }}
@@ -483,20 +630,12 @@ export default function ConfigurePage() {
                   {origins.map((origin, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                       <ConfigGlassCard>
-                        <CardContent sx={{ 
-                          display: 'flex', 
-                          justifyContent: 'space-between', 
-                          alignItems: 'center'
-                        }}>
+                        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Public color="primary" />
-                            <Typography noWrap sx={{ maxWidth: '200px' }}>
-                              {origin}
-                            </Typography>
+                            <Typography noWrap sx={{ maxWidth: '200px' }}>{origin}</Typography>
                           </Box>
-                          <IconButton color="error">
-                            <Delete />
-                          </IconButton>
+                          <IconButton color="error"><Delete /></IconButton>
                         </CardContent>
                       </ConfigGlassCard>
                     </Grid>
@@ -507,10 +646,7 @@ export default function ConfigurePage() {
                   <CardContent sx={{ textAlign: 'center', py: 4 }}>
                     <Public sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
                     <Typography variant="h6" color="textSecondary">
-                      No hay orígenes permitidos configurados
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Añade un origen para permitir solicitudes desde ese dominio
+                      No hay orígenes permitidos
                     </Typography>
                   </CardContent>
                 </ConfigGlassCard>
@@ -518,16 +654,12 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Integrations Tab (se mantiene igual) */}
+          {/* Integraciones Tab */}
           {activeTab === 2 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
                 <CardContent>
-                  <Box 
-                    component="form" 
-                    onSubmit={handleAddIntegration} 
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                  >
+                  <Box component="form" onSubmit={handleAddIntegration} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <TextField
                       label="Nombre de la Integración"
                       value={newIntegration.name}
@@ -535,9 +667,7 @@ export default function ConfigurePage() {
                       fullWidth
                       variant="outlined"
                       size="small"
-                      InputProps={{
-                        startAdornment: <Link color="action" sx={{ mr: 1 }} />
-                      }}
+                      InputProps={{ startAdornment: <Link color="action" sx={{ mr: 1 }} /> }}
                     />
                     <TextField
                       label="Webhook URL"
@@ -546,9 +676,7 @@ export default function ConfigurePage() {
                       fullWidth
                       variant="outlined"
                       size="small"
-                      InputProps={{
-                        startAdornment: <Webhook color="action" sx={{ mr: 1 }} />
-                      }}
+                      InputProps={{ startAdornment: <Webhook color="action" sx={{ mr: 1 }} /> }}
                     />
                     <TextField
                       label="Tipo de Evento"
@@ -557,17 +685,9 @@ export default function ConfigurePage() {
                       fullWidth
                       variant="outlined"
                       size="small"
-                      InputProps={{
-                        startAdornment: <Settings color="action" sx={{ mr: 1 }} />
-                      }}
+                      InputProps={{ startAdornment: <Settings color="action" sx={{ mr: 1 }} /> }}
                     />
-                    <Button 
-                      type="submit" 
-                      variant="contained" 
-                      color="primary"
-                      startIcon={<AddCircle />}
-                      sx={{ mt: 1 }}
-                    >
+                    <Button type="submit" variant="contained" color="primary" startIcon={<AddCircle />} sx={{ mt: 1 }}>
                       Crear Integración
                     </Button>
                   </Box>
@@ -580,24 +700,18 @@ export default function ConfigurePage() {
                     <Grid item xs={12} md={6} key={integration.id}>
                       <ConfigGlassCard>
                         <CardContent>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-start',
-                            mb: 2
-                          }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Webhook color="primary" />
                               {integration.name}
                             </Typography>
-                            <Chip 
-                              label={integration.active ? "Activo" : "Inactivo"} 
-                              color={integration.active ? "success" : "error"} 
+                            <Chip
+                              label={integration.active ? "Activo" : "Inactivo"}
+                              color={integration.active ? "success" : "error"}
                               size="small"
                               icon={integration.active ? <CheckCircle /> : <Cancel />}
                             />
                           </Box>
-                          
                           <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
                             <strong>Webhook:</strong> {integration.webhook_url}
                           </Typography>
@@ -616,16 +730,13 @@ export default function ConfigurePage() {
                     <Typography variant="h6" color="textSecondary">
                       No hay integraciones configuradas
                     </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Crea una integración para conectar con servicios externos
-                    </Typography>
                   </CardContent>
                 </ConfigGlassCard>
               )}
             </Box>
           )}
 
-          {/* Features Tab - Nueva pestaña */}
+          {/* Funcionalidades Tab */}
           {activeTab === 3 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
@@ -636,110 +747,350 @@ export default function ConfigurePage() {
                   </Typography>
                   
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <ConfigGlassCard sx={{ p: 3 }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={features.enable_registration}
-                            onChange={(e) => handleToggleFeature("enable_registration", e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <PersonAdd color={features.enable_registration ? "primary" : "disabled"} />
-                            <Typography variant="body1">
-                              Habilitar Registro
-                              <Typography variant="caption" display="block" color="textSecondary">
-                                Permite a nuevos usuarios registrarse en la plataforma
+                    {Object.entries(features).map(([key, value]) => (
+                      <ConfigGlassCard key={key} sx={{ p: 3 }}>
+                        <FormControlLabel
+                          control={<Switch checked={value} onChange={(e) => handleToggleFeature(key, e.target.checked)} color="primary" />}
+                          label={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              {key.includes('payment') ? <AttachMoney color={value ? "primary" : "disabled"} /> :
+                               key.includes('badge') ? <EmojiEvents color={value ? "primary" : "disabled"} /> :
+                               key.includes('points') ? <MonetizationOn color={value ? "primary" : "disabled"} /> :
+                               <Settings color={value ? "primary" : "disabled"} />}
+                              <Typography variant="body1">
+                                {key.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}
+                                <Typography variant="caption" display="block" color="textSecondary">
+                                  {getFeatureDescription(key)}
+                                </Typography>
                               </Typography>
-                            </Typography>
-                          </Box>
-                        }
-                        sx={{ width: '100%' }}
-                      />
-                    </ConfigGlassCard>
-
-                    <ConfigGlassCard sx={{ p: 3 }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={features.enable_social_login}
-                            onChange={(e) => handleToggleFeature("enable_social_login", e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <PeopleOutline color={features.enable_social_login ? "primary" : "disabled"} />
-                            <Typography variant="body1">
-                              Habilitar Login Social
-                              <Typography variant="caption" display="block" color="textSecondary">
-                                Permite el inicio de sesión con proveedores sociales
-                              </Typography>
-                            </Typography>
-                          </Box>
-                        }
-                        sx={{ width: '100%' }}
-                      />
-                    </ConfigGlassCard>
-
-                    <ConfigGlassCard sx={{ p: 3 }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={features.disable_anonymous_users}
-                            onChange={(e) => handleToggleFeature("disable_anonymous_users", e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <LockPerson color={features.disable_anonymous_users ? "error" : "disabled"} />
-                            <Typography variant="body1">
-                              Deshabilitar Usuarios Anónimos
-                              <Typography variant="caption" display="block" color="textSecondary">
-                                Impide el acceso a usuarios no registrados
-                              </Typography>
-                            </Typography>
-                          </Box>
-                        }
-                        sx={{ width: '100%' }}
-                      />
-                    </ConfigGlassCard>
-
-                    <ConfigGlassCard sx={{ p: 3 }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={features.disable_credits}
-                            onChange={(e) => handleToggleFeature("disable_credits", e.target.checked)}
-                            color="primary"
-                          />
-                        }
-                        label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <AttachMoney color={features.disable_credits ? "error" : "disabled"} />
-                            <Typography variant="body1">
-                              Desactivar Créditos
-                              <Typography variant="caption" display="block" color="textSecondary">
-                                Deshabilita el sistema de créditos en la plataforma
-                              </Typography>
-                            </Typography>
-                          </Box>
-                        }
-                        sx={{ width: '100%' }}
-                      />
-                    </ConfigGlassCard>
+                            </Box>
+                          }
+                          sx={{ width: '100%' }}
+                        />
+                      </ConfigGlassCard>
+                    ))}
                   </Box>
                 </CardContent>
               </ConfigGlassCard>
             </Box>
           )}
+
+          {/* Gamificación Tab */}
+          {activeTab === 4 && (
+            <Box sx={{ mb: 4 }}>
+              <ConfigGlassCard sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
+                    <EmojiEvents sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Gestión de Gamificación
+                  </Typography>
+
+                  {/* Event Types Section */}
+                  <ConfigGlassCard sx={{ mb: 4, p: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6">Tipos de Evento</Typography>
+                      <Button
+                        variant="contained"
+                        startIcon={<AddCircle />}
+                        onClick={() => setEditEventType({ id: 0, name: '', description: '', points_per_event: 0 })}
+                      >
+                        Nuevo Tipo
+                      </Button>
+                    </Box>
+                    
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Nombre</TableCell>
+                          <TableCell>Descripción</TableCell>
+                          <TableCell>Puntos</TableCell>
+                          <TableCell>Acciones</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {eventTypes.map((et) => (
+                          <TableRow key={et.id}>
+                            <TableCell>{et.name}</TableCell>
+                            <TableCell>{et.description}</TableCell>
+                            <TableCell>{et.points_per_event}</TableCell>
+                            <TableCell>
+                              <IconButton onClick={() => setEditEventType(et)} color="primary">
+                                <Edit />
+                              </IconButton>
+                              <IconButton onClick={() => handleDeleteEventType(et.id)} color="error">
+                                <Delete />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </ConfigGlassCard>
+
+                  {/* Badges Section */}
+                  <ConfigGlassCard sx={{ p: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6">Insignias</Typography>
+                      <Button
+                        variant="contained"
+                        startIcon={<AddCircle />}
+                        onClick={() => setEditBadge({ 
+                          id: 0, 
+                          name: '', 
+                          description: '', 
+                          event_type_id: eventTypes[0]?.id || 0, 
+                          required_points: 0, 
+                          user_type: 'both' 
+                        })}
+                        disabled={eventTypes.length === 0}
+                      >
+                        Nueva Insignia
+                      </Button>
+                    </Box>
+
+                    {eventTypes.map((eventType) => (
+                      <Accordion key={eventType.id} sx={{ background: 'transparent', boxShadow: 'none' }}>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                          <Typography>{eventType.name} (ID: {eventType.id})</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Nombre</TableCell>
+                                <TableCell>Puntos Requeridos</TableCell>
+                                <TableCell>Tipo Usuario</TableCell>
+                                <TableCell>Acciones</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {(groupedBadges[eventType.id] || []).map((badge) => (
+                                <TableRow key={badge.id}>
+                                  <TableCell>{badge.name}</TableCell>
+                                  <TableCell>{badge.required_points}</TableCell>
+                                  <TableCell>{badge.user_type}</TableCell>
+                                  <TableCell>
+                                    <IconButton onClick={() => setEditBadge(badge)} color="primary">
+                                      <Edit />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDeleteBadge(badge.id)} color="error">
+                                      <Delete />
+                                    </IconButton>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </AccordionDetails>
+                      </Accordion>
+                    ))}
+                  </ConfigGlassCard>
+                </CardContent>
+              </ConfigGlassCard>
+
+              {/* Event Type Dialog */}
+              <Dialog open={!!editEventType} onClose={() => setEditEventType(null)}>
+                <DialogTitle>{editEventType?.id ? 'Editar Tipo de Evento' : 'Nuevo Tipo de Evento'}</DialogTitle>
+                <DialogContent>
+                  <Box component="form" onSubmit={editEventType?.id ? handleUpdateEventType : handleCreateEventType} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre"
+                      fullWidth
+                      value={editEventType?.name || ''}
+                      onChange={(e) => setEditEventType({ ...editEventType!, name: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Descripción"
+                      fullWidth
+                      value={editEventType?.description || ''}
+                      onChange={(e) => setEditEventType({ ...editEventType!, description: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Puntos por evento"
+                      type="number"
+                      fullWidth
+                      value={editEventType?.points_per_event || 0}
+                      onChange={(e) => setEditEventType({ ...editEventType!, points_per_event: parseInt(e.target.value) || 0 })}
+                      margin="normal"
+                    />
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
+                      sx={{ mt: 2 }}
+                    >
+                      {editEventType?.id ? 'Actualizar' : 'Crear'}
+                    </Button>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+
+              {/* Badge Dialog */}
+              <Dialog open={!!editBadge} onClose={() => setEditBadge(null)}>
+                <DialogTitle>{editBadge?.id ? 'Editar Insignia' : 'Nueva Insignia'}</DialogTitle>
+                <DialogContent>
+                  <Box component="form" onSubmit={editBadge?.id ? handleUpdateBadge : handleCreateBadge} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre"
+                      fullWidth
+                      value={editBadge?.name || ''}
+                      onChange={(e) => setEditBadge({ ...editBadge!, name: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Descripción"
+                      fullWidth
+                      value={editBadge?.description || ''}
+                      onChange={(e) => setEditBadge({ ...editBadge!, description: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Puntos Requeridos"
+                      type="number"
+                      fullWidth
+                      value={editBadge?.required_points || 0}
+                      onChange={(e) => setEditBadge({ ...editBadge!, required_points: parseInt(e.target.value) || 0 })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Tipo de Evento"
+                      select
+                      fullWidth
+                      value={editBadge?.event_type_id || 0}
+                      onChange={(e) => setEditBadge({ ...editBadge!, event_type_id: parseInt(e.target.value) })}
+                      margin="normal"
+                      SelectProps={{ native: true }}
+                    >
+                      {eventTypes.map((et) => (
+                        <option key={et.id} value={et.id}>{et.name}</option>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label="Tipo de Usuario"
+                      select
+                      fullWidth
+                      value={editBadge?.user_type || 'both'}
+                      onChange={(e) => setEditBadge({ ...editBadge!, user_type: e.target.value as any })}
+                      margin="normal"
+                      SelectProps={{ native: true }}
+                    >
+                      <option value="anonymous">Anónimo</option>
+                      <option value="registered">Registrado</option>
+                      <option value="both">Ambos</option>
+                    </TextField>
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
+                      sx={{ mt: 2 }}
+                    >
+                      {editBadge?.id ? 'Actualizar' : 'Crear'}
+                    </Button>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+            </Box>
+          )}
+
+          {/* Pagos Tab */}
+          {activeTab === 5 && (
+            <Box sx={{ mb: 4 }}>
+              <ConfigGlassCard>
+                <CardContent>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
+                    <MonetizationOn sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Gestión de Pagos
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddCircle />}
+                      onClick={() => setEditPaymentProvider({ id: 0, name: '', active: true })}
+                    >
+                      Nuevo Proveedor
+                    </Button>
+                  </Box>
+
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre</TableCell>
+                        <TableCell>Estado</TableCell>
+                        <TableCell>Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {paymentProviders.map((provider) => (
+                        <TableRow key={provider.id}>
+                          <TableCell>{provider.name}</TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={provider.active}
+                              onChange={(e) => handleTogglePaymentProvider(provider.id, e.target.checked)}
+                              color="primary"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => setEditPaymentProvider(provider)} color="primary">
+                              <Edit />
+                            </IconButton>
+                            <IconButton onClick={() => handleDeletePaymentProvider(provider.id)} color="error">
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </ConfigGlassCard>
+
+              {/* Payment Provider Dialog */}
+              <Dialog open={!!editPaymentProvider} onClose={() => setEditPaymentProvider(null)}>
+                <DialogTitle>{editPaymentProvider?.id ? 'Editar Proveedor' : 'Nuevo Proveedor'}</DialogTitle>
+                <DialogContent>
+                  <Box component="form" onSubmit={editPaymentProvider?.id ? handleUpdatePaymentProvider : handleCreatePaymentProvider} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre"
+                      fullWidth
+                      value={editPaymentProvider?.name || ''}
+                      onChange={(e) => setEditPaymentProvider({ ...editPaymentProvider!, name: e.target.value })}
+                      margin="normal"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={editPaymentProvider?.active || false}
+                          onChange={(e) => setEditPaymentProvider({ ...editPaymentProvider!, active: e.target.checked })}
+                          color="primary"
+                        />
+                      }
+                      label="Activo"
+                      sx={{ mt: 2 }}
+                    />
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
+                      sx={{ mt: 2 }}
+                    >
+                      {editPaymentProvider?.id ? 'Actualizar' : 'Crear'}
+                    </Button>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+            </Box>
+          )}
         </motion.div>
       </Box>
 
-      {/* Notifications (se mantiene igual) */}
+      {/* Notificaciones */}
       <AnimatePresence>
         {error && (
           <Snackbar 
@@ -789,3 +1140,17 @@ export default function ConfigurePage() {
     </Box>
   );
 }
+
+// Función auxiliar para descripciones de características
+const getFeatureDescription = (key: string) => {
+  const descriptions: Record<string, string> = {
+    enable_registration: 'Permite a nuevos usuarios registrarse en la plataforma',
+    enable_social_login: 'Permite el inicio de sesión con proveedores sociales',
+    disable_anonymous_users: 'Impide el acceso a usuarios no registrados',
+    disable_credits: 'Deshabilita el sistema de créditos en la plataforma',
+    enable_payment_methods: 'Habilita diferentes métodos de pago',
+    enable_points: 'Activa el sistema de puntos por actividades',
+    enable_badges: 'Permite la obtención de insignias'
+  };
+  return descriptions[key] || 'Funcionalidad del sistema';
+};

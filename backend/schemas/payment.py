@@ -42,3 +42,16 @@ class CreditTransactionResponse(BaseModel):
 
     class Config:
         from_attributes = True  # Permite mapear desde objetos SQLAlchemy
+        
+class PaymentProviderBase(BaseModel):
+    name: str
+    active: bool = True
+
+class PaymentProviderCreate(PaymentProviderBase):
+    pass
+
+class PaymentProviderResponse(PaymentProviderBase):
+    id: int
+
+    class Config:
+        from_attributes = True

@@ -2,7 +2,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-class AnonymousSessionBase(BaseModel):
+class GuestsSessionBase(BaseModel):
     id: str
     username: str  # Nuevo campo
     credits: int
@@ -10,6 +10,6 @@ class AnonymousSessionBase(BaseModel):
     ultima_actividad: datetime | None
     last_ip: str | None
 
-class AnonymousSessionResponse(AnonymousSessionBase):
+class GuestsSessionResponse(GuestsSessionBase):
     class Config:
         from_attributes = True  # Reemplaza orm_mode = True

@@ -1,3 +1,4 @@
+// from: frontend/src/app/admin/registry/page.tsx
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
@@ -35,6 +36,7 @@ import {
   Receipt,
   CreditScore
 } from "@mui/icons-material";
+import { LoadingSpinner } from "@/components/ui";
 
 // Styled Components
 const AdminGlassCard = styled(Paper)(({ theme }) => ({
@@ -93,7 +95,7 @@ interface APILog {
   timestamp: string;
 }
 
-interface AnonymousSession {
+interface GuestsSession {
   id: string;
   credits: number;
   create_at: string;
@@ -446,9 +448,9 @@ const TabContent = ({ tab }: { tab: string }) => {
 
   if (loading) {
     return (
-      <Box sx={{ p: 4 }}>
-        <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 2 }} />
-      </Box>
+      <div className="min-h-[400px] flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
     );
   }
 

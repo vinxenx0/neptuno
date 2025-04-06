@@ -1,0 +1,902 @@
+Gracias, veamos algunas cosas 
+
+Hacer la aplicación más responsive: bien te voy a pasar los componentes navbar y footer para que hagas los cambios seo que veas convenientes tal y como hemos indicado: Revisa Navbar.tsx y Footer.tsx para asegurarte de que usen breakpoints o un diseño colapsable (ej. menú hamburguesa en móviles).
+
+// src/components/Footer.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { 
+  Box, 
+  Grid, 
+  Typography, 
+  IconButton, 
+  Divider, 
+  useTheme,
+  styled,
+  Container
+} from "@mui/material";
+import { 
+  Brightness4, 
+  Brightness7,
+  Info,
+  Gavel,
+  ContactSupport,
+  Home
+} from "@mui/icons-material";
+
+const GlassFooter = styled('footer')(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+  padding: theme.spacing(4),
+  marginTop: 'auto'
+}));
+
+const FooterLink = styled(Link)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  textDecoration: 'none',
+  transition: 'color 0.3s ease',
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}));
+
+export default function Footer() {
+  const theme = useTheme();
+  const [loadTime, setLoadTime] = useState(0);
+  const [currentTheme, setCurrentTheme] = useState(theme.palette.mode);
+
+  useEffect(() => {
+    const startTime = performance.now();
+    const handleLoad = () => {
+      const endTime = performance.now();
+      setLoadTime(parseFloat((endTime - startTime).toFixed(2)));
+    };
+
+    window.addEventListener("load", handleLoad);
+    return () => window.removeEventListener("load", handleLoad);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setCurrentTheme(newTheme);
+    // Aquí deberías implementar la lógica para cambiar el tema globalmente
+  };
+
+  return (
+    <GlassFooter>
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={3}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Home color="primary" />
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  fontWeight: 'bold',
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                Neptuno
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="textSecondary">
+              Tu framework SaaS para gestión de créditos y APIs.
+            </Typography>
+          </Grid>
+
+          <Grid item xs={6} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Acerca de
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/us">
+                <Info fontSize="small" /> Sobre Nosotros
+              </FooterLink>
+            </Box>
+          </Grid>
+
+          <Grid item xs={6} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Legal
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/privacy">
+                <Gavel fontSize="small" /> Privacidad
+              </FooterLink>
+              <FooterLink href="/about/legal">
+                <Gavel fontSize="small" /> Términos Legales
+              </FooterLink>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Soporte
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <FooterLink href="/about/contact">
+                <ContactSupport fontSize="small" /> Contacto
+              </FooterLink>
+            </Box>
+            
+            <Divider sx={{ my: 2 }} />
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Typography variant="caption" color="textSecondary">
+                Tiempo de carga: {loadTime} ms
+              </Typography>
+              <IconButton onClick={toggleTheme} color="inherit">
+                {currentTheme === 'light' ? <Brightness4 /> : <Brightness7 />}
+              </IconButton>
+            </Box>
+            
+            <Typography variant="caption" color="textSecondary">
+              © {new Date().getFullYear()} Neptuno. Todos los derechos reservados.
+            </Typography>
+          </Grid>
+        </Grid>
+      </Container>
+    </GlassFooter>
+  );
+}
+
+// src/components/web/Navbar.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth/context";
+import Link from "next/link";
+import fetchAPI from "@/lib/api";
+import {
+  Button,
+  Avatar,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
+  useTheme,
+  styled,
+  Box,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import {
+  MonetizationOn,
+  Settings,
+  ListAlt,
+  People,
+  Dashboard,
+  Login,
+  PersonAdd,
+  Person,
+  ArrowDropDown,
+  Home,
+  Star,
+  EmojiEvents,
+  Leaderboard,
+  School,
+} from "@mui/icons-material";
+
+const GlassNavbar = styled("nav")(({ theme }) => ({
+  background: "rgba(255, 255, 255, 0.1)",
+  backdropFilter: "blur(10px)",
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  padding: theme.spacing(1, 2),
+  position: "sticky",
+  top: 0,
+  zIndex: 1000,
+}));
+
+const NavContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  maxWidth: "1200px",
+  margin: "0 auto",
+}));
+
+const CreditsChip = styled(Chip)(({ theme }) => ({
+  background: "rgba(255, 165, 0, 0.2)",
+  color: "#FFA500",
+  borderColor: "#FFA500",
+}));
+
+const PointsChip = styled(Chip)(({ theme }) => ({
+  background: "rgba(255, 215, 0, 0.2)",
+  color: "#FFD700",
+  borderColor: "#FFD700",
+}));
+
+const BadgesChip = styled(Chip)(({ theme }) => ({
+  background: "rgba(0, 128, 0, 0.2)",
+  color: "#008000",
+  borderColor: "#008000",
+}));
+
+export default function Navbar() {
+  const theme = useTheme();
+  const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
+  const [disableCredits, setDisableCredits] = useState(false);
+  const [enableRegistration, setEnableRegistration] = useState(true);
+  const [enablePoints, setEnablePoints] = useState(true);
+  const [enableBadges, setEnableBadges] = useState(true);
+  const [enablePaymentMethods, setEnablePaymentMethods] = useState(true);
+  const [anonUsername, setAnonUsername] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [newBadge, setNewBadge] = useState<string | null>(null);
+
+  
+  useEffect(() => {
+    const storedAnonUsername = localStorage.getItem("anonUsername");
+    setAnonUsername(storedAnonUsername);
+  }, []);
+
+
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const [
+          disableCreditsRes,
+          enableRegistrationRes,
+          enablePointsRes,
+          enableBadgesRes,
+          enablePaymentMethodsRes,
+        ] = await Promise.all([
+          fetchAPI("/v1/settings/disable_credits"),
+          fetchAPI("/v1/settings/enable_registration"),
+          fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_badges"),
+          fetchAPI("/v1/settings/enable_payment_methods"),
+        ]);
+        setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
+        setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
+        setEnablePoints(enablePointsRes.data === "true" || enablePointsRes.data === true);
+        setEnableBadges(enableBadgesRes.data === "true" || enableBadgesRes.data === true);
+        setEnablePaymentMethods(enablePaymentMethodsRes.data === "true" || enablePaymentMethodsRes.data === true);
+      } catch (err) {
+        console.error("Error al obtener configuraciones:", err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+
+  interface InfoData {
+    credits: number;
+  }
+  
+  useEffect(() => {
+    if (!enablePoints && !enableBadges) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        if (infoData) {
+          setCredits(infoData.credits);
+        }
+
+        const { data: gamificationData } = await fetchAPI("/v1/gamification/me");
+        if (gamificationData && Array.isArray(gamificationData)) {
+          const totalPoints = enablePoints
+            ? gamificationData.reduce((sum, g) => sum + g.points, 0)
+            : 0;
+          const badges = enableBadges
+            ? gamificationData.map((g) => g.badge).filter((b) => b !== null)
+            : [];
+
+          const previousBadges = JSON.parse(localStorage.getItem("badges") || "[]");
+          const currentBadgeIds = badges.map((b) => b.id);
+          const newBadges = currentBadgeIds.filter((id) => !previousBadges.includes(id));
+          if (newBadges.length > 0 && enableBadges) {
+            const badge = badges.find((b) => b.id === newBadges[0]);
+            setNewBadge(badge?.name || "Nuevo badge");
+            setSnackbarOpen(true);
+            localStorage.setItem("badges", JSON.stringify(currentBadgeIds));
+          }
+
+          setGamification({ points: totalPoints, badges });
+        }
+      } catch (err) {
+        console.error("Error al actualizar datos:", err);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [setCredits, setGamification, enablePoints, enableBadges]);
+
+  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingsMenuClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
+  return (
+    <GlassNavbar>
+      <NavContainer>
+        <Link href="/" passHref>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
+            <Home color="primary" />
+            <Typography
+              variant="h6"
+              component="span"
+              sx={{
+                fontWeight: "bold",
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Neptuno
+            </Typography>
+          </Box>
+        </Link>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    {!disableCredits && credits > 0 && (
+      <Link href="/user/transactions" passHref>
+        <CreditsChip icon={<MonetizationOn />} label={credits} variant="outlined" clickable />
+      </Link>
+    )}
+
+    {gamification && (
+      <>
+        {enablePoints && (
+          <Link href="/user/points" passHref>
+            <PointsChip icon={<Star />} label={gamification.points} variant="outlined" clickable />
+          </Link>
+        )}
+        {enableBadges && (
+          <Link href="/user/badges" passHref>
+            <BadgesChip icon={<EmojiEvents />} label={gamification.badges.length} variant="outlined" clickable />
+          </Link>
+        )}
+      </>
+    )}
+
+          {user?.rol === "admin" && (
+            <>
+              <IconButton
+                onClick={handleSettingsMenuOpen}
+                sx={{ color: "inherit", "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" } }}
+              >
+                <Settings />
+              </IconButton>
+              <Menu
+                anchorEl={settingsAnchorEl}
+                open={Boolean(settingsAnchorEl)}
+                onClose={handleSettingsMenuClose}
+                PaperProps={{
+                  sx: {
+                    background: "rgba(255, 255, 255, 0.9)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "12px",
+                    mt: 1,
+                    minWidth: "200px",
+                  },
+                }}
+              >
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
+                  <Dashboard sx={{ mr: 1 }} /> Dashboard
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
+                  <ListAlt sx={{ mr: 1 }} /> Registros
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
+                  <People sx={{ mr: 1 }} /> Usuarios
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/rankings">
+                  <Leaderboard sx={{ mr: 1 }} /> Rankings
+                </MenuItem>
+                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/ejemplos">
+                  <School sx={{ mr: 1 }} /> Ejemplos
+                </MenuItem>
+              </Menu>
+            </>
+          )}
+
+          {user ? (
+            <Button
+              component={Link}
+              href="/user/dashboard"
+              startIcon={<Person />}
+              endIcon={<ArrowDropDown />}
+              sx={{ color: "inherit", textTransform: "none", fontWeight: "medium" }}
+            >
+              {user.username}
+            </Button>
+          ) : anonUsername ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Chip
+                avatar={<Avatar sx={{ width: 24, height: 24 }}><Person sx={{ fontSize: 14 }} /></Avatar>}
+                label={anonUsername}
+                variant="outlined"
+              />
+              <Button
+                component={Link}
+                href="/user/auth/#login"
+                variant="contained"
+                color="secondary"
+                startIcon={<Login />}
+                sx={{ borderRadius: "12px" }}
+              >
+                ¡Empezar!
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button component={Link} href="/user/auth/#login" startIcon={<Login />} sx={{ borderRadius: "12px" }}>
+                Iniciar Sesión
+              </Button>
+              {enableRegistration && (
+                <Button
+                  component={Link}
+                  href="/user/auth/#register"
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PersonAdd />}
+                  sx={{ borderRadius: "12px" }}
+                >
+                  Registrarse
+                </Button>
+              )}
+            </Box>
+          )}
+        </Box>
+      </NavContainer>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+          ¡Felicidades! Has obtenido el badge: {newBadge}
+        </Alert>
+      </Snackbar>
+    </GlassNavbar>
+  );
+}
+
+
+En la parte 2 Mejorar la página de ejemplos con un enfoque de marketing, sigue ampliando el enfoque más orientado a marketing y conversión como si fuera una landing pagre, resaltando mas beneficios del SaaS de gamificación y scoring para mejorar el engagement y la conversión. 
+
+En vez de hacer un diseño de dos columnas como ahora, haz un diseño a 1 columna como si fuera una landing page, asi te pondras mas en el papel de marketer y tendras mas libertad e ideas para hacer una landing de ejemplos mas atractiva.
+
+Manten toda la lógica existente
+
+// frontend/src/app/ejemplos/page.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Card,
+  CardContent,
+  Snackbar,
+  Alert,
+  Grid,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import fetchAPI from "@/lib/api";
+import { useAuth } from "@/lib/auth/context";
+import { UserGamificationResponse, Badge, InfoResponse } from "@/lib/types";
+
+export default function Ejemplos() {
+  const { setGamification } = useAuth();
+  const [snackMessage, setSnackMessage] = useState<string | null>(null);
+  const [registroFields, setRegistroFields] = useState({ name: "", email: "", phone: "" });
+  const [newsletterSubs, setNewsletterSubs] = useState({ tech: false, marketing: false, design: false });
+  const [encuestaAnswers, setEncuestaAnswers] = useState<number[]>([]);
+  const [checkinDone, setCheckinDone] = useState(false);
+  const [icpFields, setIcpFields] = useState({ company: "", role: "", industry: "" });
+  const [tutorialLessons, setTutorialLessons] = useState([false, false, false]);
+  const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
+  const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
+  const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
+
+  const updateGamification = async () => {
+    const { data } = await fetchAPI<InfoResponse>("/info");
+    if (data?.gamification) {
+      const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
+      const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
+      setGamification({ points: totalPoints, badges });
+    }
+  };
+
+  useEffect(() => {
+    updateGamification();
+  }, []);
+
+  const handleRegistroChange = async (field: keyof typeof registroFields, value: string) => {
+    setRegistroFields((prev) => ({ ...prev, [field]: value }));
+    if (value) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 1 } });
+      updateGamification();
+      setSnackMessage("¡Ganaste 1 punto por completar un campo!");
+    }
+    if (registroFields.name && registroFields.email && registroFields.phone) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 2 } });
+      updateGamification();
+      setSnackMessage("¡Completaste el registro y ganaste 10 puntos!");
+    }
+  };
+
+  const handleNewsletterChange = async (newsletter: keyof typeof newsletterSubs) => {
+    setNewsletterSubs((prev) => ({ ...prev, [newsletter]: !prev[newsletter] }));
+    if (!newsletterSubs[newsletter]) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 3 } });
+      updateGamification();
+      setSnackMessage("¡Ganaste 2 puntos por suscribirte a una newsletter!");
+    }
+    if (newsletterSubs.tech && newsletterSubs.marketing && newsletterSubs.design) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 4 } });
+      updateGamification();
+      setSnackMessage("¡Te suscribiste a todas las newsletters y ganaste 15 puntos!");
+    }
+  };
+
+  const handleEncuestaAnswer = async (answer: number) => {
+    setEncuestaAnswers((prev) => [...prev, answer]);
+    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 5 } });
+    updateGamification();
+    setSnackMessage("¡Ganaste 1 punto por responder una pregunta!");
+  };
+
+  const handleEncuestaComplete = async () => {
+    if (encuestaAnswers.length === 3) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 6 } });
+      updateGamification();
+      setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos!");
+    }
+  };
+
+  const handleCheckin = async () => {
+    setCheckinDone(true);
+    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 7 } });
+    updateGamification();
+    setSnackMessage("¡Ganaste 5 puntos por hacer check-in!");
+  };
+
+  const handleIcpChange = async (field: keyof typeof icpFields, value: string) => {
+    setIcpFields((prev) => ({ ...prev, [field]: value }));
+    if (value) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 8 } });
+      updateGamification();
+      setSnackMessage("¡Ganaste 1 punto por completar un campo del ICP!");
+    }
+    if (icpFields.company && icpFields.role && icpFields.industry) {
+      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 9 } });
+      updateGamification();
+      setSnackMessage("¡Completaste tu ICP y ganaste 10 puntos!");
+    }
+  };
+
+  const handleFormChange = async (field: keyof typeof formFields, value: string) => {
+    setFormFields((prev) => ({ ...prev, [field]: value }));
+    if (value) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 3 },
+      });
+      updateGamification();
+    }
+    if (formFields.name && formFields.email && formFields.phone) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 4 },
+      });
+      updateGamification();
+    }
+  };
+
+  const handleSubscriptionChange = async (list: keyof typeof subscriptions) => {
+    setSubscriptions((prev) => ({ ...prev, [list]: !prev[list] }));
+    if (!subscriptions[list]) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 5 },
+      });
+      updateGamification();
+    }
+    if (subscriptions.list1 && subscriptions.list2 && subscriptions.list3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 6 },
+      });
+      updateGamification();
+    }
+  };
+
+  const handleSurveyAnswer = async (answer: number) => {
+    setSurveyAnswers((prev) => [...prev, answer]);
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 1 },
+    });
+    updateGamification();
+  };
+
+  const handleSurveyComplete = async () => {
+    if (surveyAnswers.length === 3) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 2 },
+      });
+      updateGamification();
+    }
+  };
+
+  const handleLessonComplete = async (index: number) => {
+    setTutorialLessons((prev) => {
+      const newLessons = [...prev];
+      newLessons[index] = true;
+      return newLessons;
+    });
+    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 10 } });
+    updateGamification();
+    setSnackMessage("¡Ganaste 3 puntos por completar una lección!");
+  };
+
+  return (
+    <Box sx={{ p: { xs: 2, sm: 4 }, bgcolor: "#f5f7fa", minHeight: "100vh" }}>
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: "bold", color: "#1976d2" }}>
+          ¡Impulsa tu Negocio con Gamificación!
+        </Typography>
+        <Typography variant="h6" align="center" color="textSecondary" sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}>
+          Aumenta el engagement y la conversión de tus clientes con nuestra API SaaS de gamificación y scoring. ¡Prueba cómo funciona y empieza a ganar puntos hoy mismo!
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 6 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{ borderRadius: 2, px: 4, py: 1.5 }}
+            onClick={() => document.getElementById("registro")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            ¡Comienza Ahora!
+          </Button>
+        </Box>
+      </motion.div>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6} id="registro">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Regístrate y Desbloquea Recompensas
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Completa tus datos y gana puntos al instante. ¡Tu primer paso hacia un engagement increíble!
+                </Typography>
+                <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <TextField
+                    label="Nombre"
+                    value={registroFields.name}
+                    onChange={(e) => handleRegistroChange("name", e.target.value)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Email"
+                    value={registroFields.email}
+                    onChange={(e) => handleRegistroChange("email", e.target.value)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Teléfono"
+                    value={registroFields.phone}
+                    onChange={(e) => handleRegistroChange("phone", e.target.value)}
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Suscríbete y Potencia tu Estrategia
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Únete a nuestras newsletters y obtén puntos + contenido exclusivo para mejorar tu conversión.
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <FormControlLabel
+                    control={<Checkbox checked={newsletterSubs.tech} onChange={() => handleNewsletterChange("tech")} />}
+                    label="Tecnología"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox checked={newsletterSubs.marketing} onChange={() => handleNewsletterChange("marketing")} />}
+                    label="Marketing"
+                  />
+                  <FormControlLabel
+                    control={<Checkbox checked={newsletterSubs.design} onChange={() => handleNewsletterChange("design")} />}
+                    label="Diseño"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Opina y Gana Más
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Comparte tu feedback y acumula puntos que impulsan tu perfil en nuestra plataforma.
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(1)}>
+                    Pregunta 1
+                  </Button>
+                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(2)}>
+                    Pregunta 2
+                  </Button>
+                  <Button variant="outlined" onClick={() => handleEncuestaAnswer(3)}>
+                    Pregunta 3
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleEncuestaComplete}
+                    disabled={encuestaAnswers.length !== 3}
+                  >
+                    Completar
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Check-in: Tu Actividad Cuenta
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Registra tu participación y suma puntos para destacar entre tus competidores.
+                </Typography>
+                <Button variant="contained" onClick={handleCheckin} disabled={checkinDone}>
+                  {checkinDone ? "Check-in Realizado" : "Hacer Check-in"}
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Define tu Perfil y Crece
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Completa tu ICP y desbloquea puntos para optimizar tu experiencia con nuestra API.
+                </Typography>
+                <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <TextField
+                    label="Empresa"
+                    value={icpFields.company}
+                    onChange={(e) => handleIcpChange("company", e.target.value)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Rol"
+                    value={icpFields.role}
+                    onChange={(e) => handleIcpChange("role", e.target.value)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    label="Industria"
+                    value={icpFields.industry}
+                    onChange={(e) => handleIcpChange("industry", e.target.value)}
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Typography variant="h6" color="primary">
+                  Aprende y Triunfa
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  Domina nuestra plataforma con lecciones rápidas y gana puntos para liderar.
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {tutorialLessons.map((completed, index) => (
+                    <Button
+                      key={index}
+                      variant="outlined"
+                      onClick={() => handleLessonComplete(index)}
+                      disabled={completed}
+                    >
+                      {completed ? `Lección ${index + 1} Completada` : `Completar Lección ${index + 1}`}
+                    </Button>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mt: 6, textAlign: "center" }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
+          ¿Listo para transformar tu engagement?
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          sx={{ borderRadius: 2, px: 4, py: 1.5 }}
+          onClick={() => window.location.href = "/signup"} // Ajusta la URL según tu flujo
+        >
+          Regístrate Gratis
+        </Button>
+      </Box>
+
+      <Snackbar open={!!snackMessage} autoHideDuration={3000} onClose={() => setSnackMessage(null)}>
+        <Alert severity="success" onClose={() => setSnackMessage(null)}>
+          {snackMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+}
+
+
+Por ultimo, estoy pensando en hacer dos cambios importantes en la logica de la aplicación y debemos pararnos a pensar como lo hacemos para que la aplicación actual no rompa. Asi que necesito que empieces a pensar en como abordamos dos temas:
+
+- implantación de websockes para las notificaciones tipo flash messages
+- pensar en la posibilidad de unificar los modelos de usuarios guest y user: los anonimos y los registrados en un solo modelo. 
+
+
+Aborda mi solicitud de manera estructurada y detallada, respetando la lógica actual de la aplicación y siguiendo mis instrucciones al pie de la letra. Dado que hay varios puntos a tratar, separara la respuesta en partes claras para que sea más fácil de seguir. Generaré los códigos completos solicitados.
+
+Indicame si necesitas más archivos para ciertas implementaciones y te los proporcionaré.
+
+Si necesitas más ayuda o necesitas código adicional que ver, no dudes en decírmelo.  implementar las mejoras solicitadas de manera clara y estructurada
+
+Se que es muchiiiisima información, por favor leela toda con detenimiento. Si es mucho separa tu respuesta en partes. Solicitame los archivos que necesites ver. 
+
+
+Respeta la logica actual para no romper ningun servicio activo. Es importante esta parte que salga bien, tomate tu tiempo.Pideme los archivos que necesites ver para una mejor implantación.Si te parece mejor por motivos de capacidad generame la respuesta en varias partes, lo dejo a tu elección.
+
+
+
+Ya puedes  proceder paso a paso
+
+
