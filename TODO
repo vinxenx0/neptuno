@@ -63,6 +63,7 @@ Tema badges y points estan bajo user pero lo deben ver anonimos tb
     -- incongruencia con el id de anonimo: cuando hago logout me da un nuevo sesion? pero me mantiene los creditos
     ---- datos de transaccion incompletos pero no es asi si refrescas
     ---- el de las integraciones  es por el invalid date?
+    -- en el proxy tengo que proxear tb /v1
 
 
 
@@ -85,3 +86,5 @@ neptuno-stack      |   warnings.warn(message, stacklevel=1)
 neptuno-stack      | /usr/local/lib/python3.10/site-packages/fastapi/openapi/utils.py:225: UserWarning: Duplicate Operation ID delete_badge_endpoint_v1_gamification_badges__badge_id__delete for function delete_badge_endpoint at /app/api/v1/gamification.py
 neptuno-stack      |   warnings.warn(message, stacklevel=1)
 neptuno-db         | 2025-04-06 22:49:20+00:00 [ERROR] [Entrypoint]: Database is uninitialized and password option is not specified
+
+-
