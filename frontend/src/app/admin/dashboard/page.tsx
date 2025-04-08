@@ -412,6 +412,7 @@ export default function ConfigurePage() {
     </Box>
   );
 
+
   return (
     <Box sx={{
       p: { xs: 2, md: 4 },
@@ -419,6 +420,7 @@ export default function ConfigurePage() {
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
       <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
+        {/* Header Section */}
         <Box sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
@@ -562,7 +564,7 @@ export default function ConfigurePage() {
           </AdminGradientCard>
         </Box>
 
-        {/* Tabs Navigation - REORDENADO */}
+        {/* Tabs Navigation */}
         <Paper sx={{ mb: 3, borderRadius: '12px', overflow: 'hidden' }}>
           <Tabs
             value={activeTab}
@@ -588,7 +590,7 @@ export default function ConfigurePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Funcionalidades Tab - AHORA ES LA PRIMERA */}
+          {/* Funcionalidades Tab */}
           {activeTab === 0 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
@@ -665,15 +667,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.enable_social_login ? "Activado" : "Desactivado"}
                                 size="small"
                                 color={features.enable_social_login ? "success" : "error"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={features.enable_social_login}
                               onChange={(e) => handleToggleFeature('enable_social_login', e.target.checked)}
@@ -708,15 +712,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.disable_anonymous_users ? "Bloqueados" : "Permitidos"}
                                 size="small"
                                 color={features.disable_anonymous_users ? "error" : "success"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={features.disable_anonymous_users}
                               onChange={(e) => handleToggleFeature('disable_anonymous_users', e.target.checked)}
@@ -751,15 +757,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.disable_credits ? "Desactivado" : "Activado"}
                                 size="small"
                                 color={features.disable_credits ? "error" : "success"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={!features.disable_credits}
                               onChange={(e) => handleToggleFeature('disable_credits', !e.target.checked)}
@@ -794,15 +802,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.enable_payment_methods ? "Activado" : "Desactivado"}
                                 size="small"
                                 color={features.enable_payment_methods ? "success" : "error"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={features.enable_payment_methods}
                               onChange={(e) => handleToggleFeature('enable_payment_methods', e.target.checked)}
@@ -837,15 +847,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.enable_points ? "Activado" : "Desactivado"}
                                 size="small"
                                 color={features.enable_points ? "success" : "error"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={features.enable_points}
                               onChange={(e) => handleToggleFeature('enable_points', e.target.checked)}
@@ -880,15 +892,17 @@ export default function ConfigurePage() {
                           </Box>
                           <Divider sx={{ my: 2 }} />
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
                               <Chip
                                 label={features.enable_badges ? "Activado" : "Desactivado"}
                                 size="small"
                                 color={features.enable_badges ? "success" : "error"}
                                 sx={{ ml: 1 }}
                               />
-                            </Typography>
+                            </Box>
                             <Switch
                               checked={features.enable_badges}
                               onChange={(e) => handleToggleFeature('enable_badges', e.target.checked)}
@@ -907,7 +921,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Orígenes Permitidos Tab - AHORA ES LA SEGUNDA */}
+          {/* Orígenes Permitidos Tab */}
           {activeTab === 1 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
@@ -965,7 +979,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Integraciones Tab - AHORA ES LA TERCERA */}
+          {/* Integraciones Tab */}
           {activeTab === 2 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
@@ -1047,7 +1061,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Gamificación Tab - AHORA ES LA CUARTA */}
+          {/* Gamificación Tab */}
           {activeTab === 3 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
@@ -1268,7 +1282,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Pagos Tab - AHORA ES LA QUINTA */}
+          {/* Pagos Tab */}
           {activeTab === 4 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
@@ -1360,7 +1374,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Configuraciones Tab - AHORA ES LA SEXTA */}
+          {/* Configuraciones Tab */}
           {activeTab === 5 && (
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -1416,7 +1430,7 @@ export default function ConfigurePage() {
         </motion.div>
       </Box>
 
-      {/* Notificaciones (permanece igual) */}
+      {/* Notificaciones */}
       <AnimatePresence>
         {error && (
           <Snackbar
