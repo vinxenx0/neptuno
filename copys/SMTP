@@ -1,0 +1,29 @@
+        
+
+    Servidor de entrada de correo
+
+    Puerto de bandeja de entrada (SSL debe estar activado)
+
+    Servidor de salida de correo (SMTP)
+
+    Puerto de bandeja de salida (TLS debe estar activado)
+
+    El servidor de salida de correo requiere autentificación
+
+    IMAP (recomendado)
+
+    imap.ionos.es
+
+    993
+
+    smtp.ionos.es
+
+    587
+
+    Sí
+
+    POP3
+
+    pop.ionos.es
+
+    995

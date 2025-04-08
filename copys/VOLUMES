@@ -1,0 +1,38 @@
+Los volúmenes de Docker se almacenan en la ruta:
+
+/var/lib/docker/volumes/
+
+Cada volumen creado tiene su propio directorio dentro de esta ruta. Si ejecutas:
+
+ls /var/lib/docker/volumes/
+
+Verás una lista con los nombres de los volúmenes.
+
+Si quieres ver el contenido de un volumen específico:
+
+ls /var/lib/docker/volumes/nombre_del_volumen/_data/
+
+Ahí dentro encontrarás los archivos almacenados en ese volumen.
+Comandos útiles 🚀
+
+🔍 Ver todos los volúmenes creados:
+
+docker volume ls
+
+📂 Inspeccionar un volumen específico:
+
+docker volume inspect nombre_del_volumen
+
+🛠️ Montar un volumen en una carpeta temporal para explorarlo:
+
+docker run --rm -it -v nombre_del_volumen:/mnt busybox sh
+
+🗑️ Eliminar un volumen (⚠️ se borran los datos dentro del volumen):
+
+docker volume rm nombre_del_volumen
+
+📌 Si quieres usar un volumen específico para MySQL/MariaDB en tu docker-compose.yml, agrégalo así:
+
+volumes:
+  mariadb_data:
+    driver: local

@@ -1,0 +1,95 @@
+Parte 5: Preparar integración de medios de pago
+Para preparar la integración de PayPal, Stripe, etc., usaré un patrón de estrategia con un middleware ligero que minimice el impacto en la lógica actual.
+Implementación
+1. Interfaz de pago
+En src/lib/payments.ts:
+typescript
+
+export interface PaymentProvider {
+  name: string;
+  processPayment(amount: number, currency: string, description: string): Promise<PaymentResult>;
+}
+
+export interface PaymentResult {
+  success: boolean;
+  transactionId?: string;
+  error?: string;
+}
+
+2. Gestor de pagos
+En src/lib/payments/manager.ts:
+typescript
+
+import { PaymentProvider } from "./payments";
+
+export class PaymentManager {
+  private providers: Record<string, PaymentProvider> = {};
+
+  registerProvider(provider: PaymentProvider) {
+    this.providers[provider.name] = provider;
+  }
+
+  async processPayment(providerName: string, amount: number, currency: string, description: string): Promise<PaymentResult> {
+    const provider = this.providers[providerName];
+    if (!provider) {
+      return { success: false, error: `Proveedor ${providerName} no encontrado` };
+    }
+    return await provider.processPayment(amount, currency, description);
+  }
+}
+
+3. Ejemplo de proveedor (Stripe)
+En src/lib/payments/stripe.ts (placeholder, completar con API real más adelante):
+typescript
+
+import { PaymentProvider, PaymentResult } from "./payments";
+
+export class StripeProvider implements PaymentProvider {
+  name = "Stripe";
+
+  async processPayment(amount: number, currency: string, description: string): Promise<PaymentResult> {
+    // Placeholder: Integrar Stripe SDK en el futuro
+    try {
+      // const paymentIntent = await stripe.paymentIntents.create({...});
+      return { success: true, transactionId: "stripe_txn_123" };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+}
+
+4. Uso en la aplicación
+Ejemplo en un componente futuro:
+tsx
+
+import { PaymentManager } from "@/lib/payments/manager";
+import { StripeProvider } from "@/lib/payments/stripe";
+
+const paymentManager = new PaymentManager();
+paymentManager.registerProvider(new StripeProvider());
+
+const handlePayment = async () => {
+  const result = await paymentManager.processPayment("Stripe", 1000, "USD", "Compra de créditos");
+  if (result.success) {
+    console.log("Pago exitoso:", result.transactionId);
+  } else {
+    console.error("Error en el pago:", result.error);
+  }
+};
+
+Explicación:
+
+    Flexibilidad: Puedes añadir PayPal u otros proveedores creando nuevas clases que implementen PaymentProvider.
+    Impacto mínimo: La lógica actual no se toca; solo se integra cuando decidas añadir pagos.
+    Escalabilidad: Fácil de extender en el futuro.
+
+Conclusión
+He implementado todas las mejoras solicitadas respetando la lógica actual:
+
+    Páginas protegidas: Código completo con mensajes para módulos deshabilitados.
+    Ejemplos con marketing: Página actualizada con enfoque de conversión.
+    Responsividad: Layouts ajustados; necesito Navbar y Footer para completar.
+    SEO básico: Componente SEO añadido y sugerencias extras.
+    Medios de pago: Estructura preparada con patrón de estrategia.
+
+Si necesitas que vea más archivos (como Navbar.tsx o Footer.tsx) o quieres que profundice en algo, ¡avísame! ¿Qué te parece esta implementación?

@@ -1621,3 +1621,5 @@
 2025-04-07 00:47:07,978 - NeptunO - INFO - Procesando solicitud: token=False, session_id=db02954e-6351-4737-b828-03042aeb6b64, ip=127.0.0.1
 2025-04-07 00:47:07,978 - NeptunO - INFO - Buscando sesión anónima con ID db02954e-6351-4737-b828-03042aeb6b64 desde header
 2025-04-07 00:47:07,986 - NeptunO - INFO - Sesión anónima ID db02954e-6351-4737-b828-03042aeb6b64 actualizada desde IP 127.0.0.1
+2025-04-07 21:06:13,320 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-07 21:06:13,321 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
