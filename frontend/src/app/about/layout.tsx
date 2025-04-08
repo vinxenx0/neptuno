@@ -8,11 +8,14 @@ import { ReactNode } from "react";
 import { 
   Box, 
   Typography, 
-  List, 
-  ListItem, 
   Paper, 
   useTheme,
-  styled
+  styled,
+  Tabs,
+  Tab,
+  Stack,
+  ButtonBase,
+  Container
 } from "@mui/material";
 import { 
   Info, 
@@ -22,43 +25,43 @@ import {
   ChevronRight
 } from "@mui/icons-material";
 
-const GlassSidebar = styled(Paper)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  borderRadius: '16px',
-  boxShadow: theme.shadows[5],
-  padding: theme.spacing(4),
-  height: 'fit-content'
-}));
-
 const ContentCard = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.9)',
   backdropFilter: 'blur(10px)',
   borderRadius: '16px',
   boxShadow: theme.shadows[5],
   padding: theme.spacing(4),
-  flex: 1
+  marginTop: theme.spacing(2),
+  width: '100%'
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: theme.spacing(2),
-  borderRadius: '12px',
-  textDecoration: 'none',
-  color: theme.palette.text.primary,
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-    transform: 'translateX(4px)'
+const StyledTab = styled(Tab)(({ theme }) => ({
+  textTransform: 'none',
+  fontWeight: '500',
+  fontSize: '0.875rem',
+  minHeight: '48px',
+  color: theme.palette.text.secondary,
+  padding: theme.spacing(1, 2),
+  '&.Mui-selected': {
+    color: theme.palette.primary.main,
+    fontWeight: '600',
+    backgroundColor: theme.palette.action.selected
   },
-  '&.active': {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
-    boxShadow: theme.shadows[2]
-  }
+  '&:hover': {
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.action.hover
+  },
+  transition: 'all 0.2s ease-in-out',
+  position: 'relative',
+  overflow: 'visible'
+}));
+
+const TabLink = styled(ButtonBase)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  textAlign: 'left',
+  padding: theme.spacing(1, 2),
+  borderRadius: theme.shape.borderRadius
 }));
 
 interface PageLink {
@@ -80,58 +83,82 @@ export default function AboutLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      gap: 4, 
-      p: 4, 
-      maxWidth: '1400px', 
-      mx: 'auto',
-      minHeight: 'calc(100vh - 64px)'
+    <Container maxWidth={false} disableGutters sx={{ 
+      width: '100%',
+      minHeight: 'calc(100vh - 64px)',
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+      py: 4,
+      px: { xs: 2, sm: 4, md: 6 },
+      mt: 8 // Added margin top to account for navbar
     }}>
-      <GlassSidebar>
-        <Typography 
-          variant="h5" 
-          component="h2" 
-          sx={{ 
-            fontWeight: 'bold', 
-            mb: 3,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1
-          }}
-        >
-          <Info color="primary" />
-          Información Legal
-        </Typography>
-        
-        <List sx={{ p: 0 }}>
-          {pages.map((page) => (
-            <ListItem key={page.slug} sx={{ p: 0, mb: 1 }}>
-              <StyledLink
-                href={`/about/${page.slug}`}
-                className={currentPage === page.slug ? 'active' : ''}
-                prefetch={false}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  {page.icon}
-                  <Typography variant="body1" fontWeight={currentPage === page.slug ? 'bold' : 'normal'}>
-                    {page.title}
-                  </Typography>
-                </Box>
-                <ChevronRight sx={{ 
-                  opacity: currentPage === page.slug ? 1 : 0.5,
-                  transform: currentPage === page.slug ? 'rotate(90deg)' : 'none',
-                  transition: 'all 0.3s ease'
-                }} />
-              </StyledLink>
-            </ListItem>
-          ))}
-        </List>
-      </GlassSidebar>
+      <Container maxWidth="xl" sx={{ p: 0 }}>
+        <Paper sx={{ 
+          borderRadius: '12px',
+          mb: 3,
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${theme.palette.divider}`,
+          overflow: 'hidden'
+        }}>
+          <Tabs 
+            value={currentPage}
+            variant="scrollable"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{
+              '& .MuiTabs-indicator': {
+                height: '3px',
+                backgroundColor: theme.palette.primary.main,
+                borderRadius: '3px 3px 0 0'
+              },
+              '& .MuiTab-root': {
+                minWidth: 'auto',
+                minHeight: '56px'
+              }
+            }}
+          >
+            {pages.map((page) => (
+              <StyledTab
+                key={page.slug}
+                value={page.slug}
+                label={
+                  <Link href={`/about/${page.slug}`} passHref legacyBehavior>
+                    <TabLink>
+                      <Stack 
+                        direction="row" 
+                        alignItems="center" 
+                        spacing={1.5}
+                        sx={{
+                          position: 'relative',
+                          pr: currentPage === page.slug ? '20px' : 0
+                        }}
+                      >
+                        {page.icon}
+                        <span>{page.title}</span>
+                        {currentPage === page.slug && (
+                          <ChevronRight 
+                            sx={{ 
+                              position: 'absolute',
+                              right: 0,
+                              fontSize: '1rem',
+                              transform: 'rotate(90deg)',
+                              color: theme.palette.primary.main
+                            }} 
+                          />
+                        )}
+                      </Stack>
+                    </TabLink>
+                  </Link>
+                }
+              />
+            ))}
+          </Tabs>
+        </Paper>
 
-      <ContentCard>
-        {children}
-      </ContentCard>
-    </Box>
+        <ContentCard elevation={3}>
+          {children}
+        </ContentCard>
+      </Container>
+    </Container>
   );
 }

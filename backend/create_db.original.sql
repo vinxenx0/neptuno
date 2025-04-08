@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     subscription TEXT CHECK(subscription IN ('freemium', 'premium', 'corporate')) DEFAULT 'freemium',
     ciudad TEXT,
     website TEXT,
-    credits INTEGER DEFAULT 100,
+    credits INTEGER DEFAULT 0,
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     renewal DATETIME,
     last_ip TEXT,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS sesiones_anonimas (
     id TEXT PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
-    credits INTEGER DEFAULT 100,
+    credits INTEGER DEFAULT 0,
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     ultima_actividad DATETIME,
     last_ip TEXT

@@ -1,4 +1,5 @@
 // src/components/web/Navbar.tsx
+// src/components/web/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -41,8 +42,10 @@ import {
   School,
   Menu as MenuIcon,
   ContactMail,
-  Close
+  Close,
+  Key
 } from "@mui/icons-material";
+import Image from "next/image";
 
 const GlassNavbar = styled("nav")(({ theme }) => ({
   background: "rgba(255, 255, 255, 0.1)",
@@ -188,23 +191,38 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
 
-<Link href="/" passHref>
-  <Typography
-    variant="h6"
-    component="span"
-    className="app-logo"
-    sx={{ 
-      fontWeight: "bold", 
-      cursor: 'pointer',
-      display: { 
-        xs: 'none', // Oculto en móvil
-        md: 'block' // Visible en desktop
-      }
-    }}
-  >
-    Neptuno
-  </Typography>
-</Link>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Link href="/" passHref>
+              <Box sx={{ 
+                display: "flex", 
+                alignItems: "center",
+                gap: 1,
+                cursor: "pointer"
+              }}>
+                <Image 
+                  src="/logo.png" 
+                  alt="Logo Neptuno" 
+                  width={40} 
+                  height={40}
+                  style={{ borderRadius: "50%" }}
+                />
+                <Typography
+                  variant="h6"
+                  component="span"
+                  className="app-logo"
+                  sx={{
+                    fontWeight: "bold",
+                    display: {
+                      xs: 'none', // Oculto en móvil
+                      md: 'block' // Visible en desktop
+                    }
+                  }}
+                >
+                  Neptuno
+                </Typography>
+              </Box>
+            </Link>
+          </Box>
         </Box>
 
         {/* Sección derecha: Todos los elementos */}
@@ -303,14 +321,14 @@ export default function Navbar() {
             {/* Avatar de usuario */}
             {user ? (
               <Tooltip title={user.username} arrow>
-                <IconButton 
+                <IconButton
                   component={Link}
                   href="/user/dashboard"
                   className="user-avatar"
                 >
-                  <Avatar sx={{ 
+                  <Avatar sx={{
                     bgcolor: theme.palette.primary.main,
-                    width: 40, 
+                    width: 40,
                     height: 40,
                     fontSize: '1rem'
                   }}>
@@ -318,46 +336,42 @@ export default function Navbar() {
                   </Avatar>
                 </IconButton>
               </Tooltip>
-            ) : anonUsername ? (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <IconButton className="user-avatar">
-                  <Avatar sx={{ 
-                    bgcolor: theme.palette.grey[500],
-                    width: 40,
-                    height: 40,
-                    fontSize: '1rem'
-                  }}>
-                    G
-                  </Avatar>
-                </IconButton>
-                <Button
-                  component={Link}
-                  href="/user/auth/#login"
-                  variant="contained"
-                  color="secondary"
-                  className="start-button"
-                  startIcon={<Login />}
-                >
-                  ¡Empezar!
-                </Button>
-              </Box>
             ) : (
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <Button component={Link} href="/user/auth/#login" startIcon={<Login />}>
-                  Iniciar Sesión
-                </Button>
-                {enableRegistration && (
-                  <Button
+              <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
+                <Box sx={{ position: 'relative' }}>
+                  <IconButton 
                     component={Link}
-                    href="/user/auth/#register"
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PersonAdd />}
+                    href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+                    className="user-avatar"
                   >
-                    Registrarse
-                  </Button>
-                )}
-              </Box>
+                    <Avatar sx={{
+                      bgcolor: theme.palette.grey[500],
+                      width: 40,
+                      height: 40,
+                      color: theme.palette.common.white
+                    }}>
+                      {anonUsername ? <Person /> : <Key />}
+                    </Avatar>
+                  </IconButton>
+                  {anonUsername && (
+                    <Box sx={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      backgroundColor: theme.palette.secondary.main,
+                      borderRadius: '50%',
+                      width: 20,
+                      height: 20,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${theme.palette.background.paper}`
+                    }}>
+                      <Key sx={{ fontSize: 12, color: theme.palette.common.white }} />
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
             )}
           </Box>
         </Box>
@@ -366,29 +380,38 @@ export default function Navbar() {
         <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
           <List>
             {/* Header del menú */}
-            <Box sx={{ 
-  display: 'flex', 
-  alignItems: 'center', 
-  justifyContent: 'space-between',
-  p: 2,
-  borderBottom: `1px solid ${theme.palette.divider}`
-}}>
-  <Typography 
-    variant="h6"
-    sx={{
-      fontWeight: "bold",
-      background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparent",
-      display: "inline-block",
-    }}
-  >
-    Neptuno
-  </Typography>
-  <IconButton onClick={handleDrawerClose}>
-    <Close />
-  </IconButton>
-</Box>
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              p: 2,
+              borderBottom: `1px solid ${theme.palette.divider}`
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Image 
+                  src="/logo.png" 
+                  alt="Logo Neptuno" 
+                  width={40} 
+                  height={40}
+                  style={{ borderRadius: "50%" }}
+                />
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: "bold",
+                    background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    display: "inline-block",
+                  }}
+                >
+                  Neptuno
+                </Typography>
+              </Box>
+              <IconButton onClick={handleDrawerClose}>
+                <Close />
+              </IconButton>
+            </Box>
 
             <ListItem component={Link} href="/">
               <ListItemIcon><Home /></ListItemIcon>

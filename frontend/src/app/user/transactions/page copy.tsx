@@ -1,4 +1,3 @@
-// frontend/src/app/user/transactions/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -53,29 +52,23 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('all');
-  const [enableCredits, setEnableCredits] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const checkSettingsAndFetchTransactions = async () => {
+    if (!user) {
+      router.push("/user/auth/#login");
+      return;
+    }
+
+    const fetchTransactions = async () => {
       try {
-        // Verificar si el módulo de créditos está habilitado
-        const { data: settingsData } = await fetchAPI("/v1/settings/disable_credits");
-        const isEnabled = settingsData !== "true" && settingsData !== true;
-        setEnableCredits(isEnabled);
-
-        if (!isEnabled) {
-          return; // Si no está habilitado, no cargamos datos
-        }
-
-        // Cargar transacciones si el módulo está habilitado
         const { data } = await fetchAPI<CreditTransaction[]>("/v1/payments/transactions");
         setTransactions(data || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar transacciones");
       }
     };
-    checkSettingsAndFetchTransactions();
-  }, [router]);
+    fetchTransactions();
+  }, [user, router]);
 
   const filtered = transactions.filter(t => {
     if (activeTab === 'all') return true;
@@ -84,24 +77,7 @@ export default function TransactionsPage() {
     return true;
   });
 
-  if (enableCredits === null) return null; // Mientras se carga la configuración
-
-  if (!enableCredits) {
-    return (
-      <Box sx={{
-        minHeight: "100vh",
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        p: 4
-      }}>
-        <Typography variant="h6" color="textSecondary">
-          Esta funcionalidad no está habilitada en este momento.
-        </Typography>
-      </Box>
-    );
-  }
+  if (!user) return null;
 
   return (
     <Box sx={{
@@ -156,7 +132,7 @@ export default function TransactionsPage() {
               No hay transacciones registradas
             </Typography>
             <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-              {user ? 'Todas tus transacciones aparecerán aquí' : 'Las transacciones de créditos aparecerán aquí'}
+              Todas tus transacciones aparecerán aquí
             </Typography>
           </Box>
         ) : (
@@ -204,11 +180,9 @@ export default function TransactionsPage() {
                     >
                       {t.amount > 0 ? '+' : ''}{t.amount} créditos
                     </Typography>
-                    {user && (
-                      <Typography variant="body2" color="text.secondary">
-                        {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : "N/A"} vía {t.payment_method || "N/A"}
-                      </Typography>
-                    )}
+                    <Typography variant="body2" color="text.secondary">
+                      {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : "N/A"} vía {t.payment_method || "N/A"}
+                    </Typography>
                   </TransactionCard>
                 </motion.div>
               ))}

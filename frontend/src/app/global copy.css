@@ -4,26 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ========== PALETA DE COLORES Y VARIABLES ========== */
+/* ========== PALETA DE COLORES ========== */
 :root {
   /* Colores base */
-  --white-soft: #f8f9fa;
-  --black-soft: #212529;
-  --primary: #0d6efd;
-  --primary-hover: #0b5ed7;
-  --gray: #adb5bd;
-  --gray-light: #dee2e6;
-  --gray-dark: #495057;
+  --white-soft: #f8f9fa;        /* Casi blanco - Fondos */
+  --black-soft: #212529;        /* Casi negro - Textos */
+  --primary: #0d6efd;           /* Azul - Acento principal */
+  --primary-hover: #0b5ed7;     /* Azul más oscuro */
+  --gray: #adb5bd;              /* Gris - Sombras/bordes */
+  --gray-light: #dee2e6;        /* Gris claro - Bordes */
+  --gray-dark: #495057;         /* Gris oscuro */
   
   /* Estados */
-  --success: #198754;
+  --success: #198754;           /* Verde - Éxito */
   --success-hover: #157347;
-  --warning: #ffc107;
+  --warning: #ffc107;           /* Amarillo - Advertencia */
   --warning-hover: #ffca2c;
-  --danger: #dc3545;
+  --danger: #dc3545;            /* Rojo - Error/Peligro */
   --danger-hover: #bb2d3b;
   
-  /* Variables funcionales */
+  /* Asignación de variables funcionales */
   --background: var(--white-soft);
   --foreground: var(--black-soft);
   --border: var(--gray-light);
@@ -50,7 +50,7 @@ body {
   line-height: 1.5;
 }
 
-/* ========== COMPONENTES PRINCIPALES ========== */
+/* ========== COMPONENTES ========== */
 /* Tarjetas */
 .card {
   background: var(--background);
@@ -124,6 +124,13 @@ body {
   box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
 }
 
+/* Barras de navegación */
+.navbar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 /* Notificaciones */
 .alert {
   padding: 1rem;
@@ -143,37 +150,50 @@ body {
   color: var(--danger);
 }
 
-/* ========== NAVBAR Y COMPONENTES RELACIONADOS ========== */
+/* ========== UTILIDADES ========== */
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+/* ========== ANIMACIONES ========== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+
+
+/* ========== NAVBAR ========== */
 .app-logo {
   background: linear-gradient(45deg, var(--primary) 30%, var(--secondary) 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.nav-link {
-  transition: all 0.2s ease;
-  transform-origin: center;
-}
-
-.nav-link:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-.active-link {
-  position: relative;
-  color: var(--primary) !important;
-}
-
-.active-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--primary);
-  border-radius: 2px;
 }
 
 .notification-icon {
@@ -229,44 +249,8 @@ body {
   font-weight: 600;
 }
 
-/* ========== UTILIDADES ========== */
-.text-primary {
-  color: var(--primary);
-}
 
-.bg-primary {
-  background-color: var(--primary);
-}
-
-.border-primary {
-  border-color: var(--primary);
-}
-
-/* ========== ANIMACIONES ========== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-spinner {
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top: 3px solid var(--primary);
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-}
-
-/* ========== RESPONSIVE ========== */
+/* Mejoras de responsive */
 @media (max-width: 768px) {
   .notification-icon {
     padding: 6px;
@@ -282,6 +266,56 @@ body {
     padding: 6px 12px;
     font-size: 0.9rem;
   }
+}
+
+/* Efectos hover para enlaces */
+.nav-link {
+  transition: all 0.2s ease;
+  transform-origin: center;
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Ajustes de espaciado */
+.MuiDrawer-paper {
+  width: 250px;
+  padding: 16px 0;
+  background: rgba(255, 255, 255, 0.95) !important;
+
+}
+
+
+/* Resaltar enlace activo */
+.active-link {
+  position: relative;
+  color: var(--primary) !important;
+}
+
+.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Ajustes responsive iconos */
+@media (max-width: 768px) {
+  .notification-icon {
+    padding: 6px;
+  }
+  
+  .notification-badge {
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+  }
   
   .user-avatar .MuiAvatar-root {
     width: 32px !important;
@@ -289,9 +323,37 @@ body {
   }
 }
 
-/* ========== COMPONENTES MUI ========== */
-.MuiDrawer-paper {
-  width: 250px;
-  padding: 16px 0;
-  background: rgba(255, 255, 255, 0.95) !important;
+
+/* Resaltar enlace activo */
+.active-link {
+  position: relative;
+  color: var(--primary) !important;
+}
+
+.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary);
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .notification-icon {
+    padding: 6px;
+  }
+  
+  .notification-badge {
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+  }
+  
+  .MuiButton-root {
+    min-width: auto;
+    padding: 6px 12px;
+  }
 }

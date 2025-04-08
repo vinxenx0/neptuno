@@ -1,3 +1,4 @@
+// frontend/src/app/about/[page]/privacy.tsx
 
 export default function Privacy() {
     return (

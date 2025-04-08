@@ -25,7 +25,7 @@ class User(Base):
     subscription = Column(Enum(subscriptionEnum), default=subscriptionEnum.FREEMIUM)  # subscription de suscripción
     #ciudad = Column(String(100), nullable=True)  # Para perfil
     website = Column(String(255), nullable=True)  # URL de avatar o perfil
-    credits = Column(Integer, default=100)  # Créditos disponibles
+    credits = Column(Integer, default=10)  # Créditos disponibles
     #create_at = Column(DateTime, default=datetime.utcnow)  # Fecha de registro
     renewal = Column(DateTime, nullable=True)  # Última renovación de créditos
     last_ip = Column(String(45), nullable=True)  # Última IP conocida (IPv4/IPv6)

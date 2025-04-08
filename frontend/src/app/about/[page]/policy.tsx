@@ -1,3 +1,4 @@
+// frontend/src/app/about/[page]/policy.tsx
 export default function Policy() {
     return (
     <div>

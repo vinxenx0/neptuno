@@ -1,18 +1,18 @@
 // src/components/web/Navbar.tsx
+// src/components/web/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import {
   Button,
   Avatar,
-  Chip,
   IconButton,
   Menu,
   MenuItem,
-  Divider,
   useTheme,
   styled,
   Box,
@@ -24,6 +24,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Tooltip
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -34,13 +35,14 @@ import {
   Login,
   PersonAdd,
   Person,
-  ArrowDropDown,
   Home,
   Star,
   EmojiEvents,
   Leaderboard,
   School,
   Menu as MenuIcon,
+  ContactMail,
+  Close
 } from "@mui/icons-material";
 
 const GlassNavbar = styled("nav")(({ theme }) => ({
@@ -48,8 +50,10 @@ const GlassNavbar = styled("nav")(({ theme }) => ({
   backdropFilter: "blur(10px)",
   borderBottom: `1px solid ${theme.palette.divider}`,
   padding: theme.spacing(1, 2),
-  position: "sticky",
+  position: "fixed",
   top: 0,
+  left: 0,
+  right: 0,
   zIndex: 1000,
 }));
 
@@ -60,31 +64,15 @@ const NavContainer = styled(Box)(({ theme }) => ({
   maxWidth: "1200px",
   margin: "0 auto",
   [theme.breakpoints.down("md")]: {
-    flexDirection: "column",
-    alignItems: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 1
   },
-}));
-
-const CreditsChip = styled(Chip)(({ theme }) => ({
-  background: "rgba(255, 165, 0, 0.2)",
-  color: "#FFA500",
-  borderColor: "#FFA500",
-}));
-
-const PointsChip = styled(Chip)(({ theme }) => ({
-  background: "rgba(255, 215, 0, 0.2)",
-  color: "#FFD700",
-  borderColor: "#FFD700",
-}));
-
-const BadgesChip = styled(Chip)(({ theme }) => ({
-  background: "rgba(0, 128, 0, 0.2)",
-  color: "#008000",
-  borderColor: "#008000",
 }));
 
 export default function Navbar() {
   const theme = useTheme();
+  const pathname = usePathname();
   const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -192,6 +180,7 @@ export default function Navbar() {
   return (
     <GlassNavbar>
       <NavContainer>
+        {/* Sección izquierda: Logo y menú hamburguesa */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
             onClick={handleDrawerOpen}
@@ -199,143 +188,220 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
+
           <Link href="/" passHref>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
-              <Home color="primary" />
+            <Typography
+              variant="h6"
+              component="span"
+              className="app-logo"
+              sx={{
+                fontWeight: "bold",
+                cursor: 'pointer',
+                display: {
+                  xs: 'none', // Oculto en móvil
+                  md: 'block' // Visible en desktop
+                }
+              }}
+            >
+              Neptuno
+            </Typography>
+          </Link>
+        </Box>
+
+        {/* Sección derecha: Todos los elementos */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Enlaces desktop + iconos */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {/* Enlaces desktop */}
+            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2, mr: 1 }}>
+              <Button
+                component={Link}
+                href="/ejemplos"
+                className={pathname === '/ejemplos' ? 'active-link' : ''}
+              >
+                Ejemplos
+              </Button>
+              <Button
+                component={Link}
+                href="/rankings"
+                className={pathname === '/rankings' ? 'active-link' : ''}
+              >
+                Rankings
+              </Button>
+            </Box>
+
+            {/* Iconos de notificaciones */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {!disableCredits && credits > 0 && (
+                <Link href="/user/transactions" passHref>
+                  <IconButton className="notification-icon">
+                    <MonetizationOn />
+                    <span className="notification-badge credits-badge">{credits}</span>
+                  </IconButton>
+                </Link>
+              )}
+
+              {gamification && (
+                <>
+                  {enablePoints && (
+                    <Link href="/user/points" passHref>
+                      <IconButton className="notification-icon">
+                        <Star />
+                        <span className="notification-badge points-badge">{gamification.points}</span>
+                      </IconButton>
+                    </Link>
+                  )}
+                  {enableBadges && (
+                    <Link href="/user/badges" passHref>
+                      <IconButton className="notification-icon">
+                        <EmojiEvents />
+                        <span className="notification-badge badges-badge">{gamification.badges.length}</span>
+                      </IconButton>
+                    </Link>
+                  )}
+                </>
+              )}
+            </Box>
+          </Box>
+
+          {/* Menú admin y usuario */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {user?.rol === "admin" && (
+              <>
+                <IconButton
+                  onClick={handleSettingsMenuOpen}
+                  sx={{ color: "inherit" }}
+                >
+                  <Settings />
+                </IconButton>
+                <Menu
+                  anchorEl={settingsAnchorEl}
+                  open={Boolean(settingsAnchorEl)}
+                  onClose={handleSettingsMenuClose}
+                  PaperProps={{
+                    sx: {
+                      background: "rgba(255, 255, 255, 0.9)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "12px",
+                      mt: 1,
+                      minWidth: "200px",
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
+                    <Dashboard sx={{ mr: 1 }} /> Dashboard
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
+                    <ListAlt sx={{ mr: 1 }} /> Registros
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
+                    <People sx={{ mr: 1 }} /> Usuarios
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+
+            {/* Avatar de usuario */}
+            {user ? (
+              <Tooltip title={user.username} arrow>
+                <IconButton
+                  component={Link}
+                  href="/user/dashboard"
+                  className="user-avatar"
+                >
+                  <Avatar sx={{
+                    bgcolor: theme.palette.primary.main,
+                    width: 40,
+                    height: 40,
+                    fontSize: '1rem'
+                  }}>
+                    {user.username[0].toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            ) : anonUsername ? (
+              <Tooltip title="Iniciar sesión" arrow>
+                <IconButton 
+                  component={Link}
+                  href="/user/auth/#login"
+                  className="user-avatar"
+                >
+                  <Avatar sx={{
+                    bgcolor: theme.palette.grey[500],
+                    width: 40,
+                    height: 40,
+                    color: theme.palette.common.white
+                  }}>
+                    <Person />
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Button component={Link} href="/user/auth/#login" startIcon={<Login />}>
+                  Iniciar Sesión
+                </Button>
+                {enableRegistration && (
+                  <Button
+                    component={Link}
+                    href="/user/auth/#register"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PersonAdd />}
+                  >
+                    Registrarse
+                  </Button>
+                )}
+              </Box>
+            )}
+          </Box>
+        </Box>
+
+        {/* Menú hamburguesa */}
+        <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
+          <List>
+            {/* Header del menú */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              p: 2,
+              borderBottom: `1px solid ${theme.palette.divider}`
+            }}>
               <Typography
                 variant="h6"
-                component="span"
                 sx={{
                   fontWeight: "bold",
                   background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
+                  display: "inline-block",
                 }}
               >
                 Neptuno
               </Typography>
-            </Box>
-          </Link>
-        </Box>
-
-        <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
-          {!disableCredits && credits > 0 && (
-            <Link href="/user/transactions" passHref>
-              <CreditsChip icon={<MonetizationOn />} label={credits} variant="outlined" clickable />
-            </Link>
-          )}
-
-          {gamification && (
-            <>
-              {enablePoints && (
-                <Link href="/user/points" passHref>
-                  <PointsChip icon={<Star />} label={gamification.points} variant="outlined" clickable />
-                </Link>
-              )}
-              {enableBadges && (
-                <Link href="/user/badges" passHref>
-                  <BadgesChip icon={<EmojiEvents />} label={gamification.badges.length} variant="outlined" clickable />
-                </Link>
-              )}
-            </>
-          )}
-
-          {user?.rol === "admin" && (
-            <>
-              <IconButton
-                onClick={handleSettingsMenuOpen}
-                sx={{ color: "inherit", "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" } }}
-              >
-                <Settings />
+              <IconButton onClick={handleDrawerClose}>
+                <Close />
               </IconButton>
-              <Menu
-                anchorEl={settingsAnchorEl}
-                open={Boolean(settingsAnchorEl)}
-                onClose={handleSettingsMenuClose}
-                PaperProps={{
-                  sx: {
-                    background: "rgba(255, 255, 255, 0.9)",
-                    backdropFilter: "blur(10px)",
-                    borderRadius: "12px",
-                    mt: 1,
-                    minWidth: "200px",
-                  },
-                }}
-              >
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
-                  <Dashboard sx={{ mr: 1 }} /> Dashboard
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
-                  <ListAlt sx={{ mr: 1 }} /> Registros
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
-                  <People sx={{ mr: 1 }} /> Usuarios
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/rankings">
-                  <Leaderboard sx={{ mr: 1 }} /> Rankings
-                </MenuItem>
-                <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/ejemplos">
-                  <School sx={{ mr: 1 }} /> Ejemplos
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-
-          {user ? (
-            <Button
-              component={Link}
-              href="/user/dashboard"
-              startIcon={<Person />}
-              endIcon={<ArrowDropDown />}
-              sx={{ color: "inherit", textTransform: "none", fontWeight: "medium" }}
-            >
-              {user.username}
-            </Button>
-          ) : anonUsername ? (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Chip
-                avatar={<Avatar sx={{ width: 24, height: 24 }}><Person sx={{ fontSize: 14 }} /></Avatar>}
-                label={anonUsername}
-                variant="outlined"
-              />
-              <Button
-                component={Link}
-                href="/user/auth/#login"
-                variant="contained"
-                color="secondary"
-                startIcon={<Login />}
-                sx={{ borderRadius: "12px" }}
-              >
-                ¡Empezar!
-              </Button>
             </Box>
-          ) : (
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Button component={Link} href="/user/auth/#login" startIcon={<Login />} sx={{ borderRadius: "12px" }}>
-                Iniciar Sesión
-              </Button>
-              {enableRegistration && (
-                <Button
-                  component={Link}
-                  href="/user/auth/#register"
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PersonAdd />}
-                  sx={{ borderRadius: "12px" }}
-                >
-                  Registrarse
-                </Button>
-              )}
-            </Box>
-          )}
-        </Box>
 
-        <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
-          <List>
             <ListItem component={Link} href="/">
               <ListItemIcon><Home /></ListItemIcon>
               <ListItemText primary="Inicio" />
             </ListItem>
+            <ListItem component={Link} href="/ejemplos">
+              <ListItemIcon><School /></ListItemIcon>
+              <ListItemText primary="Ejemplos" />
+            </ListItem>
+            <ListItem component={Link} href="/rankings">
+              <ListItemIcon><Leaderboard /></ListItemIcon>
+              <ListItemText primary="Rankings" />
+            </ListItem>
+            <ListItem component={Link} href="/about/contact">
+              <ListItemIcon><ContactMail /></ListItemIcon>
+              <ListItemText primary="Contacto" />
+            </ListItem>
+
             {user?.rol === "admin" && (
               <>
                 <ListItem component={Link} href="/admin/dashboard">
@@ -349,14 +415,6 @@ export default function Navbar() {
                 <ListItem component={Link} href="/admin/users">
                   <ListItemIcon><People /></ListItemIcon>
                   <ListItemText primary="Usuarios" />
-                </ListItem>
-                <ListItem component={Link} href="/rankings">
-                  <ListItemIcon><Leaderboard /></ListItemIcon>
-                  <ListItemText primary="Rankings" />
-                </ListItem>
-                <ListItem component={Link} href="/ejemplos">
-                  <ListItemIcon><School /></ListItemIcon>
-                  <ListItemText primary="Ejemplos" />
                 </ListItem>
               </>
             )}

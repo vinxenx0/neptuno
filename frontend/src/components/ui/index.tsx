@@ -1,3 +1,4 @@
+// frontend/src/components/ui/index.tsx
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 
