@@ -1,5 +1,4 @@
 // src/app/user/dashboard/page.tsx
-// src/app/user/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,12 +25,13 @@ const GradientCard = styled(Card)(({ theme }) => ({
 }));
 
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.8)',
+  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(222, 226, 230, 0.5)',
+  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
   borderRadius: '16px',
   boxShadow: theme.shadows[2]
 }));
+
 
 interface PaymentMethod {
   id: number;
@@ -93,11 +93,12 @@ export default function UserDashboard() {
         const [transRes, methRes, providersRes] = await Promise.all([
           fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
           fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
-          fetchAPI<PaymentProvider[]>("/v1/payment-providers"),
+          fetchAPI<PaymentProvider[]>("/v1/payment-providers"), // Nueva llamada
         ]);
         setTransactions(transRes.data || []);
         setMethods(methRes.data || []);
         setPaymentProviders(providersRes.data?.filter(p => p.active) || []);
+        // Establecer el primer proveedor activo como predeterminado
         if (providersRes.data && providersRes.data.length > 0) {
           setNewMethod(prev => ({ ...prev, payment_type: providersRes.data.find(p => p.active)?.name || "" }));
         }
@@ -136,6 +137,7 @@ export default function UserDashboard() {
       setError(err instanceof Error ? err.message : "Error al eliminar método");
     }
   };
+
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,6 +200,7 @@ export default function UserDashboard() {
     }
   };
 
+
   const handleSetDefault = async (id: number) => {
     try {
       await fetchAPI(`/v1/payments/methods/${id}/default`, { method: "PUT" });
@@ -220,6 +223,7 @@ export default function UserDashboard() {
       }
     }
   };
+
 
   if (!user) return (
     <Box sx={{
@@ -300,70 +304,27 @@ export default function UserDashboard() {
           </Badge>
         </Box>
 
-        {/* Stats Cards */}
+        {/* Credits Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {/* Credits Card */}
-            <Grid item xs={12} md={4}>
-              <GradientCard>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box>
-                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                        Tus Créditos
-                      </Typography>
-                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                        {user.credits ?? 0}
-                      </Typography>
-                    </Box>
-                    <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
-                  </Box>
-                </CardContent>
-              </GradientCard>
-            </Grid>
-
-            {/* Transactions Card */}
-            <Grid item xs={12} md={4}>
-              <GradientCard sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box>
-                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                        Transacciones
-                      </Typography>
-                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                        {transactions.length}
-                      </Typography>
-                    </Box>
-                    <History sx={{ fontSize: 48, opacity: 0.8 }} />
-                  </Box>
-                </CardContent>
-              </GradientCard>
-            </Grid>
-
-            {/* Payment Methods Card */}
-            <Grid item xs={12} md={4}>
-              <GradientCard sx={{ background: 'linear-gradient(135deg, #a6c1ee 0%, #fbc2eb 100%)' }}>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box>
-                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                        Métodos de Pago
-                      </Typography>
-                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                        {methods.length}
-                      </Typography>
-                    </Box>
-                    <Payment sx={{ fontSize: 48, opacity: 0.8 }} />
-                  </Box>
-                </CardContent>
-              </GradientCard>
-            </Grid>
-          </Grid>
+          <GradientCard sx={{ mb: 4 }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                    Tus Créditos
+                  </Typography>
+                  <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                    {user.credits ?? 0}
+                  </Typography>
+                </Box>
+                <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
+              </Box>
+            </CardContent>
+          </GradientCard>
         </motion.div>
 
         {/* Tabs Navigation */}
@@ -604,39 +565,6 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
-
-              {/* Danger Zone moved to Profile Tab */}
-              <GlassCard sx={{ mt: 3 }}>
-                <CardHeader
-                  title="Zona Peligrosa"
-                  avatar={<Security color="error" />}
-                />
-                <CardContent>
-                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                    Estas acciones son irreversibles. Por favor, procede con precaución.
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button
-                      onClick={logout}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<Logout />}
-                      sx={{ flex: 1 }}
-                    >
-                      Cerrar Sesión
-                    </Button>
-                    <Button
-                      onClick={handleDeleteAccount}
-                      variant="contained"
-                      color="error"
-                      startIcon={<Delete />}
-                      sx={{ flex: 1 }}
-                    >
-                      Eliminar Cuenta
-                    </Button>
-                  </Box>
-                </CardContent>
-              </GlassCard>
             </motion.div>
           )}
 
@@ -740,6 +668,38 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
+
+              <GlassCard sx={{ mt: 3 }}>
+                <CardHeader
+                  title="Zona Peligrosa"
+                  avatar={<Security color="error" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    Estas acciones son irreversibles. Por favor, procede con precaución.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      onClick={logout}
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<Logout />}
+                      sx={{ flex: 1 }}
+                    >
+                      Cerrar Sesión
+                    </Button>
+                    <Button
+                      onClick={handleDeleteAccount}
+                      variant="contained"
+                      color="error"
+                      startIcon={<Delete />}
+                      sx={{ flex: 1 }}
+                    >
+                      Eliminar Cuenta
+                    </Button>
+                  </Box>
+                </CardContent>
+              </GlassCard>
             </motion.div>
           )}
 
@@ -1027,7 +987,7 @@ export default function UserDashboard() {
                           onChange={(e) => {
                             const selectedMethod = methods.find((m) => m.id === parseInt(e.target.value));
                             if (selectedMethod) {
-                              handleSetDefault(selectedMethod.id);
+                              handleSetDefault(selectedMethod.id); // Actualiza el método predeterminado al seleccionarlo
                             }
                           }}
                           fullWidth

@@ -43,13 +43,13 @@ import {
   DialogContent,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import {
-  AddCircle,
-  Delete,
-  ExpandMore,
-  Settings,
-  Public,
-  Link,
+import { 
+  AddCircle, 
+  Delete, 
+  ExpandMore, 
+  Settings, 
+  Public, 
+  Link, 
   Webhook,
   CheckCircle,
   Cancel,
@@ -83,16 +83,6 @@ const ConfigGlassCard = styled(Card)(({ theme }) => ({
   boxShadow: theme.shadows[5]
 }));
 
-const FeatureCard = styled(Card)(({ theme }) => ({
-  borderRadius: '16px',
-  boxShadow: theme.shadows[4],
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[8]
-  }
-}));
-
 export default function ConfigurePage() {
   const { user } = useAuth();
   const router = useRouter();
@@ -121,8 +111,6 @@ export default function ConfigurePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [expandedSettings, setExpandedSettings] = useState<Record<string, boolean>>({});
-  const [allSettingsExpanded, setAllSettingsExpanded] = useState(false);
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
@@ -140,15 +128,6 @@ export default function ConfigurePage() {
           return acc;
         }, {} as Record<string, SiteSetting[]>);
         setSettingsByTag(grouped || {});
-
-        // Initialize expanded state for settings
-        if (grouped) {
-          const initialExpandedState = Object.keys(grouped).reduce((acc, tag) => {
-            acc[tag] = false;
-            return acc;
-          }, {} as Record<string, boolean>);
-          setExpandedSettings(initialExpandedState);
-        }
 
         const originsRes = await fetchAPI<string[]>("/v1/settings/allowed_origins");
         setOrigins(originsRes.data || []);
@@ -198,16 +177,6 @@ export default function ConfigurePage() {
     acc[key].push(badge);
     return acc;
   }, {} as Record<number, Badge[]>);
-
-  const toggleAllSettings = () => {
-    const newState = !allSettingsExpanded;
-    setAllSettingsExpanded(newState);
-    const updatedExpandedSettings = Object.keys(expandedSettings).reduce((acc, tag) => {
-      acc[tag] = newState;
-      return acc;
-    }, {} as Record<string, boolean>);
-    setExpandedSettings(updatedExpandedSettings);
-  };
 
   const handleSaveSetting = async (key: string, newValue: string) => {
     try {
@@ -395,10 +364,10 @@ export default function ConfigurePage() {
   };
 
   if (loading) return (
-    <Box sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+    <Box sx={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
@@ -413,16 +382,16 @@ export default function ConfigurePage() {
   );
 
   return (
-    <Box sx={{
-      p: { xs: 2, md: 4 },
+    <Box sx={{ 
+      p: { xs: 2, md: 4 }, 
       minHeight: "100vh",
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
       <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' }, 
+          justifyContent: 'space-between', 
           alignItems: 'center',
           mb: 4,
           gap: 2
@@ -432,10 +401,10 @@ export default function ConfigurePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 'bold',
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                fontWeight: 'bold', 
                 background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -448,17 +417,17 @@ export default function ConfigurePage() {
               Gestiona la configuración del sistema
             </Typography>
           </motion.div>
-
+          
           <MuiBadge
             overlap="circular"
             badgeContent={
-              <Chip
-                label="Admin"
-                size="small"
-                color="primary"
-                sx={{
-                  position: 'absolute',
-                  top: -10,
+              <Chip 
+                label="Admin" 
+                size="small" 
+                color="primary" 
+                sx={{ 
+                  position: 'absolute', 
+                  top: -10, 
                   right: -10,
                   fontWeight: 'bold'
                 }}
@@ -466,9 +435,9 @@ export default function ConfigurePage() {
             }
           >
             <Avatar
-              sx={{
-                width: 80,
-                height: 80,
+              sx={{ 
+                width: 80, 
+                height: 80, 
                 bgcolor: theme.palette.error.main,
                 fontSize: '2rem',
                 boxShadow: theme.shadows[6]
@@ -476,7 +445,7 @@ export default function ConfigurePage() {
             >
               {user?.username?.charAt(0).toUpperCase()}
             </Avatar>
-          </MuiBadge>
+            </MuiBadge>
         </Box>
 
         {/* Stats Cards */}
@@ -562,7 +531,7 @@ export default function ConfigurePage() {
           </AdminGradientCard>
         </Box>
 
-        {/* Tabs Navigation - REORDENADO */}
+        {/* Tabs Navigation */}
         <Paper sx={{ mb: 3, borderRadius: '12px', overflow: 'hidden' }}>
           <Tabs
             value={activeTab}
@@ -572,12 +541,12 @@ export default function ConfigurePage() {
             indicatorColor="primary"
             textColor="primary"
           >
-            <Tab label="Funcionalidades" icon={<LockPerson />} iconPosition="start" />
+            <Tab label="Configuraciones" icon={<Settings />} iconPosition="start" />
             <Tab label="Orígenes" icon={<Security />} iconPosition="start" />
             <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
+            <Tab label="Funcionalidades" icon={<LockPerson />} iconPosition="start" />
             <Tab label="Gamificación" icon={<EmojiEvents />} iconPosition="start" />
             <Tab label="Pagos" icon={<MonetizationOn />} iconPosition="start" />
-            <Tab label="Configuraciones" icon={<Settings />} iconPosition="start" />
           </Tabs>
         </Paper>
 
@@ -588,326 +557,46 @@ export default function ConfigurePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Funcionalidades Tab - AHORA ES LA PRIMERA */}
+          {/* Configuraciones Tab */}
           {activeTab === 0 && (
             <Box sx={{ mb: 4 }}>
-              <ConfigGlassCard>
-                <CardContent>
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-                    <LockPerson sx={{ mr: 1, verticalAlign: 'middle' }} />
-                    Control de Funcionalidades del Sistema
-                  </Typography>
-
-                  <Grid container spacing={3}>
-                    {/* Tarjeta para Registro */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.enable_registration ? theme.palette.success.main : theme.palette.error.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <PersonAdd sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.enable_registration ? theme.palette.success.main : theme.palette.error.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Registro de Usuarios</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Controla si los nuevos usuarios pueden registrarse
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Typography variant="body2" component="span">
-                                Estado actual:
-                              </Typography>
-                              <Chip
-                                label={features.enable_registration ? "Activado" : "Desactivado"}
-                                size="small"
-                                color={features.enable_registration ? "success" : "error"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Box>
-                            <Switch
-                              checked={features.enable_registration}
-                              onChange={(e) => handleToggleFeature('enable_registration', e.target.checked)}
-                              color="primary"
+              {Object.entries(settingsByTag).map(([tag, settings]) => (
+                <ConfigGlassCard key={tag} sx={{ mb: 2 }}>
+                  <Accordion sx={{ background: 'transparent', boxShadow: 'none' }}>
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar sx={{ bgcolor: theme.palette.primary.main, width: 32, height: 32 }}>
+                          <Settings sx={{ fontSize: 16 }} />
+                        </Avatar>
+                        <Typography variant="h6">{tag}</Typography>
+                        <Chip label={`${settings.length} configs`} size="small" color="primary" variant="outlined" />
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container spacing={2}>
+                        {settings.map((setting) => (
+                          <Grid item xs={12} md={6} key={setting.key}>
+                            <TextField
+                              label={setting.key}
+                              defaultValue={setting.value}
+                              onBlur={(e) => handleSaveSetting(setting.key, e.target.value)}
+                              fullWidth
+                              variant="outlined"
+                              size="small"
+                              helperText={setting.description}
+                              InputProps={{ sx: { borderRadius: '12px' } }}
                             />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('enable_registration')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Login Social */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.enable_social_login ? theme.palette.success.main : theme.palette.error.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <PeopleOutline sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.enable_social_login ? theme.palette.success.main : theme.palette.error.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Login Social</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Permite inicio de sesión con redes sociales
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.enable_social_login ? "Activado" : "Desactivado"}
-                                size="small"
-                                color={features.enable_social_login ? "success" : "error"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={features.enable_social_login}
-                              onChange={(e) => handleToggleFeature('enable_social_login', e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('enable_social_login')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Usuarios Anónimos */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.disable_anonymous_users ? theme.palette.error.main : theme.palette.success.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <Security sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.disable_anonymous_users ? theme.palette.error.main : theme.palette.success.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Usuarios Anónimos</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Controla el acceso de usuarios no registrados
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.disable_anonymous_users ? "Bloqueados" : "Permitidos"}
-                                size="small"
-                                color={features.disable_anonymous_users ? "error" : "success"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={features.disable_anonymous_users}
-                              onChange={(e) => handleToggleFeature('disable_anonymous_users', e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('disable_anonymous_users')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Sistema de Créditos */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.disable_credits ? theme.palette.error.main : theme.palette.success.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <AttachMoney sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.disable_credits ? theme.palette.error.main : theme.palette.success.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Sistema de Créditos</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Habilita/deshabilita el uso de créditos
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.disable_credits ? "Desactivado" : "Activado"}
-                                size="small"
-                                color={features.disable_credits ? "error" : "success"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={!features.disable_credits}
-                              onChange={(e) => handleToggleFeature('disable_credits', !e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('disable_credits')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Métodos de Pago */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.enable_payment_methods ? theme.palette.success.main : theme.palette.error.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <MonetizationOn sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.enable_payment_methods ? theme.palette.success.main : theme.palette.error.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Métodos de Pago</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Habilita diferentes opciones de pago
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.enable_payment_methods ? "Activado" : "Desactivado"}
-                                size="small"
-                                color={features.enable_payment_methods ? "success" : "error"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={features.enable_payment_methods}
-                              onChange={(e) => handleToggleFeature('enable_payment_methods', e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('enable_payment_methods')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Sistema de Puntos */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.enable_points ? theme.palette.success.main : theme.palette.error.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <EmojiEvents sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.enable_points ? theme.palette.success.main : theme.palette.error.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Sistema de Puntos</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Activa puntos por actividades
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.enable_points ? "Activado" : "Desactivado"}
-                                size="small"
-                                color={features.enable_points ? "success" : "error"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={features.enable_points}
-                              onChange={(e) => handleToggleFeature('enable_points', e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('enable_points')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-
-                    {/* Tarjeta para Insignias */}
-                    <Grid item xs={12} md={6} lg={4}>
-                      <FeatureCard sx={{
-                        borderLeft: `4px solid ${features.enable_badges ? theme.palette.success.main : theme.palette.error.main}`
-                      }}>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <EmojiEvents sx={{
-                              fontSize: 40,
-                              mr: 2,
-                              color: features.enable_badges ? theme.palette.success.main : theme.palette.error.main
-                            }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Sistema de Insignias</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Permite la obtención de insignias
-                              </Typography>
-                            </Box>
-                          </Box>
-                          <Divider sx={{ my: 2 }} />
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2">
-                              Estado actual:
-                              <Chip
-                                label={features.enable_badges ? "Activado" : "Desactivado"}
-                                size="small"
-                                color={features.enable_badges ? "success" : "error"}
-                                sx={{ ml: 1 }}
-                              />
-                            </Typography>
-                            <Switch
-                              checked={features.enable_badges}
-                              onChange={(e) => handleToggleFeature('enable_badges', e.target.checked)}
-                              color="primary"
-                            />
-                          </Box>
-                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
-                            {getFeatureDescription('enable_badges')}
-                          </Typography>
-                        </CardContent>
-                      </FeatureCard>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </ConfigGlassCard>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                </ConfigGlassCard>
+              ))}
             </Box>
           )}
 
-          {/* Orígenes Permitidos Tab - AHORA ES LA SEGUNDA */}
+          {/* Orígenes Permitidos Tab */}
           {activeTab === 1 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
@@ -965,7 +654,7 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Integraciones Tab - AHORA ES LA TERCERA */}
+          {/* Integraciones Tab */}
           {activeTab === 2 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
@@ -1047,8 +736,47 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Gamificación Tab - AHORA ES LA CUARTA */}
+          {/* Funcionalidades Tab */}
           {activeTab === 3 && (
+            <Box sx={{ mb: 4 }}>
+              <ConfigGlassCard>
+                <CardContent>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
+                    <LockPerson sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Control de Funcionalidades
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    {Object.entries(features).map(([key, value]) => (
+                      <ConfigGlassCard key={key} sx={{ p: 3 }}>
+                        <FormControlLabel
+                          control={<Switch checked={value} onChange={(e) => handleToggleFeature(key, e.target.checked)} color="primary" />}
+                          label={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              {key.includes('payment') ? <AttachMoney color={value ? "primary" : "disabled"} /> :
+                               key.includes('badge') ? <EmojiEvents color={value ? "primary" : "disabled"} /> :
+                               key.includes('points') ? <MonetizationOn color={value ? "primary" : "disabled"} /> :
+                               <Settings color={value ? "primary" : "disabled"} />}
+                              <Typography variant="body1">
+                                {key.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')}
+                                <Typography variant="caption" display="block" color="textSecondary">
+                                  {getFeatureDescription(key)}
+                                </Typography>
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{ width: '100%' }}
+                        />
+                      </ConfigGlassCard>
+                    ))}
+                  </Box>
+                </CardContent>
+              </ConfigGlassCard>
+            </Box>
+          )}
+
+          {/* Gamificación Tab */}
+          {activeTab === 4 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard sx={{ mb: 3 }}>
                 <CardContent>
@@ -1069,7 +797,7 @@ export default function ConfigurePage() {
                         Nuevo Tipo
                       </Button>
                     </Box>
-
+                    
                     <Table>
                       <TableHead>
                         <TableRow>
@@ -1106,13 +834,13 @@ export default function ConfigurePage() {
                       <Button
                         variant="contained"
                         startIcon={<AddCircle />}
-                        onClick={() => setEditBadge({
-                          id: 0,
-                          name: '',
-                          description: '',
-                          event_type_id: eventTypes[0]?.id || 0,
-                          required_points: 0,
-                          user_type: 'both'
+                        onClick={() => setEditBadge({ 
+                          id: 0, 
+                          name: '', 
+                          description: '', 
+                          event_type_id: eventTypes[0]?.id || 0, 
+                          required_points: 0, 
+                          user_type: 'both' 
                         })}
                         disabled={eventTypes.length === 0}
                       >
@@ -1187,11 +915,11 @@ export default function ConfigurePage() {
                       onChange={(e) => setEditEventType({ ...editEventType!, points_per_event: parseInt(e.target.value) || 0 })}
                       margin="normal"
                     />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      fullWidth
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
                       sx={{ mt: 2 }}
                     >
                       {editEventType?.id ? 'Actualizar' : 'Crear'}
@@ -1253,11 +981,11 @@ export default function ConfigurePage() {
                       <option value="registered">Registrado</option>
                       <option value="both">Ambos</option>
                     </TextField>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      fullWidth
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
                       sx={{ mt: 2 }}
                     >
                       {editBadge?.id ? 'Actualizar' : 'Crear'}
@@ -1268,8 +996,8 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Pagos Tab - AHORA ES LA QUINTA */}
-          {activeTab === 4 && (
+          {/* Pagos Tab */}
+          {activeTab === 5 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
                 <CardContent>
@@ -1345,11 +1073,11 @@ export default function ConfigurePage() {
                       label="Activo"
                       sx={{ mt: 2 }}
                     />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      fullWidth
+                    <Button 
+                      type="submit" 
+                      variant="contained" 
+                      color="primary" 
+                      fullWidth 
                       sx={{ mt: 2 }}
                     >
                       {editPaymentProvider?.id ? 'Actualizar' : 'Crear'}
@@ -1359,69 +1087,15 @@ export default function ConfigurePage() {
               </Dialog>
             </Box>
           )}
-
-          {/* Configuraciones Tab - AHORA ES LA SEXTA */}
-          {activeTab === 5 && (
-            <Box sx={{ mb: 4 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                <Button
-                  variant="outlined"
-                  onClick={toggleAllSettings}
-                  startIcon={<ExpandMore />}
-                  sx={{ borderRadius: '12px' }}
-                >
-                  {allSettingsExpanded ? 'Contraer Todo' : 'Expandir Todo'}
-                </Button>
-              </Box>
-
-              {Object.entries(settingsByTag).map(([tag, settings]) => (
-                <ConfigGlassCard key={tag} sx={{ mb: 2 }}>
-                  <Accordion
-                    sx={{ background: 'transparent', boxShadow: 'none' }}
-                    expanded={expandedSettings[tag] || false}
-                    onChange={() => setExpandedSettings(prev => ({ ...prev, [tag]: !prev[tag] }))}
-                  >
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Avatar sx={{ bgcolor: theme.palette.primary.main, width: 32, height: 32 }}>
-                          <Settings sx={{ fontSize: 16 }} />
-                        </Avatar>
-                        <Typography variant="h6">{tag}</Typography>
-                        <Chip label={`${settings.length} configs`} size="small" color="primary" variant="outlined" />
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid container spacing={2}>
-                        {settings.map((setting) => (
-                          <Grid item xs={12} md={6} key={setting.key}>
-                            <TextField
-                              label={setting.key}
-                              defaultValue={setting.value}
-                              onBlur={(e) => handleSaveSetting(setting.key, e.target.value)}
-                              fullWidth
-                              variant="outlined"
-                              size="small"
-                              helperText={setting.description}
-                              InputProps={{ sx: { borderRadius: '12px' } }}
-                            />
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                </ConfigGlassCard>
-              ))}
-            </Box>
-          )}
         </motion.div>
       </Box>
 
-      {/* Notificaciones (permanece igual) */}
+      {/* Notificaciones */}
       <AnimatePresence>
         {error && (
-          <Snackbar
-            open
-            autoHideDuration={3000}
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
             onClose={() => setError(null)}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
@@ -1430,8 +1104,8 @@ export default function ConfigurePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
             >
-              <Alert
-                severity="error"
+              <Alert 
+                severity="error" 
                 onClose={() => setError(null)}
                 sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
               >
@@ -1441,9 +1115,9 @@ export default function ConfigurePage() {
           </Snackbar>
         )}
         {success && (
-          <Snackbar
-            open
-            autoHideDuration={3000}
+          <Snackbar 
+            open 
+            autoHideDuration={3000} 
             onClose={() => setSuccess(null)}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
@@ -1452,8 +1126,8 @@ export default function ConfigurePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
             >
-              <Alert
-                severity="success"
+              <Alert 
+                severity="success" 
                 onClose={() => setSuccess(null)}
                 sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
               >
@@ -1470,13 +1144,13 @@ export default function ConfigurePage() {
 // Función auxiliar para descripciones de características
 const getFeatureDescription = (key: string) => {
   const descriptions: Record<string, string> = {
-    enable_registration: 'Permite a nuevos usuarios registrarse en la plataforma. Si se desactiva, solo los administradores podrán crear cuentas.',
-    enable_social_login: 'Permite el inicio de sesión con proveedores sociales como Google, Facebook, etc. Requiere configuración previa de las APIs.',
-    disable_anonymous_users: 'Impide el acceso a usuarios no registrados. Todos los visitantes deberán iniciar sesión para usar la plataforma.',
-    disable_credits: 'Deshabilita el sistema de créditos en la plataforma. Los usuarios no podrán comprar ni gastar créditos.',
-    enable_payment_methods: 'Habilita diferentes métodos de pago como tarjetas, PayPal, etc. Requiere configuración previa de cada proveedor.',
-    enable_points: 'Activa el sistema de puntos por actividades. Los usuarios ganarán puntos por completar acciones en la plataforma.',
-    enable_badges: 'Permite la obtención de insignias al alcanzar ciertos logros. Configura los requisitos en la pestaña de Gamificación.'
+    enable_registration: 'Permite a nuevos usuarios registrarse en la plataforma',
+    enable_social_login: 'Permite el inicio de sesión con proveedores sociales',
+    disable_anonymous_users: 'Impide el acceso a usuarios no registrados',
+    disable_credits: 'Deshabilita el sistema de créditos en la plataforma',
+    enable_payment_methods: 'Habilita diferentes métodos de pago',
+    enable_points: 'Activa el sistema de puntos por actividades',
+    enable_badges: 'Permite la obtención de insignias'
   };
   return descriptions[key] || 'Funcionalidad del sistema';
 };

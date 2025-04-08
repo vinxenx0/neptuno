@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-screen flex flex-col bg-gray-100">
         <AuthProvider>
           {!isAuthPage && <Navbar />}
-          <main className="flex-grow w-full pt-12"> {/* Added pt-16 for navbar spacing */}
+          <main className="flex-grow w-full pt-20"> {/* Added pt-16 for navbar spacing */}
             {children}
           </main>
           {!isAuthPage && <Footer />}

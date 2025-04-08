@@ -1,5 +1,4 @@
 // src/components/Footer.tsx
-// src/components/Footer.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -21,19 +20,13 @@ import {
   Gavel,
   ContactSupport,
   Home,
-  Code,
-  Help,
-  Build,
-  LocationOn,
-  Email,
-  Phone,
 } from "@mui/icons-material";
 
 const GlassFooter = styled("footer")(({ theme }) => ({
   background: "rgba(255, 255, 255, 0.1)",
   backdropFilter: "blur(10px)",
   borderTop: `1px solid ${theme.palette.divider}`,
-  padding: theme.spacing(4, 1),
+  padding: theme.spacing(2, 1),
   marginTop: "auto",
 }));
 
@@ -47,14 +40,6 @@ const FooterLink = styled(Link)(({ theme }) => ({
   "&:hover": {
     color: theme.palette.primary.main,
   },
-}));
-
-const ContactItem = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(1),
-  color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(1),
 }));
 
 export default function Footer() {
@@ -82,10 +67,9 @@ export default function Footer() {
   return (
     <GlassFooter>
       <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          {/* Columna 1: Logo, nombre, tagline y botón de tema */}
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
               <Home color="primary" />
               <Typography
                 variant="h6"
@@ -99,30 +83,27 @@ export default function Footer() {
                 Neptuno
               </Typography>
             </Box>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
+            <Typography variant="body2" color="textSecondary">
               Tu framework SaaS para gestión de créditos y APIs.
             </Typography>
-            <IconButton 
-              onClick={toggleTheme} 
-              color="inherit"
-              sx={{ mt: 1, border: `1px solid ${theme.palette.divider}`, borderRadius: 2 }}
-            >
-              {currentTheme === "light" ? <Brightness4 /> : <Brightness7 />}
-              <Typography variant="caption" sx={{ ml: 1 }}>
-                {currentTheme === "light" ? "Modo oscuro" : "Modo claro"}
-              </Typography>
-            </IconButton>
           </Grid>
 
-          {/* Columna 2: Información */}
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Información
+              Acerca de
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <FooterLink href="/about/us">
                 <Info fontSize="small" /> Sobre Nosotros
               </FooterLink>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Legal
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <FooterLink href="/about/privacy">
                 <Gavel fontSize="small" /> Privacidad
               </FooterLink>
@@ -132,62 +113,32 @@ export default function Footer() {
             </Box>
           </Grid>
 
-          {/* Columna 3: Soporte */}
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Soporte
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <FooterLink href="/api-docs">
-                <Code fontSize="small" /> API Docs
-              </FooterLink>
-              <FooterLink href="/installation">
-                <Build fontSize="small" /> Instalación
-              </FooterLink>
-              <FooterLink href="/help">
-                <Help fontSize="small" /> Ayuda
-              </FooterLink>
-            </Box>
-          </Grid>
-
-          {/* Columna 4: Contacto */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Contacto
-            </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <ContactItem>
-                <LocationOn fontSize="small" />
-                <Typography variant="body2">
-                  Avenida Miguel Indurain, Murcia, 30008 España
-                </Typography>
-              </ContactItem>
-              <FooterLink href="mailto:info@neptuno.com">
-                <Email fontSize="small" /> info@neptuno.com
-              </FooterLink>
-              <FooterLink href="tel:+34987654321">
-                <Phone fontSize="small" /> +34 987 654 321
+              <FooterLink href="/about/contact">
+                <ContactSupport fontSize="small" /> Contacto
               </FooterLink>
             </Box>
+
+            <Divider sx={{ my: 1 }} />
+
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <Typography variant="caption" color="textSecondary">
+                Tiempo de carga: {loadTime} ms
+              </Typography>
+              <IconButton onClick={toggleTheme} color="inherit">
+                {currentTheme === "light" ? <Brightness4 /> : <Brightness7 />}
+              </IconButton>
+            </Box>
+
+            <Typography variant="caption" color="textSecondary">
+              © {new Date().getFullYear()} Neptuno. Todos los derechos reservados.
+            </Typography>
           </Grid>
         </Grid>
-
-        {/* Pie del footer */}
-        <Divider sx={{ my: 3 }} />
-        <Box sx={{ 
-          display: "flex", 
-          flexDirection: { xs: "column", sm: "row" }, 
-          alignItems: "center", 
-          justifyContent: "space-between",
-          gap: 2
-        }}>
-          <Typography variant="caption" color="textSecondary">
-            Tiempo de carga: {loadTime} ms
-          </Typography>
-          <Typography variant="caption" color="textSecondary">
-            © {new Date().getFullYear()} Neptuno. Todos los derechos reservados.
-          </Typography>
-        </Box>
       </Container>
     </GlassFooter>
   );
