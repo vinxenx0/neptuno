@@ -1,4 +1,3 @@
-// frontend/src/app/rankings/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -26,15 +25,13 @@ import {
 import fetchAPI from "@/lib/api";
 import { RankingResponse } from "@/lib/types";
 
-// Styled Components actualizados para coincidir con el dashboard
 const GlassCard = styled(Paper)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.8)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(222, 226, 230, 0.5)',
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(12px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: '16px',
-  boxShadow: theme.shadows[2],
+  boxShadow: theme.shadows[10],
   overflow: 'hidden',
-  color: theme.palette.text.primary,
 }));
 
 const GradientButton = styled(Button)(({ theme }) => ({
@@ -42,17 +39,10 @@ const GradientButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   borderRadius: '12px',
   padding: '12px 24px',
-  fontWeight: 'bold',
   transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-2px)',
-    boxShadow: theme.shadows[4],
-    background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
-  },
-  '&.MuiButton-outlined': {
-    background: 'transparent',
-    border: `2px solid ${theme.palette.primary.main}`,
-    color: theme.palette.primary.main,
+    boxShadow: theme.shadows[4]
   }
 }));
 
@@ -63,10 +53,7 @@ const RankingBadge = ({ position }: { position: number }) => {
       case 1: return { bg: '#ffd700', text: '#000' };
       case 2: return { bg: '#c0c0c0', text: '#000' };
       case 3: return { bg: '#cd7f32', text: '#000' };
-      default: return { 
-        bg: theme.palette.primary.main, 
-        text: theme.palette.primary.contrastText 
-      };
+      default: return { bg: theme.palette.primary.main, text: '#fff' };
     }
   };
   
@@ -81,8 +68,7 @@ const RankingBadge = ({ position }: { position: number }) => {
       backgroundColor: getBadgeColor().bg,
       color: getBadgeColor().text,
       fontWeight: 'bold',
-      boxShadow: theme.shadows[4],
-      fontSize: '0.875rem'
+      boxShadow: theme.shadows[4]
     }}>
       #{position}
     </Box>
@@ -113,7 +99,7 @@ export default function Rankings() {
     <Box sx={{
       minHeight: '100vh',
       p: { xs: 2, md: 4 },
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
     }}>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -143,15 +129,7 @@ export default function Rankings() {
         </Box>
       </motion.div>
 
-      <Box sx={{ 
-        mb: 4, 
-        display: 'flex', 
-        gap: 2, 
-        flexWrap: 'wrap',
-        '& .MuiButton-root': {
-          minWidth: '200px'
-        }
-      }}>
+      <Box sx={{ mb: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
         <GradientButton
           onClick={() => setSortBy("points")}
           startIcon={<Whatshot />}
@@ -170,20 +148,18 @@ export default function Rankings() {
       </Box>
 
       <GlassCard>
-        {/* Header de la tabla */}
         <Box sx={{
           p: 2,
           display: { xs: 'none', md: 'grid' },
-          gridTemplateColumns: '60px 1fr repeat(3, 150px)',
+          gridTemplateColumns: '40px 1fr repeat(3, 150px)',
           alignItems: 'center',
-          background: 'rgba(255, 255, 255, 0.7)',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+          background: 'rgba(255, 255, 255, 0.05)'
         }}>
-          <Typography variant="subtitle2" color="textSecondary" fontWeight="bold">POS</Typography>
-          <Typography variant="subtitle2" color="textSecondary" fontWeight="bold">USUARIO</Typography>
-          <Typography variant="subtitle2" color="textSecondary" fontWeight="bold">PUNTOS</Typography>
-          <Typography variant="subtitle2" color="textSecondary" fontWeight="bold">INSIGNIAS</Typography>
-          <Typography variant="subtitle2" color="textSecondary" fontWeight="bold">TIPO</Typography>
+          <Typography variant="subtitle2" color="textSecondary">POS</Typography>
+          <Typography variant="subtitle2" color="textSecondary">USUARIO</Typography>
+          <Typography variant="subtitle2" color="textSecondary">PUNTOS</Typography>
+          <Typography variant="subtitle2" color="textSecondary">INSIGNIAS</Typography>
+          <Typography variant="subtitle2" color="textSecondary">TIPO</Typography>
         </Box>
 
         <AnimatePresence>
@@ -198,14 +174,11 @@ export default function Rankings() {
               <Box sx={{
                 p: 2,
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '60px 1fr repeat(3, 150px)' },
+                gridTemplateColumns: { xs: '1fr', md: '40px 1fr repeat(3, 150px)' },
                 gap: 2,
                 alignItems: 'center',
-                borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
-                '&:hover': { 
-                  background: 'rgba(0, 0, 0, 0.02)',
-                  transition: 'background 0.3s ease'
-                }
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                '&:hover': { background: 'rgba(255, 255, 255, 0.03)' }
               }}>
                 {/* Mobile Position */}
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>
@@ -213,92 +186,60 @@ export default function Rankings() {
                 </Box>
 
                 {/* Desktop Position */}
-                <Box sx={{ 
-                  display: { xs: 'none', md: 'flex' }, 
-                  justifyContent: 'center' 
-                }}>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
                   <RankingBadge position={index + 1} />
                 </Box>
 
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 2,
-                  minWidth: 0 // Para evitar overflow
-                }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Avatar sx={{
                     bgcolor: theme.palette.primary.main,
                     width: 40,
                     height: 40,
-                    boxShadow: theme.shadows[2]
+                    boxShadow: theme.shadows[4]
                   }}>
                     {rank.username[0].toUpperCase()}
                   </Avatar>
-                  <Typography 
-                    variant="body1" 
-                    fontWeight="500"
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                  >
+                  <Typography variant="body1" fontWeight="500">
                     {rank.username}
                   </Typography>
                 </Box>
 
-                <Box sx={{ 
-                  mt: { xs: 1, md: 0 },
-                  gridColumn: { xs: '1 / -1', md: 'auto' }
-                }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      value={(rank.points / maxPoints) * 100}
-                      sx={{
-                        flexGrow: 1,
-                        height: 8,
+                <Box sx={{ mt: { xs: 1, md: 0 } }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(rank.points / maxPoints) * 100}
+                    sx={{
+                      height: 8,
+                      borderRadius: 4,
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      '& .MuiLinearProgress-bar': {
                         borderRadius: 4,
-                        background: 'rgba(0, 0, 0, 0.1)',
-                        '& .MuiLinearProgress-bar': {
-                          borderRadius: 4,
-                          background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
-                        }
-                      }}
-                    />
-                    <Typography variant="body2" fontWeight="bold" minWidth="fit-content">
-                      {rank.points.toLocaleString()} pts
-                    </Typography>
-                  </Box>
+                        background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
+                      }
+                    }}
+                  />
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    {rank.points.toLocaleString()} pts
+                  </Typography>
                 </Box>
 
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1,
-                  gridColumn: { xs: '1 / -1', md: 'auto' }
-                }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <MilitaryTech color="secondary" />
-                  <Typography variant="body2" fontWeight="bold">
+                  <Typography variant="body2">
                     {rank.badges_count} / {maxBadges}
                   </Typography>
                 </Box>
 
-                <Box sx={{ 
-                  gridColumn: { xs: '1 / -1', md: 'auto' },
-                  justifySelf: { xs: 'start', md: 'center' }
-                }}>
-                  <Chip
-                    label={rank.user_type}
-                    color={rank.user_type === 'admin' ? 'secondary' : 'primary'}
-                    variant="outlined"
-                    sx={{ 
-                      borderRadius: '8px',
-                      textTransform: 'capitalize',
-                      fontWeight: 'bold'
-                    }}
-                  />
-                </Box>
+                <Chip
+                  label={rank.user_type}
+                  color={rank.user_type === 'admin' ? 'secondary' : 'primary'}
+                  variant="outlined"
+                  sx={{ 
+                    justifySelf: 'start',
+                    borderRadius: '8px',
+                    textTransform: 'capitalize'
+                  }}
+                />
               </Box>
             </motion.div>
           ))}
@@ -312,14 +253,7 @@ export default function Rankings() {
             alignItems: 'center',
             textAlign: 'center'
           }}>
-            <Leaderboard sx={{ 
-              fontSize: 80, 
-              color: 'text.secondary', 
-              mb: 2,
-              background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }} />
+            <Leaderboard sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
             <Typography variant="h6" color="textSecondary">
               No hay datos de clasificación disponibles
             </Typography>

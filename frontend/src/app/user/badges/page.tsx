@@ -1,5 +1,4 @@
 // src/app/user/badges/page.tsx
-// src/app/user/gamification/badges/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -16,6 +15,7 @@ import {
   Tabs,
   Tab,
   Fade,
+  Paper,
 } from "@mui/material";
 import {
   GlassCard,
@@ -27,46 +27,35 @@ import fetchAPI from "@/lib/api";
 import { UserGamificationResponse, BadgeWithEventType } from "@/lib/types";
 import { EmojiEvents, Stars } from "@mui/icons-material";
 
+// Styled Components - Actualizados para mejor legibilidad
 const BadgeContainer = styled("div")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-  gap: theme.spacing(4),
-  padding: theme.spacing(4),
+  gap: theme.spacing(3),
+  padding: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: "1fr",
     padding: theme.spacing(2),
   },
 }));
 
-const BadgeCard = styled(GlassCard)(({ theme }) => ({
+const BadgeCard = styled(Box)(({ theme }) => ({
   height: "100%",
   transition: "transform 0.3s ease, box-shadow 0.3s ease",
   position: "relative",
   overflow: "hidden",
-  "&::before": {
-    content: '""',
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: "rgba(15, 23, 42, 0.7)",
-    backdropFilter: "blur(10px)",
-    zIndex: 0,
-  },
-  "& > div": {
-    position: "relative",
-    zIndex: 1,
-    height: "100%",
-  },
+  borderRadius: "16px",
+  background: theme.palette.background.paper,
+  boxShadow: theme.shadows[2],
+  border: "1px solid rgba(222, 226, 230, 0.5)",
   "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow: `0 10px 25px -5px ${theme.palette.primary.main}33`,
+    transform: "translateY(-5px)",
+    boxShadow: theme.shadows[6],
   },
 }));
 
 const EventTypeSection = styled("section")(({ theme }) => ({
-  marginBottom: theme.spacing(6),
+  marginBottom: theme.spacing(4),
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -75,8 +64,8 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     height: 3,
   },
   "& .MuiTab-root": {
-    color: theme.palette.common.white,
-    opacity: 0.7,
+    color: theme.palette.text.secondary,
+    opacity: 0.8,
     fontSize: "0.875rem",
     fontWeight: 500,
     textTransform: "capitalize",
@@ -88,6 +77,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     },
     "&:hover": {
       opacity: 1,
+      color: theme.palette.primary.main,
     },
   },
 }));
@@ -145,7 +135,7 @@ export default function Badges() {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)",
+          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -153,7 +143,7 @@ export default function Badges() {
           px: { xs: 2, md: 6 },
         }}
       >
-        <Typography variant="h6" color="textSecondary">
+        <Typography variant="h6" color="text.secondary">
           Esta funcionalidad no está habilitada en este momento.
         </Typography>
       </Box>
@@ -167,7 +157,7 @@ export default function Badges() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)",
+        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         py: { xs: 4, md: 6 },
         px: { xs: 2, md: 6 },
       }}
@@ -187,35 +177,36 @@ export default function Badges() {
             }}
           >
             <GradientText>Mis Logros</GradientText>
-            <Typography variant="subtitle1" color="textSecondary" sx={{ mt: 1 }}>
+            <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
               Tus insignias de reconocimiento
             </Typography>
           </Box>
         </motion.div>
 
-        <StyledTabs
-          value={selectedTab}
-          onChange={(_, val) => setSelectedTab(val)}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{ 
-            mb: 4,
-            "& .MuiTabs-scroller": {
-              padding: "0 16px",
-            }
-          }}
-        >
-          <Tab label="Todos" value="all" />
-          {eventTypes.map((type) => (
-            <Tab 
-              key={type} 
-              label={type.replace(/_/g, " ")} 
-              value={type} 
-              icon={<BadgeIcon type={type} />}
-              iconPosition="start"
-            />
-          ))}
-        </StyledTabs>
+        <Paper elevation={0} sx={{ mb: 4, borderRadius: "12px", background: "rgba(255, 255, 255, 0.7)" }}>
+          <StyledTabs
+            value={selectedTab}
+            onChange={(_, val) => setSelectedTab(val)}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ 
+              "& .MuiTabs-scroller": {
+                padding: "0 16px",
+              }
+            }}
+          >
+            <Tab label="Todos" value="all" />
+            {eventTypes.map((type) => (
+              <Tab 
+                key={type} 
+                label={type.replace(/_/g, " ")} 
+                value={type} 
+                icon={<BadgeIcon type={type} />}
+                iconPosition="start"
+              />
+            ))}
+          </StyledTabs>
+        </Paper>
 
         {filteredBadges.length === 0 ? (
           <EmptyState
@@ -245,24 +236,31 @@ export default function Badges() {
                           gap: 2,
                         }}
                       >
-                        <BadgeIcon type={badge.event_type.name} />
+                        <Avatar
+                          sx={{
+                            width: 56,
+                            height: 56,
+                            bgcolor: theme.palette.primary.light,
+                            color: theme.palette.primary.contrastText
+                          }}
+                        >
+                          <BadgeIcon type={badge.event_type.name} />
+                        </Avatar>
                         <Box>
-                          <Box
-                            sx={{
-                              fontSize: "1.5rem",
-                              fontWeight: "bold",
-                              lineHeight: 1.2,
-                            }}
+                          <Typography
+                            variant="h6"
+                            fontWeight="bold"
+                            color="text.primary"
                           >
-                            <GradientText>{badge.name}</GradientText>
-                          </Box>
-                          <Typography variant="caption" color="textSecondary">
+                            {badge.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
                             {badge.event_type.name.replace(/_/g, " ")}
                           </Typography>
                         </Box>
                       </Box>
 
-                      <Typography variant="body2" sx={{ mb: 3, color: "rgba(255, 255, 255, 0.9)" }}>
+                      <Typography variant="body2" color="text.primary" sx={{ mb: 3 }}>
                         {badge.description}
                       </Typography>
 
@@ -280,11 +278,11 @@ export default function Badges() {
                           size="small"
                           icon={<Stars sx={{ fontSize: "1rem" }} />}
                           sx={{ 
-                            background: theme.palette.primary.dark,
-                            color: theme.palette.common.white
+                            background: theme.palette.primary.main,
+                            color: theme.palette.primary.contrastText
                           }}
                         />
-                        <Typography variant="caption" color="textSecondary">
+                        <Typography variant="caption" color="text.secondary">
                           {badge.user_type}
                         </Typography>
                       </Box>

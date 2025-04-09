@@ -2138,7 +2138,7 @@ export interface BadgeWithEventType extends Badge {
 
 
 
-Aborda mi solicitud de manera estructurada y detallada, respetando la lógica actual de la aplicación y siguiendo mis instrucciones al pie de la letra. Dado que hay varios puntos a tratar, separara la respuesta en partes claras para que sea más fácil de seguir. Generaré los códigos completos solicitados.
+Aborda m solicitud de manera estructurada y detallada, respetando la lógica actual de la aplicación y siguiendo mis instrucciones al pie de la letra. Dado que hay varios puntos a tratar, separara la respuesta en partes claras para que sea más fácil de seguir. Genera los códigos completos solicitados.
 
 Indicame si necesitas más archivos para ciertas implementaciones y te los proporcionaré.
 

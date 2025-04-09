@@ -1,4 +1,5 @@
 // frontend/src/app/user/points/page.tsx
+// frontend/src/app/user/points/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,7 +8,7 @@ import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { GlassCard, GradientText, TimelineIcon, EmptyState } from "@/components/ui";
-import { Box, Typography, Tabs, Tab, styled, Chip, useTheme } from "@mui/material";
+import { Box, Typography, Tabs, Tab, styled, Chip } from "@mui/material";
 
 const TimelineItemContainer = styled(motion.div)(({ theme }) => ({
   display: "flex",
@@ -15,7 +16,7 @@ const TimelineItemContainer = styled(motion.div)(({ theme }) => ({
   position: "relative",
   paddingLeft: theme.spacing(6),
   paddingBottom: theme.spacing(4),
-  borderLeft: `2px solid ${theme.palette.divider}`,
+  borderLeft: "2px solid rgba(255, 255, 255, 0.1)",
   "&:last-child": {
     borderLeft: "none",
     paddingBottom: 0,
@@ -29,7 +30,7 @@ const TimelineItemContainer = styled(motion.div)(({ theme }) => ({
     height: "16px",
     borderRadius: "50%",
     background: theme.palette.primary.main,
-    boxShadow: `0 0 0 4px ${theme.palette.primary.light}33`,
+    boxShadow: `0 0 0 4px ${theme.palette.primary.dark}33`,
   },
 }));
 
@@ -37,11 +38,10 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   "& .MuiTabs-indicator": {
     backgroundColor: theme.palette.primary.main,
     height: 3,
-    borderRadius: 3,
   },
   "& .MuiTab-root": {
-    color: theme.palette.text.secondary,
-    opacity: 0.8,
+    color: theme.palette.common.white,
+    opacity: 0.7,
     fontSize: "0.875rem",
     fontWeight: 500,
     textTransform: "capitalize",
@@ -52,7 +52,6 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
       opacity: 1,
     },
     "&:hover": {
-      color: theme.palette.primary.main,
       opacity: 1,
     },
   },
@@ -61,27 +60,24 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 const StyledGlassCard = styled(GlassCard)(({ theme }) => ({
   position: "relative",
   overflow: "hidden",
-  background: "rgba(255, 255, 255, 0.9)",
-  backdropFilter: "blur(12px)",
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "rgba(15, 23, 42, 0.7)",
+    backdropFilter: "blur(10px)",
+    zIndex: 0,
+  },
   "& > div": {
     position: "relative",
     zIndex: 1,
   },
 }));
 
-const PointsBadge = styled(Chip)(({ theme }) => ({
-  fontSize: "1rem",
-  fontWeight: "bold",
-  padding: theme.spacing(1, 2),
-  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-  color: theme.palette.common.white,
-}));
-
 export default function PointsPage() {
-  const theme = useTheme();
   const { user } = useAuth();
   const router = useRouter();
   const [pointsHistory, setPointsHistory] = useState<any[]>([]);
@@ -127,7 +123,7 @@ export default function PointsPage() {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+          background: "linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -149,7 +145,7 @@ export default function PointsPage() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        background: "linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%)",
         py: { xs: 4, md: 8 },
         px: { xs: 2, md: 8 },
       }}
@@ -164,7 +160,7 @@ export default function PointsPage() {
             <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
               <GradientText>Historial de Puntos</GradientText>
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant="subtitle1" color="textSecondary">
               Tu progreso y logros en la plataforma
             </Typography>
           </Box>
@@ -179,11 +175,7 @@ export default function PointsPage() {
             mb: 4,
             "& .MuiTabs-scroller": {
               padding: "0 16px",
-            },
-            background: "rgba(255, 255, 255, 0.7)",
-            borderRadius: theme.shape.borderRadius,
-            px: 2,
-            py: 1,
+            }
           }}
         >
           <Tab label="Todos" value="all" />
@@ -210,29 +202,27 @@ export default function PointsPage() {
             }}
           >
             <Box>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant="h6" color="textSecondary" sx={{ mb: 1 }}>
                 Puntos Totales
               </Typography>
-              <Typography 
-                variant="h3" 
-                sx={{ 
-                  fontWeight: "bold",
-                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  display: 'inline-block'
-                }}
-              >
+              <Typography variant="h3" sx={{ color: "primary.light", fontWeight: "bold" }}>
                 {totalPoints}
               </Typography>
             </Box>
             {user && (
               <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
                   Nivel Actual
                 </Typography>
-                <PointsBadge
+                <Chip
                   label="Experto"
+                  color="primary"
+                  sx={{ 
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    px: 2,
+                    py: 1,
+                  }}
                 />
               </Box>
             )}
@@ -260,10 +250,10 @@ export default function PointsPage() {
                         gap: 1,
                       }}
                     >
-                      <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "semibold" }}>
+                      <Typography variant="h6" sx={{ color: "white", fontWeight: "semibold" }}>
                         +{entry.points} puntos
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="textSecondary">
                         {new Date(entry.created_at).toLocaleDateString("es-ES", {
                           day: "numeric",
                           month: "short",
@@ -271,15 +261,15 @@ export default function PointsPage() {
                         })}
                       </Typography>
                     </Box>
-                    <Typography variant="body1" sx={{ color: "text.primary", mb: 2 }}>
+                    <Typography variant="body1" sx={{ color: "rgba(255, 255, 255, 0.9)", mb: 2 }}>
                       {entry.event_type.description}
                     </Typography>
                     <Chip
                       label={entry.event_type.name}
                       size="small"
                       sx={{ 
-                        background: theme.palette.action.selected,
-                        color: theme.palette.text.primary,
+                        background: "rgba(255, 255, 255, 0.1)",
+                        color: "rgba(255, 255, 255, 0.8)",
                       }}
                     />
                   </Box>

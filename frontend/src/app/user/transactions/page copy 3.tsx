@@ -1,4 +1,5 @@
 // frontend/src/app/user/transactions/page.tsx
+// frontend/src/app/user/transactions/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -37,42 +38,41 @@ interface CreditTransaction {
 }
 
 const TransactionCard = styled(Box)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.85)',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '16px',
+  background: 'rgba(255, 255, 255, 0.12)',
+  backdropFilter: 'blur(16px)',
+  borderRadius: '24px',
   padding: theme.spacing(3),
-  boxShadow: theme.shadows[4],
-  border: '1px solid rgba(222, 226, 230, 0.5)',
-  transition: 'all 0.3s ease',
+  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+  border: '1px solid rgba(255, 255, 255, 0.18)',
+  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[6],
-    background: 'rgba(248, 249, 250, 0.95)'
+    transform: 'translateY(-8px)',
+    boxShadow: '0 12px 40px 0 rgba(31, 38, 135, 0.5)',
+    background: 'rgba(255, 255, 255, 0.18)'
   }
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& .MuiTabs-indicator': {
-    backgroundColor: theme.palette.primary.main,
-    height: 3,
+    backgroundColor: theme.palette.secondary.light,
+    height: 4,
     borderRadius: '2px'
   },
   '& .MuiTab-root': {
-    color: theme.palette.text.primary,
-    opacity: 0.8,
+    color: theme.palette.common.white,
+    opacity: 0.7,
     fontSize: '0.875rem',
     fontWeight: 500,
     textTransform: 'capitalize',
     padding: '12px 16px',
     minHeight: 'auto',
     '&.Mui-selected': {
-      color: theme.palette.primary.main,
+      color: theme.palette.common.white,
       opacity: 1,
       fontWeight: 600
     },
     '&:hover': {
-      opacity: 1,
-      color: theme.palette.primary.dark
+      opacity: 1
     }
   }
 }));
@@ -82,17 +82,7 @@ const StatusChip = styled(Chip)(({ theme }) => ({
   fontWeight: 600,
   fontSize: '0.75rem',
   padding: '2px 8px',
-  height: 'auto',
-  color: 'white',
-  '&.MuiChip-colorSuccess': {
-    backgroundColor: theme.palette.success.main
-  },
-  '&.MuiChip-colorWarning': {
-    backgroundColor: theme.palette.warning.main
-  },
-  '&.MuiChip-colorError': {
-    backgroundColor: theme.palette.error.main
-  }
+  height: 'auto'
 }));
 
 export default function TransactionsPage() {
@@ -148,13 +138,13 @@ export default function TransactionsPage() {
     return (
       <Box sx={{
         minHeight: "100vh",
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         p: 4
       }}>
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="h6" color="textSecondary">
           Esta funcionalidad no está habilitada en este momento.
         </Typography>
       </Box>
@@ -164,9 +154,9 @@ export default function TransactionsPage() {
   return (
     <Box sx={{
       minHeight: "100vh",
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
       p: { xs: 2, md: 4 },
-      color: 'text.primary'
+      color: 'white'
     }}>
       <Box sx={{ 
         maxWidth: "1200px", 
@@ -183,7 +173,7 @@ export default function TransactionsPage() {
             sx={{
               mb: 4,
               fontWeight: "bold",
-              background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+              background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.secondary.light} 90%)`,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               display: 'inline-block',
@@ -197,17 +187,16 @@ export default function TransactionsPage() {
         <StyledTabs
           value={activeTab}
           onChange={(e, newValue) => setActiveTab(newValue)}
-          textColor="primary"
-          indicatorColor="primary"
+          textColor="secondary"
+          indicatorColor="secondary"
           variant="scrollable"
           scrollButtons="auto"
           sx={{ 
             mb: 4,
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'rgba(0, 0, 0, 0.2)',
             borderRadius: '12px',
             padding: '4px',
-            maxWidth: 'fit-content',
-            boxShadow: theme.shadows[1]
+            maxWidth: 'fit-content'
           }}
         >
           <Tab label="Todas" value="all" />
@@ -219,11 +208,10 @@ export default function TransactionsPage() {
           <Box sx={{
             textAlign: 'center',
             py: 6,
-            background: 'rgba(255, 255, 255, 0.7)',
+            background: 'rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(222, 226, 230, 0.5)',
-            boxShadow: theme.shadows[2]
+            border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <History sx={{ 
               fontSize: 48, 
@@ -265,11 +253,10 @@ export default function TransactionsPage() {
                     }}>
                       <Avatar
                         sx={{
-                          bgcolor: t.amount > 0 ? 'success.main' : 'error.main',
+                          bgcolor: t.amount > 0 ? 'success.dark' : 'error.dark',
                           color: 'white',
                           width: 48,
-                          height: 48,
-                          boxShadow: theme.shadows[2]
+                          height: 48
                         }}
                       >
                         {t.amount > 0 ? <ArrowDownward /> : <ArrowUpward />}
@@ -279,7 +266,6 @@ export default function TransactionsPage() {
                           variant="h6" 
                           fontWeight="bold"
                           noWrap
-                          color="text.primary"
                         >
                           {t.transaction_type}
                         </Typography>
@@ -309,11 +295,11 @@ export default function TransactionsPage() {
                     </Box>
                     <Divider sx={{ 
                       mb: 2, 
-                      borderColor: 'rgba(0,0,0,0.1)' 
+                      borderColor: 'rgba(255,255,255,0.1)' 
                     }} />
                     <Typography
                       variant="h5"
-                      color={t.amount > 0 ? "success.dark" : "error.dark"}
+                      color={t.amount > 0 ? "success.light" : "error.light"}
                       fontWeight="bold"
                       sx={{ mb: 1 }}
                     >
