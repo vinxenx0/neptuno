@@ -138,7 +138,7 @@ export default function Footer() {
               Soporte
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <FooterLink href="/api-docs">
+              <FooterLink href="/api/docs">
                 <Code fontSize="small" /> API Docs
               </FooterLink>
               <FooterLink href="/installation">
