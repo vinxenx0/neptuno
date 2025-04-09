@@ -19,6 +19,38 @@ def get_api_logs(
     user=Depends(get_user_context),
     db: Session = Depends(get_db)
 ):
+    """
+    Retrieve a paginated list of API logs.
+
+    Args:
+        page (int): The page number to retrieve. Defaults to 1. Must be greater than or equal to 1.
+        limit (int): The number of logs per page. Defaults to 10. Must be between 1 and 100.
+        user: The user context, injected via dependency. Used to check if the user has admin privileges.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        dict: A dictionary containing the paginated logs, total items, total pages, and the current page.
+
+    Raises:
+        HTTPException: If the user does not have admin privileges (403 Forbidden).
+
+    Example Response:
+        {
+            "data": [
+                {
+                    "id": 1,
+                    "timestamp": "2023-01-01T12:00:00Z",
+                    "endpoint": "/api/v1/resource",
+                    "method": "GET",
+                    "status_code": 200,
+                    "user_id": 123
+                }
+            ],
+            "total_items": 100,
+            "total_pages": 10,
+            "current_page": 1
+        }
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
     

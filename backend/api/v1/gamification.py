@@ -4,150 +4,340 @@ from sqlalchemy.orm import Session
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
 from services.gamification_service import (
-    create_event_type, get_badges_for_event, get_event_details, get_event_types, get_rankings, get_user_events, get_user_gamification, get_user_progress_for_event, register_event, update_event_type, delete_event_type,
-    create_badge, get_badges, update_badge, delete_badge
-)
-from schemas.gamification import (
-    EventTypeCreate, EventTypeResponse, BadgeCreate, BadgeResponse,
-    GamificationEventCreate, GamificationEventResponse, UserGamificationResponse, RankingResponse
-)
+    create_event_type, get_badges_for_event, get_event_details,
+    get_event_types, get_rankings, get_user_events, get_user_gamification,
+    get_user_progress_for_event, register_event, update_event_type,
+    delete_event_type, create_badge, get_badges, update_badge, delete_badge)
+from schemas.gamification import (EventTypeCreate, EventTypeResponse,
+                                  BadgeCreate, BadgeResponse,
+                                  GamificationEventCreate,
+                                  GamificationEventResponse,
+                                  UserGamificationResponse, RankingResponse)
 from typing import List
 
 router = APIRouter(tags=["Gamification"])
 
+
 # Endpoints existentes
 @router.get("/rankings", response_model=List[RankingResponse])
 def get_rankings_endpoint(db: Session = Depends(get_db)):
+    """
+    Retrieve the rankings of users based on gamification metrics.
+
+    Args:
+        db (Session): Database session dependency.
+
+    Returns:
+        List[RankingResponse]: A list of rankings with user details and scores.
+    """
     return get_rankings(db)
 
+
 @router.post("/events")
-async def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+async def create_event(event: GamificationEventCreate,
+                       user: UserContext = Depends(get_user_context),
+                       db: Session = Depends(get_db)):
+    """
+    Register a new gamification event for the authenticated user.
+
+    Args:
+        event (GamificationEventCreate): The event details to be created.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Returns:
+        GamificationEventResponse: The created event details.
+    """
     return register_event(db, event, user)
 
+
 @router.get("/me", response_model=List[UserGamificationResponse])
-def get_my_gamification(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def get_my_gamification(user: UserContext = Depends(get_user_context),
+                        db: Session = Depends(get_db)):
+    """
+    Retrieve the gamification data for the authenticated user.
+
+    Args:
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Returns:
+        List[UserGamificationResponse]: A list of gamification data for the user.
+    """
     return get_user_gamification(db, user)
 
+
 @router.get("/events", response_model=List[GamificationEventResponse])
-def get_my_events(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def get_my_events(user: UserContext = Depends(get_user_context),
+                  db: Session = Depends(get_db)):
+    """
+    Retrieve all gamification events for the authenticated user.
+
+    Args:
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Returns:
+        List[GamificationEventResponse]: A list of events associated with the user.
+    """
     return get_user_events(db, user)
 
+
 @router.get("/events/{event_id}", response_model=GamificationEventResponse)
-def get_event_details_endpoint(event_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def get_event_details_endpoint(event_id: int,
+                               user: UserContext = Depends(get_user_context),
+                               db: Session = Depends(get_db)):
+    """
+    Retrieve details of a specific gamification event.
+
+    Args:
+        event_id (int): The ID of the event to retrieve.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the event is not found.
+
+    Returns:
+        GamificationEventResponse: The details of the requested event.
+    """
     event = get_event_details(db, event_id, user)
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
-@router.get("/event-types/{event_type_id}/badges", response_model=List[BadgeResponse])
-def get_badges_for_event_endpoint(event_type_id: int, db: Session = Depends(get_db)):
+
+@router.get("/event-types/{event_type_id}/badges",
+            response_model=List[BadgeResponse])
+def get_badges_for_event_endpoint(event_type_id: int,
+                                  db: Session = Depends(get_db)):
+    """
+    Retrieve all badges associated with a specific event type.
+
+    Args:
+        event_type_id (int): The ID of the event type.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If no badges are found for the event type.
+
+    Returns:
+        List[BadgeResponse]: A list of badges for the specified event type.
+    """
     badges = get_badges_for_event(db, event_type_id)
     if not badges:
-        raise HTTPException(status_code=404, detail="No badges found for this event type")
+        raise HTTPException(status_code=404,
+                            detail="No badges found for this event type")
     return badges
 
-@router.get("/progress/{event_type_id}", response_model=UserGamificationResponse)
-def get_user_progress_for_event_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+
+@router.get("/progress/{event_type_id}",
+            response_model=UserGamificationResponse)
+def get_user_progress_for_event_endpoint(
+    event_type_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)):
+    """
+    Retrieve the progress of the authenticated user for a specific event type.
+
+    Args:
+        event_type_id (int): The ID of the event type.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If progress is not found for the event type.
+
+    Returns:
+        UserGamificationResponse: The user's progress for the specified event type.
+    """
     progress = get_user_progress_for_event(db, user, event_type_id)
     if not progress:
-        raise HTTPException(status_code=404, detail="Progress not found for this event")
+        raise HTTPException(status_code=404,
+                            detail="Progress not found for this event")
     return progress
+
 
 # Nuevos endpoints para administración
 @router.post("/event-types", response_model=EventTypeResponse)
-def create_event_type_endpoint(event_type: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def create_event_type_endpoint(event_type: EventTypeCreate,
+                               user: UserContext = Depends(get_user_context),
+                               db: Session = Depends(get_db)):
+    """
+    Create a new event type. Only accessible by admin users.
+
+    Args:
+        event_type (EventTypeCreate): The event type details to be created.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        EventTypeResponse: The created event type details.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return create_event_type(db, event_type)
 
+
 @router.get("/event-types", response_model=List[EventTypeResponse])
-def get_event_types_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def get_event_types_endpoint(user: UserContext = Depends(get_user_context),
+                             db: Session = Depends(get_db)):
+    """
+    Retrieve all event types. Only accessible by admin users.
+
+    Args:
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        List[EventTypeResponse]: A list of all event types.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return get_event_types(db)
 
+
 @router.put("/event-types/{event_type_id}", response_model=EventTypeResponse)
-def update_event_type_endpoint(event_type_id: int, event_type_update: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def update_event_type_endpoint(event_type_id: int,
+                               event_type_update: EventTypeCreate,
+                               user: UserContext = Depends(get_user_context),
+                               db: Session = Depends(get_db)):
+    """
+    Update an existing event type. Only accessible by admin users.
+
+    Args:
+        event_type_id (int): The ID of the event type to update.
+        event_type_update (EventTypeCreate): The updated event type details.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        EventTypeResponse: The updated event type details.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return update_event_type(db, event_type_id, event_type_update)
 
+
 @router.delete("/event-types/{event_type_id}")
-def delete_event_type_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def delete_event_type_endpoint(event_type_id: int,
+                               user: UserContext = Depends(get_user_context),
+                               db: Session = Depends(get_db)):
+    """
+    Delete an existing event type. Only accessible by admin users.
+
+    Args:
+        event_type_id (int): The ID of the event type to delete.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        dict: A confirmation message of the deletion.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return delete_event_type(db, event_type_id)
 
+
 @router.post("/badges", response_model=BadgeResponse)
-def create_badge_endpoint(badge: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def create_badge_endpoint(badge: BadgeCreate,
+                          user: UserContext = Depends(get_user_context),
+                          db: Session = Depends(get_db)):
+    """
+    Create a new badge. Only accessible by admin users.
+
+    Args:
+        badge (BadgeCreate): The badge details to be created.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        BadgeResponse: The created badge details.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return create_badge(db, badge)
 
+
 @router.get("/badges", response_model=List[BadgeResponse])
-def get_badges_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def get_badges_endpoint(user: UserContext = Depends(get_user_context),
+                        db: Session = Depends(get_db)):
+    """
+    Retrieve all badges. Only accessible by admin users.
+
+    Args:
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        List[BadgeResponse]: A list of all badges.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return get_badges(db)
 
+
 @router.put("/badges/{badge_id}", response_model=BadgeResponse)
-def update_badge_endpoint(badge_id: int, badge_update: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def update_badge_endpoint(badge_id: int,
+                          badge_update: BadgeCreate,
+                          user: UserContext = Depends(get_user_context),
+                          db: Session = Depends(get_db)):
+    """
+    Update an existing badge. Only accessible by admin users.
+
+    Args:
+        badge_id (int): The ID of the badge to update.
+        badge_update (BadgeCreate): The updated badge details.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        BadgeResponse: The updated badge details.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return update_badge(db, badge_id, badge_update)
 
-@router.delete("/badges/{badge_id}")
-def delete_badge_endpoint(badge_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return delete_badge(db, badge_id)
-
-
-@router.post("/event-types", response_model=EventTypeResponse)
-def create_event_type_endpoint(event_type: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return create_event_type(db, event_type)
-
-@router.get("/event-types", response_model=List[EventTypeResponse])
-def get_event_types_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return get_event_types(db)
-
-@router.put("/event-types/{event_type_id}", response_model=EventTypeResponse)
-def update_event_type_endpoint(event_type_id: int, event_type_update: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return update_event_type(db, event_type_id, event_type_update)
-
-@router.delete("/event-types/{event_type_id}")
-def delete_event_type_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return delete_event_type(db, event_type_id)
-
-# Endpoints para Badge
-@router.post("/badges", response_model=BadgeResponse)
-def create_badge_endpoint(badge: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return create_badge(db, badge)
-
-@router.get("/badges", response_model=List[BadgeResponse])
-def get_badges_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return get_badges(db)
-
-@router.put("/badges/{badge_id}", response_model=BadgeResponse)
-def update_badge_endpoint(badge_id: int, badge_update: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="No autorizado")
-    return update_badge(db, badge_id, badge_update)
 
 @router.delete("/badges/{badge_id}")
-def delete_badge_endpoint(badge_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+def delete_badge_endpoint(badge_id: int,
+                          user: UserContext = Depends(get_user_context),
+                          db: Session = Depends(get_db)):
+    """
+    Delete an existing badge. Only accessible by admin users.
+
+    Args:
+        badge_id (int): The ID of the badge to delete.
+        user (UserContext): The authenticated user's context.
+        db (Session): Database session dependency.
+
+    Raises:
+        HTTPException: If the user is not authorized.
+
+    Returns:
+        dict: A confirmation message of the deletion.
+    """
     if user.rol != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
     return delete_badge(db, badge_id)

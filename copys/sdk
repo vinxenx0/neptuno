@@ -66,4 +66,4 @@ Dado que tu aplicación tiene una arquitectura basada en APIs RESTful con funcio
 
     SDK con FastAPI: El primer paso está claro: documentar, exportar OpenAPI, y generar un cliente inicial. Es una opción viable y valiosa para tu aplicación.
 
-todos tus endpoints en FastAPI estén documentados con docstrings y tipos adecuados.
+
