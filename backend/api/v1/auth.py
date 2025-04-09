@@ -85,8 +85,8 @@ def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
 
 @router.get("/login/{provider}", response_model=dict)
-def get_provider_login_url(provider: str):
-    enable_social_login = get_setting(db, "enable_social_login")
+def get_provider_login_url(provider: str, db: Session = Depends(get_db)):
+    enable_social_login = get_setting(db, "enable_social_login") # comprobar he tenido que meter db 
     if enable_social_login != "true":
         raise HTTPException(status_code=403, detail="El login social está deshabilitado")
     
