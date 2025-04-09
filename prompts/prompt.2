@@ -1,0 +1,3954 @@
+Aqui van los archivos del backend de la parte 1:
+
+# backend/core/config.py
+# Módulo de configuración de la aplicación.
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+class Settings:
+    PROJECT_NAME = "Neptuno"
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    ENVIRONMENT = os.getenv("ENVIRONMENT", "development")  # "development" o "production"
+    
+    # Configuración de bases de datos
+    SQLITE_URL = os.getenv("SQLITE_URL","sqlite:///dev.db")  # SQLite en desarrollo
+    MYSQL_URL = os.getenv("MYSQL_URL")  # MySQL en producción (definido en .env)
+    
+    @property
+    def DATABASE_URL(self):
+        return self.SQLITE_URL if self.ENVIRONMENT == "development" else self.MYSQL_URL
+
+settings = Settings()
+
+
+
+# backend/core/database.py
+# Módulo de conexión a la base de datos.
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+#from backend.core.config import settings
+from core.config import settings
+
+#pool_size = get_setting(db, "db_pool_size") or 20
+#max_overflow = get_setting(db, "db_max_overflow") or 10
+#pool_timeout = get_setting(db, "db_pool_timeout") or 30
+
+engine = create_engine(
+    settings.DATABASE_URL,
+    #pool_size=pool_size,
+    #max_overflow=max_overflow,
+    #pool_timeout=pool_timeout,
+    pool_pre_ping=True,
+    connect_args={"check_same_thread": False} if settings.ENVIRONMENT == "development" else {}
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# backend/core/security.py
+# Usar OAuth2 con Password Flow para autenticación segur
+
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import jwt
+from oauthlib.oauth2 import WebApplicationClient
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
+from jwt import encode, decode, PyJWTError
+from os import getenv
+from datetime import datetime, timedelta
+from typing import Optional
+from core.logging import configure_logging
+from core.database import get_db
+from services.settings_service import get_setting
+
+logger = configure_logging()
+
+# Configuración de OAuth2
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
+google_client = WebApplicationClient(getenv("GOOGLE_CLIENT_ID"))
+meta_client = WebApplicationClient(getenv("META_CLIENT_ID"))
+
+# Configuración de hash de contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+def create_token(user_id: str, user_type: str = "registered"):
+    payload = {
+        "sub": str(user_id),
+        "type": user_type,
+        "exp": datetime.utcnow() + timedelta(hours=24)
+    }
+    return jwt.encode(payload, getenv("SECRET_KEY"), algorithm="HS256")
+
+def decode_token(token: str) -> Optional[dict]:
+    try:
+        payload = jwt.decode(token, getenv("SECRET_KEY"), algorithms=["HS256"])
+        # Validación adicional del payload
+        if not payload.get("sub") or not payload.get("type"):
+            logger.warning(f"Token inválido: falta sub o type en el payload")
+            return None
+        return payload
+    except jwt.ExpiredSignatureError:
+        logger.warning("Token expirado")
+        return None
+    except jwt.InvalidTokenError as e:
+        logger.warning(f"Token inválido: {str(e)}")
+        return None
+    except Exception as e:
+        logger.error(f"Error inesperado al decodificar token: {str(e)}")
+        return None
+
+def create_access_token(data: dict):
+    db = next(get_db())
+    try:
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "token_expiration") or "3600")
+        if expiration < 300:  # Mínimo 5 minutos
+            expiration = 3600
+            logger.warning("Token expiration too low, using default 1h")
+    except Exception as e:
+        logger.error(f"Error token_expiration: {str(e)}")
+        expiration = 3600
+    
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "type": "access"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    try:
+        # Validar y convertir a entero
+        expiration = int(get_setting(db, "refresh_token_expiration") or "604800")
+        if expiration < 86400:  # Mínimo 1 día
+            expiration = 604800
+            logger.warning("Refresh token expiration too low, using default 7d")
+    except Exception as e:
+        logger.error(f"Error refresh_token_expiration: {str(e)}")
+        expiration = 604800
+    
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode = data.copy()
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
+
+def create_refresh_token(data: dict):
+    db = next(get_db())
+    expiration_str = get_setting(db, "refresh_token_expiration") or "604800"  # Valor por defecto: 7 días
+    try:
+        expiration = int(str(expiration_str))  # Convertir a cadena primero y luego a entero
+    except ValueError:
+        logger.error(f"Valor inválido para refresh_token_expiration: {expiration_str}")
+        expiration = 604800  # Valor por defecto si falla
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(seconds=expiration)
+    to_encode.update({"exp": expire, "type": "refresh"})
+    return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
+
+    
+def get_oauth2_redirect_url(provider: str) -> str:
+    if provider == "google":
+        return google_client.prepare_request_uri(
+            "https://accounts.google.com/o/oauth2/v2/auth",
+            redirect_uri=getenv("GOOGLE_REDIRECT_URI"),
+            scope=["openid", "email", "profile"]
+        )
+    elif provider == "meta":
+        return meta_client.prepare_request_uri(
+            "https://www.facebook.com/v13.0/dialog/oauth",
+            redirect_uri=getenv("META_REDIRECT_URI"),
+            scope=["email"]
+        )
+    raise ValueError("Proveedor no soportado")
+
+
+# backend/core/logging.py
+# Registrar eventos y errores para depuración y análisis.
+import logging
+from logging.handlers import RotatingFileHandler
+from core.config import settings
+
+def configure_logging():
+    logger = logging.getLogger("NeptunO")
+    if not logger.handlers:  # Evita añadir handlers múltiples
+
+        logger.setLevel(logging.INFO if settings.ENVIRONMENT == "production" else logging.DEBUG)
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        file_handler = RotatingFileHandler(
+            "app.log",
+            maxBytes=1024 * 1024,  # 1MB por archivo
+            backupCount=5  # Mantener 5 archivos de respaldo
+        )
+        file_handler.setFormatter(formatter)
+        if settings.ENVIRONMENT == "development":
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(formatter)
+            logger.addHandler(console_handler)
+        logger.addHandler(file_handler)
+    return logger
+
+
+# backend/models/user.py
+# Módulo del modelo de usuario.
+from datetime import datetime
+from sqlalchemy import Column, Float, Integer, String, DateTime, Boolean, Enum
+from core.database import Base
+from sqlalchemy.orm import relationship
+import enum
+
+class subscriptionEnum(enum.Enum):
+    FREEMIUM = "freemium"
+    PREMIUM = "premium"
+    CORPORATE = "corporate"
+
+class User(Base):
+    __tablename__ = "usuarios"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    password_hash = Column(String(255), nullable=True)  # Nullable para terceros
+    auth_provider = Column(String(20), nullable=True)  # "local", "google", "meta", etc.
+    provider_id = Column(String(255), nullable=True)  # ID único del proveedor
+    rol = Column(String(20), default="user")  # "user" o "admin"
+    activo = Column(Boolean, default=True)  # Estado de la cuenta
+    subscription = Column(Enum(subscriptionEnum), default=subscriptionEnum.FREEMIUM)  # subscription de suscripción
+    #ciudad = Column(String(100), nullable=True)  # Para perfil
+    website = Column(String(255), nullable=True)  # URL de avatar o perfil
+    credits = Column(Integer, default=10)  # Créditos disponibles
+    #create_at = Column(DateTime, default=datetime.utcnow)  # Fecha de registro
+    renewal = Column(DateTime, nullable=True)  # Última renovación de créditos
+    last_ip = Column(String(45), nullable=True)  # Última IP conocida (IPv4/IPv6)
+    last_login = Column(DateTime, nullable=True)  # Último inicio de sesión
+    token_valid_until = Column(DateTime, nullable=True)  # Fecha de expiración del token actual
+    
+    
+    gamification_events = relationship("GamificationEvent", back_populates="user")
+    gamification = relationship("UserGamification", back_populates="user")
+    
+    
+    
+      # 📌 Ubicación y demografía
+    #pais = Column(String(100), nullable=True)  
+    ciudad = Column(String(100), nullable=True)  
+    #zona_horaria = Column(String(50), nullable=True)  
+    #idioma = Column(String(20), nullable=True)  
+
+    # 📌 Datos de empresa
+    #empresa = Column(String(255), nullable=True)  
+    #industria = Column(String(100), nullable=True)  
+    #tamaño_empresa = Column(String(50), nullable=True)  # Startup, PYME, Enterprise
+    #num_empleados = Column(Integer, nullable=True)  
+    #ingresos_anuales = Column(Float, nullable=True)  
+    #presupuesto_estimado = Column(Float, nullable=True)  
+
+    # 📌 Datos técnicos y uso
+    #tecnologias_usadas = Column(String(255), nullable=True)  
+    #nivel_digitalizacion = Column(String(50), nullable=True)  
+    #dispositivo_frecuente = Column(String(50), nullable=True)  
+    #engagement = Column(Float, nullable=True)  # % de funciones utilizadas  
+    #tiempo_en_plataforma = Column(Integer, nullable=True)  # Minutos activos por mes  
+
+    # 📌 Ciclo de vida
+    create_at = Column(DateTime, default=datetime.utcnow)  
+    #ultima_actividad = Column(DateTime, nullable=True)  
+    #historial_pagos = Column(String(255), nullable=True)  
+    #probabilidad_churn = Column(Float, nullable=True)  
+
+    # 📌 Datos comerciales
+    #volumen_transacciones = Column(Float, nullable=True)  
+    #origen_lead = Column(String(100), nullable=True)  
+    #clientes_referidos = Column(Integer, nullable=True)  
+
+    # backend/models/token.py
+# modelo para tokens revocados
+
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from core.database import Base
+from datetime import datetime, timedelta
+
+class RevokedToken(Base):
+    __tablename__ = "revoked_tokens"
+    
+    token = Column(String(500), primary_key=True)  # Token JWT completo
+    revoked_at = Column(DateTime, default=datetime.utcnow)  # Fecha de revocación
+    user_id = Column(Integer, nullable=True)  # ID del usuario asociado (opcional)
+    
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    token = Column(String(100), unique=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, default=lambda: datetime.utcnow() + timedelta(hours=1))  # Expira en 1 hora
+
+
+# backend/models/site_settings.py
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from datetime import datetime
+from core.database import Base
+
+class SiteSettings(Base):
+    __tablename__ = "site_settings"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String(50), unique=True, nullable=False)
+    value = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=True)
+    tag = Column(String(50), nullable=True) # Nuevo atributo
+    updated_by = Column(Integer, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Claves esperadas (documentación):
+    # - token_expiration: int (segundos)
+    # - refresh_token_expiration: int (segundos)
+    # - rate_limit_auth: {"times": int, "seconds": int}
+    # - rate_limit_api: {"times": int, "seconds": int}
+    # - rate_limit_admin: {"times": int, "seconds": int}
+    # - cache_ttl: int (segundos)
+    # - cache_enabled: bool
+    # - allowed_origins: list[str]
+    # - celery_workers: int
+    # - celery_task_timeout: int (segundos)
+    # - db_pool_size: int
+    # - db_max_overflow: int
+    # - db_pool_timeout: int (segundos)
+    # - freemium_credits: int
+    # - premium_credits: int
+    # - credit_reset_interval: int (días)
+    # - log_level: str ("DEBUG", "INFO", "WARNING", "ERROR")
+
+# backend/models/payment_provider.py
+from sqlalchemy import Column, Integer, String, Boolean
+from models.user import Base
+
+class PaymentProvider(Base):
+    __tablename__ = "payment_providers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False)  # Ej: "Stripe", "Paypal"
+    active = Column(Boolean, default=True)  # Si está activo o no
+
+    # backend/models/payment_method.py
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from models.user import Base
+from datetime import datetime
+
+class PaymentMethod(Base):
+    __tablename__ = "payment_methods"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)  # Vinculado a un usuario
+    payment_type = Column(String(20), nullable=False)  # "credit_card", "paypal", "bank_transfer"
+    details = Column(String(255), nullable=False)  # Datos encriptados (ej. últimos 4 dígitos, email PayPal)
+    is_default = Column(Boolean, default=False)  # Método favorito
+    created_at = Column(DateTime, default=datetime.utcnow)  # Fecha de creación
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Última actualización
+
+
+
+# backend/models/log.py
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
+from models.user import Base
+from datetime import datetime
+
+class APILog(Base):
+    __tablename__ = "api_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    endpoint = Column(String(255), nullable=False)
+    method = Column(String(10), nullable=False)  # GET, POST, etc.
+    status_code = Column(Integer, nullable=False)
+    request_data = Column(Text, nullable=True)  # JSON serializado
+    response_data = Column(Text, nullable=True)  # JSON serializado
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+
+# backend/models/integration.py
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from models.user import Base
+from datetime import datetime
+
+class Integration(Base):
+    __tablename__ = "integrations"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)  # Vinculado a un usuario
+    name = Column(String(50), nullable=False)  # "slack", "zapier", "crm_custom"
+    webhook_url = Column(String(255), nullable=False)  # URL del webhook externo
+    event_type = Column(String(50), nullable=False)  # "credit_usage", "user_login", "payment_added"
+    active = Column(Boolean, default=True)  # Estado de la integración
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_triggered = Column(DateTime, nullable=True)  # Última vez que se disparó
+
+# backend/models/guests.py
+# Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
+from sqlalchemy import Column, String, Integer, DateTime, Float
+from sqlalchemy.orm import relationship
+from core.database import Base
+from datetime import datetime
+
+class GuestsSession(Base):
+    __tablename__ = "sesiones_anonimas"
+    
+    id = Column(String(36), primary_key=True, index=True)  
+    username = Column(String(50), unique=True, nullable=False)  
+    credits = Column(Integer, default=10)  
+    create_at = Column(DateTime, default=datetime.utcnow)  
+    ultima_actividad = Column(DateTime, nullable=True)  
+    last_ip = Column(String(45), nullable=True)  
+
+    # 📌 Información Inferida
+    #probable_pais = Column(String(100), nullable=True)  
+    #probable_industria = Column(String(100), nullable=True)  
+    #probable_num_empleados = Column(Integer, nullable=True)  
+    #probable_ingresos_anuales = Column(Float, nullable=True)  
+    #probable_tecnologias_usadas = Column(String(255), nullable=True)  
+    #engagement_anonimo = Column(Float, nullable=True)  # % de uso en la sesión  
+
+    # Relación con gamificación
+    gamification_events = relationship("GamificationEvent", back_populates="session")
+    gamification = relationship("UserGamification", back_populates="session")
+
+
+# backend/models/gamification.py
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+from core.database import Base
+from datetime import datetime
+from models.user import User
+from models.guests import GuestsSession
+
+
+# backend/models/gamification.py
+class EventType(Base):
+    __tablename__ = "event_types"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False)  # Ej: "api_usage"
+    description = Column(String(255), nullable=True)
+    points_per_event = Column(Integer, default=0)  # Puntos por ocurrencia del evento
+
+    badges = relationship("Badge", back_populates="event_type")
+    gamification_events = relationship("GamificationEvent", back_populates="event_type")
+    user_gamification = relationship("UserGamification", back_populates="event_type")
+
+class Badge(Base):
+    __tablename__ = "badges"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False)  # Ej: "Novato", "Becario"
+    description = Column(String(255), nullable=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    required_points = Column(Integer, nullable=False)  # Puntos necesarios para el badge
+    user_type = Column(String(20), default="both")  # "anonymous", "registered", "both"
+
+    event_type = relationship("EventType", back_populates="badges")
+    user_gamification = relationship("UserGamification", back_populates="badge")
+
+class GamificationEvent(Base):
+    __tablename__ = "gamification_events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
+    event_type = relationship("EventType", back_populates="gamification_events")
+    user = relationship("User", back_populates="gamification_events")
+    session = relationship("GuestsSession", back_populates="gamification_events")
+
+class UserGamification(Base):
+    __tablename__ = "user_gamification"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
+    event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
+    points = Column(Integer, default=0)
+    badge_id = Column(Integer, ForeignKey("badges.id"), nullable=True)
+    
+    event_type = relationship("EventType", back_populates="user_gamification")
+    badge = relationship("Badge", back_populates="user_gamification")
+    user = relationship("User", back_populates="gamification")
+    session = relationship("GuestsSession", back_populates="gamification")
+
+
+#backend/models/error_log.py
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text
+from models.user import Base
+from datetime import datetime
+
+
+class ErrorLog(Base):
+    __tablename__ = "error_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36),
+                        ForeignKey("sesiones_anonimas.id"),
+                        nullable=True)
+    user_type = Column(String(20), nullable=False, default="anonymous")
+
+    error_code = Column(Integer, nullable=False)
+    message = Column(String(255), nullable=False)
+    details = Column(Text, nullable=True)
+    url = Column(String(255), nullable=True)
+    method = Column(String(10), nullable=True)
+    ip_address = Column(String(45), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+#backend/models/credit_transaction.py
+# backend/models/credit_transaction.py
+from sqlalchemy import CheckConstraint, Column, Integer, String, ForeignKey, DateTime, Float
+from models.user import Base
+from datetime import datetime
+
+
+class CreditTransaction(Base):
+    __tablename__ = "credit_transactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
+    session_id = Column(String(36),
+                        ForeignKey("sesiones_anonimas.id"),
+                        nullable=True)
+    user_type = Column(String(20), nullable=False) #, default="anonymous") # "registered" o "anonymous"
+    amount = Column(Integer, nullable=False)
+    transaction_type = Column(String(50), nullable=False)
+    description = Column(String(255), nullable=True)
+    payment_amount = Column(Float, nullable=True)
+    payment_method = Column(String(50), nullable=True)
+    payment_status = Column(String(20), default="pending")
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    # Restricción para asegurar que solo uno de user_id o session_id esté presente
+    __table_args__ = (CheckConstraint(
+        "(user_id IS NOT NULL AND session_id IS NULL AND user_type = 'registered') OR "
+        "(user_id IS NULL AND session_id IS NOT NULL AND user_type = 'anonymous')",
+        name="check_user_or_session"), )
+
+
+#backend/models/allowed_origin.py
+from sqlalchemy import Column, Integer, String
+from models.user import Base
+
+class AllowedOrigin(Base):
+    __tablename__ = "allowed_origins"
+    id = Column(Integer, primary_key=True, index=True)
+    origin = Column(String(255), unique=True, nullable=False)  # Ejemplo: "https://thirdparty.com"
+
+
+
+# backend/schemas/user.py
+from pydantic import BaseModel, EmailStr
+from datetime import datetime
+from typing import Optional
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    username: str
+    password: str
+    ciudad: Optional[str] = None
+    website: Optional[str] = None
+
+class UpdateProfileRequest(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    ciudad: Optional[str] = None
+    website: Optional[str] = None
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    username: str
+    rol: str
+    activo: bool
+    subscription: str  # Esto funciona porque Pydantic automáticamente usa el .value de los Enum
+    ciudad: Optional[str] = None
+    website: Optional[str] = None
+    credits: int
+    create_at: datetime
+    last_ip: Optional[str] = None
+
+    class Config:
+        from_attributes = True  # Esto reemplaza a orm_mode = True en Pydantic v2
+
+
+
+# backend/schemas/site_settings.py
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
+
+class SiteSettingBase(BaseModel):
+    key: str
+    value: str
+    description: Optional[str] = None
+    tag: Optional[str] = None
+
+class SiteSettingCreate(SiteSettingBase):
+    pass
+
+class SiteSettingResponse(SiteSettingBase):
+    id: int
+    updated_by: Optional[int] = None
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+#backend/schemas/payment.py
+
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
+
+
+class PurchaseRequest(BaseModel):
+    credits: int
+    payment_amount: float
+    payment_method: Optional[str] = "stripe"
+
+class PurchaseResponse(BaseModel):
+    transaction_id: int
+    credits_added: int
+    new_balance: int
+
+class PaymentMethodCreate(BaseModel):
+    payment_type: str
+    details: str
+    is_default: bool = False
+
+class PaymentMethodResponse(BaseModel):
+    id: int
+    payment_type: str
+    details: str
+    is_default: bool
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True  # Permite mapear desde objetos SQLAlchemy
+        
+class CreditTransactionResponse(BaseModel):
+    id: int
+    amount: int
+    transaction_type: str
+    payment_amount: Optional[float] = None
+    payment_method: Optional[str] = None
+    payment_status: Optional[str] = None
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True  # Permite mapear desde objetos SQLAlchemy
+        
+class PaymentProviderBase(BaseModel):
+    name: str
+    active: bool = True
+
+class PaymentProviderCreate(PaymentProviderBase):
+    pass
+
+class PaymentProviderResponse(PaymentProviderBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+# // backend/schemas/integration.py
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
+
+class IntegrationBase(BaseModel):
+    name: str
+    webhook_url: str
+    event_type: str
+
+class IntegrationCreate(IntegrationBase):
+    pass
+
+class IntegrationResponse(IntegrationBase):
+    id: int
+    user_id: int
+    active: bool
+    created_at: datetime
+    last_triggered: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True  # Para mapear desde objetos SQLAlchemy
+
+
+
+# backend/schemas/gamification.py
+
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional, List
+
+class EventTypeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    points_per_event: int = 0
+
+class EventTypeCreate(EventTypeBase):
+    pass
+
+class EventTypeResponse(EventTypeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class BadgeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    event_type_id: int
+    required_points: int
+    user_type: str = "both"
+
+class BadgeCreate(BadgeBase):
+    pass
+
+class BadgeResponse(BadgeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class GamificationEventBase(BaseModel):
+    event_type_id: int
+
+class GamificationEventCreate(GamificationEventBase):
+    pass
+
+class GamificationEventResponse(GamificationEventBase):
+    id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+
+class UserGamificationBase(BaseModel):
+    points: int
+    badge_id: Optional[int]
+
+class UserGamificationResponse(UserGamificationBase):
+    event_type_id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    event_type: EventTypeResponse
+    badge: Optional[BadgeResponse]
+
+    class Config:
+        from_attributes = True
+        
+        
+class RankingResponse(BaseModel):
+    username: str
+    points: int
+    badges_count: int
+    user_type: str
+
+    class Config:
+        from_attributes = True
+
+# // backend/schemas/error_log.py
+from pydantic import BaseModel
+from datetime import datetime
+
+class ErrorLogBase(BaseModel):
+    user_id: int | None
+    session_id: str | None
+    error_code: int
+    message: str
+    details: str | None
+    url: str | None
+    method: str | None
+    ip_address: str | None
+    created_at: datetime
+
+class ErrorLogResponse(ErrorLogBase):
+    id: int
+
+    class Config:
+        from_attributes = True  # Reemplaza orm_mode = True
+
+
+#backend/schemas/credit_transaction.py
+from pydantic import BaseModel
+from datetime import datetime
+
+class CreditTransactionBase(BaseModel):
+    user_id: int | None
+    session_id: str | None
+    amount: int
+    transaction_type: str
+    payment_amount: float | None
+    payment_method: str | None
+    payment_status: str
+    timestamp: datetime
+
+class CreditTransactionResponse(CreditTransactionBase):
+    id: int
+
+    class Config:
+        from_attributes = True  # Reemplaza orm_mode = True
+
+#backend/schemas/auth.py
+from pydantic import BaseModel, EmailStr
+
+# Respuesta de tokens tras autenticación exitosa
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+# Solicitud para refrescar un token
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+# Solicitud para restablecer contraseña
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+    
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
+
+class LoginRequest(BaseModel):
+    username: str  # En este caso, es el email
+    password: str
+    
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+# backend/schemas/api_log.py
+from pydantic import BaseModel
+from datetime import datetime
+
+class APILogBase(BaseModel):
+    user_id: int | None
+    endpoint: str
+    method: str
+    status_code: int
+    request_data: str | None
+    response_data: str | None
+    timestamp: datetime
+
+class APILogResponse(APILogBase):
+    id: int
+
+    class Config:
+        from_attributes = True  # Reemplaza orm_mode = True
+
+# backend/api/v1/anonymous_sessions.py
+from pydantic import BaseModel
+from datetime import datetime
+
+class GuestsSessionBase(BaseModel):
+    id: str
+    username: str  # Nuevo campo
+    credits: int
+    create_at: datetime
+    ultima_actividad: datetime | None
+    last_ip: str | None
+
+class GuestsSessionResponse(GuestsSessionBase):
+    class Config:
+        from_attributes = True  # Reemplaza orm_mode = True
+
+
+# backend/middleware/logging.py
+from fastapi import Request, Response
+from sqlalchemy.orm import Session
+from core.database import get_db
+from models.log import APILog
+# from core.logging import logger
+import json
+from starlette.middleware.base import BaseHTTPMiddleware
+from typing import Callable
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        db = next(get_db())
+        request_data = await request.body()
+        response = await call_next(request)
+        
+        user_id = None
+        if "Authorization" in request.headers:
+            from dependencies.auth import get_user_context
+            try:
+                user = await get_user_context(request.headers["Authorization"].replace("Bearer ", ""))
+                user_id = int(user.user_id)
+            except:
+                pass
+
+        log_entry = APILog(
+            user_id=user_id,
+            endpoint=str(request.url.path),
+            method=request.method,
+            status_code=response.status_code,
+            request_data=request_data.decode() if request_data else None,
+            response_data=response.body.decode() if response.body else None
+        )
+        db.add(log_entry)
+        db.commit()
+        # logger.info(f"{request.method} {request.url.path} - Status: {response.status_code}")
+        return response
+
+
+# backend/models/gamification.py
+from fastapi import Depends
+from functools import wraps
+from sqlalchemy.orm import Session
+from dependencies.auth import UserContext, get_user_context
+from core.database import get_db
+from services.gamification_service import register_event
+from schemas.gamification import GamificationEventCreate
+from models.gamification import EventType
+
+# backend/models/gamification.py
+def track_gamification_event(event_type_name: str):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db), *args, **kwargs):
+            event_type = db.query(EventType).filter(EventType.name == event_type_name).first()
+            if not event_type:
+                raise ValueError(f"Event type '{event_type_name}' not found")
+
+            event = GamificationEventCreate(event_type_id=event_type.id)
+            register_event(db, event, user)
+
+            return await func(user=user, db=db, *args, **kwargs)
+        return wrapper
+    return decorator
+
+
+
+# backend/middleware/credits.py
+from schemas.gamification import GamificationEventCreate
+from services.gamification_service import register_event
+from fastapi import Depends, HTTPException
+from functools import wraps
+from sqlalchemy.orm import Session
+from models.credit_transaction import CreditTransaction
+from dependencies.auth import UserContext, get_user_context
+from models.user import User
+from models.guests import GuestsSession
+from core.database import get_db
+from core.logging import configure_logging
+from services.integration_service import trigger_webhook
+from services.settings_service import get_setting
+from dependencies.auth import UserContext
+
+logger = configure_logging()
+
+# backend/middleware/credits.py
+from fastapi import Depends, HTTPException
+from functools import wraps
+from sqlalchemy.orm import Session
+from models.credit_transaction import CreditTransaction
+from dependencies.auth import UserContext, get_user_context
+from models.user import User
+from models.guests import GuestsSession
+from core.database import get_db
+from core.logging import configure_logging
+from services.integration_service import trigger_webhook
+from services.settings_service import get_setting
+
+logger = configure_logging()
+
+def require_credits(func):
+    @wraps(func)
+    async def wrapper(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db), *args, **kwargs):
+        disable_credits = get_setting(db, "disable_credits")
+        
+        if disable_credits != "true":  # Solo procesar créditos si no están desactivados
+            try:
+                if user.user_type == "registered":
+                    user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+                    if not user_db:
+                        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+                    credits = user_db.credits
+                else:
+                    session_db = db.query(GuestsSession).filter(GuestsSession.id == user.session_id).first()
+                    if not session_db:
+                        raise HTTPException(status_code=404, detail="Sesión no encontrada")
+                    credits = session_db.credits
+
+                if credits <= 0:
+                    logger.warning(f"Usuario {user.user_type} ID {user.user_id} sin créditos suficientes")
+                    raise HTTPException(status_code=403, detail="No te quedan créditos disponibles.")
+
+                logger.info(f"Usuario {user.user_type} ID {user.user_id} realiza consulta")
+                response = await func(user=user, db=db, *args, **kwargs)
+
+                if user.user_type == "registered":
+                    user_db.credits -= 1
+                    transaction = CreditTransaction(
+                        user_id=user_db.id,
+                        user_type="registered",
+                        amount=-1,
+                        transaction_type="usage",
+                        description="Consulta realizada"
+                    )
+                else:
+                    session_db.credits -= 1
+                    transaction = CreditTransaction(
+                        session_id=session_db.id,
+                        user_type="anonymous",
+                        amount=-1,
+                        transaction_type="usage",
+                        description="Consulta realizada por anónimo"
+                    )
+
+                # Verificación adicional de user_type
+                if transaction.user_type != user.user_type:
+                    logger.error(f"Inconsistencia en user_type: transacción={transaction.user_type}, contexto={user.user_type}")
+                    raise HTTPException(status_code=500, detail="Inconsistencia en el tipo de usuario")
+
+                # Registro de parámetros de la transacción para depuración
+                logger.debug(f"Parámetros de la transacción: {transaction.__dict__}")
+
+                db.add(transaction)
+                db.commit()
+
+                trigger_webhook(db, "credit_usage", {
+                    "user_id": user.user_id,
+                    "user_type": user.user_type,
+                    "credits_remaining": credits - 1
+                })
+
+                logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits - 1}")
+                
+                # Registrar evento de gamificación
+                #event = GamificationEventCreate(event_type="api_usage")
+                #register_event(db, event, user)
+                
+                return response
+            except HTTPException as e:
+                raise e
+            except Exception as e:
+                logger.error(f"Error inesperado en middleware de créditos para {user.user_type} ID {user.user_id}: {str(e)}")
+                raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+        else:
+            return await func(user=user, db=db, *args, **kwargs)
+    return wrapper
+
+
+# backend/schemas/gamification.py
+
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional, List
+
+class EventTypeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    points_per_event: int = 0
+
+class EventTypeCreate(EventTypeBase):
+    pass
+
+class EventTypeResponse(EventTypeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class BadgeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    event_type_id: int
+    required_points: int
+    user_type: str = "both"
+
+class BadgeCreate(BadgeBase):
+    pass
+
+class BadgeResponse(BadgeBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class GamificationEventBase(BaseModel):
+    event_type_id: int
+
+class GamificationEventCreate(GamificationEventBase):
+    pass
+
+class GamificationEventResponse(GamificationEventBase):
+    id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+
+class UserGamificationBase(BaseModel):
+    points: int
+    badge_id: Optional[int]
+
+class UserGamificationResponse(UserGamificationBase):
+    event_type_id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    event_type: EventTypeResponse
+    badge: Optional[BadgeResponse]
+
+    class Config:
+        from_attributes = True
+        
+        
+class RankingResponse(BaseModel):
+    username: str
+    points: int
+    badges_count: int
+    user_type: str
+
+    class Config:
+        from_attributes = True
+
+# backend/dependencies/auth.py
+# Módulo de dependencias de autenticación.
+# backend/dependencies/auth.py
+from fastapi import Depends, HTTPException, Request
+from sqlalchemy.orm import Session
+from core.database import get_db
+from models.user import User
+from models.guests import GuestsSession
+from models.token import RevokedToken
+from core.security import decode_token
+from core.logging import configure_logging
+from uuid import uuid4
+from datetime import datetime
+from pydantic import BaseModel
+from fastapi import Response
+import random
+import string
+
+logger = configure_logging()
+
+class UserContext(BaseModel):
+    user_id: str
+    email: str
+    username: str
+    user_type: str  # "registered" o "anonymous"
+    subscription: str
+    credits: int
+    rol: str
+    session_id: str | None = None
+
+    class Config:
+        from_attributes = True
+
+def generate_unique_username(db: Session) -> str:
+    while True:
+        random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
+        username = f"Guest_{random_chars}"
+        if not db.query(GuestsSession).filter(GuestsSession.username == username).first():
+            return username
+
+async def get_user_context(request: Request, response: Response, db: Session = Depends(get_db)):
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    session_id = request.headers.get("X-Session-ID")  # Leer de header en lugar de cookie
+    client_ip = request.client.host
+    logger.info(f"Procesando solicitud: token={bool(token)}, session_id={session_id}, ip={client_ip}")
+
+    try:
+        if token:
+            # Lógica para usuarios registrados (sin cambios)
+            if db.query(RevokedToken).filter(RevokedToken.token == token).first():
+                logger.warning(f"Intento de uso de token revocado desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token revocado")
+            payload = decode_token(token)
+            if not payload or payload.get("type") != "access":
+                logger.error(f"Token inválido recibido desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token inválido o no es de acceso")
+            user = db.query(User).filter(User.id == int(payload["sub"])).first()
+            if not user:
+                logger.error(f"Usuario no encontrado para token desde IP {client_ip}")
+                raise HTTPException(status_code=404, detail="Usuario no encontrado")
+            if not user.activo:
+                logger.warning(f"Intento de acceso con usuario inactivo ID {user.id} desde IP {client_ip}")
+                raise HTTPException(status_code=403, detail="Usuario inactivo")
+            if user.token_valid_until and user.token_valid_until < datetime.utcnow():
+                logger.warning(f"Token expirado manualmente para usuario ID {user.id} desde IP {client_ip}")
+                raise HTTPException(status_code=401, detail="Token no válido")
+            
+            user.last_ip = client_ip
+            user.last_login = datetime.utcnow()
+            db.commit()
+            logger.info(f"Usuario registrado ID {user.id} autenticado desde IP {client_ip}")
+            return UserContext(
+                user_type="registered",
+                user_id=str(user.id),
+                email=user.email,
+                username=user.username,
+                credits=user.credits,
+                subscription=user.subscription.value,
+                rol=user.rol
+            )
+
+        if not session_id:
+            logger.info("No hay session_id en header, creando nueva sesión anónima")
+            session_id = str(uuid4())
+            username = generate_unique_username(db)  # Generar apodo único
+            new_session = GuestsSession(
+                id=session_id,
+                username=username,  # Asignar el apodo
+                credits=10,
+                create_at=datetime.utcnow(),
+                ultima_actividad=datetime.utcnow(),
+                last_ip=client_ip
+            )
+            db.add(new_session)
+            db.commit()
+            logger.info(f"Nueva sesión anónima creada ID {session_id} con username {username} desde IP {client_ip}")
+            return UserContext(
+                user_type="anonymous",
+                user_id=session_id,
+                email="anonymous@example.com",
+                username=username,  # Usar el apodo generado
+                credits=10,
+                subscription="basic",
+                rol="anonymous",
+                session_id=session_id
+            )
+        else:
+            logger.info(f"Buscando sesión anónima con ID {session_id} desde header")
+            session = db.query(GuestsSession).filter(GuestsSession.id == session_id).first()
+            if not session:
+                logger.warning(f"Sesión anónima inválida ID {session_id} desde IP {client_ip}")
+                raise HTTPException(status_code=400, detail="Sesión anónima inválida")
+            
+            session.last_ip = client_ip
+            session.ultima_actividad = datetime.utcnow()
+            db.commit()
+            logger.info(f"Sesión anónima ID {session_id} actualizada desde IP {client_ip}")
+            return UserContext(
+                user_type="anonymous",
+                user_id=session.id,
+                email="anonymous@example.com",
+                username=session.username,  # Usar el username de la sesión
+                credits=session.credits,
+                subscription="basic",
+                rol="anonymous",
+                session_id=session_id
+            )
+
+        logger.error(f"No autorizado: sin token ni sesión válida desde IP {client_ip}")
+        raise HTTPException(status_code=401, detail="No autorizado")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.critical(f"Error inesperado en get_user_context desde IP {client_ip}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al procesar la autenticación")
+# backend/dependencies/credits.py
+from fastapi import Depends, HTTPException
+from sqlalchemy.orm import Session
+from models.credit_transaction import CreditTransaction
+from dependencies.auth import UserContext, get_user_context
+from models.user import User
+from models.guests import GuestsSession
+from core.database import get_db
+from core.logging import configure_logging
+from services.integration_service import trigger_webhook
+from services.settings_service import get_setting
+
+logger = configure_logging()
+
+async def check_credits(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    disable_credits = get_setting(db, "disable_credits")
+    
+    if disable_credits != "true":  # Solo procesar créditos si no están desactivados
+        try:
+            if user.user_type == "registered":
+                user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+                if not user_db:
+                    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+                credits = user_db.credits
+            else:
+                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
+                if not session_db:
+                    raise HTTPException(status_code=404, detail="Sesión no encontrada")
+                credits = session_db.credits
+
+            if credits <= 0:
+                logger.warning(f"Usuario {user.user_type} ID {user.user_id} sin créditos suficientes")
+                raise HTTPException(status_code=403, detail="No te quedan créditos disponibles.")
+            
+            return user  # Retorna el usuario para usarlo en el endpoint
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            logger.error(f"Error inesperado en check_credits para {user.user_type} ID {user.user_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+    return user  # Si los créditos están desactivados, simplemente retorna el usuario
+
+# backend/services/user_service.py
+from sqlalchemy.orm import Session
+from models.user import User
+from fastapi import HTTPException
+
+def get_user_info(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
+def update_user(db: Session, user_id: int, email: str = None, username: str = None, ciudad: str = None, website: str = None):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    if email and email != user.email:
+        existing_email = db.query(User).filter(User.email == email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="El email ya está en uso")
+        user.email = email
+    
+    if username and username != user.username:
+        existing_username = db.query(User).filter(User.username == username).first()
+        if existing_username:
+            raise HTTPException(status_code=400, detail="El username ya está en uso")
+        user.username = username
+    
+    if ciudad is not None:
+        user.ciudad = ciudad
+    if website is not None:
+        user.website = website
+    
+    db.commit()
+    db.refresh(user)
+    return user
+
+def delete_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    db.delete(user)
+    db.commit()
+    return {"message": "Usuario eliminado"}
+
+def list_users(db: Session):
+    return db.query(User).all()
+
+
+# backend/services/settings_service.py
+import json
+from sqlalchemy.orm import Session
+from models.site_settings import SiteSettings
+from core.logging import configure_logging
+from fastapi import HTTPException
+
+logger = configure_logging()
+
+def update_setting(db: Session, admin_id: str, key: str, value: str, description: str = None, tag: str = None):
+    try:
+        from models.user import User
+        admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+        if not admin:
+            raise HTTPException(status_code=403, detail="Solo administradores pueden modificar ajustes")
+        
+        setting = db.query(SiteSettings).filter(SiteSettings.key == key).first()
+        if setting:
+            setting.value = value
+            setting.description = description
+            setting.tag = tag
+            setting.updated_by = admin_id
+        else:
+            setting = SiteSettings(key=key, value=value, description=description, tag=tag, updated_by=admin_id)
+            db.add(setting)
+        db.commit()
+        logger.info(f"Ajuste {key} actualizado por admin ID {admin_id}")
+        return {"key": key, "value": value, "tag": tag}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al actualizar ajuste {key}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al actualizar ajuste")
+
+def get_all_settings(db: Session, admin_id: str):
+    try:
+        from models.user import User
+        admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+        if not admin:
+            raise HTTPException(status_code=403, detail="Solo administradores pueden ver configuraciones")
+        
+        settings = db.query(SiteSettings).all()
+        return settings
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al obtener ajustes para admin {admin_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al obtener ajustes")
+
+def get_setting(db: Session, key: str) -> dict | list | int | str | None:
+    try:
+        setting = db.query(SiteSettings).filter(SiteSettings.key == key).first()
+        if not setting:
+            return None
+        value = setting.value
+        try:
+            return json.loads(value)  # Intentar deserializar como JSON
+        except json.JSONDecodeError:
+            # Si falla, intentar limpiar comillas adicionales y devolver la cadena
+            cleaned_value = value.strip('"')
+            try:
+                return json.loads(cleaned_value)  # Reintentar con el valor limpio
+            except json.JSONDecodeError:
+                return cleaned_value  # Devolver la cadena limpia si no es JSON válido
+    except Exception as e:
+        logger.error(f"Error al obtener ajuste {key}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al obtener ajuste")
+
+def set_setting(db: Session, key: str, value: any, admin_id: str, description: str = None):
+    try:
+        from models.user import User
+        admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+        if not admin:
+            raise HTTPException(status_code=403, detail="Solo administradores pueden modificar configuraciones")
+        
+        setting = db.query(SiteSettings).filter(SiteSettings.key == key).first()
+        serialized_value = json.dumps(value)  # Serializar a JSON
+        if setting:
+            setting.value = serialized_value
+            setting.description = description or setting.description
+        else:
+            setting = SiteSettings(key=key, value=serialized_value, description=description)
+            db.add(setting)
+        db.commit()
+        logger.info(f"Configuración '{key}' actualizada por admin {admin_id}: {value}")
+        return {"key": key, "value": value}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al establecer ajuste {key}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al establecer ajuste")
+
+#def get_all_settings(db: Session, admin_id: str) -> dict:
+#    from models.user import User
+#    admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+#    if not admin:
+#        raise HTTPException(status_code=403, detail="Solo administradores pueden ver configuraciones")
+#    
+#    settings = db.query(SiteSettings).all()
+#    return {s.key: json.loads(s.value) for s in settings}
+
+# backend/services/payment_service.py
+from sqlalchemy.orm import Session
+from schemas.payment import PaymentMethodResponse
+from models.payment_method import PaymentMethod
+from models.user import User
+from core.logging import configure_logging
+from models.credit_transaction import CreditTransaction
+from fastapi import HTTPException, status
+
+logger = configure_logging()
+
+class StripeSimulator:
+    @staticmethod
+    def create_payment_intent(amount: float, currency: str = "usd"):
+        return {"id": "pi_simulated", "status": "succeeded"}
+
+stripe = StripeSimulator()
+
+def purchase_credits(db: Session, user_id: int, credits: int, payment_amount: float, payment_method: str = "stripe"):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+        transaction = CreditTransaction(
+            user_type="registered",  # ¡Añadimos esto explícitamente!
+            user_id=user_id,
+            amount=credits,
+            transaction_type="purchase",
+            payment_amount=payment_amount,
+            payment_method=payment_method,
+            payment_status="pending"
+        )
+        db.add(transaction)
+        db.commit()
+        db.refresh(transaction)
+
+        payment_intent = stripe.create_payment_intent(payment_amount)
+        if payment_intent["status"] == "succeeded":
+            transaction.payment_status = "completed"
+            user.credits += credits
+            db.commit()
+            logger.info(f"Compra de {credits} créditos completada para usuario {user_id}")
+            return {"transaction_id": transaction.id, "credits_added": credits, "new_balance": user.credits}
+        else:
+            transaction.payment_status = "failed"
+            db.commit()
+            raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="Error al procesar el pago")
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al procesar compra de créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al procesar compra")
+
+def add_payment_method(db: Session, user_id: int, payment_type: str, details: str, is_default: bool = False):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        if is_default:
+            db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id, PaymentMethod.is_default == True).update({"is_default": False})
+        
+        payment_method = PaymentMethod(
+            user_id=user_id,
+            payment_type=payment_type,
+            details=details,
+            is_default=is_default
+        )
+        db.add(payment_method)
+        db.commit()
+        logger.info(f"Método de pago añadido para usuario ID {user_id}: {payment_type}")
+        return payment_method
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al añadir método de pago para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al añadir método de pago")
+
+def get_payment_methods(db: Session, user_id: int):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        return db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id).all()
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al listar métodos de pago para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al listar métodos de pago")
+
+def set_default_payment_method(db: Session, user_id: int, payment_method_id: int):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        payment_method = db.query(PaymentMethod).filter(PaymentMethod.id == payment_method_id, PaymentMethod.user_id == user_id).first()
+        if not payment_method:
+            raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+        
+        db.query(PaymentMethod).filter(PaymentMethod.user_id == user_id, PaymentMethod.is_default == True).update({"is_default": False})
+        payment_method.is_default = True
+        db.commit()
+        logger.info(f"Método de pago ID {payment_method_id} establecido como predeterminado para usuario ID {user_id}")
+        return payment_method
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al establecer método de pago predeterminado para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al establecer método de pago")
+
+def get_credit_transactions(db: Session, user_id: int):
+    try:
+        return db.query(CreditTransaction).filter(CreditTransaction.user_id == user_id).all()
+    except Exception as e:
+        logger.error(f"Error al obtener transacciones de créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al obtener transacciones")
+    
+    
+def update_payment_method(db: Session, user_id: int, method_id: int, payment_type: str, details: str) -> PaymentMethodResponse:
+    method = db.query(PaymentMethod).filter(PaymentMethod.id == method_id, PaymentMethod.user_id == user_id).first()
+    if not method:
+        raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+    method.payment_type = payment_type
+    method.details = details
+    db.commit()
+    db.refresh(method)
+    return PaymentMethodResponse.from_orm(method)
+
+def delete_payment_method(db: Session, user_id: int, method_id: int):
+    method = db.query(PaymentMethod).filter(PaymentMethod.id == method_id, PaymentMethod.user_id == user_id).first()
+    if not method:
+        raise HTTPException(status_code=404, detail="Método de pago no encontrado")
+    if method.is_default:
+        raise HTTPException(status_code=400, detail="No se puede eliminar el método de pago predeterminado")
+    db.delete(method)
+    db.commit()
+
+    # backend/services/payment_provider_service.py
+from sqlalchemy.orm import Session
+from models.payment_provider import PaymentProvider
+from schemas.payment import PaymentProviderCreate
+from fastapi import HTTPException
+
+def create_payment_provider(db: Session, provider: PaymentProviderCreate):
+    existing = db.query(PaymentProvider).filter(PaymentProvider.name == provider.name).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Payment provider already exists")
+    db_provider = PaymentProvider(**provider.dict())
+    db.add(db_provider)
+    db.commit()
+    db.refresh(db_provider)
+    return db_provider
+
+def get_payment_providers(db: Session):
+    return db.query(PaymentProvider).all()
+
+def update_payment_provider(db: Session, provider_id: int, provider_update: PaymentProviderCreate):
+    provider = db.query(PaymentProvider).filter(PaymentProvider.id == provider_id).first()
+    if not provider:
+        raise HTTPException(status_code=404, detail="Payment provider not found")
+    for key, value in provider_update.dict().items():
+        setattr(provider, key, value)
+    db.commit()
+    db.refresh(provider)
+    return provider
+
+def delete_payment_provider(db: Session, provider_id: int):
+    provider = db.query(PaymentProvider).filter(PaymentProvider.id == provider_id).first()
+    if not provider:
+        raise HTTPException(status_code=404, detail="Payment provider not found")
+    db.delete(provider)
+    db.commit()
+    return {"message": "Payment provider deleted"}
+
+
+# backend/services/origin_service.py
+from sqlalchemy.orm import Session
+from models.user import User
+from models.allowed_origin import AllowedOrigin
+from core.logging import configure_logging
+from fastapi import HTTPException
+
+logger = configure_logging()
+
+def get_allowed_origins(db: Session) -> list[str]:
+    try:
+        origins = db.query(AllowedOrigin).all()
+        return [origin.origin for origin in origins]
+    except Exception as e:
+        logger.error(f"Error al obtener orígenes permitidos: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al obtener orígenes")
+
+def add_allowed_origin(db: Session, origin: str, admin_id: int):
+    try:
+        admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+        if not admin:
+            raise HTTPException(status_code=403, detail="Solo administradores")
+        if db.query(AllowedOrigin).filter(AllowedOrigin.origin == origin).first():
+            raise HTTPException(status_code=400, detail="Origen ya existe")
+        new_origin = AllowedOrigin(origin=origin)
+        db.add(new_origin)
+        db.commit()
+        logger.info(f"Origen permitido añadido: {origin} por admin {admin_id}")
+        return {"origin": origin}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al añadir origen permitido {origin}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al añadir origen")
+
+# backend/services/integration_service.py
+from datetime import datetime
+from sqlalchemy.orm import Session
+from models.integration import Integration
+from core.logging import configure_logging
+from fastapi import HTTPException
+import requests
+
+logger = configure_logging()
+
+def add_integration(db: Session, user_id: str, name: str, webhook_url: str, event_type: str):
+    try:
+        integration = Integration(
+            user_id=user_id,
+            name=name,
+            webhook_url=webhook_url,
+            event_type=event_type
+        )
+        db.add(integration)
+        db.commit()
+        logger.info(f"Integración {name} añadida para usuario ID {user_id}")
+        return integration
+    except Exception as e:
+        logger.error(f"Error al añadir integración {name} para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al añadir integración")
+
+def trigger_webhook(db: Session, event_type: str, payload: dict):
+    try:
+        integrations = db.query(Integration).filter(Integration.event_type == event_type, Integration.active == True).all()
+        for integration in integrations:
+            try:
+                response = requests.post(integration.webhook_url, json=payload, timeout=5)
+                if response.status_code == 200:
+                    integration.last_triggered = datetime.utcnow()
+                    db.commit()
+                    logger.info(f"Webhook disparado para integración ID {integration.id}")
+                else:
+                    logger.warning(f"Webhook falló para integración ID {integration.id}: {response.status_code}")
+            except Exception as e:
+                logger.error(f"Error al disparar webhook ID {integration.id}: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error al procesar webhooks para event_type {event_type}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al procesar webhooks")
+
+
+# backend/services/gamification_service.py
+from typing import List, Optional
+from sqlalchemy.orm import Session
+from models.guests import GuestsSession
+from models.gamification import GamificationEvent, UserGamification, EventType, Badge
+from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
+from dependencies.auth import UserContext
+from sqlalchemy import func
+from models.gamification import EventType, Badge, GamificationEvent, UserGamification
+from schemas.gamification import EventTypeCreate, BadgeCreate
+from fastapi import HTTPException
+from models.user import User
+import logging
+from typing import List, Optional
+from sqlalchemy.orm import Session
+from models.gamification import GamificationEvent, UserGamification, EventType, Badge
+from schemas.gamification import GamificationEventCreate
+from dependencies.auth import UserContext
+
+
+# backend/services/gamification_service.py
+
+def register_event(db: Session, event: GamificationEventCreate, user: UserContext) -> GamificationEvent:
+    """Registra un evento de gamificación y actualiza los puntos del usuario."""
+    user_id = int(user.user_id) if user.user_type == "registered" else None
+    session_id = user.session_id if user.user_type == "anonymous" else None
+
+    db_event = GamificationEvent(
+        event_type_id=event.event_type_id,
+        user_id=user_id,
+        session_id=session_id
+    )
+    db.add(db_event)
+    db.commit()
+    db.refresh(db_event)
+    update_user_gamification(db, user, event.event_type_id)
+    return db_event
+
+def get_user_gamification(db: Session, user: UserContext) -> List[UserGamification]:
+    """Obtiene todos los registros de gamificación del usuario."""
+    if user.user_type == "registered":
+        return db.query(UserGamification).filter(UserGamification.user_id == int(user.user_id)).all()
+    return db.query(UserGamification).filter(UserGamification.session_id == user.session_id).all()
+
+def get_user_events(db: Session, user: UserContext) -> List[GamificationEvent]:
+    """Obtiene todos los eventos de gamificación del usuario."""
+    if user.user_type == "registered":
+        return db.query(GamificationEvent).filter(GamificationEvent.user_id == int(user.user_id)).all()
+    return db.query(GamificationEvent).filter(GamificationEvent.session_id == user.session_id).all()
+
+def get_event_details(db: Session, event_id: int, user: UserContext) -> Optional[GamificationEvent]:
+    """Obtiene los detalles de un evento específico si pertenece al usuario."""
+    event = db.query(GamificationEvent).filter(GamificationEvent.id == event_id).first()
+    if not event:
+        return None
+    if (user.user_type == "registered" and event.user_id == int(user.user_id)) or \
+       (user.user_type == "anonymous" and event.session_id == user.session_id):
+        return event
+    return None
+
+def get_badges_for_event(db: Session, event_type_id: int) -> List[Badge]:
+    """Obtiene todos los badges asociados a un tipo de evento."""
+    return db.query(Badge).filter(Badge.event_type_id == event_type_id).all()
+
+def get_user_progress_for_event(db: Session, user: UserContext, event_type_id: int) -> Optional[UserGamification]:
+    """Obtiene el progreso del usuario para un tipo de evento específico."""
+    if user.user_type == "registered":
+        return db.query(UserGamification).filter(
+            UserGamification.user_id == int(user.user_id),
+            UserGamification.event_type_id == event_type_id
+        ).first()
+    return db.query(UserGamification).filter(
+        UserGamification.session_id == user.session_id,
+        UserGamification.event_type_id == event_type_id
+    ).first()
+
+
+
+def update_user_gamification(db: Session, user: UserContext, event_type_id: int) -> UserGamification:
+    logging.info(f"Actualizando gamificación para user_type={user.user_type}, user_id={user.user_id}, session_id={user.session_id}, event_type_id={event_type_id}")
+    user_id = int(user.user_id) if user.user_type == "registered" else None
+    session_id = user.session_id if user.user_type == "anonymous" else None
+
+    gamification = get_user_progress_for_event(db, user, event_type_id)
+    if not gamification:
+        gamification = UserGamification(
+            user_id=user_id,
+            session_id=session_id,
+            event_type_id=event_type_id,
+            points=0
+        )
+        db.add(gamification)
+        logging.info("Creado nuevo registro de UserGamification")
+
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise ValueError("Event type not found")
+
+    events_count = db.query(GamificationEvent).filter(
+        GamificationEvent.event_type_id == event_type_id,
+        (GamificationEvent.user_id == user_id) if user_id else (GamificationEvent.session_id == session_id)
+    ).count()
+    logging.info(f"Contados {events_count} eventos para event_type_id={event_type_id}")
+
+    gamification.points = events_count * event_type.points_per_event
+
+    badge = db.query(Badge).filter(
+        Badge.event_type_id == event_type_id,
+        Badge.user_type.in_([user.user_type, "both"]),
+        Badge.required_points <= gamification.points
+    ).order_by(Badge.required_points.desc()).first()
+    logging.info(f"Badge encontrado: {badge.id if badge else 'None'}")
+
+    gamification.badge_id = badge.id if badge else None
+    db.commit()
+    db.refresh(gamification)
+    return gamification
+# Funciones para EventType
+def create_event_type(db: Session, event_type: EventTypeCreate):
+    db_event_type = EventType(**event_type.dict())
+    db.add(db_event_type)
+    db.commit()
+    db.refresh(db_event_type)
+    return db_event_type
+
+def get_event_types(db: Session) -> List[EventType]:
+    return db.query(EventType).all()
+
+def update_event_type(db: Session, event_type_id: int, event_type_update: EventTypeCreate):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    for key, value in event_type_update.dict().items():
+        setattr(event_type, key, value)
+    db.commit()
+    db.refresh(event_type)
+    return event_type
+
+def delete_event_type(db: Session, event_type_id: int):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    db.delete(event_type)
+    db.commit()
+    return {"message": "Event type deleted"}
+
+# Funciones para Badge
+def create_badge(db: Session, badge: BadgeCreate):
+    db_badge = Badge(**badge.dict())
+    db.add(db_badge)
+    db.commit()
+    db.refresh(db_badge)
+    return db_badge
+
+def get_badges(db: Session) -> List[Badge]:
+    return db.query(Badge).all()
+
+def update_badge(db: Session, badge_id: int, badge_update: BadgeCreate):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    for key, value in badge_update.dict().items():
+        setattr(badge, key, value)
+    db.commit()
+    db.refresh(badge)
+    return badge
+
+def delete_badge(db: Session, badge_id: int):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    db.delete(badge)
+    db.commit()
+    return {"message": "Badge deleted"}
+
+#def calculate_points(api_usages: int) -> int:
+#    """Calcula los puntos según el número de usos de la API."""
+#    if api_usages >= 30:
+#        return 1000
+#    elif api_usages >= 20:
+#        return 500
+#    elif api_usages >= 10:
+#        return 100
+#    elif api_usages >= 1:
+#        return 5
+#    return 0
+
+
+
+def get_rankings(db: Session) -> List[RankingResponse]:
+    # Rankings para usuarios registrados
+    registered = db.query(
+        User.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, User.id == UserGamification.user_id
+    ).group_by(User.id).all()
+
+    # Rankings para usuarios anónimos
+    anonymous = db.query(
+        GuestsSession.username,
+        func.sum(UserGamification.points).label("total_points"),
+        func.count(UserGamification.badge_id).label("badges_count")
+    ).join(UserGamification, GuestsSession.id == UserGamification.session_id
+    ).group_by(GuestsSession.id).all()
+
+    all_rankings = [
+        RankingResponse(
+            username=r.username,
+            points=r.total_points,
+            badges_count=r.badges_count,
+            user_type="registered" if r in registered else "anonymous"
+        ) for r in registered + anonymous
+    ]
+    return sorted(all_rankings, key=lambda x: x.points, reverse=True)
+
+
+def get_event_types(db: Session) -> List[EventType]:
+    return db.query(EventType).all()
+
+def update_event_type(db: Session, event_type_id: int, event_type_update: EventTypeCreate):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    for key, value in event_type_update.dict().items():
+        setattr(event_type, key, value)
+    db.commit()
+    db.refresh(event_type)
+    return event_type
+
+def delete_event_type(db: Session, event_type_id: int):
+    event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type not found")
+    db.delete(event_type)
+    db.commit()
+    return {"message": "Event type deleted"}
+
+def get_badges(db: Session) -> List[Badge]:
+    return db.query(Badge).all()
+
+def update_badge(db: Session, badge_id: int, badge_update: BadgeCreate):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    for key, value in badge_update.dict().items():
+        setattr(badge, key, value)
+    db.commit()
+    db.refresh(badge)
+    return badge
+
+def delete_badge(db: Session, badge_id: int):
+    badge = db.query(Badge).filter(Badge.id == badge_id).first()
+    if not badge:
+        raise HTTPException(status_code=404, detail="Badge not found")
+    db.delete(badge)
+    db.commit()
+    return {"message": "Badge deleted"}
+
+
+# backend/services/credits_service.py
+# Permitir la renovación automática o manual de créditos para usuarios registrados y anónimos.
+from sqlalchemy.orm import Session
+from models.user import User, subscriptionEnum
+from models.credit_transaction import CreditTransaction
+from datetime import datetime, timedelta
+from fastapi import HTTPException, status
+from core.logging import configure_logging
+
+logger = configure_logging()
+
+def reset_credits(db: Session, freemium_credits: int = 100, premium_credits: int = 1000, reset_interval: int = 30):
+    try:
+        users = db.query(User).filter(User.activo == True).all()
+        for user in users:
+            if not user.renewal or user.renewal < datetime.utcnow() - timedelta(days=reset_interval):
+                user.credits = freemium_credits if user.subscription == subscriptionEnum.FREEMIUM else premium_credits
+                user.renewal = datetime.utcnow()
+                db.add(CreditTransaction(
+                    user_id=user.id,
+                    user_type='registered',  # Corrección clave
+                    amount=user.credits,
+                    transaction_type="reset"
+                ))
+        db.commit()
+    except Exception as e:
+        logger.error(f"Error al reiniciar créditos: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al reiniciar créditos")
+
+def deduct_credit(db: Session, user_id: int, amount: int = 1):
+    try:
+        user = db.query(User).filter(User.id == user_id).with_for_update().first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+        if user.credits < amount:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No te quedan suficientes créditos")
+        user.credits -= amount
+        db.add(CreditTransaction(
+            user_id=user_id,
+            user_type='registered',  # Corrección clave
+            amount=-amount,
+            transaction_type="usage",
+            description="Consulta realizada"  # Opcional, para consistencia con los logs
+        ))
+        db.commit()
+        return user.credits
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al deducir créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al deducir créditos")
+
+# backend/services/credits_service.py
+# Permitir la renovación automática o manual de créditos para usuarios registrados y anónimos.
+from sqlalchemy.orm import Session
+from models.user import User, subscriptionEnum
+from models.credit_transaction import CreditTransaction
+from datetime import datetime, timedelta
+from fastapi import HTTPException, status
+from core.logging import configure_logging
+
+logger = configure_logging()
+
+def reset_credits(db: Session, freemium_credits: int = 100, premium_credits: int = 1000, reset_interval: int = 30):
+    try:
+        users = db.query(User).filter(User.activo == True).all()
+        for user in users:
+            if not user.renewal or user.renewal < datetime.utcnow() - timedelta(days=reset_interval):
+                user.credits = freemium_credits if user.subscription == subscriptionEnum.FREEMIUM else premium_credits
+                user.renewal = datetime.utcnow()
+                db.add(CreditTransaction(
+                    user_id=user.id,
+                    user_type='registered',  # Corrección clave
+                    amount=user.credits,
+                    transaction_type="reset"
+                ))
+        db.commit()
+    except Exception as e:
+        logger.error(f"Error al reiniciar créditos: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al reiniciar créditos")
+
+def deduct_credit(db: Session, user_id: int, amount: int = 1):
+    try:
+        user = db.query(User).filter(User.id == user_id).with_for_update().first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+        if user.credits < amount:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No te quedan suficientes créditos")
+        user.credits -= amount
+        db.add(CreditTransaction(
+            user_id=user_id,
+            user_type='registered',  # Corrección clave
+            amount=-amount,
+            transaction_type="usage",
+            description="Consulta realizada"  # Opcional, para consistencia con los logs
+        ))
+        db.commit()
+        return user.credits
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al deducir créditos para usuario {user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al deducir créditos")
+
+# backend/services/auth_service.py
+# Módulo de servicio de autenticación.
+from os import getenv
+from uuid import uuid4
+from sqlalchemy.orm import Session
+from models.user import User, subscriptionEnum
+from models.token import PasswordResetToken, RevokedToken
+from core.security import (
+    get_password_hash, verify_password, create_access_token, 
+    create_refresh_token, decode_token
+)
+from core.logging import configure_logging
+from core.security import google_client, meta_client
+
+from datetime import datetime, timedelta
+from fastapi import HTTPException
+import requests
+from threading import Lock
+from threading import Lock
+from datetime import datetime, timedelta
+from fastapi import HTTPException
+from threading import Lock
+import jwt
+
+refresh_lock = Lock()
+
+logger = configure_logging()
+
+def register_user(
+    db: Session, 
+    email: str, 
+    username: str, 
+    password: str, 
+    ciudad: str = None, 
+    website: str = None, 
+    subscription: str = "freemium"
+):
+    try:
+        if db.query(User).filter(User.email == email).first():
+            logger.warning(f"Intento de registro con email duplicado: {email}")
+            raise HTTPException(status_code=400, detail="El email ya está registrado")
+        if db.query(User).filter(User.username == username).first():
+            logger.warning(f"Intento de registro con username duplicado: {username}")
+            raise HTTPException(status_code=400, detail="El username ya está registrado")
+        
+        hashed_password = get_password_hash(password)
+        user = User(
+            email=email,
+            username=username,
+            password_hash=hashed_password,
+            ciudad=ciudad,
+            website=website,
+            subscription=subscriptionEnum(subscription),
+            credits=100, 
+            renewal=datetime.utcnow(),
+            create_at=datetime.utcnow()
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        
+        access_token = create_access_token({"sub": str(user.id), "type": "registered"})
+        refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+        logger.info(f"Usuario registrado ID {user.id} con subscription {subscription}")
+        return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.critical(f"Error inesperado en registro de usuario {email}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al registrar usuario")
+
+def login_user(db: Session, email: str, password: str, ip: str):
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        if not user or not verify_password(password, user.password_hash):
+            logger.error(f"Intento de login fallido para email {email} desde IP {ip}")
+            raise HTTPException(status_code=401, detail="Credenciales inválidas")
+        if not user.activo:
+            logger.warning(f"Intento de login con usuario inactivo ID {user.id} desde IP {ip}")
+            raise HTTPException(status_code=403, detail="Usuario inactivo")
+        
+        user.last_ip = ip
+        db.commit()
+        
+        # Añadir log para inspeccionar los datos del usuario
+        logger.debug(f"Usuario encontrado: ID={user.id}, email={user.email}, subscription={user.subscription}, type={type(user.subscription)}")
+        
+        # Generar el token
+        access_token = create_access_token({"sub": str(user.id), "type": "registered"})
+        refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+        logger.info(f"Login exitoso para usuario ID {user.id} desde IP {ip}")
+        return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    except Exception as e:
+        logger.critical(f"Error inesperado en login para {email} desde IP {ip}: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error al iniciar sesión")
+
+
+
+
+
+def refresh_access_token(db: Session, refresh_token: str):
+    if not refresh_token or len(refresh_token) < 10:
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+
+    with refresh_lock:
+        try:
+            # 1. Decodificar primero sin verificar revocación
+            try:
+                payload = jwt.decode(
+                    refresh_token,
+                    getenv("SECRET_KEY"),
+                    algorithms=["HS256"],
+                    options={"verify_exp": True}
+                )
+            except jwt.ExpiredSignatureError:
+                logger.warning("Refresh token expirado")
+                raise HTTPException(status_code=401, detail="Refresh token expirado")
+            except Exception as e:
+                logger.warning(f"Error decodificando token: {str(e)}")
+                raise HTTPException(status_code=401, detail="Token inválido")
+
+            # 2. Verificar si el token fue revocado DESPUÉS de decodificar
+            if db.query(RevokedToken).filter(RevokedToken.token == refresh_token).first():
+                logger.warning("Refresh token ya revocado")
+                raise HTTPException(status_code=401, detail="Refresh token revocado")
+
+            # 3. Validar claims
+            if payload.get("type") != "refresh":
+                raise HTTPException(status_code=401, detail="Tipo de token incorrecto")
+
+            user_id = payload.get("sub")
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Falta sub claim")
+
+            # 4. Verificar usuario
+            user = db.query(User).filter(User.id == int(user_id)).first()
+            if not user or not user.activo:
+                raise HTTPException(status_code=403, detail="Usuario inválido")
+
+            # 5. Revocar el token actual
+            db.add(RevokedToken(token=refresh_token, user_id=user.id))
+            
+            # 6. Crear nuevos tokens
+            new_access_token = create_access_token({"sub": str(user.id), "type": "registered"})
+            new_refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+            
+            db.commit()  # Hacer commit después de crear los nuevos tokens
+            
+            return {
+                "access_token": new_access_token,
+                "refresh_token": new_refresh_token,
+                "token_type": "bearer"
+            }
+
+        except HTTPException:
+            db.rollback()
+            raise
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Error crítico: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error interno")
+
+        
+def logout_user(db: Session, token: str): #_estimate ?
+    payload = decode_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
+    revoked_token = RevokedToken(token=token)
+    db.add(revoked_token)
+    db.commit()
+    return {"message": "Sesión cerrada"}
+
+def request_password_reset(db: Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Email no encontrado")
+    
+    token = str(uuid4())
+    reset_token = PasswordResetToken(user_id=user.id, token=token)
+    db.add(reset_token)
+    db.commit()
+    
+    logger.info(f"Token de reseteo generado para usuario ID {user.id}: {token}")
+    return {"message": "Solicitud de recuperación enviada", "token": token}
+
+def confirm_password_reset(db: Session, token: str, new_password: str):
+    reset_token = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
+    if not reset_token:
+        raise HTTPException(status_code=400, detail="Token inválido")
+    if reset_token.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Token expirado")
+    
+    user = db.query(User).filter(User.id == reset_token.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    user.password_hash = get_password_hash(new_password)
+    db.delete(reset_token)
+    db.commit()
+    return {"message": "Contraseña actualizada con éxito"}
+
+def change_user_password(db: Session, user_id: int, current_password: str, new_password: str):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    if not verify_password(current_password, user.password_hash):
+        raise HTTPException(status_code=400, detail="Contraseña actual incorrecta")
+    
+    user.password_hash = get_password_hash(new_password)
+    db.commit()
+    return {"message": "Contraseña actualizada con éxito"}
+
+def login_with_provider(db: Session, provider: str, code: str, ip: str):
+    if provider == "google":
+        token_url = "https://oauth2.googleapis.com/token"
+        client_id = getenv("GOOGLE_CLIENT_ID")
+        client_secret = getenv("GOOGLE_CLIENT_SECRET")
+        redirect_uri = getenv("GOOGLE_REDIRECT_URI")
+    elif provider == "meta":
+        token_url = "https://graph.facebook.com/v13.0/oauth/access_token"
+        client_id = getenv("META_CLIENT_ID")
+        client_secret = getenv("META_CLIENT_SECRET")
+        redirect_uri = getenv("META_REDIRECT_URI")
+    else:
+        raise HTTPException(status_code=400, detail="Proveedor no soportado")
+
+    token_data = {
+        "code": code,
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "redirect_uri": redirect_uri,
+        "grant_type": "authorization_code"
+    }
+    response = requests.post(token_url, data=token_data)
+    if response.status_code != 200:
+        logger.error(f"Error al obtener token de {provider}: {response.text}")
+        raise HTTPException(status_code=400, detail="Error al autenticar con el proveedor")
+
+    token_info = response.json()
+    user_info_url = "https://www.googleapis.com/oauth2/v3/userinfo" if provider == "google" else "https://graph.facebook.com/me?fields=id,email"
+    user_response = requests.get(user_info_url, headers={"Authorization": f"Bearer {token_info['access_token']}"})
+    user_data = user_response.json()
+
+    email = user_data.get("email")
+    provider_id = user_data.get("id") or user_data.get("sub")
+    user = db.query(User).filter(User.email == email).first()
+
+    if not user:
+        user = User(
+            email=email,
+            username=email.split("@")[0],
+            auth_provider=provider,
+            provider_id=provider_id,
+            credits= 200, # Comprobar si es cuando hace login o cuando se registra por primera vez con otro proveedor
+            create_at=datetime.utcnow()
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    else:
+        if user.auth_provider != provider or user.provider_id != provider_id:
+            logger.warning(f"Conflicto de proveedor para email {email}")
+            raise HTTPException(status_code=400, detail="Email ya registrado con otro proveedor")
+
+    user.last_ip = ip
+    user.last_login = datetime.utcnow()
+    db.commit()
+
+    access_token = create_access_token({"sub": str(user.id), "type": "registered"})
+    refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
+    logger.info(f"Login con {provider} exitoso para usuario ID {user.id}")
+    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+
+
+# backend/api/v1/anonymous_sessions.py
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List
+from models.guests import GuestsSession
+from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
+from dependencies.auth import UserContext, get_user_context
+from core.database import get_db
+from math import ceil
+
+router = APIRouter(tags=["Sessions"])
+
+@router.get("/", response_model=dict)
+def get_anonymous_sessions(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    user=Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
+    
+    offset = (page - 1) * limit
+    query = db.query(GuestsSession)
+    total_items = query.count()
+    sessions = query.offset(offset).limit(limit).all()
+    
+    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+    sessions_data = [GuestsSessionResponse.from_orm(session) for session in sessions]
+    
+    return {
+        "data": sessions_data,  # Usar los datos serializados
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }
+
+@router.get("/credits", response_model=dict)
+async def get_anonymous_credits(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.user_type != "anonymous":
+        raise HTTPException(status_code=403, detail="Solo para usuarios anónimos")
+    session = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
+    if not session:
+        raise HTTPException(status_code=404, detail="Sesión no encontrada")
+    return {"credits": session.credits}
+
+
+# backend/api/v1/api_logs.py
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List
+from core.logging import configure_logging
+from models.log import APILog
+from schemas.api_log import APILogResponse  # Asegúrate de que este esquema existe
+from dependencies.auth import get_user_context
+from core.database import get_db
+from math import ceil
+
+router = APIRouter(tags=["Logs"])
+logger = configure_logging()
+
+@router.get("/", response_model=dict)
+def get_api_logs(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    user=Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
+    
+    offset = (page - 1) * limit
+    query = db.query(APILog)
+    total_items = query.count()
+    logs = query.offset(offset).limit(limit).all()
+    
+    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+    logs_data = [APILogResponse.from_orm(log) for log in logs]
+    
+    logger.info(f"Logs encontrados: {len(logs)} para page={page}, limit={limit}")
+    
+    return {
+        "data": logs_data,  # Usar los datos serializados
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }
+
+# backend/api/v1/auth.py
+# Módulo de autenticación de la API v1.
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy.orm import Session
+from services.settings_service import get_setting
+from schemas.auth import (ChangePasswordRequest, PasswordResetConfirm,
+                          TokenResponse, RefreshTokenRequest,
+                          PasswordResetRequest)
+from schemas.user import RegisterRequest
+from services.auth_service import (login_user, register_user,
+                                   refresh_access_token, logout_user,
+                                   request_password_reset,
+                                   confirm_password_reset,
+                                   change_user_password, login_with_provider)
+from core.database import get_db
+from core.security import oauth2_scheme, OAuth2PasswordRequestForm
+from core.security import get_oauth2_redirect_url
+from dependencies.auth import UserContext, get_user_context
+from core.logging import configure_logging
+
+router = APIRouter(tags=["auth"])
+logger = configure_logging()
+
+
+@router.post("/token", response_model=TokenResponse)
+def login_for_access_token(request: Request,
+                           form_data: OAuth2PasswordRequestForm = Depends(),
+                           db: Session = Depends(get_db)):
+    try:
+        ip = request.client.host
+        return login_user(db, form_data.username, form_data.password, ip)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.critical(
+            f"Error inesperado en login desde IP {request.client.host}: {str(e)}"
+        )
+        raise HTTPException(status_code=500,
+                            detail="Error al procesar el login")
+
+
+@router.post("/register", response_model=TokenResponse)
+def register(data: RegisterRequest, db: Session = Depends(get_db)):
+    enable_registration = get_setting(db, "enable_registration")
+    if enable_registration != "true":
+        raise HTTPException(status_code=403, detail="El registro de nuevos usuarios está deshabilitado")
+    return register_user(db, data.email, data.username, data.password,
+                         data.ciudad, data.website)
+
+
+@router.post("/password-reset", response_model=dict)
+def reset_password(data: PasswordResetRequest, db: Session = Depends(get_db)):
+    return request_password_reset(db, data.email)
+
+
+@router.post("/password-reset/confirm", response_model=dict)
+def confirm_password_reset(data: PasswordResetConfirm,
+                           db: Session = Depends(get_db)):
+    return confirm_password_reset(db, data.token, data.new_password)
+
+
+@router.post("/refresh", response_model=TokenResponse)
+def refresh_token(
+    request: Request,
+    data: RefreshTokenRequest, 
+    db: Session = Depends(get_db)
+):
+    try:
+        logger.info(f"Intento de refresco de token desde IP {request.client.host}")
+        result = refresh_access_token(db, data.refresh_token)
+        logger.info("Refresco de token exitoso")
+        return result
+    except HTTPException as e:
+        logger.error(f"Error al refrescar token: {e.detail}")
+        raise
+    except Exception as e:
+        logger.critical(f"Error inesperado en refresh_token: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+    
+@router.post("/logout", response_model=dict)
+def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    return logout_user(db, token)
+
+
+@router.get("/login/{provider}", response_model=dict)
+def get_provider_login_url(provider: str):
+    enable_social_login = get_setting(db, "enable_social_login")
+    if enable_social_login != "true":
+        raise HTTPException(status_code=403, detail="El login social está deshabilitado")
+    
+    try:
+        redirect_url = get_oauth2_redirect_url(provider)
+        return {"redirect_url": redirect_url}
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Proveedor no soportado")
+
+
+@router.post("/login/{provider}/callback", response_model=TokenResponse)
+def provider_callback(provider: str,
+                      code: str,
+                      request: Request,
+                      db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip)
+
+
+@router.put("/me/password", response_model=dict)
+def change_password(data: ChangePasswordRequest,
+                    user: UserContext = Depends(get_user_context),
+                    db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(
+            status_code=403,
+            detail="Solo usuarios registrados pueden cambiar su contraseña")
+    return change_user_password(db, int(user.user_id), data.current_password,
+                                data.new_password)
+
+
+# backend/api/v1/credit_transactions.py
+# backend/api/v1/credit_transactions.py
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List
+from models.credit_transaction import CreditTransaction
+from schemas.credit_transaction import CreditTransactionResponse
+from dependencies.auth import get_user_context
+from core.database import get_db
+from math import ceil
+
+router = APIRouter(tags=["Transactions"])
+
+@router.get("/", response_model=dict)
+def get_credit_transactions(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    user=Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
+    
+    offset = (page - 1) * limit
+    query = db.query(CreditTransaction)
+    total_items = query.count()
+    transactions = query.offset(offset).limit(limit).all()
+    
+    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+    transactions_data = [CreditTransactionResponse.from_orm(t) for t in transactions]
+    
+    return {
+        "data": transactions_data,  # Usar los datos serializados
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }
+
+# backend/api/v1/endpoints.py
+# Módulo de endpoints de la API v1.
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from services.settings_service import get_setting
+from middleware.credits_middleware import require_credits
+from dependencies.auth import UserContext, get_user_context
+from services.credits_service import reset_credits
+from core.database import get_db
+from core.logging import configure_logging
+
+router = APIRouter()
+logger = configure_logging()
+
+
+@router.get("/consultar")
+@require_credits
+async def consultar(user: UserContext = Depends(get_user_context)):
+    return {
+        "message": f"Consulta realizada por {user.user_type} con ID {user.user_id}",
+        "creditos_restantes": user.credits - 1
+    }
+
+@router.post("/reset-credits")
+def reset_all_credits(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    try:
+        if user.user_type != "registered":
+            logger.warning(f"Intento de resetear créditos por usuario no registrado ID {user.user_id}")
+            raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+        reset_credits(db, int(user.user_id))
+        return {"message": "Créditos reiniciados para todos los usuarios"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.critical(f"Error inesperado en reset-credits por ID {user.user_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al reiniciar créditos")
+    return {"message": "Créditos reiniciados para todos los usuarios"}
+
+@router.get("/example", dependencies=[Depends(require_credits)])
+async def example_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return {"message": "Ejemplo de endpoint protegido por créditos", "credits_remaining": user.credits}
+
+
+@router.get("/test-credit-consumption")
+@require_credits
+async def test_credit_consumption(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return {"message": "Crédito consumido exitosamente"}
+
+
+# backend/api/v1/error_logs.py
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from typing import List
+from core.logging import configure_logging
+from models.error_log import ErrorLog
+from schemas.error_log import ErrorLogResponse  # Asegúrate de que este esquema existe
+from dependencies.auth import get_user_context
+from core.database import get_db
+from math import ceil
+
+router = APIRouter(tags=["Errors"])
+logger = configure_logging()
+
+@router.get("/", response_model=dict)
+def get_error_logs(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    user=Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo los administradores pueden acceder a este recurso")
+    
+    offset = (page - 1) * limit
+    query = db.query(ErrorLog)
+    total_items = query.count()
+    logs = query.offset(offset).limit(limit).all()
+    
+    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+    logs_data = [ErrorLogResponse.from_orm(log) for log in logs]
+    
+    logger.info(f"Logs encontrados: {len(logs)} para page={page}, limit={limit}")
+    
+    return {
+        "data": logs_data,  # Usar los datos serializados
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }
+
+
+# backend/api/v1/gamification.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from dependencies.auth import UserContext, get_user_context
+from core.database import get_db
+from services.gamification_service import (
+    create_event_type, get_badges_for_event, get_event_details, get_event_types, get_rankings, get_user_events, get_user_gamification, get_user_progress_for_event, register_event, update_event_type, delete_event_type,
+    create_badge, get_badges, update_badge, delete_badge
+)
+from schemas.gamification import (
+    EventTypeCreate, EventTypeResponse, BadgeCreate, BadgeResponse,
+    GamificationEventCreate, GamificationEventResponse, UserGamificationResponse, RankingResponse
+)
+from typing import List
+
+router = APIRouter(tags=["Gamification"])
+
+# Endpoints existentes
+@router.get("/rankings", response_model=List[RankingResponse])
+def get_rankings_endpoint(db: Session = Depends(get_db)):
+    return get_rankings(db)
+
+@router.post("/events")
+async def create_event(event: GamificationEventCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return register_event(db, event, user)
+
+@router.get("/me", response_model=List[UserGamificationResponse])
+def get_my_gamification(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return get_user_gamification(db, user)
+
+@router.get("/events", response_model=List[GamificationEventResponse])
+def get_my_events(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    return get_user_events(db, user)
+
+@router.get("/events/{event_id}", response_model=GamificationEventResponse)
+def get_event_details_endpoint(event_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    event = get_event_details(db, event_id, user)
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
+
+@router.get("/event-types/{event_type_id}/badges", response_model=List[BadgeResponse])
+def get_badges_for_event_endpoint(event_type_id: int, db: Session = Depends(get_db)):
+    badges = get_badges_for_event(db, event_type_id)
+    if not badges:
+        raise HTTPException(status_code=404, detail="No badges found for this event type")
+    return badges
+
+@router.get("/progress/{event_type_id}", response_model=UserGamificationResponse)
+def get_user_progress_for_event_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    progress = get_user_progress_for_event(db, user, event_type_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found for this event")
+    return progress
+
+# Nuevos endpoints para administración
+@router.post("/event-types", response_model=EventTypeResponse)
+def create_event_type_endpoint(event_type: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return create_event_type(db, event_type)
+
+@router.get("/event-types", response_model=List[EventTypeResponse])
+def get_event_types_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return get_event_types(db)
+
+@router.put("/event-types/{event_type_id}", response_model=EventTypeResponse)
+def update_event_type_endpoint(event_type_id: int, event_type_update: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return update_event_type(db, event_type_id, event_type_update)
+
+@router.delete("/event-types/{event_type_id}")
+def delete_event_type_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return delete_event_type(db, event_type_id)
+
+@router.post("/badges", response_model=BadgeResponse)
+def create_badge_endpoint(badge: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return create_badge(db, badge)
+
+@router.get("/badges", response_model=List[BadgeResponse])
+def get_badges_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return get_badges(db)
+
+@router.put("/badges/{badge_id}", response_model=BadgeResponse)
+def update_badge_endpoint(badge_id: int, badge_update: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return update_badge(db, badge_id, badge_update)
+
+@router.delete("/badges/{badge_id}")
+def delete_badge_endpoint(badge_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return delete_badge(db, badge_id)
+
+
+@router.post("/event-types", response_model=EventTypeResponse)
+def create_event_type_endpoint(event_type: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return create_event_type(db, event_type)
+
+@router.get("/event-types", response_model=List[EventTypeResponse])
+def get_event_types_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return get_event_types(db)
+
+@router.put("/event-types/{event_type_id}", response_model=EventTypeResponse)
+def update_event_type_endpoint(event_type_id: int, event_type_update: EventTypeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return update_event_type(db, event_type_id, event_type_update)
+
+@router.delete("/event-types/{event_type_id}")
+def delete_event_type_endpoint(event_type_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return delete_event_type(db, event_type_id)
+
+# Endpoints para Badge
+@router.post("/badges", response_model=BadgeResponse)
+def create_badge_endpoint(badge: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return create_badge(db, badge)
+
+@router.get("/badges", response_model=List[BadgeResponse])
+def get_badges_endpoint(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return get_badges(db)
+
+@router.put("/badges/{badge_id}", response_model=BadgeResponse)
+def update_badge_endpoint(badge_id: int, badge_update: BadgeCreate, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return update_badge(db, badge_id, badge_update)
+
+@router.delete("/badges/{badge_id}")
+def delete_badge_endpoint(badge_id: int, user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    return delete_badge(db, badge_id)
+
+
+# backend/api/v1/integrations.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from models.integration import Integration
+from dependencies.auth import UserContext, get_user_context
+from services.integration_service import add_integration
+from core.database import get_db
+from pydantic import BaseModel
+
+router = APIRouter(tags=["integrations"])
+
+class CreateIntegrationRequest(BaseModel):
+    name: str
+    webhook_url: str
+    event_type: str
+
+@router.post("/")
+def create_integration(
+    request: CreateIntegrationRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+    return add_integration(db, user.user_id, request.name, request.webhook_url, request.event_type)
+
+@router.get("/")
+def list_integrations(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados")
+    integrations = db.query(Integration).filter(Integration.user_id == user.user_id).all()
+    return [
+        {
+            "id": i.id,
+            "name": i.name,
+            "webhook_url": i.webhook_url,
+            "event_type": i.event_type,
+            "active": i.active,
+            "created_at": i.created_at,
+            "last_triggered": i.last_triggered,
+        }
+        for i in integrations
+    ]
+
+# backend/api/v1/payment_providers.py
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from dependencies.auth import UserContext, get_user_context
+from core.database import get_db
+from services.payment_provider_service import (
+    create_payment_provider, 
+    get_payment_providers, 
+    update_payment_provider, 
+    delete_payment_provider
+)
+from schemas.payment import PaymentProviderCreate, PaymentProviderResponse
+from typing import List
+
+router = APIRouter(tags=["Payment Providers"])
+
+@router.get(
+    "/",
+    response_model=List[PaymentProviderResponse],
+    summary="Obtener proveedores de pago",
+    description="Obtiene la lista de proveedores de pago disponibles"
+)
+def get_providers(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    # Acceso permitido para usuarios registrados y administradores
+    if user.user_type != "registered" and user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso no autorizado"
+        )
+    return get_payment_providers(db)
+
+@router.post(
+    "/",
+    response_model=PaymentProviderResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Crear nuevo proveedor",
+    description="Crea un nuevo proveedor de pagos (solo administradores)"
+)
+def create_provider(
+    provider_data: PaymentProviderCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Se requieren privilegios de administrador"
+        )
+    return create_payment_provider(db, provider_data)
+
+@router.put(
+    "/{provider_id}",
+    response_model=PaymentProviderResponse,
+    summary="Actualizar proveedor",
+    description="Actualiza un proveedor de pagos existente (solo administradores)"
+)
+def update_provider(
+    provider_id: int, 
+    provider_update: PaymentProviderCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Se requieren privilegios de administrador"
+        )
+    return update_payment_provider(db, provider_id, provider_update)
+
+@router.delete(
+    "/{provider_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Eliminar proveedor",
+    description="Elimina un proveedor de pagos (solo administradores)"
+)
+def delete_provider(
+    provider_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Se requieren privilegios de administrador"
+        )
+    delete_payment_provider(db, provider_id)
+    return {"detail": "Proveedor eliminado exitosamente"}
+
+# backend/api/v1/payments.py
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from dependencies.auth import UserContext, get_user_context
+from services.payment_service import add_payment_method, delete_payment_method, get_credit_transactions, get_payment_methods, purchase_credits, set_default_payment_method, update_payment_method
+from core.database import get_db
+from core.logging import configure_logging
+from schemas.payment import CreditTransactionResponse, PurchaseRequest, PaymentMethodCreate, PaymentMethodResponse, PurchaseResponse
+
+router = APIRouter(tags=["payments"])
+logger = configure_logging()
+
+@router.post("/purchase", response_model=PurchaseResponse)
+async def buy_credits(
+    request: PurchaseRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden comprar créditos")
+    return purchase_credits(db, int(user.user_id), request.credits, request.payment_amount, request.payment_method)
+
+@router.post("/methods", response_model=PaymentMethodResponse)
+def add_method(
+    method: PaymentMethodCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden añadir métodos de pago")
+    return add_payment_method(db, int(user.user_id), method.payment_type, method.details, method.is_default)
+
+@router.get("/methods", response_model=list[PaymentMethodResponse])
+def list_methods(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden ver sus métodos de pago")
+    return get_payment_methods(db, int(user.user_id))
+
+@router.put("/methods/{method_id}/default", response_model=PaymentMethodResponse)
+def set_default(
+    method_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden establecer un método de pago por defecto")
+    return set_default_payment_method(db, int(user.user_id), method_id)
+
+@router.get("/transactions", response_model=list[CreditTransactionResponse])
+def list_transactions(
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden ver sus transacciones")
+    return get_credit_transactions(db, int(user.user_id))
+
+
+@router.put("/methods/{method_id}", response_model=PaymentMethodResponse)
+def update_method(
+    method_id: int,
+    method: PaymentMethodCreate,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db),
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden actualizar métodos de pago")
+    return update_payment_method(db, int(user.user_id), method_id, method.payment_type, method.details)
+
+@router.delete("/methods/{method_id}")
+def delete_method(
+    method_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db),
+):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403, detail="Solo usuarios registrados pueden eliminar métodos de pago")
+    delete_payment_method(db, int(user.user_id), method_id)
+    return {"message": "Método de pago eliminado"}
+
+
+# backend/api/v1/site_settings.py
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from schemas.site_settings import SiteSettingResponse
+from services.origin_service import add_allowed_origin
+from models.user import User
+from dependencies.auth import UserContext, get_user_context
+from services.settings_service import get_all_settings, set_setting, update_setting, get_setting
+from core.database import get_db
+from core.logging import configure_logging
+from pydantic import BaseModel
+
+router = APIRouter(tags=["site_settings"])
+
+logger = configure_logging()
+
+class AddOriginRequest(BaseModel):
+    origin: str
+
+@router.post("/allowed-origins")
+async def add_origin(
+    request: AddOriginRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    origin = request.origin
+    allowed_origins = get_setting(db, "allowed_origins") or []
+    if origin in allowed_origins:
+        raise HTTPException(status_code=400, detail="Origen ya existe")
+    allowed_origins.append(origin)
+    return set_setting(db, "allowed_origins", allowed_origins, user.user_id, "Orígenes permitidos para CORS")
+
+@router.get("/admin/config", response_model=List[SiteSettingResponse])
+def get_admin_config(user=Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo administradores")
+    return get_all_settings(db, user.user_id)
+
+
+
+class UpdateConfigRequest(BaseModel):
+    key: str
+    value: dict | list | int | str
+    description: str | None = None
+
+@router.post("/admin/config")
+async def update_config(
+    request: UpdateConfigRequest,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    return set_setting(db, request.key, request.value, user.user_id, request.description)
+
+@router.put("/{key}")
+def update_site_setting(
+    key: str,
+    value: str,
+    description: str = None,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.user_type != "registered" or not db.query(User).filter(User.id == user.user_id, User.rol == "admin").first():
+        raise HTTPException(status_code=403, detail="Solo administradores")
+    return update_setting(db, user.user_id, key, value, description)
+
+@router.get("/{key}")
+def get_site_setting(key: str, db: Session = Depends(get_db)):
+    return get_setting(db, key)
+
+
+#backend/api/v1/users.py
+from math import ceil
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from models.user import User
+from schemas.user import UserResponse, UpdateProfileRequest
+from services.user_service import get_user_info, update_user, delete_user, list_users
+from core.database import get_db
+from dependencies.auth import UserContext, get_user_context
+
+router = APIRouter(tags=["users"])
+
+
+
+@router.get("/me", response_model=UserResponse)
+def get_me(user: UserContext = Depends(get_user_context),
+           db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403,
+                            detail="Solo usuarios registrados")
+    return get_user_info(db, int(user.user_id))
+
+
+@router.put("/me", response_model=UserResponse)
+def update_me(request: UpdateProfileRequest,
+              user: UserContext = Depends(get_user_context),
+              db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403,
+                            detail="Solo usuarios registrados")
+    return update_user(db, int(user.user_id), request.email, request.username,
+                       request.ciudad, request.website)
+
+
+@router.delete("/me", response_model=dict)
+def delete_me(user: UserContext = Depends(get_user_context),
+              db: Session = Depends(get_db)):
+    if user.user_type != "registered":
+        raise HTTPException(status_code=403,
+                            detail="Solo usuarios registrados")
+    return delete_user(db, int(user.user_id))
+
+@router.get("/admin/users", response_model=dict)
+def get_all_users(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    user=Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Solo administradores pueden ver la lista de usuarios")
+    
+    offset = (page - 1) * limit
+    query = db.query(User)
+    total_items = query.count()
+    users = query.offset(offset).limit(limit).all()
+    
+    # Convertimos los usuarios a esquemas Pydantic
+    users_data = [UserResponse.model_validate(user) for user in users]
+    
+    return {
+        "data": users_data,
+        "total_items": total_items,
+        "total_pages": ceil(total_items / limit),
+        "current_page": page
+    }
+
+
+# Nuevo endpoint: obtener un usuario específico por ID
+@router.get("/{user_id}", response_model=UserResponse)
+def get_user(user_id: int,
+             user: UserContext = Depends(get_user_context),
+             db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Solo administradores pueden acceder a esta información")
+    user_data = get_user_info(db, user_id)
+    if not user_data:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user_data
+
+
+# Nuevo endpoint: actualizar un usuario específico por ID
+@router.put("/{user_id}", response_model=UserResponse)
+def update_user_by_id(user_id: int,
+                      request: UpdateProfileRequest,
+                      user: UserContext = Depends(get_user_context),
+                      db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Solo administradores pueden actualizar usuarios")
+    updated_user = update_user(db,
+                               user_id,
+                               email=request.email,
+                               username=request.username,
+                               ciudad=request.ciudad,
+                               website=request.website)
+    return updated_user
+
+
+# Nuevo endpoint: eliminar un usuario específico por ID
+@router.delete("/{user_id}", response_model=dict)
+def delete_user_by_id(user_id: int,
+                      user: UserContext = Depends(get_user_context),
+                      db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Solo administradores pueden eliminar usuarios")
+    result = delete_user(db, user_id)
+    return result
+
+
+-- Script universal para SQLite, MySQL/MariaDB y PostgreSQL
+
+-- psql -U tu_usuario -h localhost -d neptuno_db -f ruta/al/script.sql
+-- sqlite3 dev.db < create_db.sql
+-- mysql -u tu_usuario -p neptuno_db < ruta/al/script.sql
+
+-- Script adaptado exclusivamente para SQLite3
+
+-- Tabla de usuarios
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT,
+    auth_provider TEXT,
+    provider_id TEXT,
+    rol TEXT DEFAULT 'user',
+    activo INTEGER DEFAULT 1,
+    subscription TEXT CHECK(subscription IN ('freemium', 'premium', 'corporate')) DEFAULT 'freemium',
+    ciudad TEXT,
+    website TEXT,
+    credits INTEGER DEFAULT 100,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    renewal DATETIME,
+    last_ip TEXT,
+    last_login DATETIME,
+    token_valid_until DATETIME
+);
+
+-- Tabla de sesiones anónimas
+CREATE TABLE IF NOT EXISTS sesiones_anonimas (
+    id TEXT PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    credits INTEGER DEFAULT 100,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultima_actividad DATETIME,
+    last_ip TEXT
+);
+
+-- Tabla de configuraciones del sitio
+CREATE TABLE IF NOT EXISTS site_settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT NOT NULL UNIQUE,
+    value TEXT NOT NULL,
+    description TEXT,
+    tag TEXT,
+    updated_by INTEGER,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de tokens revocados
+CREATE TABLE IF NOT EXISTS revoked_tokens (
+    token TEXT PRIMARY KEY,
+    revoked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INTEGER
+);
+
+-- Tabla de tokens de reseteo de contraseña
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+-- Tabla de transacciones de créditos
+CREATE TABLE IF NOT EXISTS credit_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    session_id TEXT,
+    user_type TEXT NOT NULL,
+    amount INTEGER NOT NULL,
+    transaction_type TEXT NOT NULL,
+    description TEXT,
+    payment_amount REAL,
+    payment_method TEXT,
+    payment_status TEXT DEFAULT 'pending',
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id),
+    CHECK (
+        (user_id IS NOT NULL AND session_id IS NULL AND user_type = 'registered') OR 
+        (user_id IS NULL AND session_id IS NOT NULL AND user_type = 'anonymous')
+    )
+);
+
+-- Tabla de logs de errores
+CREATE TABLE IF NOT EXISTS error_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    session_id TEXT,
+    user_type TEXT NOT NULL DEFAULT 'anonymous',
+    error_code INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    details TEXT,
+    url TEXT,
+    method TEXT,
+    ip_address TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id)
+);
+
+-- Tabla de integraciones
+CREATE TABLE IF NOT EXISTS integrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    webhook_url TEXT NOT NULL,
+    event_type TEXT NOT NULL,
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_triggered DATETIME,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+-- Tabla de logs de API
+CREATE TABLE IF NOT EXISTS api_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    endpoint TEXT NOT NULL,
+    method TEXT NOT NULL,
+    status_code INTEGER NOT NULL,
+    request_data TEXT,
+    response_data TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+-- Tabla de métodos de pago
+CREATE TABLE IF NOT EXISTS payment_methods (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    payment_type TEXT NOT NULL,
+    details TEXT NOT NULL,
+    is_default INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id)
+);
+
+-- Tabla de orígenes permitidos
+CREATE TABLE IF NOT EXISTS allowed_origins (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    origin TEXT NOT NULL UNIQUE
+);
+
+-- Tabla de tipos de eventos (adaptada para SQLite)
+CREATE TABLE IF NOT EXISTS event_types (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    points_per_event INTEGER DEFAULT 0
+);
+
+-- Tabla de badges
+CREATE TABLE IF NOT EXISTS badges (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    event_type_id INTEGER NOT NULL,
+    required_points INTEGER NOT NULL,
+    user_type TEXT DEFAULT 'both',
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id)
+);
+
+-- Tabla de eventos de gamificación
+CREATE TABLE IF NOT EXISTS gamification_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_type_id INTEGER NOT NULL,
+    user_id INTEGER,
+    session_id TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id),
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id)
+);
+
+-- Tabla de gamificación del usuario
+CREATE TABLE IF NOT EXISTS user_gamification (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    session_id TEXT,
+    event_type_id INTEGER NOT NULL,
+    points INTEGER DEFAULT 0,
+    badge_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id),
+    FOREIGN KEY (event_type_id) REFERENCES event_types(id),
+    FOREIGN KEY (badge_id) REFERENCES badges(id)
+);
+
+---------------------------------------------------------------------
+-- Insertar datos iniciales
+---------------------------------------------------------------------
+
+-- Configuraciones iniciales con tags
+INSERT OR IGNORE INTO site_settings (key, value, description, tag) VALUES
+('token_expiration', '60', 'Tiempo de vida del access token (segundos)', 'auth'),
+('refresh_token_expiration', '604800', 'Tiempo de vida del refresh token (7 días)', 'auth'),
+('max_login_attempts', '5', 'Máximo de intentos de login antes de bloqueo', 'auth'),
+('rate_limit_auth', '{"times": 20, "seconds": 60}', 'Límite de peticiones para auth', 'rate_limit'),
+('rate_limit_api', '{"times": 100, "seconds": 60}', 'Límite de peticiones para API', 'rate_limit'),
+('rate_limit_admin', '{"times": 50, "seconds": 60}', 'Límite de peticiones para admin', 'rate_limit'),
+('cache_ttl', '300', 'Tiempo de vida del caché en Redis (segundos)', 'cache'),
+('cache_enabled', 'true', 'Habilitar/deshabilitar el caché', 'cache'),
+('cache_max_size', '10000', 'Tamaño máximo del caché en entradas', 'cache'),
+('allowed_origins', '["http://localhost:3000", "https://neptuno.app"]', 'Orígenes permitidos para CORS', 'cors'),
+('cors_enabled', 'true', 'Habilitar/deshabilitar CORS', 'cors'),
+('celery_workers', '4', 'Número de workers de Celery', 'celery'),
+('celery_task_timeout', '300', 'Tiempo máximo de ejecución de tareas Celery (segundos)', 'celery'),
+('celery_max_retries', '3', 'Máximo de reintentos para tareas Celery', 'celery'),
+('db_pool_size', '20', 'Tamaño del pool de conexiones a la DB', 'database'),
+('db_max_overflow', '10', 'Conexiones adicionales permitidas en el pool', 'database'),
+('db_pool_timeout', '30', 'Tiempo de espera para una conexión del pool (segundos)', 'database'),
+('freemium_credits', '100', 'Créditos iniciales para suscripción freemium', 'credits'),
+('premium_credits', '1000', 'Créditos iniciales para suscripción premium', 'credits'),
+('corporate_credits', '5000', 'Créditos iniciales para suscripción corporativa', 'credits'),
+('credit_reset_interval', '30', 'Intervalo de reinicio de créditos (días)', 'credits'),
+('log_level', '"INFO"', 'Nivel de logging', 'logging'),
+('log_retention_days', '90', 'Días de retención de logs', 'logging'),
+('maintenance_mode', 'false', 'Activar/desactivar modo mantenimiento', 'system'),
+('api_version', '"1.0.0"', 'Versión actual de la API', 'system');
+
+INSERT OR IGNORE INTO  site_settings (key, value, description, tag) VALUES
+('enable_payment_methods', 'true', 'Activar o desactivar medios de pago', 'Funcionalidades'),
+('enable_gamification', 'true', 'Activar o desactivar gamificación', 'Funcionalidades');
+
+
+
+-- Usuarios iniciales
+INSERT OR IGNORE INTO usuarios (email, username, password_hash, subscription, credits, rol, create_at, activo) VALUES
+('freemium@example.com', 'freemium_user', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'FREEMIUM', 100, 'user', datetime('now'), 1),
+('premium@example.com', 'premium_user', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'PREMIUM', 1000, 'user', datetime('now'), 1),
+('corporate@example.com', 'corporate_user', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'CORPORATE', 5000, 'user', datetime('now'), 1),
+('admin@example.com', 'admin_user', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'PREMIUM', 1000, 'admin', datetime('now'), 1),
+('testuser1@example.com', 'test_user1', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'FREEMIUM', 100, 'user', datetime('now'), 1),
+('testadmin@example.com', 'test_admin', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'CORPORATE', 5000, 'admin', datetime('now'), 1);
+
+-- Orígenes permitidos
+INSERT OR IGNORE INTO allowed_origins (origin) VALUES
+('http://localhost:3000'),
+('https://neptuno.app'),
+('https://api.example.com'),
+('https://app.example.com');
+
+-- Sesiones anónimas
+INSERT OR IGNORE INTO sesiones_anonimas (id, username, credits, create_at, ultima_actividad, last_ip) VALUES
+(hex(randomblob(16)), 'anon_user_1', 100, datetime('now'), datetime('now'), '192.168.1.1'),
+(hex(randomblob(16)), 'anon_user_2', 90, datetime('now', '-1 day'), datetime('now', '-1 hour'), '192.168.1.2'),
+(hex(randomblob(16)), 'anon_user_3', 80, datetime('now', '-2 days'), datetime('now', '-2 hours'), '192.168.1.3');
+
+-- Transacciones de créditos (usuarios registrados)
+INSERT OR IGNORE INTO credit_transactions (user_id, user_type, amount, transaction_type, description, timestamp) VALUES
+((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), 'registered', -10, 'api_call', 'Llamada a API de procesamiento', datetime('now')),
+((SELECT id FROM usuarios WHERE email = 'premium@example.com'), 'registered', 500, 'purchase', 'Compra de créditos', datetime('now'));
+
+-- Transacciones de créditos (sesiones anónimas)
+INSERT OR IGNORE INTO credit_transactions (session_id, user_type, amount, transaction_type, description, timestamp) VALUES
+((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 'anonymous', -5, 'api_call', 'Llamada a API demo', datetime('now')),
+((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_2'), 'anonymous', -15, 'api_call', 'Procesamiento de datos', datetime('now'));
+
+-- Logs de errores
+INSERT OR IGNORE INTO error_logs (user_id, user_type, error_code, message, details, url, method, ip_address, created_at) VALUES
+((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), 'registered', 400, 'Invalid request parameters', 'Missing required field ''email''', '/api/v1/users', 'POST', '192.168.1.100', datetime('now')),
+((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 'anonymous', 429, 'Rate limit exceeded', 'Too many requests from this IP', '/api/v1/process', 'POST', '192.168.1.101', datetime('now')),
+((SELECT id FROM usuarios WHERE email = 'corporate@example.com'), 'registered', 500, 'Internal server error', 'Database connection timeout', '/api/v1/credits', 'GET', '192.168.1.102', datetime('now'));
+
+-- Integraciones
+INSERT OR IGNORE INTO integrations (user_id, name, webhook_url, event_type, active, created_at, last_triggered) VALUES
+((SELECT id FROM usuarios WHERE email = 'premium@example.com'), 'slack', 'https://hooks.slack.com/services/TXXXXX/BXXXXX/XXXXX', 'credit_usage', 1, datetime('now'), datetime('now', '-2 hours')),
+((SELECT id FROM usuarios WHERE email = 'admin@example.com'), 'zapier', 'https://hooks.zapier.com/hooks/catch/XXXXX/XXXXX', 'user_login', 1, datetime('now'), NULL),
+((SELECT id FROM usuarios WHERE email = 'corporate@example.com'), 'crm_custom', 'https://api.crm.com/webhook/XXXXX', 'payment_added', 0, datetime('now'), NULL);
+
+-- Logs de API
+INSERT OR IGNORE INTO api_logs (user_id, endpoint, method, status_code, request_data, response_data, timestamp) VALUES
+((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), '/api/v1/auth/login', 'POST', 200, '{"email": "user@example.com", "password": "****"}', '{"token": "xxxx.yyyy.zzzz"}', datetime('now')),
+(NULL, '/api/v1/process', 'POST', 201, '{"data": "sample data"}', '{"result": "processed", "credits_used": 5}', datetime('now')),
+((SELECT id FROM usuarios WHERE email = 'admin@example.com'), '/api/v1/admin/users', 'GET', 200, NULL, '{"count": 42, "users": []}', datetime('now'));
+
+-- Métodos de pago
+INSERT OR IGNORE INTO payment_methods (user_id, payment_type, details, is_default, created_at, updated_at) VALUES
+((SELECT id FROM usuarios WHERE email = 'premium@example.com'), 'credit_card', 'VISA ending in 4242', 1, datetime('now'), datetime('now')),
+((SELECT id FROM usuarios WHERE email = 'premium@example.com'), 'paypal', 'user@example.com', 0, datetime('now'), datetime('now')),
+((SELECT id FROM usuarios WHERE email = 'corporate@example.com'), 'bank_transfer', 'IBAN: ESXX XXXX XXXX XXXX XXXX', 1, datetime('now'), datetime('now'));
+
+-- Tokens revocados
+INSERT OR IGNORE INTO revoked_tokens (token, revoked_at, user_id) VALUES
+('expired.token.xxxx', datetime('now', '-30 days'), (SELECT id FROM usuarios WHERE email = 'freemium@example.com')),
+('compromised.token.yyyy', datetime('now', '-2 hours'), (SELECT id FROM usuarios WHERE email = 'premium@example.com'));
+
+-- Tokens de reseteo de contraseña
+INSERT OR IGNORE INTO password_reset_tokens (user_id, token, created_at, expires_at) VALUES
+((SELECT id FROM usuarios WHERE email = 'freemium@example.com'), 'reset_token_123', datetime('now'), datetime('now', '+1 hour')),
+((SELECT id FROM usuarios WHERE email = 'admin@example.com'), 'reset_token_456', datetime('now'), datetime('now', '+1 hour'));
+
+---------------------------------------------------------------------
+-- Datos iniciales para gamificación
+---------------------------------------------------------------------
+
+-- Insertar tipos de eventos
+INSERT OR IGNORE INTO event_types (name, description, points_per_event) VALUES
+('api_usage', 'Eventos por uso de la API', 5),
+('test_api', 'Eventos de prueba', 10);
+
+-- Insertar badges
+INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points, user_type) VALUES
+('Novato', 'Primeros pasos en la API', 1, 5, 'both'),
+('Becario', 'Uso intermedio de la API', 1, 100, 'both'),
+('Junior', 'Uso avanzado de la API', 1, 500, 'registered'),
+('Senior', 'Maestro de la API', 1, 1000, 'registered'),
+('Tester', 'Participante en pruebas', 2, 10, 'both');
+
+-- Insertar eventos de gamificación sin variables ni NOW()
+INSERT OR IGNORE INTO gamification_events (event_type_id, user_id, timestamp)
+VALUES (2, (SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), datetime('now'));
+
+INSERT OR IGNORE INTO gamification_events (event_type_id, session_id, timestamp)
+VALUES (2, (SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), datetime('now'));
+
+-- Actualizar gamificación de usuarios de prueba
+INSERT OR IGNORE INTO user_gamification (user_id, event_type_id, points, badge_id)
+VALUES ((SELECT id FROM usuarios WHERE email = 'testuser1@example.com'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
+
+INSERT OR IGNORE INTO user_gamification (session_id, event_type_id, points, badge_id)
+VALUES ((SELECT id FROM sesiones_anonimas WHERE username = 'anon_user_1'), 2, 10, (SELECT id FROM badges WHERE name = 'Tester'));
+
+INSERT OR IGNORE INTO event_types (name, description, points_per_event) VALUES
+('survey_question', 'Responder una pregunta de la encuesta', 1),
+('survey_completed', 'Completar la encuesta', 0),
+('registration_field', 'Rellenar un campo de registro', 1),
+('registration_completed', 'Completar el registro', 0),
+('subscription_list', 'Suscribirse a una lista', 1),
+('all_subscriptions', 'Suscribirse a todas las listas', 0);
+
+INSERT OR IGNORE INTO badges (name, description, event_type_id, required_points, user_type) VALUES
+('Encuestador', 'Completar una encuesta', (SELECT id FROM event_types WHERE name='survey_completed'), 0, 'both'),
+('Registrado', 'Completar el registro', (SELECT id FROM event_types WHERE name='registration_completed'), 0, 'both'),
+('Suscriptor', 'Suscribirse a todas las listas', (SELECT id FROM event_types WHERE name='all_subscriptions'), 0, 'both');
+
+INSERT OR IGNORE INTO event_types (id, name, description, points_per_event) VALUES
+(1, 'registro_campo', 'Puntos por completar cada campo del registro', 1),
+(2, 'registro_completo', 'Puntos por completar el registro completo', 10),
+(3, 'suscripcion_newsletter', 'Puntos por cada suscripción a newsletter', 2),
+(4, 'todas_suscripciones', 'Puntos por suscribirse a todas las newsletters', 15),
+(5, 'encuesta_pregunta', 'Puntos por cada pregunta de encuesta respondida', 1),
+(6, 'encuesta_completa', 'Puntos por completar la encuesta', 10),
+(7, 'checkin_horario', 'Puntos por hacer check-in en horario', 5),
+(8, 'icp_campo', 'Puntos por completar cada campo del ICP', 1),
+(9, 'icp_completo', 'Puntos por completar el ICP completo', 10),
+(10, 'leccion_completada', 'Puntos por completar cada lección', 3);
+
+-- Mensaje final
+SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;
+
+
+
+# backend/main.py
+# Punto de entrada principal de la aplicación.
+from api.v1 import payment_providers
+from models.gamification import EventType
+from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
+from services.gamification_service import get_user_gamification, register_event
+from fastapi import Depends, FastAPI, HTTPException, Request, Depends
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from api.v1 import auth, endpoints, payments, site_settings, integrations, payments
+from api.v1 import anonymous_sessions, credit_transactions, error_logs
+from api.v1 import api_logs
+from api.v1 import users
+from api.v1 import gamification
+from dependencies.credits import check_credits
+from models.credit_transaction import CreditTransaction
+from models.guests import GuestsSession
+from models.user import User
+from services.integration_service import trigger_webhook
+from middleware.credits_middleware import require_credits
+from middleware.logging import LoggingMiddleware
+from dependencies.auth import UserContext, get_user_context
+from services.settings_service import get_setting
+from services.origin_service import get_allowed_origins
+from core.database import Base, engine, get_db
+from core.logging import configure_logging
+from core.config import settings
+from services.credits_service import reset_credits
+from models.error_log import ErrorLog
+from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
+    redoc_url=None,
+    #root_path="/api"
+    proxy_headers=True  # Necesario para X-Forwarded-*
+
+    #servers=[{"url": "/api", "description": "Local server"}],
+
+    #openapi_url="/api/openapi.json",
+
+    #swagger_ui_parameters={"url": "/api/openapi.json"}
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En desarrollo (en producción usa dominios exactos)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]  # Añade esto para headers personalizados
+)
+
+logger = configure_logging()
+# app.add_middleware(LoggingMiddleware)
+
+# Middleware para confiar en el proxy
+# app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
+
+db = next(get_db())
+#app.add_middleware(
+#    CORSMiddleware,
+#    allow_origins=["*", #
+#        "https://172.18.0.2:8000",
+#        "https://localhost:8000",
+#        "https://localhost:3000",
+#        "http://localhost:8000",
+#        "http://localhost:3000",
+#        "https://neptuno.ciberpunk.es",
+#        "http://neptuno.ciberpunk.es",
+#        "127.0.0.0.1",
+        #"194.164.164.177",
+        #"neptuno.ciberpunk.es",
+        #"172.18.0.3"
+    #],  # Lista explícita de dominios permitidos
+    #allow_origins=["*"], #allowed_origins = get_setting(db, "allowed_origins") or ["https://localhost:3000"]  # Valor por defecto
+    #allow_credentials=True,
+    #allow_methods=["*"],
+#    allow_headers=["*"]
+#)
+
+
+Base.metadata.create_all(bind=engine)
+
+
+
+@app.on_event("startup")
+async def startup_event():
+
+    try:
+        admin_id = 1
+        logger.info(f"Iniciando {settings.PROJECT_NAME} en entorno {settings.ENVIRONMENT}")
+        logger.info("Ejecutando renovación de créditos automática al iniciar")
+        reset_credits(db, admin_id)
+    except HTTPException as e:
+        logger.error(f"Error HTTP en startup: {e.detail}")
+    except Exception as e:
+        logger.error(f"Error inesperado en startup: {str(e)}")
+    finally:
+        db.close()
+        
+rate_limit_auth = get_setting(db, "rate_limit_auth") or {"times": 20, "seconds": 60}
+rate_limit_api = get_setting(db, "rate_limit_api") or {"times": 100, "seconds": 60}
+rate_limit_admin = get_setting(db, "rate_limit_admin") or {"times": 50, "seconds": 60}
+
+async def get_rate_limit_key(request: Request, user: UserContext = Depends(get_user_context)):
+        if user.user_type == "registered":
+            return f"user:{user.user_id}"
+        return f"ip:{request.client.host}"
+
+app.include_router(auth.router, prefix="/v1/auth", tags=["auth"])
+app.include_router(users.router, prefix="/v1/users", tags=["users"])
+app.include_router(endpoints.router, prefix="/v1/api", tags=["api"])
+app.include_router(payments.router, prefix="/v1/payments", tags=["payments"])
+app.include_router(site_settings.router, prefix="/v1/settings", tags=["site_settings"])
+app.include_router(integrations.router, prefix="/v1/integrations", tags=["integrations"])
+#app.include_router(payments.router, prefix="/v1/payments", tags=["payments"], dependencies=[Depends(RateLimiter(**rate_limit_api, identifier=get_rate_limit_key))])
+app.include_router(error_logs.router, prefix="/v1/errors", tags=["Errors"])
+app.include_router(anonymous_sessions.router, prefix="/v1/sessions", tags=["Sessions"])
+app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=["Transactions"])
+app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
+app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
+app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
+
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    db = next(get_db())
+    try:
+        logger.error(f"HTTP Error {exc.status_code} en {request.method} {request.url}: {exc.detail}")
+        error_log = ErrorLog(
+            error_code=exc.status_code,
+            message=exc.detail,
+            url=str(request.url),
+            method=request.method,
+            ip_address=request.client.host
+        )
+        db.add(error_log)
+        db.commit()
+    finally:
+        db.close()
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": exc.status_code, "message": exc.detail}}
+    )
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    db = next(get_db())
+    try:
+        logger.critical(f"Error inesperado en {request.method} {request.url}: {str(exc)}")
+        error_log = ErrorLog(
+            error_code=500,
+            message="Error interno del servidor",
+            details=str(exc),
+            url=str(request.url),
+            method=request.method,
+            ip_address=request.client.host
+        )
+        db.add(error_log)
+        db.commit()
+    finally:
+        db.close()
+    return JSONResponse(
+        status_code=500,
+        content={"error": {"code": 500, "message": "Error interno del servidor"}}
+    )
+    
+# Health check endpoint para despliegue
+@app.get("/health")
+async def health_check(db: Session = Depends(get_db)):
+    try:
+        # Ejecuta una consulta SQL simple utilizando text()
+        db.execute(text("SELECT 1"))
+        logger.info("Base de datos accesible")
+        return {"status": "healthy", "environment": settings.ENVIRONMENT}
+    except Exception as e:
+        logger.error(f"Error en health check: {str(e)}")
+        raise HTTPException(status_code=503, detail="Database unavailable")
+    
+@app.get("/")
+async def root():
+    return {"message": "Bienvenido a la API Backend"}
+
+@app.get("/no-login/")
+async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
+    """
+    Endpoint para probar la API sin necesidad de login.
+    Consume créditos si están activos.
+    """
+    # Preparar la respuesta
+    response = {"message": "Consulta realizada sin necesidad de login", "user_type": user.user_type}
+    if user.user_type == "anonymous":
+        response["session_id"] = user.user_id  # Incluir session_id en la respuesta
+
+    # Consumir créditos si no están desactivados
+    disable_credits = get_setting(db, "disable_credits")
+    if disable_credits != "true":
+        try:
+            if user.user_type == "registered":
+                user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+                user_db.credits -= 1
+                transaction = CreditTransaction(
+                    user_id=user_db.id,
+                    user_type="registered",  # Especificar explícitamente
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada"
+                )
+                credits_remaining = user_db.credits
+            else:
+                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
+                session_db.credits -= 1
+                transaction = CreditTransaction(
+                    session_id=session_db.id,
+                    user_type="anonymous",  # Especificar explícitamente para claridad
+                    amount=-1,
+                    transaction_type="usage",
+                    description="Consulta realizada por anónimo"
+                )
+                credits_remaining = session_db.credits
+            
+            db.add(transaction)
+            db.commit()
+
+            trigger_webhook(db, "credit_usage", {
+                "user_id": user.user_id,
+                "user_type": user.user_type,
+                "credits_remaining": credits_remaining
+            })
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits_remaining}")
+        except Exception as e:
+            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+
+    return response
+
+@app.get("/restricted")
+async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
+    """
+    Endpoint restringido que requiere login.
+    Consume créditos si están activos.
+    """
+    if user.user_type != "registered":
+        raise HTTPException(status_code=401, detail="Se requiere autenticación")
+
+    # Preparar la respuesta
+    response = {"message": "Consulta realizada con login", "user_type": user.user_type}
+
+    # Consumir créditos si no están desactivados
+    disable_credits = get_setting(db, "disable_credits")
+    if disable_credits != "true":
+        try:
+            user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+            user_db.credits -= 1
+            transaction = CreditTransaction(
+                user_id=user_db.id,
+                user_type="registered",  # Especificar explícitamente
+                amount=-1,
+                transaction_type="usage",
+                description="Consulta realizada"
+            )
+            db.add(transaction)
+            db.commit()
+
+            trigger_webhook(db, "credit_usage", {
+                "user_id": user.user_id,
+                "user_type": user.user_type,
+                "credits_remaining": user_db.credits
+            })
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user_db.credits}")
+        except Exception as e:
+            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
+
+    return response
+
+@app.get("/info")
+async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    disable_anonymous = get_setting(db, "disable_anonymous_users")
+    base_info = {
+        "user_id": user.user_id,
+        "email": user.email,
+        "username": user.username,
+        "user_type": user.user_type,
+        "subscription": user.subscription,
+        "credits": user.credits,
+        "rol": user.rol,
+        "session_id": user.session_id if user.user_type == "anonymous" else None
+    }
+
+    gamification = get_user_gamification(db, user)
+    gamification_data = [
+        UserGamificationResponse.from_orm(g) for g in gamification
+    ]
+
+    return {**base_info, "gamification": gamification_data}
+
+
+@app.post("/test-event", response_model=GamificationEventResponse)
+def test_gamification_event(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+    event_type = db.query(EventType).filter(EventType.name == "test_api").first()
+    if not event_type:
+        raise HTTPException(status_code=404, detail="Event type 'test_api' not found")
+    event = GamificationEventCreate(event_type_id=event_type.id)
+    return register_event(db, event, user)
+
+
+
+es demasiado? perdona si he repetido algun fichero
+
+
+recuerda siempre que Necesito tu mejor perfil de programador full stack FASTApi, Python, NextJS y SQLAlchemy con fuertes
+nociones de diseño front UX/AI y que ahora lo que mas me importa es que analices bien los archivos que te paso, los memorices,
+y entiendas como se relacionan
+
+eso sera clave para las mejoras futuras que a la vista estan las que hacen falta, pero pr favor no olvides prestar atencion a
+a los archivos que te paso con calama todo llegara
+
+echas en falta algo del backend? vamos a por el frontend?
+
+
+        
