@@ -90,7 +90,7 @@ export default function LandingPage() {
   useEffect(() => {
     if (!user) {
       const storedCredits = localStorage.getItem("anonCredits");
-      const initialCredits = storedCredits ? parseInt(storedCredits) : 100;
+      const initialCredits = storedCredits ? parseInt(storedCredits) : 10;
       setLocalCredits(initialCredits);
       setCredits(initialCredits);
     }

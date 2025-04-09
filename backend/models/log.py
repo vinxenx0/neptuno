@@ -1,3 +1,4 @@
+# backend/models/log.py
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from models.user import Base
 from datetime import datetime

@@ -1,3 +1,4 @@
+// frontend/src/app/about/[page]/contact.tsx
 export default function Contact() {
     return (
     <div>

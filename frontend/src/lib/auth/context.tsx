@@ -30,7 +30,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [credits, setCredits] = useState<number>(100); // Valor por defecto para anónimos
+  const [credits, setCredits] = useState<number>(10); // Valor por defecto para anónimos
   const [gamification, setGamification] = useState<Gamification | null>(null); // Estado para gamificación
   const [loading, setLoading] = useState(true);
   const router = useRouter();

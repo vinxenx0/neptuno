@@ -173,17 +173,17 @@ def delete_badge(db: Session, badge_id: int):
     db.commit()
     return {"message": "Badge deleted"}
 
-def calculate_points(api_usages: int) -> int:
-    """Calcula los puntos según el número de usos de la API."""
-    if api_usages >= 30:
-        return 1000
-    elif api_usages >= 20:
-        return 500
-    elif api_usages >= 10:
-        return 100
-    elif api_usages >= 1:
-        return 5
-    return 0
+#def calculate_points(api_usages: int) -> int:
+#    """Calcula los puntos según el número de usos de la API."""
+#    if api_usages >= 30:
+#        return 1000
+#    elif api_usages >= 20:
+#        return 500
+#    elif api_usages >= 10:
+#        return 100
+#    elif api_usages >= 1:
+#        return 5
+#    return 0
 
 
 

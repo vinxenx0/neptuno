@@ -51,7 +51,7 @@ def register_user(
             ciudad=ciudad,
             website=website,
             subscription=subscriptionEnum(subscription),
-            credits=100,
+            credits=100, 
             renewal=datetime.utcnow(),
             create_at=datetime.utcnow()
         )
@@ -252,7 +252,7 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
             username=email.split("@")[0],
             auth_provider=provider,
             provider_id=provider_id,
-            credits=100,
+            credits= 200, # Comprobar si es cuando hace login o cuando se registra por primera vez con otro proveedor
             create_at=datetime.utcnow()
         )
         db.add(user)

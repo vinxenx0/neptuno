@@ -1,3 +1,4 @@
+// frontend/src/app/about/[page]/us.tsx
 export default function Us() {
     return (
     <div>

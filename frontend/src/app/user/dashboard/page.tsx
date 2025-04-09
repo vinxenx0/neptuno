@@ -1,4 +1,5 @@
 // src/app/user/dashboard/page.tsx
+// src/app/user/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,11 +8,14 @@ import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
-import { Box,  Grid,  Card,  CardContent,  CardHeader,  TextField,  Button,  Accordion,  AccordionSummary,  AccordionDetails,  Typography,  IconButton,
-  Snackbar,  Alert,  MenuItem,  Avatar,  Chip,  Divider,  List,  ListItem,  ListItemAvatar,  ListItemText,  Badge,  Paper,  Tabs,  Tab,  useTheme,  styled
+import {
+  Box, Grid, Card, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
+  Snackbar, Alert, MenuItem, Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Badge, Paper, Tabs, Tab, useTheme, styled
 } from "@mui/material";
-import {  AccountCircle,  Lock,  Payment,  CreditCard,  AddCircle,  Delete,  ExpandMore,  Edit,  History,  AttachMoney,  Security,  Logout,  Person,
-  LocationOn,  Language,  Star,  StarBorder} from "@mui/icons-material";
+import {
+  AccountCircle, Lock, Payment, CreditCard, AddCircle, Delete, ExpandMore, Edit, History, AttachMoney, Security, Logout, Person,
+  LocationOn, Language, Star, StarBorder
+} from "@mui/icons-material";
 
 // Styled Components
 const GradientCard = styled(Card)(({ theme }) => ({
@@ -22,13 +26,12 @@ const GradientCard = styled(Card)(({ theme }) => ({
 }));
 
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
+  background: 'rgba(248, 249, 250, 0.8)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
+  border: '1px solid rgba(222, 226, 230, 0.5)',
   borderRadius: '16px',
   boxShadow: theme.shadows[2]
 }));
-
 
 interface PaymentMethod {
   id: number;
@@ -90,12 +93,11 @@ export default function UserDashboard() {
         const [transRes, methRes, providersRes] = await Promise.all([
           fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
           fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
-          fetchAPI<PaymentProvider[]>("/v1/payment-providers"), // Nueva llamada
+          fetchAPI<PaymentProvider[]>("/v1/payment-providers"),
         ]);
         setTransactions(transRes.data || []);
         setMethods(methRes.data || []);
         setPaymentProviders(providersRes.data?.filter(p => p.active) || []);
-        // Establecer el primer proveedor activo como predeterminado
         if (providersRes.data && providersRes.data.length > 0) {
           setNewMethod(prev => ({ ...prev, payment_type: providersRes.data.find(p => p.active)?.name || "" }));
         }
@@ -134,7 +136,6 @@ export default function UserDashboard() {
       setError(err instanceof Error ? err.message : "Error al eliminar método");
     }
   };
-
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,7 +198,6 @@ export default function UserDashboard() {
     }
   };
 
-
   const handleSetDefault = async (id: number) => {
     try {
       await fetchAPI(`/v1/payments/methods/${id}/default`, { method: "PUT" });
@@ -221,12 +221,11 @@ export default function UserDashboard() {
     }
   };
 
-
   if (!user) return (
-    <Box sx={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
+    <Box sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
@@ -241,17 +240,17 @@ export default function UserDashboard() {
   );
 
   return (
-    <Box sx={{ 
-      p: { xs: 2, md: 4 }, 
+    <Box sx={{
+      p: { xs: 2, md: 4 },
       minHeight: "100vh",
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
     }}>
       <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>
         {/* Header Section */}
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' }, 
-          justifyContent: 'space-between', 
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
           alignItems: 'center',
           mb: 4,
           gap: 2
@@ -261,10 +260,10 @@ export default function UserDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Typography 
-              variant="h3" 
-              sx={{ 
-                fontWeight: 'bold', 
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 'bold',
                 background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -277,7 +276,7 @@ export default function UserDashboard() {
               Bienvenido a tu panel de control
             </Typography>
           </motion.div>
-          
+
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -288,9 +287,9 @@ export default function UserDashboard() {
             }
           >
             <Avatar
-              sx={{ 
-                width: 80, 
-                height: 80, 
+              sx={{
+                width: 80,
+                height: 80,
                 bgcolor: theme.palette.primary.main,
                 fontSize: '2rem',
                 boxShadow: theme.shadows[6]
@@ -301,27 +300,70 @@ export default function UserDashboard() {
           </Badge>
         </Box>
 
-        {/* Credits Card */}
+        {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <GradientCard sx={{ mb: 4 }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                    Tus Créditos
-                  </Typography>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                    {user.credits ?? 0}
-                  </Typography>
-                </Box>
-                <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </GradientCard>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            {/* Credits Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Tus Créditos
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {user.credits ?? 0}
+                      </Typography>
+                    </Box>
+                    <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+
+            {/* Transactions Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Transacciones
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {transactions.length}
+                      </Typography>
+                    </Box>
+                    <History sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+
+            {/* Payment Methods Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard sx={{ background: 'linear-gradient(135deg, #a6c1ee 0%, #fbc2eb 100%)' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Métodos de Pago
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {methods.length}
+                      </Typography>
+                    </Box>
+                    <Payment sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+          </Grid>
         </motion.div>
 
         {/* Tabs Navigation */}
@@ -360,8 +402,8 @@ export default function UserDashboard() {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <GlassCard>
-                    <CardHeader 
-                      title="Información Personal" 
+                    <CardHeader
+                      title="Información Personal"
                       avatar={<AccountCircle color="primary" />}
                       action={
                         <IconButton onClick={() => setEditMode(!editMode)}>
@@ -424,16 +466,16 @@ export default function UserDashboard() {
                               }}
                             />
                             <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-                              <Button 
-                                type="submit" 
-                                variant="contained" 
+                              <Button
+                                type="submit"
+                                variant="contained"
                                 color="primary"
                                 sx={{ flex: 1 }}
                               >
                                 Guardar Cambios
                               </Button>
-                              <Button 
-                                onClick={() => setEditMode(false)} 
+                              <Button
+                                onClick={() => setEditMode(false)}
                                 variant="outlined"
                                 sx={{ flex: 1 }}
                               >
@@ -456,9 +498,9 @@ export default function UserDashboard() {
                                     <Person />
                                   </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                  primary="Username" 
-                                  secondary={user.username || "No especificado"} 
+                                <ListItemText
+                                  primary="Username"
+                                  secondary={user.username || "No especificado"}
                                   secondaryTypographyProps={{ color: "textPrimary" }}
                                 />
                               </ListItem>
@@ -469,9 +511,9 @@ export default function UserDashboard() {
                                     <AccountCircle />
                                   </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                  primary="Email" 
-                                  secondary={user.email || "No especificado"} 
+                                <ListItemText
+                                  primary="Email"
+                                  secondary={user.email || "No especificado"}
                                   secondaryTypographyProps={{ color: "textPrimary" }}
                                 />
                               </ListItem>
@@ -482,9 +524,9 @@ export default function UserDashboard() {
                                     <LocationOn />
                                   </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                  primary="Ciudad" 
-                                  secondary={user.ciudad || "No especificado"} 
+                                <ListItemText
+                                  primary="Ciudad"
+                                  secondary={user.ciudad || "No especificado"}
                                   secondaryTypographyProps={{ color: "textPrimary" }}
                                 />
                               </ListItem>
@@ -495,9 +537,9 @@ export default function UserDashboard() {
                                     <Language />
                                   </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText 
-                                  primary="Website" 
-                                  secondary={user.website || "No especificado"} 
+                                <ListItemText
+                                  primary="Website"
+                                  secondary={user.website || "No especificado"}
                                   secondaryTypographyProps={{ color: "textPrimary" }}
                                 />
                               </ListItem>
@@ -508,11 +550,11 @@ export default function UserDashboard() {
                     </CardContent>
                   </GlassCard>
                 </Grid>
-                
+
                 <Grid item xs={12} md={6}>
                   <GlassCard>
-                    <CardHeader 
-                      title="Actividad Reciente" 
+                    <CardHeader
+                      title="Actividad Reciente"
                       avatar={<History color="primary" />}
                     />
                     <CardContent>
@@ -527,8 +569,8 @@ export default function UserDashboard() {
                             >
                               <ListItem>
                                 <ListItemAvatar>
-                                  <Avatar sx={{ 
-                                    bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                                  <Avatar sx={{
+                                    bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light
                                   }}>
                                     {t.amount > 0 ? "+" : "-"}
                                   </Avatar>
@@ -550,9 +592,9 @@ export default function UserDashboard() {
                           No hay actividad reciente
                         </Typography>
                       )}
-                      <Button 
-                        fullWidth 
-                        variant="outlined" 
+                      <Button
+                        fullWidth
+                        variant="outlined"
                         sx={{ mt: 2 }}
                         onClick={() => setTabValue(2)}
                       >
@@ -562,6 +604,39 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
+
+              {/* Danger Zone moved to Profile Tab */}
+              <GlassCard sx={{ mt: 3 }}>
+                <CardHeader
+                  title="Zona Peligrosa"
+                  avatar={<Security color="error" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    Estas acciones son irreversibles. Por favor, procede con precaución.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      onClick={logout}
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<Logout />}
+                      sx={{ flex: 1 }}
+                    >
+                      Cerrar Sesión
+                    </Button>
+                    <Button
+                      onClick={handleDeleteAccount}
+                      variant="contained"
+                      color="error"
+                      startIcon={<Delete />}
+                      sx={{ flex: 1 }}
+                    >
+                      Eliminar Cuenta
+                    </Button>
+                  </Box>
+                </CardContent>
+              </GlassCard>
             </motion.div>
           )}
 
@@ -575,14 +650,14 @@ export default function UserDashboard() {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <GlassCard>
-                    <CardHeader 
-                      title="Cambiar Contraseña" 
+                    <CardHeader
+                      title="Cambiar Contraseña"
                       avatar={<Lock color="primary" />}
                     />
                     <CardContent>
-                      <Box 
-                        component="form" 
-                        onSubmit={handleChangePassword} 
+                      <Box
+                        component="form"
+                        onSubmit={handleChangePassword}
                         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                       >
                         <TextField
@@ -611,9 +686,9 @@ export default function UserDashboard() {
                             startAdornment: <Security color="action" sx={{ mr: 1 }} />
                           }}
                         />
-                        <Button 
-                          type="submit" 
-                          variant="contained" 
+                        <Button
+                          type="submit"
+                          variant="contained"
                           color="primary"
                           sx={{ mt: 1 }}
                         >
@@ -623,11 +698,11 @@ export default function UserDashboard() {
                     </CardContent>
                   </GlassCard>
                 </Grid>
-                
+
                 <Grid item xs={12} md={6}>
                   <GlassCard>
-                    <CardHeader 
-                      title="Métodos de Pago" 
+                    <CardHeader
+                      title="Métodos de Pago"
                       subheader={`${methods.length} configurados`}
                       avatar={<Payment color="primary" />}
                     />
@@ -653,9 +728,9 @@ export default function UserDashboard() {
                           No hay métodos de pago configurados
                         </Typography>
                       )}
-                      <Button 
-                        fullWidth 
-                        variant="outlined" 
+                      <Button
+                        fullWidth
+                        variant="outlined"
                         sx={{ mt: 2 }}
                         onClick={() => setTabValue(3)}
                       >
@@ -665,38 +740,6 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
-              
-              <GlassCard sx={{ mt: 3 }}>
-                <CardHeader 
-                  title="Zona Peligrosa" 
-                  avatar={<Security color="error" />}
-                />
-                <CardContent>
-                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                    Estas acciones son irreversibles. Por favor, procede con precaución.
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button 
-                      onClick={logout} 
-                      variant="outlined" 
-                      color="secondary" 
-                      startIcon={<Logout />}
-                      sx={{ flex: 1 }}
-                    >
-                      Cerrar Sesión
-                    </Button>
-                    <Button 
-                      onClick={handleDeleteAccount} 
-                      variant="contained" 
-                      color="error"
-                      startIcon={<Delete />}
-                      sx={{ flex: 1 }}
-                    >
-                      Eliminar Cuenta
-                    </Button>
-                  </Box>
-                </CardContent>
-              </GlassCard>
             </motion.div>
           )}
 
@@ -708,13 +751,13 @@ export default function UserDashboard() {
               transition={{ duration: 0.3 }}
             >
               <GlassCard>
-                <CardHeader 
-                  title="Historial de Transacciones" 
+                <CardHeader
+                  title="Historial de Transacciones"
                   avatar={<History color="primary" />}
                   action={
-                    <Chip 
-                      label={`${transactions.length} transacciones`} 
-                      color="primary" 
+                    <Chip
+                      label={`${transactions.length} transacciones`}
+                      color="primary"
                       variant="outlined"
                     />
                   }
@@ -735,8 +778,8 @@ export default function UserDashboard() {
                         >
                           <ListItem>
                             <ListItemAvatar>
-                              <Avatar sx={{ 
-                                bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light 
+                              <Avatar sx={{
+                                bgcolor: t.amount > 0 ? theme.palette.success.light : theme.palette.error.light
                               }}>
                                 {t.amount > 0 ? "+" : "-"}
                               </Avatar>
@@ -746,8 +789,8 @@ export default function UserDashboard() {
                               secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
                             />
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                              <Typography 
-                                variant="subtitle1" 
+                              <Typography
+                                variant="subtitle1"
                                 color={t.amount > 0 ? "success.main" : "error.main"}
                                 fontWeight="bold"
                               >
@@ -769,291 +812,291 @@ export default function UserDashboard() {
           )}
 
           {/* Payment Methods Tab */}
- {tabValue === 3 && (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-      <GlassCard>
-        <CardHeader
-          title="Métodos de Pago"
-          avatar={<Payment color="primary" />}
-          subheader="Gestiona tus métodos de pago asociados"
-        />
-        <CardContent>
-          {methods.length > 0 && (
-            <List sx={{ mb: 3 }}>
-              {methods.map((m) => (
-                <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: "8px", overflow: "hidden" }}>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
-                        {m.is_default ? <Star /> : <CreditCard />}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
-                          {m.is_default && (
-                            <Chip label="Predeterminado" size="small" color="success" variant="outlined" />
-                          )}
-                        </Box>
-                      }
-                      secondary={m.details}
-                    />
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <IconButton onClick={() => setEditMethod(m)} color="primary">
-                        <Edit />
-                      </IconButton>
-                      <IconButton onClick={() => setDeleteMethodId(m.id)} color="error">
-                        <Delete />
-                      </IconButton>
-                      {!m.is_default && (
-                        <Button
-                          onClick={() => handleSetDefault(m.id)}
+          {tabValue === 3 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <GlassCard>
+                <CardHeader
+                  title="Métodos de Pago"
+                  avatar={<Payment color="primary" />}
+                  subheader="Gestiona tus métodos de pago asociados"
+                />
+                <CardContent>
+                  {methods.length > 0 && (
+                    <List sx={{ mb: 3 }}>
+                      {methods.map((m) => (
+                        <Paper key={m.id} elevation={2} sx={{ mb: 2, borderRadius: "8px", overflow: "hidden" }}>
+                          <ListItem>
+                            <ListItemAvatar>
+                              <Avatar sx={{ bgcolor: m.is_default ? theme.palette.success.main : theme.palette.grey[300] }}>
+                                {m.is_default ? <Star /> : <CreditCard />}
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={
+                                <Box sx={{ display: "flex", alignItems: "center" }}>
+                                  <Typography sx={{ mr: 1 }}>{m.payment_type}</Typography>
+                                  {m.is_default && (
+                                    <Chip label="Predeterminado" size="small" color="success" variant="outlined" />
+                                  )}
+                                </Box>
+                              }
+                              secondary={m.details}
+                            />
+                            <Box sx={{ display: "flex", gap: 1 }}>
+                              <IconButton onClick={() => setEditMethod(m)} color="primary">
+                                <Edit />
+                              </IconButton>
+                              <IconButton onClick={() => setDeleteMethodId(m.id)} color="error">
+                                <Delete />
+                              </IconButton>
+                              {!m.is_default && (
+                                <Button
+                                  onClick={() => handleSetDefault(m.id)}
+                                  variant="outlined"
+                                  size="small"
+                                >
+                                  Hacer Predeterminado
+                                </Button>
+                              )}
+                            </Box>
+                          </ListItem>
+                        </Paper>
+                      ))}
+                    </List>
+                  )}
+
+                  {/* Formulario para añadir método */}
+                  <Accordion
+                    sx={{
+                      background: "rgba(255, 255, 255, 0.05)",
+                      boxShadow: "none",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                    }}
+                  >
+                    <AccordionSummary expandIcon={<ExpandMore />}>
+                      <Typography>Añadir nuevo método de pago</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box component="form" onSubmit={handleAddMethod} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <TextField
+                          label="Tipo"
+                          select
+                          value={newMethod.payment_type}
+                          onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
+                          fullWidth
                           variant="outlined"
                           size="small"
                         >
-                          Hacer Predeterminado
+                          {paymentProviders.map((provider) => (
+                            <MenuItem key={provider.id} value={provider.name}>
+                              {provider.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                        <TextField
+                          label="Detalles"
+                          value={newMethod.details}
+                          onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          multiline
+                          rows={3}
+                        />
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          startIcon={<AddCircle />}
+                          sx={{ mt: 1 }}
+                        >
+                          Añadir Método
                         </Button>
-                      )}
-                    </Box>
-                  </ListItem>
-                </Paper>
-              ))}
-            </List>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                </CardContent>
+              </GlassCard>
+
+              {/* Diálogo para editar método */}
+              <Dialog open={!!editMethod} onClose={() => setEditMethod(null)}>
+                <DialogTitle>Editar Método de Pago</DialogTitle>
+                <DialogContent>
+                  <Box
+                    component="form"
+                    onSubmit={handleEditMethod}
+                    sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
+                  >
+                    <TextField
+                      label="Tipo"
+                      select
+                      value={editMethod?.payment_type || ""}
+                      onChange={(e) => setEditMethod({ ...editMethod!, payment_type: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    >
+                      {paymentProviders.map((provider) => (
+                        <MenuItem key={provider.id} value={provider.name}>
+                          {provider.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label="Detalles"
+                      value={editMethod?.details || ""}
+                      onChange={(e) => setEditMethod({ ...editMethod!, details: e.target.value })}
+                      fullWidth
+                      required
+                      variant="outlined"
+                      size="small"
+                      multiline
+                      rows={3}
+                    />
+                    <DialogActions>
+                      <Button onClick={() => setEditMethod(null)} variant="outlined">
+                        Cancelar
+                      </Button>
+                      <Button type="submit" variant="contained" color="primary">
+                        Guardar
+                      </Button>
+                    </DialogActions>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+
+              {/* Diálogo para confirmar eliminación */}
+              <Dialog open={!!deleteMethodId} onClose={() => setDeleteMethodId(null)}>
+                <DialogTitle>¿Eliminar Método de Pago?</DialogTitle>
+                <DialogContent>
+                  <Typography>Esta acción es irreversible. ¿Estás seguro de eliminar este método?</Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setDeleteMethodId(null)} variant="outlined">
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteMethod(deleteMethodId!)}
+                    variant="contained"
+                    color="error"
+                  >
+                    Eliminar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </motion.div>
           )}
-
-          {/* Formulario para añadir método */}
-          <Accordion
-            sx={{
-              background: "rgba(255, 255, 255, 0.05)",
-              boxShadow: "none",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMore />}>
-              <Typography>Añadir nuevo método de pago</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box component="form" onSubmit={handleAddMethod} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <TextField
-                  label="Tipo"
-                  select
-                  value={newMethod.payment_type}
-                  onChange={(e) => setNewMethod({ ...newMethod, payment_type: e.target.value })}
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                >
-                  {paymentProviders.map((provider) => (
-                    <MenuItem key={provider.id} value={provider.name}>
-                      {provider.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  label="Detalles"
-                  value={newMethod.details}
-                  onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
-                  fullWidth
-                  required
-                  variant="outlined"
-                  size="small"
-                  multiline
-                  rows={3}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircle />}
-                  sx={{ mt: 1 }}
-                >
-                  Añadir Método
-                </Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </CardContent>
-      </GlassCard>
-
-      {/* Diálogo para editar método */}
-      <Dialog open={!!editMethod} onClose={() => setEditMethod(null)}>
-        <DialogTitle>Editar Método de Pago</DialogTitle>
-        <DialogContent>
-          <Box
-            component="form"
-            onSubmit={handleEditMethod}
-            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
-          >
-            <TextField
-              label="Tipo"
-              select
-              value={editMethod?.payment_type || ""}
-              onChange={(e) => setEditMethod({ ...editMethod!, payment_type: e.target.value })}
-              fullWidth
-              variant="outlined"
-              size="small"
-            >
-              {paymentProviders.map((provider) => (
-                <MenuItem key={provider.id} value={provider.name}>
-                  {provider.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Detalles"
-              value={editMethod?.details || ""}
-              onChange={(e) => setEditMethod({ ...editMethod!, details: e.target.value })}
-              fullWidth
-              required
-              variant="outlined"
-              size="small"
-              multiline
-              rows={3}
-            />
-            <DialogActions>
-              <Button onClick={() => setEditMethod(null)} variant="outlined">
-                Cancelar
-              </Button>
-              <Button type="submit" variant="contained" color="primary">
-                Guardar
-              </Button>
-            </DialogActions>
-          </Box>
-        </DialogContent>
-      </Dialog>
-
-      {/* Diálogo para confirmar eliminación */}
-      <Dialog open={!!deleteMethodId} onClose={() => setDeleteMethodId(null)}>
-        <DialogTitle>¿Eliminar Método de Pago?</DialogTitle>
-        <DialogContent>
-          <Typography>Esta acción es irreversible. ¿Estás seguro de eliminar este método?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteMethodId(null)} variant="outlined">
-            Cancelar
-          </Button>
-          <Button
-            onClick={() => handleDeleteMethod(deleteMethodId!)}
-            variant="contained"
-            color="error"
-          >
-            Eliminar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </motion.div>
-  )}
 
           {/* Buy Credits Tab */}
           {tabValue === 4 && (
-  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <GlassCard>
-          <CardHeader title="Comprar Créditos" avatar={<AttachMoney color="primary" />} subheader="Recarga tu saldo de créditos" />
-          <CardContent>
-            <Box component="form" onSubmit={handlePurchase} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <TextField
-                label="Cantidad de Créditos"
-                type="number"
-                value={credits}
-                onChange={(e) => setCredits(e.target.value)}
-                fullWidth
-                required
-                variant="outlined"
-                size="small"
-                InputProps={{ startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} /> }}
-              />
-              <TextField
-                label="Monto a Pagar (USD)"
-                type="number"
-                inputProps={{ step: "0.01" }}
-                value={paymentAmount}
-                onChange={(e) => setPaymentAmount(e.target.value)}
-                fullWidth
-                required
-                variant="outlined"
-                size="small"
-                InputProps={{ startAdornment: <Typography sx={{ mr: 1 }}>$</Typography> }}
-              />
-              <TextField
-                label="Método de Pago"
-                select
-                value={methods.find((m) => m.is_default)?.id || methods[0]?.id || ""}
-                onChange={(e) => {
-                  const selectedMethod = methods.find((m) => m.id === parseInt(e.target.value));
-                  if (selectedMethod) {
-                    handleSetDefault(selectedMethod.id); // Actualiza el método predeterminado al seleccionarlo
-                  }
-                }}
-                fullWidth
-                variant="outlined"
-                size="small"
-                disabled={methods.length === 0}
-                helperText={methods.length === 0 ? "No hay métodos de pago disponibles" : "Selecciona un método de pago"}
-              >
-                {methods.map((method) => (
-                  <MenuItem key={method.id} value={method.id}>
-                    {method.payment_type} - {method.details} {method.is_default ? "(Predeterminado)" : ""}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Button type="submit" variant="contained" color="primary" size="large" sx={{ mt: 2 }} disabled={methods.length === 0}>
-                Comprar Créditos
-              </Button>
-            </Box>
-          </CardContent>
-        </GlassCard>
-      </Grid>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader title="Comprar Créditos" avatar={<AttachMoney color="primary" />} subheader="Recarga tu saldo de créditos" />
+                    <CardContent>
+                      <Box component="form" onSubmit={handlePurchase} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <TextField
+                          label="Cantidad de Créditos"
+                          type="number"
+                          value={credits}
+                          onChange={(e) => setCredits(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{ startAdornment: <AttachMoney color="action" sx={{ mr: 1 }} /> }}
+                        />
+                        <TextField
+                          label="Monto a Pagar (USD)"
+                          type="number"
+                          inputProps={{ step: "0.01" }}
+                          value={paymentAmount}
+                          onChange={(e) => setPaymentAmount(e.target.value)}
+                          fullWidth
+                          required
+                          variant="outlined"
+                          size="small"
+                          InputProps={{ startAdornment: <Typography sx={{ mr: 1 }}>$</Typography> }}
+                        />
+                        <TextField
+                          label="Método de Pago"
+                          select
+                          value={methods.find((m) => m.is_default)?.id || methods[0]?.id || ""}
+                          onChange={(e) => {
+                            const selectedMethod = methods.find((m) => m.id === parseInt(e.target.value));
+                            if (selectedMethod) {
+                              handleSetDefault(selectedMethod.id);
+                            }
+                          }}
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          disabled={methods.length === 0}
+                          helperText={methods.length === 0 ? "No hay métodos de pago disponibles" : "Selecciona un método de pago"}
+                        >
+                          {methods.map((method) => (
+                            <MenuItem key={method.id} value={method.id}>
+                              {method.payment_type} - {method.details} {method.is_default ? "(Predeterminado)" : ""}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                        <Button type="submit" variant="contained" color="primary" size="large" sx={{ mt: 2 }} disabled={methods.length === 0}>
+                          Comprar Créditos
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
 
-      <Grid item xs={12} md={6}>
-        <GlassCard>
-          <CardHeader title="Tarifas y Beneficios" avatar={<CreditCard color="primary" />} />
-          <CardContent>
-            <List>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: theme.palette.success.light }}>
-                    <Star />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="1 crédito = $1 USD" secondary="Tasa de cambio fija" />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: theme.palette.info.light }}>
-                    <Payment />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Múltiples métodos de pago" secondary="Tarjetas, PayPal y más" />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
-                    <Security />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Transacciones seguras" secondary="Encriptación SSL" />
-              </ListItem>
-            </List>
-          </CardContent>
-        </GlassCard>
-      </Grid>
-    </Grid>
-  </motion.div>
-)}
+                <Grid item xs={12} md={6}>
+                  <GlassCard>
+                    <CardHeader title="Tarifas y Beneficios" avatar={<CreditCard color="primary" />} />
+                    <CardContent>
+                      <List>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.success.light }}>
+                              <Star />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText primary="1 crédito = $1 USD" secondary="Tasa de cambio fija" />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.info.light }}>
+                              <Payment />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText primary="Múltiples métodos de pago" secondary="Tarjetas, PayPal y más" />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: theme.palette.warning.light }}>
+                              <Security />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText primary="Transacciones seguras" secondary="Encriptación SSL" />
+                        </ListItem>
+                      </List>
+                    </CardContent>
+                  </GlassCard>
+                </Grid>
+              </Grid>
+            </motion.div>
+          )}
         </Box>
       </Box>
 
       {/* Notifications */}
       <AnimatePresence>
         {error && (
-          <Snackbar 
-            open 
-            autoHideDuration={3000} 
+          <Snackbar
+            open
+            autoHideDuration={3000}
             onClose={() => setError(null)}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
@@ -1062,8 +1105,8 @@ export default function UserDashboard() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
             >
-              <Alert 
-                severity="error" 
+              <Alert
+                severity="error"
                 onClose={() => setError(null)}
                 sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
               >
@@ -1073,9 +1116,9 @@ export default function UserDashboard() {
           </Snackbar>
         )}
         {success && (
-          <Snackbar 
-            open 
-            autoHideDuration={3000} 
+          <Snackbar
+            open
+            autoHideDuration={3000}
             onClose={() => setSuccess(null)}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
@@ -1084,8 +1127,8 @@ export default function UserDashboard() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
             >
-              <Alert 
-                severity="success" 
+              <Alert
+                severity="success"
                 onClose={() => setSuccess(null)}
                 sx={{ boxShadow: theme.shadows[6], borderRadius: '12px' }}
               >

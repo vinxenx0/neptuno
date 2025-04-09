@@ -1,8 +1,495 @@
-2025-04-06 21:07:50,517 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
-2025-04-06 21:07:50,557 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
-2025-04-06 21:07:50,571 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
-2025-04-06 21:07:50,579 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
-2025-04-06 21:08:20,587 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
-2025-04-06 21:08:20,593 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
-2025-04-06 21:08:20,606 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
-2025-04-06 21:08:20,612 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:11,710 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:11,775 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:11,775 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:11,842 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:11,843 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:11,909 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:11,913 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:11,998 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:11,998 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:12,142 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-09 20:17:18,961 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-04-09 20:17:18,961 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-04-09 20:17:19,052 - NeptunO - INFO - Nueva sesión anónima creada ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 con username Guest_9ny4c desde IP 127.0.0.1
+2025-04-09 20:17:19,067 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:17:19,067 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:17:19,141 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:17:32,718 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:17:32,719 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:17:32,796 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:17:48,464 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:17:48,465 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:17:48,541 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:17:48,553 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:17:48,553 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:17:48,630 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:08,415 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:08,415 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:08,519 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:08,525 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:08,525 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:08,618 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:10,497 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:10,497 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:10,585 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:10,743 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:10,743 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:10,818 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:11,017 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:11,017 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:11,085 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:11,309 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:11,309 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:11,385 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:11,533 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:11,533 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:11,596 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:11,601 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:11,601 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:11,707 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:13,181 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:13,181 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:13,252 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:13,466 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:13,466 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:13,540 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:13,622 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:13,622 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:13,696 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:13,849 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:13,849 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:13,918 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:14,287 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:14,288 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:14,363 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:14,530 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:14,530 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:14,596 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:15,272 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:15,272 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:15,352 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:15,435 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:18:15,604 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:15,604 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:15,718 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:16,278 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:16,278 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:16,352 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:16,455 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:18:16,543 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:16,543 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:16,618 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:18,815 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:18,816 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:18,885 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:18,895 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:18,896 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:18,974 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:21,615 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:21,615 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:21,696 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:21,714 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:21,714 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:21,796 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:34,274 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:34,275 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:34,774 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:51,970 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:51,971 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:52,040 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:18:52,051 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:18:52,051 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:18:52,118 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:19:21,973 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:19:21,973 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:19:22,062 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:19:22,071 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:19:22,071 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:19:22,140 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:19:51,961 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:19:51,961 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:19:52,061 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:19:52,070 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:19:52,070 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:19:52,139 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:20:21,962 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:20:21,962 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:20:22,039 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:20:22,051 - NeptunO - INFO - Procesando solicitud: token=False, session_id=53be0a91-7d1e-44bc-a957-7c7ef1783762, ip=127.0.0.1
+2025-04-09 20:20:22,051 - NeptunO - INFO - Buscando sesión anónima con ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 desde header
+2025-04-09 20:20:22,128 - NeptunO - INFO - Sesión anónima ID 53be0a91-7d1e-44bc-a957-7c7ef1783762 actualizada desde IP 127.0.0.1
+2025-04-09 20:20:35,660 - NeptunO - DEBUG - Usuario encontrado: ID=9, email=vicente@vicente.com, subscription=subscriptionEnum.FREEMIUM, type=<enum 'subscriptionEnum'>
+2025-04-09 20:20:35,660 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-04-09 20:20:35,661 - NeptunO - INFO - Login exitoso para usuario ID 9 desde IP 127.0.0.1
+2025-04-09 20:20:35,724 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:35,808 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:35,981 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,050 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,135 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:20:36,389 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,473 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,482 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,551 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,552 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,617 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,622 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,695 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,800 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:36,917 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:20:36,975 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:20:37,039 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:21:07,081 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:21:07,161 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:21:07,167 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:21:07,239 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:21:37,077 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:21:37,150 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:21:37,156 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:21:37,227 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:22:07,079 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:22:07,149 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:22:07,158 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:22:07,238 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:22:37,082 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:22:37,171 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:22:37,183 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:22:37,282 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:23:07,082 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:23:07,160 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:23:07,167 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:23:07,238 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:23:37,127 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:23:37,182 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:23:37,188 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:23:37,259 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:24:07,137 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:24:07,203 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:24:07,210 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:24:07,281 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:24:37,174 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:24:37,236 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:24:37,345 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:24:37,425 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:25:07,173 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:25:07,247 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:25:07,255 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:25:07,336 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:25:37,173 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:25:37,236 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:25:37,243 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:25:37,313 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:08,041 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:08,102 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:08,111 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:08,192 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:16,417 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:16,490 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:16,499 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:16,568 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,212 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,301 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,303 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,380 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,381 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,459 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,463 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,535 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,539 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,602 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:20,602 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:20,691 - NeptunO - INFO - Usuario registrado ID 9 autenticado desde IP 127.0.0.1
+2025-04-09 20:26:30,642 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-04-09 20:26:30,642 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-04-09 20:26:30,723 - NeptunO - INFO - Nueva sesión anónima creada ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 con username Guest_ktst3 desde IP 127.0.0.1
+2025-04-09 20:26:36,015 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:36,015 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:36,112 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:36,122 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:36,122 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:36,189 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:39,097 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:39,098 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:39,223 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:49,740 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:49,740 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:49,834 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:49,835 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:49,835 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:49,912 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:51,450 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:51,450 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:51,523 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:51,687 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:51,687 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:51,756 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:51,806 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:51,807 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:51,912 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:52,120 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:52,120 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:52,245 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:52,481 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:52,482 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:52,578 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:52,584 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:52,584 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:52,667 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:53,166 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:53,166 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:53,234 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:53,386 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:53,387 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:53,456 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:53,643 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:53,644 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:53,711 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:53,888 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:53,888 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:53,967 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:54,494 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:54,494 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:54,589 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:54,758 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:54,758 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:55,011 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:55,055 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:55,055 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:55,156 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:55,309 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:55,309 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:55,378 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:55,462 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:55,462 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:55,534 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:55,720 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:55,721 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:55,789 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:55,993 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:55,993 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:56,067 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:56,242 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:56,242 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:56,311 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:56,434 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:56,434 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:56,512 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:56,677 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:56,677 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:56,745 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:58,585 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:58,586 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:58,645 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:26:58,717 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:26:58,817 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:26:58,817 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:26:58,889 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:00,529 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:00,529 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:00,622 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:00,705 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:00,781 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:00,782 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:00,856 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:00,961 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:00,961 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:01,034 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:01,139 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:01,139 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:01,211 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:01,285 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:01,360 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:01,438 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:01,516 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:01,516 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:01,611 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:01,685 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:01,760 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:01,760 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:01,834 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:01,924 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:01,924 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,001 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,020 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:02,096 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,096 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,167 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,170 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,170 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,245 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,251 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,251 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,311 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,372 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,373 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,445 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,526 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,526 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,600 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,672 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:02,672 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:02,745 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:02,830 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:02,928 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:02,990 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:03,080 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:03,150 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:03,150 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:03,222 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:03,305 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:03,305 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:03,379 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:03,463 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:03,464 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:03,567 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:03,650 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:03,650 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:03,722 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:03,807 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:03,885 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:03,972 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:03,972 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,045 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,049 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,049 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,122 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,127 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:04,225 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:04,306 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,307 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,411 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,416 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,416 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,511 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,516 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,516 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,589 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,592 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,593 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,667 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,670 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,670 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,745 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,751 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,752 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,822 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,832 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,833 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:04,900 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:04,904 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:04,904 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:05,000 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:05,004 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:05,004 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:05,067 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:05,074 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:05,075 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:05,401 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:05,505 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:05,506 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:05,578 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:05,653 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:05,716 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:05,850 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:05,850 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,011 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,083 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:06,083 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,156 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,228 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:06,228 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,289 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,378 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:06,479 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:06,557 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:06,557 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,611 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,672 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:06,738 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:06,739 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,811 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,883 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:06,883 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:06,978 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:06,982 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:07,060 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:07,139 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,140 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,233 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,329 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,330 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,400 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,407 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,408 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,478 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,481 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,481 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,556 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,558 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,558 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,633 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,636 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:07,705 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,705 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,790 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,827 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,827 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,889 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,893 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,893 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:07,956 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:07,958 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:07,958 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:08,078 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:08,088 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:08,088 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:08,156 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:08,305 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:08,305 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:08,445 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:08,588 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:08,669 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:08,804 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:08,804 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:08,934 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:08,935 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:08,935 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,078 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,173 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,173 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,444 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,575 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,576 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,634 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,636 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,636 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,722 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,726 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,726 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,789 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,792 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,792 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,878 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:09,881 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:09,881 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:09,945 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:10,016 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:10,016 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:10,089 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:10,095 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:10,095 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:10,167 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:10,179 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:10,372 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:10,530 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-09 20:27:10,609 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:10,610 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:10,689 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:10,816 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:10,816 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:10,889 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:41,060 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:41,061 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:41,122 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-09 20:27:41,158 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
+2025-04-09 20:27:41,158 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
+2025-04-09 20:27:41,233 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1

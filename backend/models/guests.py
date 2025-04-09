@@ -10,7 +10,7 @@ class GuestsSession(Base):
     
     id = Column(String(36), primary_key=True, index=True)  
     username = Column(String(50), unique=True, nullable=False)  
-    credits = Column(Integer, default=100)  
+    credits = Column(Integer, default=10)  
     create_at = Column(DateTime, default=datetime.utcnow)  
     ultima_actividad = Column(DateTime, nullable=True)  
     last_ip = Column(String(45), nullable=True)  
