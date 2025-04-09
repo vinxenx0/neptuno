@@ -11,10 +11,25 @@ from dependencies.auth import UserContext, get_user_context
 router = APIRouter(tags=["users"])
 
 
-
 @router.get("/me", response_model=UserResponse)
 def get_me(user: UserContext = Depends(get_user_context),
            db: Session = Depends(get_db)):
+    """
+    Retrieve the information of the currently authenticated user.
+
+    This endpoint is restricted to users with the "registered" user type. 
+    If the user is not registered, a 403 HTTP exception is raised.
+
+    Args:
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        UserResponse: The response model containing the user's information.
+
+    Raises:
+        HTTPException: If the user is not of type "registered" or if any other error occurs.
+    """
     if user.user_type != "registered":
         raise HTTPException(status_code=403,
                             detail="Solo usuarios registrados")
@@ -25,6 +40,20 @@ def get_me(user: UserContext = Depends(get_user_context),
 def update_me(request: UpdateProfileRequest,
               user: UserContext = Depends(get_user_context),
               db: Session = Depends(get_db)):
+    """
+    Update the profile of the currently authenticated user.
+
+    Args:
+        request (UpdateProfileRequest): The request body containing the updated profile information.
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        UserResponse: The updated user profile.
+
+    Raises:
+        HTTPException: If the user is not of type "registered".
+    """
     if user.user_type != "registered":
         raise HTTPException(status_code=403,
                             detail="Solo usuarios registrados")
@@ -35,31 +64,58 @@ def update_me(request: UpdateProfileRequest,
 @router.delete("/me", response_model=dict)
 def delete_me(user: UserContext = Depends(get_user_context),
               db: Session = Depends(get_db)):
+    """
+    Delete the currently authenticated user's account.
+
+    Args:
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        dict: A confirmation message.
+
+    Raises:
+        HTTPException: If the user is not of type "registered".
+    """
     if user.user_type != "registered":
         raise HTTPException(status_code=403,
                             detail="Solo usuarios registrados")
     return delete_user(db, int(user.user_id))
 
+
 @router.get("/admin/users", response_model=dict)
-def get_all_users(
-    page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=100),
-    user=Depends(get_user_context),
-    db: Session = Depends(get_db)
-):
+def get_all_users(page: int = Query(1, ge=1),
+                  limit: int = Query(10, ge=1, le=100),
+                  user=Depends(get_user_context),
+                  db: Session = Depends(get_db)):
+    """
+    Retrieve a paginated list of all users (admin only).
+
+    Args:
+        page (int): The page number to retrieve (default is 1).
+        limit (int): The number of users per page (default is 10, max is 100).
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        dict: A dictionary containing the paginated list of users and metadata.
+
+    Raises:
+        HTTPException: If the user is not an admin.
+    """
     if user.rol != "admin":
         raise HTTPException(
             status_code=403,
             detail="Solo administradores pueden ver la lista de usuarios")
-    
+
     offset = (page - 1) * limit
     query = db.query(User)
     total_items = query.count()
     users = query.offset(offset).limit(limit).all()
-    
+
     # Convertimos los usuarios a esquemas Pydantic
     users_data = [UserResponse.model_validate(user) for user in users]
-    
+
     return {
         "data": users_data,
         "total_items": total_items,
@@ -68,11 +124,24 @@ def get_all_users(
     }
 
 
-# Nuevo endpoint: obtener un usuario específico por ID
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: int,
              user: UserContext = Depends(get_user_context),
              db: Session = Depends(get_db)):
+    """
+    Retrieve a specific user's information by ID (admin only).
+
+    Args:
+        user_id (int): The ID of the user to retrieve.
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        UserResponse: The user's information.
+
+    Raises:
+        HTTPException: If the user is not an admin or if the user is not found.
+    """
     if user.rol != "admin":
         raise HTTPException(
             status_code=403,
@@ -83,12 +152,26 @@ def get_user(user_id: int,
     return user_data
 
 
-# Nuevo endpoint: actualizar un usuario específico por ID
 @router.put("/{user_id}", response_model=UserResponse)
 def update_user_by_id(user_id: int,
                       request: UpdateProfileRequest,
                       user: UserContext = Depends(get_user_context),
                       db: Session = Depends(get_db)):
+    """
+    Update a specific user's information by ID (admin only).
+
+    Args:
+        user_id (int): The ID of the user to update.
+        request (UpdateProfileRequest): The request body containing the updated user information.
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        UserResponse: The updated user's information.
+
+    Raises:
+        HTTPException: If the user is not an admin.
+    """
     if user.rol != "admin":
         raise HTTPException(
             status_code=403,
@@ -102,11 +185,24 @@ def update_user_by_id(user_id: int,
     return updated_user
 
 
-# Nuevo endpoint: eliminar un usuario específico por ID
 @router.delete("/{user_id}", response_model=dict)
 def delete_user_by_id(user_id: int,
                       user: UserContext = Depends(get_user_context),
                       db: Session = Depends(get_db)):
+    """
+    Delete a specific user's account by ID (admin only).
+
+    Args:
+        user_id (int): The ID of the user to delete.
+        user (UserContext): The context of the authenticated user, injected via dependency.
+        db (Session): The database session, injected via dependency.
+
+    Returns:
+        dict: A confirmation message.
+
+    Raises:
+        HTTPException: If the user is not an admin.
+    """
     if user.rol != "admin":
         raise HTTPException(
             status_code=403,
