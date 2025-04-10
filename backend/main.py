@@ -39,11 +39,8 @@ app = FastAPI(
     redoc_url=None,
     #root_path="/api"
     proxy_headers=True  # Necesario para X-Forwarded-*
-
     #servers=[{"url": "/api", "description": "Local server"}],
-
     #openapi_url="/api/openapi.json",
-
     #swagger_ui_parameters={"url": "/api/openapi.json"}
 )
 

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Box, Grid, Card, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import {
   AccountCircle, Lock, Payment, CreditCard, AddCircle, Delete, ExpandMore, Edit, History, AttachMoney, Security, Logout, Person,
-  LocationOn, Language, Star, StarBorder
+  LocationOn, Language, Star, StarBorder,
+  LocalActivity
 } from "@mui/icons-material";
 
 // Styled Components
@@ -75,6 +76,16 @@ export default function UserDashboard() {
   const [tabValue, setTabValue] = useState(0);
   const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
   const [deleteMethodId, setDeleteMethodId] = useState<number | null>(null);
+  const { coupons, setCoupons } = useAuth();
+
+  const handleRedeem = async (couponId: number) => {
+    const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, {
+      method: "POST",
+    });
+    setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
+    const { data: info } = await fetchAPI<any>("/info");
+    setCredits(info.credits);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -383,6 +394,7 @@ export default function UserDashboard() {
             >
               <Tab label="Perfil" icon={<Person />} iconPosition="start" />
               <Tab label="Seguridad" icon={<Security />} iconPosition="start" />
+              <Tab label="Cupones" icon={<LocalActivity />} iconPosition="start" />
               <Tab label="Transacciones" icon={<History />} iconPosition="start" />
               <Tab label="Métodos de Pago" icon={<Payment />} iconPosition="start" />
               <Tab label="Comprar Créditos" icon={<CreditCard />} iconPosition="start" />
@@ -743,8 +755,54 @@ export default function UserDashboard() {
             </motion.div>
           )}
 
-          {/* Transactions Tab */}
+          {/* Coupons Tab */}
           {tabValue === 2 && (
+            <Box>
+              <Typography variant="h6">Mis Cupones</Typography>
+              {coupons.length === 0 ? (
+                <Typography>No tienes cupones</Typography>
+              ) : (
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Nombre</TableCell>
+                      <TableCell>Créditos</TableCell>
+                      <TableCell>Estado</TableCell>
+                      <TableCell>Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {coupons.map((coupon) => (
+                      <TableRow key={coupon.id}>
+                        <TableCell>{coupon.name}</TableCell>
+                        <TableCell>{coupon.credits}</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={coupon.status}
+                            color={coupon.status === "active" ? "success" : "error"}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {coupon.status === "active" && (
+                            <Button
+                              variant="contained"
+                              onClick={() => handleRedeem(coupon.id)}
+                            >
+                              Canjear
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </Box>
+          )}
+
+
+          {/* Transactions Tab */}
+          {tabValue === 3 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -812,7 +870,7 @@ export default function UserDashboard() {
           )}
 
           {/* Payment Methods Tab */}
-          {tabValue === 3 && (
+          {tabValue === 4 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               <GlassCard>
                 <CardHeader
@@ -989,7 +1047,7 @@ export default function UserDashboard() {
           )}
 
           {/* Buy Credits Tab */}
-          {tabValue === 4 && (
+          {tabValue === 5 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
@@ -1138,6 +1196,6 @@ export default function UserDashboard() {
           </Snackbar>
         )}
       </AnimatePresence>
-    </Box>
+    </Box >
   );
 }

@@ -60,9 +60,10 @@ import {
   AttachMoney,
   Edit,
   EmojiEvents,
-  MonetizationOn
+  MonetizationOn,
+  LocalActivity
 } from "@mui/icons-material";
-import { SiteSetting, Integration, EventType, Badge, PaymentProvider } from "@/lib/types";
+import { SiteSetting, Integration, EventType, Badge, PaymentProvider, Coupon } from "@/lib/types";
 
 const AdminGradientCard = styled(Card)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
@@ -111,7 +112,9 @@ export default function ConfigurePage() {
     enable_payment_methods: true,
     enable_points: true,
     enable_badges: true,
+    enable_coupons: true,
   });
+
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
@@ -123,6 +126,8 @@ export default function ConfigurePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [expandedSettings, setExpandedSettings] = useState<Record<string, boolean>>({});
   const [allSettingsExpanded, setAllSettingsExpanded] = useState(false);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [editCoupon, setEditCoupon] = useState<Coupon | null>(null);
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
@@ -165,6 +170,9 @@ export default function ConfigurePage() {
         const paymentProvidersRes = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
         setPaymentProviders(paymentProvidersRes.data || []);
 
+        const couponsRes = await fetchAPI<Coupon[]>("/v1/coupons/");
+        setCoupons(couponsRes.data || []);
+
         const featuresRes = await Promise.all([
           fetchAPI("/v1/settings/enable_registration"),
           fetchAPI("/v1/settings/enable_social_login"),
@@ -173,6 +181,7 @@ export default function ConfigurePage() {
           fetchAPI("/v1/settings/enable_payment_methods"),
           fetchAPI("/v1/settings/enable_points"),
           fetchAPI("/v1/settings/enable_badges"),
+          fetchAPI("/v1/settings/enable_coupons"),
         ]);
         setFeatures({
           enable_registration: featuresRes[0].data === "true",
@@ -182,6 +191,7 @@ export default function ConfigurePage() {
           enable_payment_methods: featuresRes[4].data === "true",
           enable_points: featuresRes[5].data === "true",
           enable_badges: featuresRes[6].data === "true",
+          enable_coupons: featuresRes[7].data === "true",
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
@@ -394,6 +404,54 @@ export default function ConfigurePage() {
     }
   };
 
+  // Funciones para manejar cupones
+  const handleSubmitCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editCoupon) return;
+    try {
+      if (editCoupon.id) {
+        const { data } = await fetchAPI<Coupon>(`/v1/coupons/${editCoupon.id}`, {
+          method: "PUT",
+          data: {
+            name: editCoupon.name,
+            description: editCoupon.description,
+            credits: editCoupon.credits,
+            active: editCoupon.active,
+          },
+        });
+        setCoupons(coupons.map((c) => (c.id === data!.id ? data! : c)));
+      } else {
+        const { data } = await fetchAPI<Coupon>("/v1/coupons/", {
+          method: "POST",
+          data: {
+            name: editCoupon.name,
+            description: editCoupon.description,
+            credits: editCoupon.credits,
+            active: editCoupon.active,
+            unique_identifier: `CUPON-${Date.now()}`,
+          },
+        });
+        setCoupons([...coupons, data!]);
+      }
+      setEditCoupon(null);
+      setSuccess("Cupón guardado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al guardar cupón");
+    }
+  };
+
+  const handleDeleteCoupon = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/coupons/${id}`, { method: "DELETE" });
+      setCoupons(coupons.filter((c) => c.id !== id));
+      setSuccess("Cupón eliminado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar cupón");
+    }
+  };
+
   if (loading) return (
     <Box sx={{
       display: 'flex',
@@ -578,6 +636,7 @@ export default function ConfigurePage() {
             <Tab label="Orígenes" icon={<Security />} iconPosition="start" />
             <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
             <Tab label="Gamificación" icon={<EmojiEvents />} iconPosition="start" />
+            <Tab label="Cupones" icon={<LocalActivity />} iconPosition="start" />
             <Tab label="Pagos" icon={<MonetizationOn />} iconPosition="start" />
             <Tab label="Configuraciones" icon={<Settings />} iconPosition="start" />
           </Tabs>
@@ -915,6 +974,52 @@ export default function ConfigurePage() {
                         </CardContent>
                       </FeatureCard>
                     </Grid>
+
+                    {/* Tarjeta para Cupones */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <FeatureCard sx={{
+                        borderLeft: `4px solid ${features.enable_coupons ? theme.palette.success.main : theme.palette.error.main}`
+                      }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <EmojiEvents sx={{
+                              fontSize: 40,
+                              mr: 2,
+                              color: features.enable_coupons ? theme.palette.success.main : theme.palette.error.main
+                            }} />
+                            <Box>
+                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Cupones</Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Habilita el sistema de cupones
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Divider sx={{ my: 2 }} />
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
+                              <Chip
+                                label={features.enable_coupons ? "Activado" : "Desactivado"}
+                                size="small"
+                                color={features.enable_coupons ? "success" : "error"}
+                                sx={{ ml: 1 }}
+                              />
+                            </Box>
+                            <Switch
+                              checked={features.enable_coupons}
+                              onChange={(e) => handleToggleFeature('enable_coupons', e.target.checked)}
+                              color="primary"
+                            />
+                          </Box>
+                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
+                            {getFeatureDescription('enable_coupons')}
+                          </Typography>
+                        </CardContent>
+                      </FeatureCard>
+                    </Grid>
+
                   </Grid>
                 </CardContent>
               </ConfigGlassCard>
@@ -1282,8 +1387,120 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Pagos Tab */}
+          {/* CUpones Tab */}
           {activeTab === 4 && (
+            <Box sx={{ mb: 4 }}>
+              <ConfigGlassCard>
+                <CardContent>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
+                    <LocalActivity sx={{ mr: 1, verticalAlign: 'middle' }} />
+                    Gestión de Cupones
+                  </Typography>
+
+                  {/* Botón para crear cupón */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddCircle />}
+                      onClick={() => setEditCoupon({ id: 0, name: '', description: '', credits: 0, active: true, unique_identifier: '', status: 'active', issued_at: new Date().toISOString() })}
+                    >
+                      Nuevo Cupón
+                    </Button>
+                  </Box>
+
+                  {/* Tabla de cupones */}
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre</TableCell>
+                        <TableCell>Descripción</TableCell>
+                        <TableCell>Créditos</TableCell>
+                        <TableCell>Estado</TableCell>
+                        <TableCell>Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {coupons.map((coupon) => (
+                        <TableRow key={coupon.id}>
+                          <TableCell>{coupon.name}</TableCell>
+                          <TableCell>{coupon.description || 'Sin descripción'}</TableCell>
+                          <TableCell>{coupon.credits}</TableCell>
+                          <TableCell>
+                            <Chip
+                              label={coupon.status}
+                              color={coupon.status === "active" ? "success" : "error"}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => setEditCoupon(coupon)} color="primary">
+                              <Edit />
+                            </IconButton>
+                            <IconButton onClick={() => handleDeleteCoupon(coupon.id)} color="error">
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </ConfigGlassCard>
+
+              {/* Diálogo para crear/editar cupón */}
+              <Dialog open={!!editCoupon} onClose={() => setEditCoupon(null)}>
+                <DialogTitle>{editCoupon?.id ? 'Editar Cupón' : 'Nuevo Cupón'}</DialogTitle>
+                <DialogContent>
+                  <Box component="form" onSubmit={handleSubmitCoupon} sx={{ mt: 2 }}>
+                    <TextField
+                      label="Nombre"
+                      fullWidth
+                      value={editCoupon?.name || ''}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, name: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Descripción"
+                      fullWidth
+                      value={editCoupon?.description || ''}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, description: e.target.value })}
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Créditos"
+                      type="number"
+                      fullWidth
+                      value={editCoupon?.credits || 0}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, credits: parseInt(e.target.value) || 0 })}
+                      margin="normal"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={editCoupon?.active || false}
+                          onChange={(e) => setEditCoupon({ ...editCoupon!, active: e.target.checked })}
+                          color="primary"
+                        />
+                      }
+                      label="Activo"
+                      sx={{ mt: 2 }}
+                    />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      sx={{ mt: 2 }}
+                    >
+                      {editCoupon?.id ? 'Actualizar' : 'Crear'}
+                    </Button>
+                  </Box>
+                </DialogContent>
+              </Dialog>
+            </Box>
+          )}
+
+          {/* Pagos Tab */}
+          {activeTab === 5 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
                 <CardContent>
@@ -1375,7 +1592,7 @@ export default function ConfigurePage() {
           )}
 
           {/* Configuraciones Tab */}
-          {activeTab === 5 && (
+          {activeTab === 6 && (
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Button
@@ -1490,7 +1707,8 @@ const getFeatureDescription = (key: string) => {
     disable_credits: 'Deshabilita el sistema de créditos en la plataforma. Los usuarios no podrán comprar ni gastar créditos.',
     enable_payment_methods: 'Habilita diferentes métodos de pago como tarjetas, PayPal, etc. Requiere configuración previa de cada proveedor.',
     enable_points: 'Activa el sistema de puntos por actividades. Los usuarios ganarán puntos por completar acciones en la plataforma.',
-    enable_badges: 'Permite la obtención de insignias al alcanzar ciertos logros. Configura los requisitos en la pestaña de Gamificación.'
+    enable_badges: 'Permite la obtención de insignias al alcanzar ciertos logros. Configura los requisitos en la pestaña de Gamificación.',
+    enable_coupons: 'Permite la creación y uso de cupones de descuento. Los usuarios podrán canjear cupones para obtener descuentos en compras.'
   };
   return descriptions[key] || 'Funcionalidad del sistema';
 };

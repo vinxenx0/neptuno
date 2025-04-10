@@ -12,6 +12,13 @@ from datetime import datetime
 
 logger = configure_logging()
 
+class CouponCreate:
+    def __init__(self, name: str, description: str, credits: int, active: bool):
+        self.name = name
+        self.description = description
+        self.credits = credits
+        self.active = active
+
 def create_coupon(db: Session, coupon_data: CouponCreate, user_id: Optional[int] = None, session_id: Optional[str] = None) -> Coupon:
     unique_identifier = str(uuid.uuid4())
     while db.query(Coupon).filter(Coupon.unique_identifier == unique_identifier).first():
@@ -25,7 +32,8 @@ def create_coupon(db: Session, coupon_data: CouponCreate, user_id: Optional[int]
         credits=coupon_data.credits,
         active=coupon_data.active,
         user_id=user_id,
-        session_id=session_id
+        session_id=session_id,
+        status="active"  # Aseguramos que el estado inicial sea "active"
     )
     db.add(coupon)
     db.commit()

@@ -78,9 +78,10 @@ def redeem_coupon_endpoint(
     session_id = user.session_id if user.user_type == "anonymous" else None
     return redeem_coupon(db, coupon_id, user_id, session_id)
 
+
 @router.post("/generate-demo-coupon", response_model=CouponResponse)
 def generate_demo_coupon(
-    credits: int,
+    credits: int = 5,  # Valor por defecto
     db: Session = Depends(get_db)
 ):
     coupon_data = CouponCreate(

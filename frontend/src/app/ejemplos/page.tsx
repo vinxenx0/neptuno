@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
-import { UserGamificationResponse, Badge, InfoResponse } from "@/lib/types";
+import { UserGamificationResponse, Badge, InfoResponse, Coupon } from "@/lib/types";
 
 export default function Ejemplos() {
   const { setGamification } = useAuth();
@@ -31,6 +31,8 @@ export default function Ejemplos() {
   const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
   const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
+  const { setCoupons } = useAuth();
+  const [message, setMessage] = useState<string | null>(null);
 
   const updateGamification = async () => {
     const { data } = await fetchAPI<InfoResponse>("/info");
@@ -44,6 +46,24 @@ export default function Ejemplos() {
   useEffect(() => {
     updateGamification();
   }, []);
+
+  const handleGenerateCoupon = async () => {
+    try {
+      const { data } = await fetchAPI<Coupon>("/v1/coupons/generate-demo-coupon", {
+        method: "POST",
+        data: { credits: 5 },
+      });
+      if (data) {
+        setCoupons([...useAuth().coupons, data]);
+        setMessage("Cupón generado");
+      } else {
+        setMessage("Error: No se recibió el cupón");
+      }
+    } catch (err) {
+      setMessage("Error al generar cupón");
+      console.error(err);
+    }
+  };
 
   const handleRegistroChange = async (field: keyof typeof registroFields, value: string) => {
     setRegistroFields((prev) => ({ ...prev, [field]: value }));
@@ -80,11 +100,37 @@ export default function Ejemplos() {
     setSnackMessage("¡Ganaste 1 punto por responder una pregunta!");
   };
 
+  // src/app/ejemplos/page.tsx (actualizar handleEncuestaComplete)
   const handleEncuestaComplete = async () => {
     if (encuestaAnswers.length === 3) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 6 } });
-      updateGamification();
-      setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos!");
+      try {
+        await fetchAPI("/v1/gamification/events", {
+          method: "POST",
+          data: { event_type_id: 6 },
+        });
+        updateGamification();
+
+        // Generar cupón como recompensa
+        const { data: coupon } = await fetchAPI<Coupon>("/v1/coupons/", {
+          method: "POST",
+          data: {
+            name: "Recompensa Encuesta",
+            description: "Cupón por completar la encuesta",
+            credits: 10,
+            active: true,
+            unique_identifier: `SURVEY-${Date.now()}`,
+          },
+        });
+        if (coupon) {
+          setCoupons([...useAuth().coupons, coupon]);
+          setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos + un cupón de 10 créditos!");
+        } else {
+          setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos!");
+        }
+      } catch (err) {
+        setSnackMessage("Error al procesar la encuesta");
+        console.error(err);
+      }
     }
   };
 
@@ -108,6 +154,8 @@ export default function Ejemplos() {
       setSnackMessage("¡Completaste tu ICP y ganaste 10 puntos!");
     }
   };
+
+
 
   const handleFormChange = async (field: keyof typeof formFields, value: string) => {
     setFormFields((prev) => ({ ...prev, [field]: value }));
@@ -298,6 +346,22 @@ export default function Ejemplos() {
             </Button>
           </CardContent>
         </Card>
+
+        <Box sx={{ p: 4, background: "#1a1a2e", color: "white" }}>
+          <Typography variant="h4">Página de Ejemplos</Typography>
+          <Button variant="contained" onClick={handleGenerateCoupon} sx={{ mt: 2 }}>
+            Generar Cupón de 5 Créditos
+          </Button>
+          <Snackbar
+            open={!!message}
+            autoHideDuration={3000}
+            onClose={() => setMessage(null)}
+          >
+            <Alert severity={message?.includes("Error") ? "error" : "success"}>
+              {message}
+            </Alert>
+          </Snackbar>
+        </Box>
 
         <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
           <CardContent>

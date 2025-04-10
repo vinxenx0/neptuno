@@ -9,6 +9,8 @@ from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging
+from services.coupon_service import create_coupon
+from schemas.coupon import CouponCreate
 from uuid import uuid4
 from datetime import datetime
 from pydantic import BaseModel
@@ -93,6 +95,20 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             )
             db.add(new_session)
             db.commit()
+
+            # Crear cupón de bienvenida
+
+            coupon_data = CouponCreate(
+                name="Bienvenida",
+                description="Cupón de bienvenida para usuarios anónimos",
+                credits=5,
+                active=True,
+                unique_identifier=f"WELCOME-{session_id[:8]}"
+            )
+            create_coupon(db, coupon_data, session_id=session_id)
+            logger.info(f"Cupón de bienvenida creado para sesión {session_id}")
+
+        
             logger.info(f"Nueva sesión anónima creada ID {session_id} con username {username} desde IP {client_ip}")
             return UserContext(
                 user_type="anonymous",

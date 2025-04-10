@@ -83,6 +83,7 @@ export default function Navbar() {
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
   const [enablePoints, setEnablePoints] = useState(true);
+  const [enableCoupons, setEnableCoupons] = useState(true);
   const [enableBadges, setEnableBadges] = useState(true);
   const [enablePaymentMethods, setEnablePaymentMethods] = useState(true);
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
@@ -101,18 +102,21 @@ export default function Navbar() {
           disableCreditsRes,
           enableRegistrationRes,
           enablePointsRes,
+          enableCouponsRes,
           enableBadgesRes,
           enablePaymentMethodsRes,
         ] = await Promise.all([
           fetchAPI("/v1/settings/disable_credits"),
           fetchAPI("/v1/settings/enable_registration"),
           fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_coupons"),
           fetchAPI("/v1/settings/enable_badges"),
           fetchAPI("/v1/settings/enable_payment_methods"),
         ]);
         setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
         setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
         setEnablePoints(enablePointsRes.data === "true" || enablePointsRes.data === true);
+        setEnableCoupons(enableCouponsRes.data === "true" || enableCouponsRes.data === true);
         setEnableBadges(enableBadgesRes.data === "true" || enableBadgesRes.data === true);
         setEnablePaymentMethods(enablePaymentMethodsRes.data === "true" || enablePaymentMethodsRes.data === true);
       } catch (err) {
@@ -182,8 +186,9 @@ export default function Navbar() {
   };
 
   // Contar cupones activos y no expirados
-  const availableCoupons = coupons.filter(
+  const availableCoupons = (coupons || []).filter(
     (coupon) =>
+      coupon && // Verifica que coupon no sea null/undefined
       coupon.status === "active" &&
       (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
   ).length;
@@ -268,16 +273,17 @@ export default function Navbar() {
               )}
 
               {/* Cupones */}
-              <Link href="/user/coupon" passHref>
-                <Tooltip title="Tus cupones">
-                  <IconButton className="notification-icon">
-                    <Badge badgeContent={availableCoupons} color="secondary">
-                      <LocalActivity />
-                    </Badge>
-                  </IconButton>
-                </Tooltip>
-              </Link>
-
+              {enableCoupons && (
+                <Link href="/user/coupon" passHref>
+                  <Tooltip title="Tus cupones">
+                    <IconButton className="notification-icon">
+                      <Badge badgeContent={availableCoupons} color="secondary">
+                        <LocalActivity />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+              )}
 
               {gamification && (
                 <>
