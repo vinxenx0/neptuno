@@ -1,6 +1,7 @@
 # backend/main.py
 # Punto de entrada principal de la aplicación.
 from api.v1 import payment_providers
+from api.v1 import coupons
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
 from services.gamification_service import get_user_gamification, register_event
@@ -103,9 +104,9 @@ async def startup_event():
     finally:
         db.close()
         
-rate_limit_auth = get_setting(db, "rate_limit_auth") or {"times": 20, "seconds": 60}
-rate_limit_api = get_setting(db, "rate_limit_api") or {"times": 100, "seconds": 60}
-rate_limit_admin = get_setting(db, "rate_limit_admin") or {"times": 50, "seconds": 60}
+#rate_limit_auth = get_setting(db, "rate_limit_auth") or {"times": 20, "seconds": 60}
+#rate_limit_api = get_setting(db, "rate_limit_api") or {"times": 100, "seconds": 60}
+#rate_limit_admin = get_setting(db, "rate_limit_admin") or {"times": 50, "seconds": 60}
 
 async def get_rate_limit_key(request: Request, user: UserContext = Depends(get_user_context)):
         if user.user_type == "registered":
@@ -125,6 +126,7 @@ app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=[
 app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
 app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
+app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
 
 
 

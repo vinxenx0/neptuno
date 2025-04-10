@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge  } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge, Coupon  } from "../types";
 import { motion } from "framer-motion";
 import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
 
@@ -12,7 +12,9 @@ interface AuthContextType {
   user: User | null;
   credits: number;
   gamification: Gamification | null; // Añadimos gamificación al contexto
+  coupons: Coupon[];
   setCredits: (credits: number) => void; // Añadido
+  setCoupons: (coupons: Coupon[]) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   setGamification: (gamification: Gamification) => void; // Añadido
@@ -34,6 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [gamification, setGamification] = useState<Gamification | null>(null); // Estado para gamificación
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
 
 
   useEffect(() => {
@@ -79,12 +82,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } else {
             setGamification({ points: 0, badges: [] });
           }
+
+          // Obtener cupones del usuario
+          const couponsRes = await fetchAPI<Coupon[]>("/v1/coupons/me");
+          setCoupons(couponsRes.data || []);
+
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
         setUser(null);
         setCredits(0);
         setGamification({ points: 0, badges: [] });
+        setCoupons([]);
         localStorage.removeItem("session_id");
         localStorage.removeItem("anonUsername");
       } finally {
@@ -230,7 +239,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits,gamification, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits,gamification, coupons, setCoupons, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

@@ -24,7 +24,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Tooltip
+  Tooltip,
+  Badge
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -43,7 +44,8 @@ import {
   Menu as MenuIcon,
   ContactMail,
   Close,
-  Key
+  Key,
+  LocalActivity
 } from "@mui/icons-material";
 import Image from "next/image";
 
@@ -75,7 +77,7 @@ const NavContainer = styled(Box)(({ theme }) => ({
 export default function Navbar() {
   const theme = useTheme();
   const pathname = usePathname();
-  const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
+  const { user, credits, gamification, coupons, setCredits, setGamification, logout } = useAuth();
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [disableCredits, setDisableCredits] = useState(false);
@@ -179,6 +181,13 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
+  // Contar cupones activos y no expirados
+  const availableCoupons = coupons.filter(
+    (coupon) =>
+      coupon.status === "active" &&
+      (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
+  ).length;
+
   return (
     <GlassNavbar>
       <NavContainer>
@@ -193,16 +202,16 @@ export default function Navbar() {
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Link href="/" passHref>
-              <Box sx={{ 
-                display: "flex", 
+              <Box sx={{
+                display: "flex",
                 alignItems: "center",
                 gap: 1,
                 cursor: "pointer"
               }}>
-                <Image 
-                  src="/logo.png" 
-                  alt="Logo Neptuno" 
-                  width={40} 
+                <Image
+                  src="/logo.png"
+                  alt="Logo Neptuno"
+                  width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
                 />
@@ -257,6 +266,18 @@ export default function Navbar() {
                   </IconButton>
                 </Link>
               )}
+
+              {/* Cupones */}
+              <Link href="/user/coupon" passHref>
+                <Tooltip title="Tus cupones">
+                  <IconButton className="notification-icon">
+                    <Badge badgeContent={availableCoupons} color="secondary">
+                      <LocalActivity />
+                    </Badge>
+                  </IconButton>
+                </Tooltip>
+              </Link>
+
 
               {gamification && (
                 <>
@@ -339,7 +360,7 @@ export default function Navbar() {
             ) : (
               <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
                 <Box sx={{ position: 'relative' }}>
-                  <IconButton 
+                  <IconButton
                     component={Link}
                     href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
                     className="user-avatar"
@@ -388,10 +409,10 @@ export default function Navbar() {
               borderBottom: `1px solid ${theme.palette.divider}`
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Image 
-                  src="/logo.png" 
-                  alt="Logo Neptuno" 
-                  width={40} 
+                <Image
+                  src="/logo.png"
+                  alt="Logo Neptuno"
+                  width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
                 />
@@ -474,6 +495,6 @@ export default function Navbar() {
           ¡Felicidades! Has obtenido el badge: {newBadge}
         </Alert>
       </Snackbar>
-    </GlassNavbar>
+    </GlassNavbar >
   );
 }

@@ -493,3 +493,199 @@
 2025-04-09 20:27:41,158 - NeptunO - INFO - Procesando solicitud: token=False, session_id=1960aa2f-d064-4340-a38c-7e091b9a9e36, ip=127.0.0.1
 2025-04-09 20:27:41,158 - NeptunO - INFO - Buscando sesión anónima con ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 desde header
 2025-04-09 20:27:41,233 - NeptunO - INFO - Sesión anónima ID 1960aa2f-d064-4340-a38c-7e091b9a9e36 actualizada desde IP 127.0.0.1
+2025-04-10 01:44:12,737 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 01:44:12,738 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 01:44:28,760 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 01:44:28,760 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 01:45:06,912 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'Coupon.user_id' failed to locate a name ("name 'Coupon' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:45:22,175 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'Coupon.user_id' failed to locate a name ("name 'Coupon' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:45:54,680 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'Coupon.user_id' failed to locate a name ("name 'Coupon' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:46:15,894 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'Coupon.user_id' failed to locate a name ("name 'Coupon' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:46:39,674 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'Coupon.user_id' failed to locate a name ("name 'Coupon' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:52:33,025 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'user_id' failed to locate a name ("name 'user_id' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:53:02,731 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'user_id' failed to locate a name ("name 'user_id' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:53:08,907 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: When initializing mapper Mapper[User(usuarios)], expression 'user_id' failed to locate a name ("name 'user_id' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 01:57:20,382 - NeptunO - ERROR - Error al obtener ajuste rate_limit_auth: Could not determine join condition between parent/child tables on relationship GuestsSession.coupons - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 01:57:59,306 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 01:57:59,306 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 01:57:59,313 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship GuestsSession.coupons - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 01:57:59,313 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 01:58:27,584 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/coupons/generate-demo-coupon?credits=5: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.coupons - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 01:59:24,433 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 01:59:24,433 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 01:59:24,440 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship GuestsSession.coupons - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 01:59:24,440 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 01:59:31,841 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 01:59:31,841 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 01:59:31,849 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship GuestsSession.coupons - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 01:59:31,849 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:00:39,293 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:00:39,294 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:00:39,297 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'user_id'
+2025-04-10 02:00:39,297 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:00:56,280 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:00:56,280 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:00:56,284 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'user_id'
+2025-04-10 02:00:56,284 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:01:55,057 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:01:55,057 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:01:55,060 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'user_id'
+2025-04-10 02:01:55,061 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:03:06,613 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:03:06,613 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:03:06,616 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'user_id'
+2025-04-10 02:03:06,616 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:03:15,020 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:03:15,020 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:03:15,023 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'user_id'
+2025-04-10 02:03:15,023 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:04:16,398 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:04:16,398 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:04:16,401 - NeptunO - ERROR - Error al reiniciar créditos: When initializing mapper Mapper[User(usuarios)], expression 'user_id' failed to locate a name ("name 'user_id' is not defined"). If this is a class name, consider adding this relationship() to the <class 'models.user.User'> class after both dependent classes have been defined.
+2025-04-10 02:04:16,401 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:04:39,870 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:04:39,870 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:04:39,876 - NeptunO - ERROR - Error al reiniciar créditos: 'Table' object has no attribute 'session_id'
+2025-04-10 02:04:39,876 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:04:49,882 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:04:49,883 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:04:49,895 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship Coupon.redeemed_by_session - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 02:04:49,895 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:05:12,249 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/coupons/generate-demo-coupon?credits=5: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Coupon(coupons)]'. Original exception was: Could not determine join condition between parent/child tables on relationship Coupon.redeemed_by_session - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 02:05:15,669 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/coupons/generate-demo-coupon?credits=5: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Coupon(coupons)]'. Original exception was: Could not determine join condition between parent/child tables on relationship Coupon.redeemed_by_session - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 02:20:18,203 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:20:18,204 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:20:18,217 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship Coupon.redeemed_by_session - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 02:20:18,217 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:27:10,811 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:27:10,811 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:27:10,825 - NeptunO - ERROR - Error al reiniciar créditos: Mapper 'Mapper[GuestsSession(sesiones_anonimas)]' has no property 'coupons'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-04-10 02:27:10,825 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:27:21,497 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:27:21,497 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:27:21,508 - NeptunO - ERROR - Error al reiniciar créditos: Mapper 'Mapper[User(usuarios)]' has no property 'coupons'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-04-10 02:27:21,508 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:27:41,810 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:27:41,810 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:28:38,862 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:28:38,862 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:28:38,867 - NeptunO - ERROR - Error al reiniciar créditos: Mapper 'Mapper[Coupon(coupons)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-04-10 02:28:38,867 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:28:41,678 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:28:41,678 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:28:41,681 - NeptunO - ERROR - Error al reiniciar créditos: Mapper 'Mapper[Coupon(coupons)]' has no property 'user'.  If this property was indicated from other mappers or configure events, ensure registry.configure() has been called.
+2025-04-10 02:28:41,681 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:29:12,380 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:29:12,381 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:29:12,392 - NeptunO - ERROR - Error al reiniciar créditos: Could not determine join condition between parent/child tables on relationship Coupon.redeemed_by_session - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-10 02:29:12,392 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-10 02:29:38,667 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:29:38,667 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:31:25,919 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:31:25,919 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:34:32,599 - NeptunO - INFO - Cupón creado: 03fc9f98-f57e-43cd-b7db-fc94d8bf51ad
+2025-04-10 02:35:57,998 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:35:57,998 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:36:25,736 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:36:25,736 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:38:57,388 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-10 02:38:57,388 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-10 02:41:54,015 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:41:54,018 - NeptunO - WARNING - Token expirado
+2025-04-10 02:41:54,018 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-04-10 02:41:54,019 - NeptunO - ERROR - HTTP Error 401 en GET http://127.0.0.1:8000/info: Token inválido o no es de acceso
+2025-04-10 02:41:54,562 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-04-10 02:41:54,565 - NeptunO - ERROR - Error al refrescar token: Usuario inválido
+2025-04-10 02:41:54,565 - NeptunO - ERROR - HTTP Error 403 en POST http://127.0.0.1:8000/v1/auth/refresh: Usuario inválido
+2025-04-10 02:41:56,748 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-04-10 02:41:56,748 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-04-10 02:41:56,834 - NeptunO - INFO - Nueva sesión anónima creada ID 5a7f1e49-854c-4e09-9873-b681bd394d91 con username Guest_ie0hm desde IP 127.0.0.1
+2025-04-10 02:41:57,343 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5a7f1e49-854c-4e09-9873-b681bd394d91, ip=127.0.0.1
+2025-04-10 02:41:57,343 - NeptunO - INFO - Buscando sesión anónima con ID 5a7f1e49-854c-4e09-9873-b681bd394d91 desde header
+2025-04-10 02:41:57,445 - NeptunO - INFO - Sesión anónima ID 5a7f1e49-854c-4e09-9873-b681bd394d91 actualizada desde IP 127.0.0.1
+2025-04-10 02:41:57,561 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5a7f1e49-854c-4e09-9873-b681bd394d91, ip=127.0.0.1
+2025-04-10 02:41:57,561 - NeptunO - INFO - Buscando sesión anónima con ID 5a7f1e49-854c-4e09-9873-b681bd394d91 desde header
+2025-04-10 02:41:57,645 - NeptunO - INFO - Sesión anónima ID 5a7f1e49-854c-4e09-9873-b681bd394d91 actualizada desde IP 127.0.0.1
+2025-04-10 02:41:57,647 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/coupons/me: La funcionalidad de cupones está deshabilitada
+2025-04-10 02:42:02,623 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:02,623 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-04-10 02:42:02,701 - NeptunO - INFO - Nueva sesión anónima creada ID 323bd0d3-e0bd-4e07-9f3d-591a9becc7a9 con username Guest_oiex0 desde IP 127.0.0.1
+2025-04-10 02:42:02,757 - NeptunO - INFO - Procesando solicitud: token=False, session_id=323bd0d3-e0bd-4e07-9f3d-591a9becc7a9, ip=127.0.0.1
+2025-04-10 02:42:02,757 - NeptunO - INFO - Buscando sesión anónima con ID 323bd0d3-e0bd-4e07-9f3d-591a9becc7a9 desde header
+2025-04-10 02:42:02,856 - NeptunO - INFO - Sesión anónima ID 323bd0d3-e0bd-4e07-9f3d-591a9becc7a9 actualizada desde IP 127.0.0.1
+2025-04-10 02:42:02,959 - NeptunO - INFO - Procesando solicitud: token=False, session_id=323bd0d3-e0bd-4e07-9f3d-591a9becc7a9, ip=127.0.0.1
+2025-04-10 02:42:02,960 - NeptunO - INFO - Buscando sesión anónima con ID 323bd0d3-e0bd-4e07-9f3d-591a9becc7a9 desde header
+2025-04-10 02:42:03,034 - NeptunO - INFO - Sesión anónima ID 323bd0d3-e0bd-4e07-9f3d-591a9becc7a9 actualizada desde IP 127.0.0.1
+2025-04-10 02:42:03,037 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/coupons/me: La funcionalidad de cupones está deshabilitada
+2025-04-10 02:42:23,435 - NeptunO - ERROR - Intento de login fallido para email admin@example.com desde IP 127.0.0.1
+2025-04-10 02:42:23,435 - NeptunO - CRITICAL - Error inesperado en login para admin@example.com desde IP 127.0.0.1: 401: Credenciales inválidas
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno/backend/services/auth_service.py", line 77, in login_user
+    raise HTTPException(status_code=401, detail="Credenciales inválidas")
+fastapi.exceptions.HTTPException: 401: Credenciales inválidas
+2025-04-10 02:42:23,436 - NeptunO - ERROR - HTTP Error 500 en POST http://127.0.0.1:8000/v1/auth/token: Error al iniciar sesión
+2025-04-10 02:42:43,581 - NeptunO - DEBUG - Usuario encontrado: ID=4, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-10 02:42:43,582 - NeptunO - WARNING - Token expiration too low, using default 1h
+2025-04-10 02:42:43,583 - NeptunO - INFO - Login exitoso para usuario ID 4 desde IP 127.0.0.1
+2025-04-10 02:42:43,635 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:43,723 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:43,843 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:43,957 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:44,058 - NeptunO - CRITICAL - Error inesperado en POST http://127.0.0.1:8000/v1/gamification/events: Event type not found
+2025-04-10 02:42:46,827 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:46,901 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:46,957 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:47,034 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:47,088 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:47,178 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:47,183 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:47,279 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:47,294 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:47,391 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:47,394 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:47,523 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:54,272 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:54,367 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:54,472 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:54,567 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:54,672 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:42:54,757 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:42:54,758 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/coupons/me: La funcionalidad de cupones está deshabilitada
+2025-04-10 02:43:24,978 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:25,078 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:25,102 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:25,202 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:26,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:26,978 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:26,983 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:27,078 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:27,078 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:27,156 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:27,157 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:27,257 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:27,275 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:27,391 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:27,392 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:27,478 - NeptunO - INFO - Usuario registrado ID 4 autenticado desde IP 127.0.0.1
+2025-04-10 02:43:54,978 - NeptunO - INFO - Procesando solicitud: token=False, session_id=None, ip=127.0.0.1
+2025-04-10 02:43:54,979 - NeptunO - INFO - No hay session_id en header, creando nueva sesión anónima
+2025-04-10 02:43:55,066 - NeptunO - INFO - Nueva sesión anónima creada ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 con username Guest_ruziy desde IP 127.0.0.1
+2025-04-10 02:43:55,075 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:43:55,076 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:43:55,166 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:25,007 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:44:25,007 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:44:25,077 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:25,129 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:44:25,129 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:44:25,221 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:43,753 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:44:43,754 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:44:43,844 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:43,856 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:44:43,856 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:44:43,977 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:44,027 - NeptunO - INFO - Procesando solicitud: token=False, session_id=57a2d3a5-d795-41b0-87e2-930ec378a5e4, ip=127.0.0.1
+2025-04-10 02:44:44,027 - NeptunO - INFO - Buscando sesión anónima con ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 desde header
+2025-04-10 02:44:44,121 - NeptunO - INFO - Sesión anónima ID 57a2d3a5-d795-41b0-87e2-930ec378a5e4 actualizada desde IP 127.0.0.1
+2025-04-10 02:44:44,123 - NeptunO - ERROR - HTTP Error 403 en GET http://127.0.0.1:8000/v1/coupons/me: La funcionalidad de cupones está deshabilitada

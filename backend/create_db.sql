@@ -353,5 +353,26 @@ INSERT OR IGNORE INTO event_types (id, name, description, points_per_event) VALU
 (9, 'icp_completo', 'Puntos por completar el ICP completo', 10),
 (10, 'leccion_completada', 'Puntos por completar cada lección', 3);
 
+CREATE TABLE IF NOT EXISTS coupons (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    unique_identifier TEXT NOT NULL UNIQUE,
+    issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME,
+    redeemed_at DATETIME,
+    active INTEGER DEFAULT 1,
+    status TEXT CHECK(status IN ('active', 'redeemed', 'expired', 'disabled')) DEFAULT 'active',
+    credits INTEGER NOT NULL,
+    user_id INTEGER,
+    session_id TEXT,
+    redeemed_by_user_id INTEGER,
+    redeemed_by_session_id TEXT,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (session_id) REFERENCES sesiones_anonimas(id),
+    FOREIGN KEY (redeemed_by_user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (redeemed_by_session_id) REFERENCES sesiones_anonimas(id)
+);
+
 -- Mensaje final
 SELECT '✅ Base de datos inicializada con datos de ejemplo, incluyendo gamificación.' AS message;

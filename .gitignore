@@ -15,7 +15,7 @@ ssl/*.pem
 .copys
 dev.db
 .etc
-.migrations
+migrations
 .alembic.ini
 
 
