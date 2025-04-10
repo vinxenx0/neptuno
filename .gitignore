@@ -15,9 +15,11 @@ ssl/*.pem
 .copys
 dev.db
 .etc
-.migrations
+migrations
+out
 .alembic.ini
-
+.pytest_cache
+.trash
 
 # dependencies
 /node_modules

@@ -15,20 +15,7 @@ logger = configure_logging()
 async def buy_credits(request: PurchaseRequest,
                       user: UserContext = Depends(get_user_context),
                       db: Session = Depends(get_db)):
-    """
-    Purchase credits for the user.
 
-    Args:
-        request (PurchaseRequest): The purchase request containing the number of credits, payment amount, and payment method.
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        PurchaseResponse: The response containing the details of the purchase.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -41,20 +28,7 @@ async def buy_credits(request: PurchaseRequest,
 def add_method(method: PaymentMethodCreate,
                user: UserContext = Depends(get_user_context),
                db: Session = Depends(get_db)):
-    """
-    Add a new payment method for the user.
 
-    Args:
-        method (PaymentMethodCreate): The payment method details to be added.
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        PaymentMethodResponse: The response containing the details of the added payment method.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -66,19 +40,7 @@ def add_method(method: PaymentMethodCreate,
 @router.get("/methods", response_model=list[PaymentMethodResponse])
 def list_methods(user: UserContext = Depends(get_user_context),
                  db: Session = Depends(get_db)):
-    """
-    Retrieve the list of payment methods for the user.
 
-    Args:
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        list[PaymentMethodResponse]: A list of the user's payment methods.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -91,20 +53,7 @@ def list_methods(user: UserContext = Depends(get_user_context),
 def set_default(method_id: int,
                 user: UserContext = Depends(get_user_context),
                 db: Session = Depends(get_db)):
-    """
-    Set a payment method as the default for the user.
 
-    Args:
-        method_id (int): The ID of the payment method to set as default.
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        PaymentMethodResponse: The response containing the updated payment method details.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -117,19 +66,7 @@ def set_default(method_id: int,
 @router.get("/transactions", response_model=list[CreditTransactionResponse])
 def list_transactions(user: UserContext = Depends(get_user_context),
                       db: Session = Depends(get_db)):
-    """
-    Retrieve the list of credit transactions for the user.
 
-    Args:
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        list[CreditTransactionResponse]: A list of the user's credit transactions.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -144,21 +81,7 @@ def update_method(
         user: UserContext = Depends(get_user_context),
         db: Session = Depends(get_db),
 ):
-    """
-    Update an existing payment method for the user.
 
-    Args:
-        method_id (int): The ID of the payment method to update.
-        method (PaymentMethodCreate): The updated payment method details.
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        PaymentMethodResponse: The response containing the updated payment method details.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
@@ -174,20 +97,7 @@ def delete_method(
         user: UserContext = Depends(get_user_context),
         db: Session = Depends(get_db),
 ):
-    """
-    Delete a payment method for the user.
 
-    Args:
-        method_id (int): The ID of the payment method to delete.
-        user (UserContext): The user context, automatically injected by FastAPI.
-        db (Session): The database session, automatically injected by FastAPI.
-
-    Returns:
-        dict: A message indicating the payment method was deleted.
-
-    Raises:
-        HTTPException: If the user is not registered.
-    """
     if user.user_type != "registered":
         raise HTTPException(
             status_code=403,
