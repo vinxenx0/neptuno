@@ -3,27 +3,35 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-class CouponBase(BaseModel):
+class CouponTypeBase(BaseModel):
     name: str
     description: Optional[str] = None
-    unique_identifier: str
-    expires_at: Optional[datetime] = None
     credits: int
     active: bool = True
 
-class CouponCreate(CouponBase):
+class CouponTypeCreate(CouponTypeBase):
     pass
 
-class CouponUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
+class CouponTypeResponse(CouponTypeBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class CouponBase(BaseModel):
+    unique_identifier: str
     expires_at: Optional[datetime] = None
-    credits: Optional[int] = None
-    active: Optional[bool] = None
-    status: Optional[str] = None
+
+class CouponCreate(BaseModel):
+    coupon_type_id: int
+    user_id: Optional[int] = None
+    session_id: Optional[str] = None
 
 class CouponResponse(CouponBase):
     id: int
+    coupon_type_id: int
     issued_at: datetime
     redeemed_at: Optional[datetime] = None
     status: str
@@ -33,4 +41,4 @@ class CouponResponse(CouponBase):
     redeemed_by_session_id: Optional[str] = None
 
     class Config:
-        from_attributes = True  # Reemplaza orm_mode=True, siguiendo la versión moderna de Pydantic
+        from_attributes = True

@@ -190,6 +190,7 @@ export interface BadgeWithEventType extends Badge {
 
 // Nuevo tipo para cupones
 export interface Coupon {
+  coupon_type: any;
   id: number;
   name: string;
   description?: string;
@@ -204,4 +205,14 @@ export interface Coupon {
   session_id?: string; // Opcional, para usuarios anónimos
   redeemed_by_user_id?: number; // Quién lo canjeó, si aplica
   redeemed_by_session_id?: string; // Quién lo canjeó (anónimo), si aplica
+}
+
+
+
+export interface CouponType {
+  id: number;
+  name: string;
+  description?: string;
+  credits: number;
+  active: boolean;
 }

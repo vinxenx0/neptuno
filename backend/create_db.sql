@@ -245,7 +245,6 @@ INSERT OR IGNORE INTO allowed_origins (origin) VALUES
 ('http://localhost:3000'),
 ('https://neptuno.app'),
 ('https://api.example.com'),
-('https://app.example.com');
 
 -- Sesiones anónimas
 INSERT OR IGNORE INTO sesiones_anonimas (id, username, credits, create_at, ultima_actividad, last_ip) VALUES

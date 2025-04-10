@@ -1382,7 +1382,6 @@ export default function ConfigurePage() {
           )}
 
           {/* CUpones Tab */}
-
           {activeTab === 4 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
@@ -1392,109 +1391,87 @@ export default function ConfigurePage() {
                     Gestión de Cupones
                   </Typography>
 
-                  {/* Sección de Tipos de Cupones */}
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Tipos de Cupones</Typography>
+                  {/* Botón para crear cupón */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                     <Button
                       variant="contained"
                       startIcon={<AddCircle />}
-                      onClick={() => setEditCouponType({ id: 0, name: '', description: '', credits: 0, active: true })}
+                      onClick={() => setEditCoupon({ id: 0, name: '', description: '', credits: 0, active: true, unique_identifier: '', status: 'active', issued_at: new Date().toISOString() })}
                     >
-                      Nuevo Tipo de Cupón
+                      Nuevo Cupón
                     </Button>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Nombre</TableCell>
-                          <TableCell>Descripción</TableCell>
-                          <TableCell>Créditos</TableCell>
-                          <TableCell>Activo</TableCell>
-                          <TableCell>Acciones</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {couponTypes.map((ct) => (
-                          <TableRow key={ct.id}>
-                            <TableCell>{ct.name}</TableCell>
-                            <TableCell>{ct.description || 'Sin descripción'}</TableCell>
-                            <TableCell>{ct.credits}</TableCell>
-                            <TableCell>
-                              <Chip label={ct.active ? "Activo" : "Inactivo"} color={ct.active ? "success" : "error"} />
-                            </TableCell>
-                            <TableCell>
-                              <IconButton onClick={() => setEditCouponType(ct)} color="primary">
-                                <Edit />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
                   </Box>
 
-                  {/* Sección de Actividad de Cupones */}
-                  <Box>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Última Actividad de Cupones</Typography>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>Tipo</TableCell>
-                          <TableCell>Identificador</TableCell>
-                          <TableCell>Usuario/Sesión</TableCell>
-                          <TableCell>Estado</TableCell>
-                          <TableCell>Fecha de Emisión</TableCell>
+                  {/* Tabla de cupones */}
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre</TableCell>
+                        <TableCell>Descripción</TableCell>
+                        <TableCell>Créditos</TableCell>
+                        <TableCell>Estado</TableCell>
+                        <TableCell>Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {coupons.map((coupon) => (
+                        <TableRow key={coupon.id}>
+                          <TableCell>{coupon.name}</TableCell>
+                          <TableCell>{coupon.description || 'Sin descripción'}</TableCell>
+                          <TableCell>{coupon.credits}</TableCell>
+                          <TableCell>
+                            <Chip
+                              label={coupon.status}
+                              color={coupon.status === "active" ? "success" : "error"}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => setEditCoupon(coupon)} color="primary">
+                              <Edit />
+                            </IconButton>
+                            <IconButton onClick={() => handleDeleteCoupon(coupon.id)} color="error">
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {coupons.map((coupon) => (
-                          <TableRow key={coupon.id}>
-                            <TableCell>{coupon.id}</TableCell>
-                            <TableCell>{coupon.coupon_type.name}</TableCell>
-                            <TableCell>{coupon.unique_identifier}</TableCell>
-                            <TableCell>{coupon.user_id || coupon.session_id || 'No asignado'}</TableCell>
-                            <TableCell>{coupon.status}</TableCell>
-                            <TableCell>{new Date(coupon.issued_at).toLocaleString()}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </ConfigGlassCard>
 
-              {/* Diálogo para crear/editar tipo de cupón */}
-              <Dialog open={!!editCouponType} onClose={() => setEditCouponType(null)}>
-                <DialogTitle>{editCouponType?.id ? 'Editar Tipo de Cupón' : 'Nuevo Tipo de Cupón'}</DialogTitle>
+              {/* Diálogo para crear/editar cupón */}
+              <Dialog open={!!editCoupon} onClose={() => setEditCoupon(null)}>
+                <DialogTitle>{editCoupon?.id ? 'Editar Cupón' : 'Nuevo Cupón'}</DialogTitle>
                 <DialogContent>
-                  <Box component="form" onSubmit={handleSubmitCouponType} sx={{ mt: 2 }}>
+                  <Box component="form" onSubmit={handleSubmitCoupon} sx={{ mt: 2 }}>
                     <TextField
                       label="Nombre"
                       fullWidth
-                      value={editCouponType?.name || ''}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, name: e.target.value })}
+                      value={editCoupon?.name || ''}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, name: e.target.value })}
                       margin="normal"
                     />
                     <TextField
                       label="Descripción"
                       fullWidth
-                      value={editCouponType?.description || ''}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, description: e.target.value })}
+                      value={editCoupon?.description || ''}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, description: e.target.value })}
                       margin="normal"
                     />
                     <TextField
                       label="Créditos"
                       type="number"
                       fullWidth
-                      value={editCouponType?.credits || 0}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, credits: parseInt(e.target.value) || 0 })}
+                      value={editCoupon?.credits || 0}
+                      onChange={(e) => setEditCoupon({ ...editCoupon!, credits: parseInt(e.target.value) || 0 })}
                       margin="normal"
                     />
                     <FormControlLabel
                       control={
                         <Switch
-                          checked={editCouponType?.active || false}
-                          onChange={(e) => setEditCouponType({ ...editCouponType!, active: e.target.checked })}
+                          checked={editCoupon?.active || false}
+                          onChange={(e) => setEditCoupon({ ...editCoupon!, active: e.target.checked })}
                           color="primary"
                         />
                       }
@@ -1508,7 +1485,7 @@ export default function ConfigurePage() {
                       fullWidth
                       sx={{ mt: 2 }}
                     >
-                      {editCouponType?.id ? 'Actualizar' : 'Crear'}
+                      {editCoupon?.id ? 'Actualizar' : 'Crear'}
                     </Button>
                   </Box>
                 </DialogContent>

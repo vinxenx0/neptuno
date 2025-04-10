@@ -1,4 +1,4 @@
-# backend/models/gamification.py
+# backend/middleware/gamification.py
 from fastapi import Depends
 from functools import wraps
 from sqlalchemy.orm import Session
@@ -8,7 +8,7 @@ from services.gamification_service import register_event
 from schemas.gamification import GamificationEventCreate
 from models.gamification import EventType
 
-# backend/models/gamification.py
+
 def track_gamification_event(event_type_name: str):
     def decorator(func):
         @wraps(func)

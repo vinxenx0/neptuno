@@ -20,11 +20,7 @@ CREATE TABLE usuarios (
 	token_valid_until DATETIME, 
 	PRIMARY KEY (id)
 );
-INSERT INTO usuarios VALUES(1,'freemium@example.com','freemium_user','$2b$12$Qbxinxz3wbAhDx1jwsi3WewH/LwSBNaovSRnwAF6OMsTg.RlFqS3m',NULL,NULL,'user',1,'FREEMIUM',NULL,NULL,1,'2025-04-03 10:45:53.861734','2025-04-03 10:48:46.170888',NULL,NULL,NULL);
-INSERT INTO usuarios VALUES(2,'premium@example.com','premium_user','$2b$12$Cc7xz7ja8PcCpjfI0F6TDecTWSQk6VPqbhBeSkltQvfjAcRDGd73G',NULL,NULL,'user',1,'PREMIUM',NULL,NULL,1000,'2025-04-03 10:45:54.147097','2025-04-03 10:48:46.171070',NULL,NULL,NULL);
-INSERT INTO usuarios VALUES(3,'corporate@example.com','corporate_user','$2b$12$ryerT3S4gp4LIvNN8Eu19uoRt0ZRQOUDeaNt27x50v5e9oeDvMAHa',NULL,NULL,'user',1,'CORPORATE',NULL,NULL,1000,'2025-04-03 10:45:54.438423','2025-04-03 10:48:46.171159',NULL,NULL,NULL);
-INSERT INTO usuarios VALUES(4,'admin@example.com','admin_user','$2b$12$mSQISiTT0/babKkzsQbNB.WAs6DnyQF6wUFuyRmZPCHMJQMyLESgu',NULL,NULL,'admin',1,'PREMIUM','admin city','web admin',124523,'2025-04-03 10:45:54.737924','2025-04-03 10:48:46.171208','127.0.0.1','2025-04-10 10:05:58.101267',NULL);
-
+INSERT INTO usuarios VALUES(4,'admin@example.com','admin_user','$2b$12$mSQISiTT0/babKkzsQbNB.WAs6DnyQF6wUFuyRmZPCHMJQMyLESgu',NULL,NULL,'admin',1,'PREMIUM','admin city','web admin',124520,'2025-04-03 10:45:54.737924','2025-04-03 10:48:46.171208','127.0.0.1','2025-04-10 12:08:48.838279',NULL);
 CREATE TABLE sesiones_anonimas (
 	id VARCHAR(36) NOT NULL, 
 	username VARCHAR(50) NOT NULL, 
@@ -35,7 +31,7 @@ CREATE TABLE sesiones_anonimas (
 	PRIMARY KEY (id), 
 	UNIQUE (username)
 );
-
+INSERT INTO sesiones_anonimas VALUES('20120a4b-412b-4979-b67b-c0a5d2659f1c','Guest_zgpcm',10,'2025-04-10 11:30:30.870905','2025-04-10 11:49:31.385751','127.0.0.1');
 CREATE TABLE event_types (
 	id INTEGER NOT NULL, 
 	name VARCHAR(50) NOT NULL, 
@@ -44,7 +40,6 @@ CREATE TABLE event_types (
 	PRIMARY KEY (id), 
 	UNIQUE (name)
 );
-
 INSERT INTO event_types VALUES(1,'api_usage','Uso de la API',10);
 INSERT INTO event_types VALUES(2,'login','Inicio de sesión exitoso',5);
 INSERT INTO event_types VALUES(3,'purchase','Compra de créditos',50);
@@ -56,18 +51,16 @@ INSERT INTO event_types VALUES(8,'registration_field','Rellenar un campo de regi
 INSERT INTO event_types VALUES(9,'registration_completed','Completar el registro',0);
 INSERT INTO event_types VALUES(10,'subscription_list','Suscribirse a una lista',1);
 INSERT INTO event_types VALUES(11,'all_subscriptions','Suscribirse a todas las listas',0);
-
-
 CREATE TABLE revoked_tokens (
 	token VARCHAR(500) NOT NULL, 
 	revoked_at DATETIME, 
 	user_id INTEGER, 
 	PRIMARY KEY (token)
 );
-
 INSERT INTO revoked_tokens VALUES('expired.token.xxxx','2025-03-04 10:45:55.317705',1);
 INSERT INTO revoked_tokens VALUES('compromised.token.yyyy','2025-04-03 08:45:55.317714',2);
-
+INSERT INTO revoked_tokens VALUES('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3NDQ4ODQyMzd9.ctr8JQNPmMTFm0t7oWMg9zODqRAB1lnM2kfS7W06ceY','2025-04-10 11:04:17.373515',4);
+INSERT INTO revoked_tokens VALUES('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwidHlwZSI6InJlZnJlc2giLCJleHAiOjE3NDQ4ODc4NTd9.sZuYv3M9QtqgPeYgg4qmkbgrgqIWqQxR4XfCs6itwqU','2025-04-10 12:04:18.866916',4);
 CREATE TABLE site_settings (
 	id INTEGER NOT NULL, 
 	"key" VARCHAR(50) NOT NULL, 
@@ -79,7 +72,6 @@ CREATE TABLE site_settings (
 	PRIMARY KEY (id), 
 	UNIQUE ("key")
 );
-
 INSERT INTO site_settings VALUES(1,'token_expiration','60','Tiempo de vida del access token (segundos)','auth',NULL,'2025-04-03 10:45:55.303092');
 INSERT INTO site_settings VALUES(2,'refresh_token_expiration','604800','Tiempo de vida del refresh token (7 días)','auth',NULL,'2025-04-03 10:45:55.303096');
 INSERT INTO site_settings VALUES(3,'max_login_attempts','5','Máximo de intentos de login antes de bloqueo','auth',NULL,'2025-04-03 10:45:55.303098');
@@ -89,7 +81,7 @@ INSERT INTO site_settings VALUES(6,'rate_limit_admin','{"times": 50, "seconds": 
 INSERT INTO site_settings VALUES(7,'cache_ttl','300','Tiempo de vida del caché en Redis (segundos)','cache',NULL,'2025-04-03 10:45:55.303104');
 INSERT INTO site_settings VALUES(8,'cache_enabled','true','Habilitar/deshabilitar el caché','cache',NULL,'2025-04-03 10:45:55.303106');
 INSERT INTO site_settings VALUES(9,'cache_max_size','10000','Tamaño máximo del caché en entradas','cache',NULL,'2025-04-03 10:45:55.303107');
-INSERT INTO site_settings VALUES(10,'allowed_origins','["http://localhost:3000", "https://neptuno.app", "test"]','Orígenes permitidos para CORS','cors',NULL,'2025-04-08 14:53:42.185359');
+INSERT INTO site_settings VALUES(10,'allowed_origins','["http://localhost:3000", "https://neptuno.app", "test", "https://nuevoorigen.com"]','Orígenes permitidos para CORS','cors',NULL,'2025-04-10 10:26:42.688850');
 INSERT INTO site_settings VALUES(11,'cors_enabled','true','Habilitar/deshabilitar CORS','cors',NULL,'2025-04-03 10:45:55.303111');
 INSERT INTO site_settings VALUES(12,'celery_workers','4','Número de workers de Celery','celery',NULL,'2025-04-03 10:45:55.303112');
 INSERT INTO site_settings VALUES(13,'celery_task_timeout','300','Tiempo máximo de ejecución de tareas Celery (segundos)','celery',NULL,'2025-04-03 10:45:55.303114');
@@ -105,15 +97,14 @@ INSERT INTO site_settings VALUES(22,'log_level','"INFO"','Nivel de logging','log
 INSERT INTO site_settings VALUES(23,'log_retention_days','90','Días de retención de logs','logging',NULL,'2025-04-03 10:45:55.303130');
 INSERT INTO site_settings VALUES(24,'maintenance_mode','false','Activar/desactivar modo mantenimiento','system',NULL,'2025-04-03 10:45:55.303131');
 INSERT INTO site_settings VALUES(25,'api_version','"1.0.0"','Versión actual de la API','system',NULL,'2025-04-03 10:45:55.303133');
-INSERT INTO site_settings VALUES(26,'enable_registration','"false"',NULL,NULL,NULL,'2025-04-08 19:04:41.439601');
+INSERT INTO site_settings VALUES(26,'enable_registration','"true"',NULL,NULL,NULL,'2025-04-10 10:20:05.845363');
 INSERT INTO site_settings VALUES(27,'enable_payment_methods','"true"',NULL,NULL,NULL,'2025-04-05 13:48:44.070527');
 INSERT INTO site_settings VALUES(28,'enable_gamification','"true"',NULL,NULL,NULL,'2025-04-04 15:08:31.058845');
 INSERT INTO site_settings VALUES(29,'enable_social_login','"false"',NULL,NULL,NULL,'2025-04-08 19:04:43.027686');
 INSERT INTO site_settings VALUES(30,'enable_badges','"true"',NULL,NULL,NULL,'2025-04-06 18:54:30.409629');
 INSERT INTO site_settings VALUES(31,'enable_points','"true"',NULL,NULL,NULL,'2025-04-06 18:54:31.329235');
-INSERT INTO site_settings VALUES(32,'enable_coupons','"true"',NULL,NULL,NULL,'2025-04-10 08:21:06.127707');
+INSERT INTO site_settings VALUES(32,'enable_coupons','"true"',NULL,NULL,NULL,'2025-04-10 10:26:18.999869');
 INSERT INTO site_settings VALUES(33,'disable_anonymous_users','"false"',NULL,NULL,NULL,'2025-04-10 09:50:27.641205');
-
 CREATE TABLE allowed_origins (
 	id INTEGER NOT NULL, 
 	origin VARCHAR(255) NOT NULL, 
@@ -123,7 +114,6 @@ CREATE TABLE allowed_origins (
 INSERT INTO allowed_origins VALUES(1,'http://localhost:3000');
 INSERT INTO allowed_origins VALUES(2,'https://neptuno.app');
 INSERT INTO allowed_origins VALUES(3,'https://api.example.com');
-
 CREATE TABLE badges (
 	id INTEGER NOT NULL, 
 	name VARCHAR(50) NOT NULL, 
@@ -136,7 +126,6 @@ CREATE TABLE badges (
 	FOREIGN KEY(event_type_id) REFERENCES event_types (id)
 );
 INSERT INTO badges VALUES(1,'Novato','Primer uso de la API',1,10,'both');
-INSERT INTO badges VALUES(2,'Experto','Más de 100 usos de la API',1,100,'both');
 INSERT INTO badges VALUES(3,'Comprador','Primera compra de créditos',3,50,'registered');
 INSERT INTO badges VALUES(4,'Becario','Uso intermedio de la API',1,100,'both');
 INSERT INTO badges VALUES(5,'Junior','Uso avanzado de la API',1,500,'registered');
@@ -146,7 +135,7 @@ INSERT INTO badges VALUES(8,'test','test',5,12,'both');
 INSERT INTO badges VALUES(9,'Encuestador','Completar una encuesta',7,0,'both');
 INSERT INTO badges VALUES(10,'Registrado','Completar el registro',9,0,'both');
 INSERT INTO badges VALUES(11,'Suscriptor','Suscribirse a todas las listas',11,0,'both');
-
+INSERT INTO badges VALUES(12,'DIOS','god mode',1,3000,'both');
 CREATE TABLE gamification_events (
 	id INTEGER NOT NULL, 
 	event_type_id INTEGER NOT NULL, 
@@ -158,10 +147,9 @@ CREATE TABLE gamification_events (
 	FOREIGN KEY(user_id) REFERENCES usuarios (id), 
 	FOREIGN KEY(session_id) REFERENCES sesiones_anonimas (id)
 );
-
-INSERT INTO gamification_events VALUES(1,1,1,NULL,'2025-04-03 10:45:55.355293');
-INSERT INTO gamification_events VALUES(2,2,2,NULL,'2025-04-03 10:45:55.356397');
-INSERT INTO gamification_events VALUES(3,3,2,NULL,'2025-04-03 10:45:55.356905');
+INSERT INTO gamification_events VALUES(1,1,NULL,NULL,'2025-04-03 10:45:55.355293');
+INSERT INTO gamification_events VALUES(2,2,NULL,NULL,'2025-04-03 10:45:55.356397');
+INSERT INTO gamification_events VALUES(3,3,NULL,NULL,'2025-04-03 10:45:55.356905');
 INSERT INTO gamification_events VALUES(4,2,5,NULL,'2025-04-03 12:58:37');
 INSERT INTO gamification_events VALUES(5,2,NULL,'69fa5be7-1433-4df4-917b-b8a2607877dc','2025-04-03 12:58:37');
 INSERT INTO gamification_events VALUES(6,2,5,NULL,'2025-04-03 12:59:44');
@@ -568,6 +556,10 @@ INSERT INTO gamification_events VALUES(406,3,NULL,'bfaf0269-a2ec-4100-a671-6a2ac
 INSERT INTO gamification_events VALUES(407,3,NULL,'bfaf0269-a2ec-4100-a671-6a2ac7a52ce1','2025-04-10 10:03:29.284155');
 INSERT INTO gamification_events VALUES(408,3,NULL,'bfaf0269-a2ec-4100-a671-6a2ac7a52ce1','2025-04-10 10:03:31.000327');
 INSERT INTO gamification_events VALUES(409,100,4,NULL,'2025-04-10 10:03:57.706251');
+INSERT INTO gamification_events VALUES(410,5,4,NULL,'2025-04-10 10:28:32.309453');
+INSERT INTO gamification_events VALUES(411,5,4,NULL,'2025-04-10 10:28:33.842136');
+INSERT INTO gamification_events VALUES(412,5,4,NULL,'2025-04-10 10:28:35.896928');
+INSERT INTO gamification_events VALUES(413,6,4,NULL,'2025-04-10 10:28:37.630332');
 CREATE TABLE password_reset_tokens (
 	id INTEGER NOT NULL, 
 	user_id INTEGER NOT NULL, 
@@ -580,7 +572,6 @@ CREATE TABLE password_reset_tokens (
 );
 INSERT INTO password_reset_tokens VALUES(1,1,'reset_token_123','2025-04-03 10:45:55.334424','2025-04-03 11:45:55.317795');
 INSERT INTO password_reset_tokens VALUES(2,4,'reset_token_456','2025-04-03 10:45:55.334428','2025-04-03 11:45:55.317801');
-
 CREATE TABLE credit_transactions (
 	id INTEGER NOT NULL, 
 	user_id INTEGER, 
@@ -598,7 +589,9 @@ CREATE TABLE credit_transactions (
 	FOREIGN KEY(user_id) REFERENCES usuarios (id), 
 	FOREIGN KEY(session_id) REFERENCES sesiones_anonimas (id)
 );
-
+INSERT INTO credit_transactions VALUES(1,4,NULL,'registered',-1,'usage','Consulta realizada',NULL,NULL,'pending','2025-04-10 10:37:20.214410');
+INSERT INTO credit_transactions VALUES(2,4,NULL,'registered',-1,'usage','Consulta realizada',NULL,NULL,'pending','2025-04-10 10:37:21.802392');
+INSERT INTO credit_transactions VALUES(3,4,NULL,'registered',-1,'usage','Consulta realizada',NULL,NULL,'pending','2025-04-10 10:37:23.402732');
 CREATE TABLE integrations (
 	id INTEGER NOT NULL, 
 	user_id INTEGER NOT NULL, 
@@ -611,11 +604,11 @@ CREATE TABLE integrations (
 	PRIMARY KEY (id), 
 	FOREIGN KEY(user_id) REFERENCES usuarios (id)
 );
-
 INSERT INTO integrations VALUES(1,2,'slack','https://hooks.slack.com/services/TXXXXX/BXXXXX/XXXXX','credit_usage',1,'2025-04-03 10:45:55.329495','2025-04-03 08:45:55.316848');
 INSERT INTO integrations VALUES(2,4,'zapier','https://hooks.zapier.com/hooks/catch/XXXXX/XXXXX','user_login',1,'2025-04-03 10:45:55.329498',NULL);
 INSERT INTO integrations VALUES(3,3,'crm_custom','https://api.crm.com/webhook/XXXXX','payment_added',0,'2025-04-03 10:45:55.329500',NULL);
-
+INSERT INTO integrations VALUES(4,4,'teste','teset','teset',1,'2025-04-10 11:10:27.911651',NULL);
+INSERT INTO integrations VALUES(5,4,'erqwerqwer','qwerqwer','qwerqwer',1,'2025-04-10 11:14:54.373691',NULL);
 CREATE TABLE payment_methods (
 	id INTEGER NOT NULL, 
 	user_id INTEGER NOT NULL, 
@@ -627,7 +620,6 @@ CREATE TABLE payment_methods (
 	PRIMARY KEY (id), 
 	FOREIGN KEY(user_id) REFERENCES usuarios (id)
 );
-
 INSERT INTO payment_methods VALUES(1,2,'credit_card','VISA ending in 4242',1,'2025-04-03 10:45:55.332126','2025-04-03 10:45:55.332129');
 INSERT INTO payment_methods VALUES(2,2,'paypal','user@example.com',0,'2025-04-03 10:45:55.332131','2025-04-03 10:45:55.332132');
 INSERT INTO payment_methods VALUES(3,3,'bank_transfer','IBAN: ESXX XXXX XXXX XXXX XXXX',1,'2025-04-03 10:45:55.332134','2025-04-03 10:45:55.332136');
@@ -649,16 +641,11 @@ INSERT INTO payment_methods VALUES(18,3,'bank_transfer','IBAN: ESXX XXXX XXXX XX
 INSERT INTO payment_methods VALUES(19,2,'credit_card','VISA ending in 4242',1,'2025-04-03 13:07:25','2025-04-03 13:07:25');
 INSERT INTO payment_methods VALUES(20,2,'paypal','user@example.com',0,'2025-04-03 13:07:25','2025-04-03 13:07:25');
 INSERT INTO payment_methods VALUES(21,3,'bank_transfer','IBAN: ESXX XXXX XXXX XXXX XXXX',1,'2025-04-03 13:07:25','2025-04-03 13:07:25');
-INSERT INTO payment_methods VALUES(22,4,'stripoer','pago estripoer',0,'2025-04-04 19:54:13.654140','2025-04-06 22:45:45.202146');
-INSERT INTO payment_methods VALUES(23,4,'credit bank','my bank',0,'2025-04-05 11:18:02.949542','2025-04-06 18:57:08.588683');
-INSERT INTO payment_methods VALUES(24,4,'tarjeteee','my credit card',0,'2025-04-05 11:18:09.398887','2025-04-05 11:18:09.398903');
-INSERT INTO payment_methods VALUES(25,4,'teasef asdfasd f','asdfasdfsad',0,'2025-04-06 22:45:42.674178','2025-04-06 22:46:16.919428');
 INSERT INTO payment_methods VALUES(26,4,'checke gourmet','gurmet',1,'2025-04-06 22:46:15.313151','2025-04-06 22:46:16.924262');
 INSERT INTO payment_methods VALUES(27,9,'checke gourmet','cheke vicente gurme',1,'2025-04-08 13:24:24.850500','2025-04-08 13:24:26.662651');
 INSERT INTO payment_methods VALUES(28,2,'credit_card','VISA ending in 4242',1,'2025-04-09 23:57:15','2025-04-09 23:57:15');
 INSERT INTO payment_methods VALUES(29,2,'paypal','user@example.com',0,'2025-04-09 23:57:15','2025-04-09 23:57:15');
 INSERT INTO payment_methods VALUES(30,3,'bank_transfer','IBAN: ESXX XXXX XXXX XXXX XXXX',1,'2025-04-09 23:57:15','2025-04-09 23:57:15');
-
 CREATE TABLE error_logs (
 	id INTEGER NOT NULL, 
 	user_id INTEGER, 
@@ -675,6 +662,7 @@ CREATE TABLE error_logs (
 	FOREIGN KEY(user_id) REFERENCES usuarios (id), 
 	FOREIGN KEY(session_id) REFERENCES sesiones_anonimas (id)
 );
+INSERT INTO error_logs VALUES(1,NULL,NULL,'anonymous',400,'Sesión anónima inválida',NULL,'http://127.0.0.1:8000/info','GET','127.0.0.1','2025-04-10 10:17:11.100311');
 
 CREATE TABLE user_gamification (
 	id INTEGER NOT NULL, 
@@ -689,9 +677,8 @@ CREATE TABLE user_gamification (
 	FOREIGN KEY(event_type_id) REFERENCES event_types (id), 
 	FOREIGN KEY(badge_id) REFERENCES badges (id)
 );
-
-
-
+INSERT INTO user_gamification VALUES(1,4,NULL,5,150,8);
+INSERT INTO user_gamification VALUES(2,4,NULL,6,7,NULL);
 CREATE TABLE payment_providers (
 	id INTEGER NOT NULL, 
 	name VARCHAR(50) NOT NULL, 
@@ -699,14 +686,9 @@ CREATE TABLE payment_providers (
 	PRIMARY KEY (id), 
 	UNIQUE (name)
 );
-
 INSERT INTO payment_providers VALUES(1,'stripoer',1);
 INSERT INTO payment_providers VALUES(2,'credit bank',1);
-INSERT INTO payment_providers VALUES(3,'tarjeteee',1);
-INSERT INTO payment_providers VALUES(4,'asfasdfasdfasdf',1);
-INSERT INTO payment_providers VALUES(5,'teasef asdfasd f',1);
 INSERT INTO payment_providers VALUES(6,'checke gourmet',1);
-
 CREATE TABLE coupons (
 	id INTEGER NOT NULL, 
 	name VARCHAR(100) NOT NULL, 
@@ -725,7 +707,6 @@ CREATE TABLE coupons (
 	PRIMARY KEY (id), 
 	UNIQUE (unique_identifier)
 );
-
 INSERT INTO coupons VALUES(4,'Recompensa Encuesta','Cupón por completar la encuesta','c0f4f4eb-30e8-4127-be23-4dc3011fbb17','2025-04-10 09:24:12.634122',NULL,NULL,1,'active',10,NULL,NULL,NULL,NULL);
 INSERT INTO coupons VALUES(5,'Bienvenida','Cupón de bienvenida para usuarios anónimos','dd7ba7c4-651f-4c7a-81ee-b3149e343cf4','2025-04-10 09:24:34.576009',NULL,NULL,1,'active',5,NULL,'5277baa1-6b36-4401-b252-c12cabf33629',NULL,NULL);
 INSERT INTO coupons VALUES(6,'Registrado','Cupon por registrarse','6fe9652f-cc54-4153-b05b-9226285d6dfd','2025-04-10 09:27:07.967261',NULL,NULL,1,'active',5,NULL,NULL,NULL,NULL);
@@ -735,7 +716,20 @@ INSERT INTO coupons VALUES(9,'Recompensa Encuesta','Cupón por completar la encu
 INSERT INTO coupons VALUES(10,'Demo Coupon','Cupón de demostración','8d2d9360-6960-4f34-adda-277cf38ab5ce','2025-04-10 10:00:03.405445',NULL,NULL,1,'active',5,NULL,NULL,NULL,NULL);
 INSERT INTO coupons VALUES(11,'Bienvenida','Cupón de bienvenida para usuarios anónimos','cb6a5293-e712-49fb-8ed8-bb71a6208dc0','2025-04-10 10:02:46.013487',NULL,NULL,1,'active',5,NULL,'bfaf0269-a2ec-4100-a671-6a2ac7a52ce1',NULL,NULL);
 INSERT INTO coupons VALUES(12,'Demo Coupon','Cupón de demostración','01f6fba6-b195-4533-9a60-0e163f3582c5','2025-04-10 10:03:35.236935',NULL,NULL,1,'active',5,NULL,NULL,NULL,NULL);
-
+INSERT INTO coupons VALUES(13,'Recompensa Encuesta','Cupón por completar la encuesta','3ad3c85b-886d-48e8-b306-cdd447bb1e9c','2025-04-10 10:28:37.949055',NULL,NULL,1,'active',10,NULL,NULL,NULL,NULL);
+INSERT INTO coupons VALUES(14,'Bienvenida','Cupón de bienvenida para usuarios anónimos','af5d8fc4-f4b2-4cb2-9df3-aa34c2e15f6f','2025-04-10 11:30:30.952932',NULL,NULL,1,'active',5,NULL,'20120a4b-412b-4979-b67b-c0a5d2659f1c',NULL,NULL);
+CREATE TABLE api_logs (
+	id INTEGER NOT NULL, 
+	user_id INTEGER, 
+	endpoint VARCHAR(255) NOT NULL, 
+	method VARCHAR(10) NOT NULL, 
+	status_code INTEGER NOT NULL, 
+	request_data TEXT, 
+	response_data TEXT, 
+	timestamp DATETIME, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES usuarios (id)
+);
 CREATE UNIQUE INDEX ix_usuarios_username ON usuarios (username);
 CREATE INDEX ix_usuarios_id ON usuarios (id);
 CREATE UNIQUE INDEX ix_usuarios_email ON usuarios (email);
@@ -750,10 +744,8 @@ CREATE INDEX ix_credit_transactions_id ON credit_transactions (id);
 CREATE INDEX ix_integrations_id ON integrations (id);
 CREATE INDEX ix_payment_methods_id ON payment_methods (id);
 CREATE INDEX ix_error_logs_id ON error_logs (id);
-/*
-CREATE INDEX ix_api_logs_id ON api_logs (id);
-*/
 CREATE INDEX ix_user_gamification_id ON user_gamification (id);
 CREATE INDEX ix_payment_providers_id ON payment_providers (id);
 CREATE INDEX ix_coupons_id ON coupons (id);
+CREATE INDEX ix_api_logs_id ON api_logs (id);
 COMMIT;
