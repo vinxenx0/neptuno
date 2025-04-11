@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Mini Twitter</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>🐦 MiniTwitter</h1>
+    {% if user %}
+    <p>👋 {{ user.username }} | 🪙 {{ user.credits }} créditos | 🏆 {{ points }} pts | 🎖️ {{ badges }} badges</p>
+    <form action="/logout" method="post"><button>Logout</button></form>
+    {% endif %}
+  </header>
+
+  {% for message in messages %}
+  <div class="flash {{ message[0] }}">{{ message[1] }}</div>
+  {% endfor %}
+
+  {% if user %}
+  <form action="/logout" method="post" style="display:inline;">
+    <button>Logout</button>
+  </form>
+  {% endif %}
+
+
+  {% if not user %}
+  <section>
+    <h2>Login</h2>
+    <form action="/login" method="post">
+      <input name="username" placeholder="Usuario">
+      <input name="password" type="password" placeholder="Contraseña">
+      <button>Entrar</button>
+    </form>
+
+    <h2>Registro</h2>
+    <form action="/register" method="post">
+      <input name="username" placeholder="Usuario">
+      <input name="email" type="email" placeholder="Email">
+      <input name="password" type="password" placeholder="Contraseña">
+      <button>Crear cuenta</button>
+    </form>
+  </section>
+  {% else %}
+  <form action="/tweet" method="post">
+    <textarea name="content" rows="2" placeholder="¿En qué piensas?"></textarea>
+    <button>Publicar</button>
+  </form>
+  {% endif %}
+
+  <section>
+    <h2>🧵 Timeline</h2>
+    {% for t in tweets %}
+    <div class="tweet {% if t.parent_id %}reply{% endif %}">
+      <p><strong>{{ t.user }}</strong>: {{ t.content }}</p>
+    </div>
+    {% endfor %}
+  </section>
+
+  <footer>
+    <p>© Neptuno POC</p>
+  </footer>
+</body>
+
+</html>

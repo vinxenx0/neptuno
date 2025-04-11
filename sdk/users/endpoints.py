@@ -1,7 +1,7 @@
 # sdk/users/endpoints.py
 
-from client import request
-from models.user import UserResponse, UpdateProfileRequest
+from sdk.client import request
+from sdk.models.user import UserResponse, UpdateProfileRequest
 from typing import List
 
 

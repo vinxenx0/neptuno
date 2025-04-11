@@ -1,5 +1,5 @@
-from client import request
-from models.site_settings import SiteSettingResponse, SiteSettingCreate, UpdateConfigRequest
+from sdk.client import request
+from sdk.models.site_settings import SiteSettingResponse, SiteSettingCreate, UpdateConfigRequest
 from typing import List
 
 

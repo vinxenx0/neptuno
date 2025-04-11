@@ -2,8 +2,8 @@
 # sdk/client.py
 
 import httpx
-from config import settings
-from exceptions import (
+from sdk.config import settings
+from sdk.exceptions import (
     UnauthorizedError, NotFoundError, ServerError, ValidationError, ConflictError, SDKError
 )
 
@@ -34,6 +34,9 @@ def request(method: str, path: str, data: dict = None, form: bool = False) -> di
             raise ConflictError("Conflict occurred")
         elif response.status_code == 422:
             raise ValidationError(response.text)
+        elif response.status_code == 500:
+            print("🔴 Server Error:", response.text)  # Agrega esto para debugging
+            raise ServerError("Internal server error")
         elif 500 <= response.status_code < 600:
             raise ServerError("Internal server error")
 

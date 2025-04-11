@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>🧵 Timeline</title></head>
+<body>
+    <h1>📜 Timeline de {{ user.username if user else "Invitado" }}</h1>
+    <a href="/">⬅ Volver</a>
+    {% for t in timeline %}
+        {% include 'tweet.html' with context %}
+    {% endfor %}
+</body>
+</html>

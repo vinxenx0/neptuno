@@ -1,12 +1,12 @@
-from config import settings
-from auth.endpoints import login
-from models.auth import LoginRequest
-from users import endpoints as users
-from gamification import endpoints as gamy
-from payments import endpoints as payments
-from models.payment import PaymentMethodCreate, PurchaseRequest
-from models.gamification import GamificationEventCreate
-from transactions import endpoints as transactions
+from sdk.config import settings
+from sdk.auth.endpoints import login
+from sdk.models.auth import LoginRequest
+from sdk.users import endpoints as users
+from sdk.gamification import endpoints as gamy
+from sdk.payments import endpoints as payments
+from sdk.models.payment import PaymentMethodCreate, PurchaseRequest
+from sdk.models.gamification import GamificationEventCreate
+from sdk.transactions import endpoints as transactions
 
 def print_status(message, ok=True):
     status = "✅" if ok else "❌"

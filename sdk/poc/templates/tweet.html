@@ -1,0 +1,11 @@
+<div style="margin-left:40px;">
+    <strong>{{ t.user }}</strong>: {{ t.content }}
+    <form action="/tweet" method="post">
+        <input type="hidden" name="parent_id" value="{{ t.id }}">
+        <input name="content" placeholder="Responder...">
+        <button>Responder</button>
+    </form>
+    {% for r in t.replies %}
+        {% include 'tweet.html' with context %}
+    {% endfor %}
+</div>

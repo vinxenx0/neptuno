@@ -1,6 +1,6 @@
 from typing import List
-from client import request
-from models.gamification import (
+from sdk.client import request
+from sdk.models.gamification import (
     GamificationEventCreate,
     GamificationEventResponse,
     UserGamificationResponse,

@@ -1,6 +1,6 @@
 from typing import List
-from client import request
-from models.payment import (
+from sdk.client import request
+from sdk.models.payment import (
     PurchaseRequest,
     PurchaseResponse,
     PaymentMethodCreate,

@@ -1,9 +1,9 @@
 # sdk/auth/endpoints.py
 # sdk/auth/endpoints.py
 
-from client import request
-from models.auth import (
-    LoginRequest, TokenResponse, PasswordResetRequest, PasswordResetConfirm,
+from sdk.client import request
+from sdk.models.auth import (
+    LoginRequest, RegisterRequest, TokenResponse, PasswordResetRequest, PasswordResetConfirm,
     RefreshTokenRequest, ChangePasswordRequest
 )
 
@@ -16,8 +16,7 @@ def login(data: LoginRequest) -> TokenResponse:
 
 
 def register(data: dict) -> TokenResponse:
-    """Registro de usuario (usa mismo esquema que RegisterRequest del backend)"""
-    result = request("POST", "/v1/auth/register", data=data)
+    result = request("POST", "/v1/auth/register", data=data)  # ← Ya es un dict, no .dict()
     return TokenResponse(**result)
 
 

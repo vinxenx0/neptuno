@@ -1,15 +1,15 @@
 # /sdk/tests/test_e2e.py
 # python -m pytest tests
 import pytest
-from auth.endpoints  import login
-from models.auth import LoginRequest
-from users import endpoints as users
-from gamification import endpoints as gamy
-from models.gamification import GamificationEventCreate
-from payments import endpoints as payments
-from models.payment import PaymentMethodCreate, PurchaseRequest
-from transactions import endpoints as transactions
-from config import settings
+from sdk.auth.endpoints  import login
+from sdk.models.auth import LoginRequest
+from sdk.users import endpoints as users
+from sdk.gamification import endpoints as gamy
+from sdk.models.gamification import GamificationEventCreate
+from sdk.payments import endpoints as payments
+from sdk.models.payment import PaymentMethodCreate, PurchaseRequest
+from sdk.transactions import endpoints as transactions
+from sdk.config import settings
 
 import sys
 import os
