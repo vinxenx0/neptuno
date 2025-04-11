@@ -1,6 +1,7 @@
 # backend/dependencies/auth.py
 # Módulo de dependencias de autenticación.
 # backend/dependencies/auth.py
+from models.coupon_type import CouponType
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -97,13 +98,18 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             db.commit()
 
             # Crear cupón de bienvenida
+            coupon_type = db.query(CouponType).filter(CouponType.name == "Bienvenida").first()
+            if not coupon_type:
+                logger.error("Tipo de cupón 'Bienvenida' no encontrado")
+                raise HTTPException(status_code=500, detail="Tipo de cupón 'Bienvenida' no encontrado")
 
             coupon_data = CouponCreate(
                 name="Bienvenida",
                 description="Cupón de bienvenida para usuarios anónimos",
                 credits=5,
                 active=True,
-                unique_identifier=f"WELCOME-{session_id[:8]}"
+                unique_identifier=f"WELCOME-{session_id[:8]}",
+                coupon_type_id=coupon_type.id  # Añadir el coupon_type_id
             )
             create_coupon(db, coupon_data, session_id=session_id)
             logger.info(f"Cupón de bienvenida creado para sesión {session_id}")

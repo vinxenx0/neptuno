@@ -17,7 +17,8 @@ dev.db
 .etc
 migrations
 .alembic.ini
-
+.trash
+.pytest_cache
 
 # dependencies
 /node_modules

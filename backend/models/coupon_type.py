@@ -7,7 +7,8 @@ class CouponType(Base):
     __tablename__ = "coupon_types"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(50), unique=True, nullable=False)  # Ejemplo: "Bienvenida", "Demostración"
+    
     description = Column(String(255), nullable=True)
     credits = Column(Integer, nullable=False)
     active = Column(Boolean, default=True)

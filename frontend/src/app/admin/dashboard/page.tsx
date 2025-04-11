@@ -100,7 +100,7 @@ export default function ConfigurePage() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [settingsByTag, setSettingsByTag] = useState<Record<string, SiteSetting[]>>({});
-  const [origins, setOrigins] = useState<string[]>([]);
+  const [origins, setOrigins] = useState<string[] | null>(null);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [newOrigin, setNewOrigin] = useState("");
   const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
@@ -254,6 +254,17 @@ export default function ConfigurePage() {
     }
   };
 
+  const handleDeleteOrigin = async (origin: string) => {
+    try {
+      await fetchAPI(`/v1/settings/allowed-origins/${encodeURIComponent(origin)}`, { method: "DELETE" });
+      setOrigins(origins.filter(o => o !== origin));
+      setSuccess("Origen eliminado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar origen");
+    }
+  };
+
   const handleAddIntegration = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -261,12 +272,37 @@ export default function ConfigurePage() {
         method: "POST",
         data: { name: newIntegration.name, webhook_url: newIntegration.webhook_url, event_type: newIntegration.event_type },
       });
-      setIntegrations([...integrations, data!]);
+      setIntegrations([...integrations, data]);
       setNewIntegration({ name: "", webhook_url: "", event_type: "" });
       setSuccess("Integración creada con éxito");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al crear integración");
+    }
+  };
+
+  const handleToggleIntegration = async (id: number, active: boolean) => {
+    try {
+      const { data } = await fetchAPI(`/v1/integrations/${id}`, {
+        method: "PUT",
+        data: { name: integrations.find(i => i.id === id)?.name, webhook_url: integrations.find(i => i.id === id)?.webhook_url, event_type: integrations.find(i => i.id === id)?.event_type, active: !active },
+      });
+      setIntegrations(integrations.map(i => i.id === id ? data as Integration : i));
+      setSuccess(`Integración ${active ? "desactivada" : "activada"} con éxito`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar integración");
+    }
+  };
+
+  const handleDeleteIntegration = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/integrations/${id}`, { method: "DELETE" });
+      setIntegrations(integrations.filter(i => i.id !== id));
+      setSuccess("Integración eliminada con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar integración");
     }
   };
 
@@ -1049,9 +1085,9 @@ export default function ConfigurePage() {
                 </CardContent>
               </ConfigGlassCard>
 
-              {origins.length > 0 ? (
+              {Array.isArray(origins) && origins.length > 0 ? (
                 <Grid container spacing={2}>
-                  {origins.map((origin, index) => (
+                  {Array.isArray(origins) && origins.map((origin, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                       <ConfigGlassCard>
                         <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1059,7 +1095,9 @@ export default function ConfigurePage() {
                             <Public color="primary" />
                             <Typography noWrap sx={{ maxWidth: '200px' }}>{origin}</Typography>
                           </Box>
-                          <IconButton color="error"><Delete /></IconButton>
+                          <IconButton color="error" onClick={() => handleDeleteOrigin(origin)}>
+                            <Delete />
+                          </IconButton>
                         </CardContent>
                       </ConfigGlassCard>
                     </Grid>
@@ -1127,14 +1165,18 @@ export default function ConfigurePage() {
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Webhook color="primary" />
-                              {integration.name}
+                              {integration.name} (User ID: {integration.user_id})
                             </Typography>
-                            <Chip
-                              label={integration.active ? "Activo" : "Inactivo"}
-                              color={integration.active ? "success" : "error"}
-                              size="small"
-                              icon={integration.active ? <CheckCircle /> : <Cancel />}
-                            />
+                            <Box>
+                              <Switch
+                                checked={integration.active}
+                                onChange={() => handleToggleIntegration(integration.id, integration.active)}
+                                color="primary"
+                              />
+                              <IconButton color="error" onClick={() => handleDeleteIntegration(integration.id)}>
+                                <Delete />
+                              </IconButton>
+                            </Box>
                           </Box>
                           <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
                             <strong>Webhook:</strong> {integration.webhook_url}

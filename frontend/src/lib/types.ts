@@ -80,6 +80,7 @@ export interface CreditTransaction {
 }
 
 export interface Integration {
+  user_id: number;
   id: number;
   name: string;
   webhook_url: string;

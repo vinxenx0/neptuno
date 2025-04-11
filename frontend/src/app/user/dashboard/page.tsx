@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableHead, TableRow, Link } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Box, Grid, Card, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
@@ -17,6 +17,7 @@ import {
   LocationOn, Language, Star, StarBorder,
   LocalActivity
 } from "@mui/icons-material";
+import { Integration } from "@/lib/types";
 
 // Styled Components
 const GradientCard = styled(Card)(({ theme }) => ({
@@ -77,6 +78,8 @@ export default function UserDashboard() {
   const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
   const [deleteMethodId, setDeleteMethodId] = useState<number | null>(null);
   const { coupons, setCoupons } = useAuth();
+  const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
 
   const handleRedeem = async (couponId: number) => {
     const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, {
@@ -101,14 +104,16 @@ export default function UserDashboard() {
 
     const fetchData = async () => {
       try {
-        const [transRes, methRes, providersRes] = await Promise.all([
+        const [transRes, methRes, providersRes, integrationsRes] = await Promise.all([
           fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
           fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
           fetchAPI<PaymentProvider[]>("/v1/payment-providers"),
+          fetchAPI<Integration[]>("/v1/integrations/"),
         ]);
         setTransactions(transRes.data || []);
         setMethods(methRes.data || []);
         setPaymentProviders(providersRes.data?.filter(p => p.active) || []);
+        setIntegrations(integrationsRes.data || []);
         if (providersRes.data && providersRes.data.length > 0) {
           setNewMethod(prev => ({ ...prev, payment_type: providersRes.data.find(p => p.active)?.name || "" }));
         }
@@ -118,6 +123,33 @@ export default function UserDashboard() {
     };
     fetchData();
   }, [user, router]);
+
+  const handleAddIntegration = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<Integration>("/v1/integrations/", {
+        method: "POST",
+        data: { name: newIntegration.name, webhook_url: newIntegration.webhook_url, event_type: newIntegration.event_type },
+      });
+      setIntegrations([...integrations, data!]);
+      setNewIntegration({ name: "", webhook_url: "", event_type: "" });
+      setSuccess("Integración creada con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear integración");
+    }
+  };
+
+  const handleDeleteIntegration = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/integrations/${id}`, { method: "DELETE" });
+      setIntegrations(integrations.filter((i) => i.id !== id));
+      setSuccess("Integración eliminada");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar integración");
+    }
+  };
 
   const handleEditMethod = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -398,6 +430,7 @@ export default function UserDashboard() {
               <Tab label="Transacciones" icon={<History />} iconPosition="start" />
               <Tab label="Métodos de Pago" icon={<Payment />} iconPosition="start" />
               <Tab label="Comprar Créditos" icon={<CreditCard />} iconPosition="start" />
+              <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
             </Tabs>
           </Paper>
         </motion.div>
@@ -1144,6 +1177,57 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
+            </motion.div>
+          )}
+
+          {tabValue === 6 && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <GlassCard>
+                <CardHeader title="Mis Integraciones" avatar={<Link color="primary" />} />
+                <CardContent>
+                  <Box component="form" onSubmit={handleAddIntegration} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <TextField
+                      label="Nombre de la Integración"
+                      value={newIntegration.name}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <TextField
+                      label="Webhook URL"
+                      value={newIntegration.webhook_url}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <TextField
+                      label="Tipo de Evento"
+                      value={newIntegration.event_type}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <Button type="submit" variant="contained" color="primary" startIcon={<AddCircle />}>
+                      Añadir Integración
+                    </Button>
+                  </Box>
+                  {integrations.length > 0 && (
+                    <List sx={{ mt: 3 }}>
+                      {integrations.map((integration) => (
+                        <ListItem key={integration.id}>
+                          <ListItemText
+                            primary={integration.name}
+                            secondary={`Webhook: ${integration.webhook_url} | Evento: ${integration.event_type} | Estado: ${integration.active ? "Activo (Admin)" : "Pendiente"}`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </GlassCard>
             </motion.div>
           )}
         </Box>

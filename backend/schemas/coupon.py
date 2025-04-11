@@ -25,14 +25,17 @@ class CouponBase(BaseModel):
     expires_at: Optional[datetime] = None
 
 class CouponCreate(BaseModel):
-    coupon_type_id: int
-    user_id: Optional[int] = None
-    session_id: Optional[str] = None
+    name: str
+    description: Optional[str] = None
+    credits: int
+    active: bool = True
+    unique_identifier: str
+    coupon_type_id: int  # Campo obligatorio
 
-class CouponResponse(CouponBase):
+class CouponResponse(CouponCreate):
     id: int
-    coupon_type_id: int
     issued_at: datetime
+    expires_at: Optional[datetime] = None
     redeemed_at: Optional[datetime] = None
     status: str
     user_id: Optional[int] = None
