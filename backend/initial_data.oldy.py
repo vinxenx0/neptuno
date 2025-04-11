@@ -2,7 +2,6 @@
 import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
 from core.database import SessionLocal, Base, engine
 from models.site_settings import SiteSettings
 from models.user import User, subscriptionEnum
@@ -23,16 +22,9 @@ def init_db():
     Base.metadata.create_all(bind=engine)
 
 def init_settings_and_users():
-    """Pobla la base de datos con datos iniciales si está vacía."""
-    Session = sessionmaker(bind=engine)
-    db = Session()
+    db = SessionLocal()
     try:
-        # Verificar si la base de datos ya tiene datos
-        if db.query(User).first():
-            print("La base de datos ya está poblada. No se realizarán cambios.")
-            return
-
-        # Configuraciones iniciales en site_settings
+        # Configuraciones iniciales con tags
         settings_data = [
             {"key": "token_expiration", "value": 60, "description": "Tiempo de vida del access token (segundos)", "tag": "auth"},
             {"key": "refresh_token_expiration", "value": 604800, "description": "Tiempo de vida del refresh token (7 días)", "tag": "auth"},

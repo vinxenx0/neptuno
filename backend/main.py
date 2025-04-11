@@ -2,6 +2,7 @@
 # Punto de entrada principal de la aplicación.
 from api.v1 import payment_providers
 from api.v1 import coupons
+from initial_data import init_db, init_settings_and_users
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
 from services.gamification_service import get_user_gamification, register_event
@@ -82,13 +83,15 @@ db = next(get_db())
 #)
 
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 
 
 @app.on_event("startup")
 async def startup_event():
-
+    init_db()  # Crea las tablas si no existen
+    init_settings_and_users()  # Pobla con datos iniciales si es necesario
+    
     try:
         admin_id = 1
         logger.info(f"Iniciando {settings.PROJECT_NAME} en entorno {settings.ENVIRONMENT}")

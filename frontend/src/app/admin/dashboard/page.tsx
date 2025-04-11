@@ -41,6 +41,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Select,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {
@@ -130,6 +131,10 @@ export default function ConfigurePage() {
   const [editCoupon, setEditCoupon] = useState<Coupon | null>(null);
   const [couponTypes, setCouponTypes] = useState<CouponType[]>([]);
   const [editCouponType, setEditCouponType] = useState<CouponType | null>(null);
+  const [corsEnabled, setCorsEnabled] = useState(true);
+
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
@@ -206,6 +211,38 @@ export default function ConfigurePage() {
     };
     fetchData();
   }, [user, router]);
+
+  useEffect(() => {
+    const fetchCorsSettings = async () => {
+      const { data } = await fetchAPI("/v1/settings/allowed_origins");
+      setCorsEnabled(data === "true");
+      if (data === "true") {
+        const originsData = await fetchAPI<string[]>("/v1/origins");
+        setOrigins(originsData.data || []);
+      }
+    };
+    fetchCorsSettings();
+  }, []);
+
+  const handleToggleCors = async () => {
+    try {
+      await fetchAPI("/v1/settings/admin/config", {
+        method: "POST",
+        data: { key: "allowed_origins", value: (!corsEnabled).toString() },
+      });
+      setCorsEnabled(!corsEnabled);
+      setSuccess(`CORS ${!corsEnabled ? "activado" : "desactivado"}`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar CORS");
+    }
+  };
+
+
+  //const handleToggleIntegration = async (id: number, active: boolean) => {
+  //  await fetchAPI(`/v1/integrations/${id}/toggle`, { method: "PUT" });
+    // Actualizar estado local
+  //};
 
   const groupedBadges = badges.reduce((acc, badge) => {
     const key = badge.event_type_id;
@@ -331,6 +368,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdateEventType = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editEventType?.id) return;
     try {
       const { data } = await fetchAPI<EventType>(`/v1/gamification/event-types/${editEventType.id}`, { method: "PUT", data: editEventType });
@@ -368,6 +406,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdateBadge = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editBadge?.id) return;
     try {
       const { data } = await fetchAPI<Badge>(`/v1/gamification/badges/${editBadge.id}`, { method: "PUT", data: editBadge });
@@ -419,6 +458,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdatePaymentProvider = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editPaymentProvider?.id) return;
     try {
       const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${editPaymentProvider.id}`, {
@@ -444,6 +484,7 @@ export default function ConfigurePage() {
       setError(err instanceof Error ? err.message : "Error al eliminar proveedor");
     }
   };
+
 
   // Funciones para manejar cupones
   const handleSubmitCouponType = async (e: React.FormEvent) => {
@@ -1058,67 +1099,32 @@ export default function ConfigurePage() {
 
           {/* Orígenes Permitidos Tab */}
           {activeTab === 1 && (
-            <Box sx={{ mb: 4 }}>
-              <ConfigGlassCard sx={{ mb: 3 }}>
-                <CardContent>
-                  <Box component="form" onSubmit={handleAddOrigin} sx={{ display: 'flex', gap: 2 }}>
-                    <TextField
-                      label="Nuevo Origen Permitido"
-                      value={newOrigin}
-                      onChange={(e) => setNewOrigin(e.target.value)}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      placeholder="https://example.com"
-                      InputProps={{ startAdornment: <Public color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      startIcon={<AddCircle />}
-                      sx={{ minWidth: '120px' }}
-                    >
-                      Añadir
-                    </Button>
-                  </Box>
-                </CardContent>
-              </ConfigGlassCard>
-
-              {Array.isArray(origins) && origins.length > 0 ? (
-                <Grid container spacing={2}>
-                  {Array.isArray(origins) && origins.map((origin, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                      <ConfigGlassCard>
-                        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Public color="primary" />
-                            <Typography noWrap sx={{ maxWidth: '200px' }}>{origin}</Typography>
-                          </Box>
-                          <IconButton color="error" onClick={() => handleDeleteOrigin(origin)}>
-                            <Delete />
-                          </IconButton>
-                        </CardContent>
-                      </ConfigGlassCard>
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <ConfigGlassCard>
-                  <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                    <Public sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-                    <Typography variant="h6" color="textSecondary">
-                      No hay orígenes permitidos
-                    </Typography>
-                  </CardContent>
-                </ConfigGlassCard>
+            <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h6">Orígenes Permitidos</Typography>
+                <Switch checked={corsEnabled} onChange={handleToggleCors} />
+              </Box>
+              {corsEnabled && (
+                <Table>
+                  <TableHead sx={{ backgroundColor: '#333', color: 'white' }}>
+                    <TableRow>
+                      <TableCell sx={{ color: 'white' }}>Origen</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {origins.map((origin, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{origin}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               )}
             </Box>
           )}
-
           {/* Integraciones Tab */}
           {activeTab === 2 && (
-            <Box sx={{ mb: 4 }}>
+            <Box>
               <ConfigGlassCard sx={{ mb: 3 }}>
                 <CardContent>
                   <Box component="form" onSubmit={handleAddIntegration} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

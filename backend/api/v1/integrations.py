@@ -1,7 +1,9 @@
 # backend/api/v1/integrations.py
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from models.user import User
+from schemas.integration import IntegrationCreate
 from models.integration import Integration
 from dependencies.auth import UserContext, get_user_context
 from services.integration_service import add_integration
@@ -101,3 +103,31 @@ def delete_integration(
     db.delete(integration)
     db.commit()
     return {"message": "Integración eliminada"}
+
+
+@router.put("/integrations/{integration_id}/toggle")
+async def toggle_integration(integration_id: int, current_user: User = Depends(get_user_context), db: Session = Depends(get_db)):
+    integration = db.query(Integration).filter(Integration.id == integration_id).first()
+    if not integration:
+        raise HTTPException(status_code=404, detail="Integración no encontrada")
+    if current_user.rol != "admin" and integration.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No autorizado")
+    integration.active = not integration.active
+    db.commit()
+    return {"message": "Estado actualizado"}
+
+@router.post("/integrations")
+async def create_integration(integration: IntegrationCreate, user_id: Optional[int] = None, current_user: User = Depends(get_user_context), db: Session = Depends(get_db)):
+    if current_user.rol == "admin" and user_id:
+        target_user = db.query(User).filter(User.id == user_id).first()
+        if not target_user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        integration_data = integration.dict()
+        integration_data["user_id"] = user_id
+    else:
+        integration_data = integration.dict()
+        integration_data["user_id"] = current_user.id
+    db_integration = Integration(**integration_data)
+    db.add(db_integration)
+    db.commit()
+    return db_integration
