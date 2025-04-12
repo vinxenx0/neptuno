@@ -72,3 +72,7 @@ class User(Base):
     #volumen_transacciones = Column(Float, nullable=True)  
     #origen_lead = Column(String(100), nullable=True)  
     #clientes_referidos = Column(Integer, nullable=True)  
+
+    # Añadir relaciones inversas en los modelos existentes
+    coupons = relationship("Coupon", foreign_keys="Coupon.user_id", back_populates="user")
+    

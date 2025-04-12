@@ -150,7 +150,7 @@ const TabContent = ({ tab }: { tab: string }) => {
       try {
         setLoading(true);
         let endpoint = `/v1/${tab}?page=${page}&limit=${limit}`;
-        if (tab === "coupons") endpoint = `/v1/coupons/activity?page=${page}&limit=${limit}`;
+        if (tab === "coupons") endpoint = `/v1/coupons/activity`; //?page=${page}&limit=${limit}`;
         const response = await fetchAPI<{
           data: any[];
           total_items: number;

@@ -18,6 +18,8 @@ import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
 import { UserGamificationResponse, Badge, InfoResponse, Coupon } from "@/lib/types";
+import { n } from "framer-motion/dist/types.d-B50aGbjN";
+import { Session } from "inspector/promises";
 
 export default function Ejemplos() {
   const { setGamification } = useAuth();
@@ -33,6 +35,7 @@ export default function Ejemplos() {
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
   const { setCoupons } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
+  const { user, coupons } = useAuth();
 
   const updateGamification = async () => {
     const { data } = await fetchAPI<InfoResponse>("/info");
@@ -49,12 +52,11 @@ export default function Ejemplos() {
 
   const handleGenerateCoupon = async () => {
     try {
-      const { data } = await fetchAPI<Coupon>("/v1/coupons/generate-demo-coupon", {
+      const { data } = await fetchAPI<Coupon>("/v1/coupons/generate-demo-coupon?credits=5", {
         method: "POST",
-        data: { credits: 5,  active: true, unique_identifier: `DEMO-${Date.now()}` },
       });
       if (data) {
-        setCoupons([...useAuth().coupons, data]);
+        setCoupons([...coupons, data]);
         setMessage("Cupón generado");
       } else {
         setMessage("Error: No se recibió el cupón");

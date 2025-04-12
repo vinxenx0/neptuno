@@ -473,11 +473,14 @@ def init_settings_and_users():
         coupons = [{
             "coupon_type_id": coupon_type_objects[0].id,
             "unique_identifier": str(uuid.uuid4()),
+            "name": str(uuid.uuid4()),
             "issued_at": datetime.utcnow() - timedelta(days=5),
             "expires_at": datetime.utcnow() + timedelta(days=25),
             "active": True,
             "status": "active",
-            "user_id": users[0].id
+            "user_id": users[0].id,
+            "session_id": anonymous_sessions[0].id,
+            "credits": 50
         }]
         for coupon in coupons:
             db.add(Coupon(**coupon))

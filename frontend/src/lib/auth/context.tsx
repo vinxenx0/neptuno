@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge, Coupon  } from "../types";
+import { User, TokenResponse, RegisterRequest, UserInfo, Gamification, Badge, Coupon } from "../types";
 import { motion } from "framer-motion";
 import { GamificationEventCreate, GamificationEventResponse, UserGamificationResponse } from "../types";
 
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data } = await fetchAPI<UserInfo>("/info");
+        const { data } = await fetchAPI<any>("/info"); // Endpoint para obtener info del usuario
         if (data) {
           if (data.user_type === "registered") {
             setUser({
@@ -59,27 +59,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               user_type: data.user_type,
             });
             setCredits(data.credits);
-            localStorage.removeItem("session_id");
-            localStorage.removeItem("anonUsername");
           } else if (data.user_type === "anonymous") {
             setUser(null);
-            //setCredits(data.credits);
-            //setCoupons([]);
-            setGamification({ points: 0, badges: [] });
+            setCredits(data.credits);
             localStorage.setItem("session_id", data.session_id!);
-            localStorage.setItem("anonUsername", data.username!);
           } else {
             setUser(null);
             setCredits(0);
-            localStorage.removeItem("session_id");
-            localStorage.removeItem("anonUsername");
           }
-  
-          // Procesar datos de gamificación
-          const { data: gamificationData } = await fetchAPI<UserGamificationResponse[]>("/v1/gamification/me");
-          if (gamificationData && Array.isArray(gamificationData)) {
-            const totalPoints = gamificationData.reduce((sum, g) => sum + g.points, 0);
-            const badges = gamificationData.map(g => g.badge).filter(b => b !== null) as Badge[];
+
+          // Obtener datos de gamificación
+          const gamificationRes = await fetchAPI<any[]>("/v1/gamification/me");
+          if (gamificationRes.data) {
+            const totalPoints = gamificationRes.data.reduce((sum, g) => sum + g.points, 0);
+            const badges = gamificationRes.data.map(g => g.badge).filter(Boolean) as Badge[];
             setGamification({ points: totalPoints, badges });
           } else {
             setGamification({ points: 0, badges: [] });
@@ -88,7 +81,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // Obtener cupones del usuario
           const couponsRes = await fetchAPI<Coupon[]>("/v1/coupons/me");
           setCoupons(couponsRes.data || []);
-
         }
       } catch (err) {
         console.error("Error en checkAuth:", err);
@@ -96,13 +88,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCredits(0);
         setGamification({ points: 0, badges: [] });
         setCoupons([]);
-        localStorage.removeItem("session_id");
-        localStorage.removeItem("anonUsername");
       } finally {
         setLoading(false);
       }
     };
-  
+
     checkAuth();
   }, []);
 
@@ -241,7 +231,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, credits,gamification, coupons, setCoupons, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
+      value={{ user, credits, gamification, coupons, setCoupons, setGamification, setCredits, login, logout, register, loginWithGoogle, refreshToken, updateProfile, deleteProfile, resetPassword }}
     >
       {children}
     </AuthContext.Provider>

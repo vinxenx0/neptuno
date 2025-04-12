@@ -191,7 +191,6 @@ export interface BadgeWithEventType extends Badge {
 
 // Nuevo tipo para cupones
 export interface Coupon {
-  coupon_type: any;
   id: number;
   name: string;
   description?: string;

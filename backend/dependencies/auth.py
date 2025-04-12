@@ -115,9 +115,9 @@ async def get_user_context(request: Request, response: Response, db: Session = D
                 redeemed_at=None,
                 status="active",
                 unique_identifier=f"WELCOME-{session_id[:8]}",
-                coupon_type_id=coupon_type.id  # Añadir el coupon_type_id
+                coupon_type_id=coupon_type.id  # Asignar el ID del tipo de cupón
             )
-            create_coupon(db, coupon_data) 
+            create_coupon(db, coupon_data, user_id=None, session_id=session_id) 
             logger.info(f"Cupón de bienvenida creado para sesión {session_id}")
 
         
