@@ -1484,9 +1484,11 @@ export default function ConfigurePage() {
                                 method: "POST",
                                 data: { coupon_type_id: ct.id },
                               });
-                              setCoupons([...coupons, { ...data!, coupon_type: { name: ct.name }, credits: 5 }]);
-                              setSuccess("Cupón de prueba generado con éxito");
-                              setTimeout(() => setSuccess(null), 3000);
+                              if (data) {
+                                setCoupons([...coupons, data]);
+                                setSuccess("Cupón de prueba generado con éxito");
+                                setTimeout(() => setSuccess(null), 3000);
+                              }
                             } catch (err) {
                               setError(err instanceof Error ? err.message : "Error al generar cupón de prueba");
                             }

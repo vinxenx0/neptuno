@@ -1,13 +1,14 @@
 # backend/api/v1/coupons.py
 from datetime import datetime
 import uuid
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+from core.logging import configure_logging
 from models.coupon_type import CouponType
 from models.user import User
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
-from services.coupon_service import (create_coupon, get_coupon_activity,
+from services.coupon_service import (create_coupon, create_test_coupon, get_coupon_activity,
                                      get_user_coupons, get_all_coupons,
                                      update_coupon, delete_coupon,
                                      redeem_coupon)
@@ -17,6 +18,25 @@ from typing import List
 
 router = APIRouter(tags=["Coupons"])
 
+logger = configure_logging()
+
+@router.post("/test", response_model=CouponResponse)
+async def create_test_coupon_route(
+    coupon_type_id: int = Body(..., embed=True),
+    db: Session = Depends(get_db),
+    current_user: UserContext = Depends(get_user_context)
+):
+    try:
+        # Llamar al servicio para crear el cupón
+        new_coupon = create_test_coupon(db, coupon_type_id, int(current_user.user_id))
+        db.commit()
+        db.refresh(new_coupon)
+
+        # Devolver el cupón creado como respuesta
+        return CouponResponse.from_orm(new_coupon)
+    except Exception as e:
+        logger.error(f"Error al crear cupón de prueba: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear cupón de prueba")
 
 @router.get("/activity", response_model=dict)
 async def get_coupons_activity(

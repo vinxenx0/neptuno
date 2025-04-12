@@ -9,9 +9,28 @@ from schemas.coupon import CouponCreate, CouponResponse, CouponUpdate
 from core.logging import configure_logging
 from fastapi import HTTPException
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 logger = configure_logging()
+
+def create_test_coupon(db: Session, coupon_type_id: int, admin_user_id: int):
+    unique_id = str(uuid.uuid4())
+    expires_at = datetime.utcnow() + timedelta(hours=24)  # Expira en 24 horas
+    new_coupon = Coupon(
+        coupon_type_id=coupon_type_id,
+        name="Test Coupon",  # Valor predeterminado para el campo name
+        unique_identifier=unique_id,
+        status="active",
+        credits=1,
+        issued_at=datetime.utcnow(),
+        expires_at=expires_at,
+        active=True,
+        user_id=admin_user_id  # Asignamos el cupón al admin
+    )
+    db.add(new_coupon)
+    db.commit()
+    db.refresh(new_coupon)
+    return new_coupon
 
 def get_coupon_activity(db: Session, page: int = 1, limit: int = 10) -> dict:
     """
