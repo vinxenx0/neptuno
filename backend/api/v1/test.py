@@ -1,4 +1,4 @@
-# backend/api/v1/endpoints.py
+# backend/api/v1/test.py
 # Módulo de endpoints de la API v1.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -9,7 +9,7 @@ from services.credits_service import reset_credits
 from core.database import get_db
 from core.logging import configure_logging
 
-router = APIRouter()
+router = APIRouter(tags=["test"])
 logger = configure_logging()
 
 

@@ -51,7 +51,7 @@ export default function Ejemplos() {
     try {
       const { data } = await fetchAPI<Coupon>("/v1/coupons/generate-demo-coupon", {
         method: "POST",
-        data: { credits: 5 },
+        data: { credits: 5,  active: true, unique_identifier: `DEMO-${Date.now()}` },
       });
       if (data) {
         setCoupons([...useAuth().coupons, data]);

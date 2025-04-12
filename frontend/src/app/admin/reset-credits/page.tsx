@@ -17,7 +17,7 @@ export default function ResetCreditsPage() {
   }, [user, router]);
 
   const handleClick = async () => {
-    const { data, error } = await fetchAPI<{ message: string }>("/v1/api/reset-credits", {
+    const { data, error } = await fetchAPI<{ message: string }>("/v1/test/reset-credits", {
       method: "POST",
     });
     setResponse(data?.message || null);

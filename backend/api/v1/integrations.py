@@ -28,6 +28,7 @@ def create_integration(
     integration = add_integration(db, user.user_id, request.name, request.webhook_url, request.event_type)
     return {
         "id": integration.id,
+        "user_id": user.user_id,
         "name": integration.name,
         "webhook_url": integration.webhook_url,
         "event_type": integration.event_type,

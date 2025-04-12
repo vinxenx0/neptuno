@@ -8,6 +8,11 @@ from schemas.api_log import APILogResponse  # Asegúrate de que este esquema exi
 from dependencies.auth import get_user_context
 from core.database import get_db
 from math import ceil
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from core.database import get_db
+from services.log_service import clear_api_logs, clear_error_logs
+from models.user import User
 
 router = APIRouter(tags=["Logs"])
 logger = configure_logging()
@@ -38,3 +43,20 @@ def get_api_logs(
         "total_pages": ceil(total_items / limit),
         "current_page": page
     }
+
+@router.delete("/clear", status_code=status.HTTP_204_NO_CONTENT)
+async def clear_logs(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_user_context)
+):
+    """
+    Elimina todos los logs de la API. Solo accesible para administradores.
+    """
+    if current_user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No autorizado. Solo administradores pueden vaciar logs."
+        )
+    clear_api_logs(db)
+    return None  # HTTP 204 no devuelve contenido
+

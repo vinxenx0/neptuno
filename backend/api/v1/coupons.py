@@ -1,17 +1,52 @@
 # backend/api/v1/coupons.py
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+from models.user import User
 from services.settings_service import get_setting
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
-from services.coupon_service import create_coupon, delete_coupon, get_user_coupons, get_all_coupons, redeem_coupon, update_coupon
+from services.coupon_service import create_coupon, create_test_coupon, delete_coupon, get_coupon_activity, get_user_coupons, get_all_coupons, redeem_coupon, update_coupon
 from schemas.coupon import CouponTypeCreate, CouponTypeResponse, CouponCreate, CouponResponse
 from schemas.coupon import CouponCreate, CouponResponse
 from models.coupon_type import CouponType
 from typing import List
 
 router = APIRouter(tags=["Coupons"])
+
+@router.post("/test", response_model=dict)
+async def create_test_coupon_route(
+    coupon_type_id: int = Body(..., embed=True),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_user_context)
+):
+    """
+    Crea un cupón de prueba para un tipo de cupón específico. Solo para administradores.
+    """
+    if current_user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No autorizado. Solo administradores pueden crear cupones de prueba."
+        )
+    return create_test_coupon(db, coupon_type_id, admin_user_id=current_user.id)
+
+@router.get("/activity", response_model=dict)
+async def get_coupons_activity(
+    page: int = Query(1, ge=1, description="Número de página"),
+    limit: int = Query(10, ge=1, le=100, description="Elementos por página"),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_user_context)
+):
+    """
+    Obtiene la actividad de cupones con paginación. Solo accesible para administradores.
+    """
+    if current_user.rol != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No autorizado. Solo administradores pueden ver la actividad de cupones."
+        )
+    return get_coupon_activity(db, page, limit)
+
 
 
 @router.post("/types", response_model=CouponTypeResponse)
@@ -58,7 +93,7 @@ def get_my_coupons(user: UserContext = Depends(get_user_context),
         raise HTTPException(
             status_code=403,
             detail="La funcionalidad de cupones está deshabilitada")
-    user_id = int(user.user_id) if user.user_type == "registered" else None
+    user_id = user.user_id if user.user_type == "registered" else None
     session_id = user.session_id if user.user_type == "anonymous" else None
     return get_user_coupons(db, user_id, session_id)
 

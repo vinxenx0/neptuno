@@ -63,7 +63,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             localStorage.removeItem("anonUsername");
           } else if (data.user_type === "anonymous") {
             setUser(null);
-            setCredits(data.credits);
+            //setCredits(data.credits);
+            //setCoupons([]);
+            setGamification({ points: 0, badges: [] });
             localStorage.setItem("session_id", data.session_id!);
             localStorage.setItem("anonUsername", data.username!);
           } else {

@@ -10,8 +10,69 @@ from core.logging import configure_logging
 from fastapi import HTTPException
 import uuid
 from datetime import datetime
+from sqlalchemy.orm import Session
+from models.coupon import Coupon
+from sqlalchemy import desc
+import uuid
+from datetime import datetime, timedelta
 
 logger = configure_logging()
+
+
+def create_test_coupon(db: Session, coupon_type_id: int, admin_user_id: int):
+    unique_id = str(uuid.uuid4())
+    expires_at = datetime.utcnow() + timedelta(hours=24)  # Expira en 24 horas
+    new_coupon = Coupon(
+        coupon_type_id=coupon_type_id,
+        unique_identifier=unique_id,
+        status="active",
+        issued_at=datetime.utcnow(),
+        expires_at=expires_at,
+        active=True,
+        user_id=admin_user_id  # Asignamos el cupón al admin
+    )
+    db.add(new_coupon)
+    db.commit()
+    db.refresh(new_coupon)
+    return new_coupon
+    
+def get_coupon_activity(db: Session, page: int = 1, limit: int = 10) -> dict:
+    """
+    Obtiene la actividad de cupones con paginación.
+    """
+    offset = (page - 1) * limit
+    total_items = db.query(Coupon).count()
+    total_pages = (total_items + limit - 1) // limit
+
+    coupons = (
+        db.query(Coupon)
+        .order_by(desc(Coupon.issued_at))
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    # Serialización manual para coincidir con el frontend
+    coupons_data = [
+        {
+            "id": coupon.id,
+            "coupon_type": coupon.coupon_type.name if coupon.coupon_type else "Desconocido",
+            "unique_identifier": coupon.unique_identifier,
+            "user_id": coupon.user_id,
+            "session_id": coupon.session_id,
+            "status": coupon.status,
+            "issued_at": coupon.issued_at.isoformat(),
+            "redeemed_at": coupon.redeemed_at.isoformat() if coupon.redeemed_at else None,
+        }
+        for coupon in coupons
+    ]
+
+    return {
+        "data": coupons_data,
+        "total_items": total_items,
+        "total_pages": total_pages,
+        "current_page": page,
+    }
 
 def create_coupon(db: Session, coupon_data: CouponCreate) -> Coupon:
     coupon_type = db.query(CouponType).filter(CouponType.id == coupon_data.coupon_type_id, CouponType.active == True).first()
@@ -41,7 +102,7 @@ def get_coupon_by_id(db: Session, coupon_id: int) -> Coupon:
         raise HTTPException(status_code=404, detail="Cupón no encontrado")
     return coupon
 
-def get_user_coupons(db: Session, user_id: Optional[int], session_id: Optional[str]) -> list[Coupon]:
+def get_user_coupons(db: Session, user_id: Optional[str], session_id: Optional[str]) -> list[Coupon]:
     query = db.query(Coupon)
     if user_id:
         query = query.filter(Coupon.user_id == user_id)

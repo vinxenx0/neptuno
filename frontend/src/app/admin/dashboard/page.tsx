@@ -42,6 +42,7 @@ import {
   DialogTitle,
   DialogContent,
   Select,
+  MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {
@@ -65,6 +66,11 @@ import {
   LocalActivity
 } from "@mui/icons-material";
 import { SiteSetting, Integration, EventType, Badge, PaymentProvider, Coupon, CouponType } from "@/lib/types";
+
+interface AllowedOrigin {
+  id: number;
+  origin: string;
+}
 
 const AdminGradientCard = styled(Card)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
@@ -133,7 +139,22 @@ export default function ConfigurePage() {
   const [editCouponType, setEditCouponType] = useState<CouponType | null>(null);
   const [corsEnabled, setCorsEnabled] = useState(true);
 
+
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
+        setPaymentProviders(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar proveedores");
+      }
+    };
+    fetchData();
+  }, []);
+
 
 
   useEffect(() => {
@@ -177,6 +198,7 @@ export default function ConfigurePage() {
         const paymentProvidersRes = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
         setPaymentProviders(paymentProvidersRes.data || []);
 
+
         const couponTypesRes = await fetchAPI<CouponType[]>("/v1/coupons/types");
         setCouponTypes(couponTypesRes.data || []);
 
@@ -214,11 +236,18 @@ export default function ConfigurePage() {
 
   useEffect(() => {
     const fetchCorsSettings = async () => {
-      const { data } = await fetchAPI("/v1/settings/allowed_origins");
-      setCorsEnabled(data === "true");
-      if (data === "true") {
-        const originsData = await fetchAPI<string[]>("/v1/origins");
-        setOrigins(originsData.data || []);
+      try {
+        const { data: corsEnabledData } = await fetchAPI("/v1/settings/allowed_origins");
+        const enabled = corsEnabledData === "true";
+        setCorsEnabled(enabled);
+        if (enabled) {
+          const { data: originsData } = await fetchAPI<AllowedOrigin[]>("/v1/origins");
+          setOrigins(originsData ? originsData.map(o => o.origin) : []);
+        } else {
+          setOrigins([]);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar configuración de CORS");
       }
     };
     fetchCorsSettings();
@@ -241,7 +270,7 @@ export default function ConfigurePage() {
 
   //const handleToggleIntegration = async (id: number, active: boolean) => {
   //  await fetchAPI(`/v1/integrations/${id}/toggle`, { method: "PUT" });
-    // Actualizar estado local
+  // Actualizar estado local
   //};
 
   const groupedBadges = badges.reduce((acc, badge) => {
@@ -320,13 +349,13 @@ export default function ConfigurePage() {
 
   const handleToggleIntegration = async (id: number, active: boolean) => {
     try {
-      const { data } = await fetchAPI(`/v1/integrations/${id}`, {
+      const integration = integrations.find(i => i.id === id);
+      const { data } = await fetchAPI<Integration>(`/v1/integrations/${id}`, {
         method: "PUT",
-        data: { name: integrations.find(i => i.id === id)?.name, webhook_url: integrations.find(i => i.id === id)?.webhook_url, event_type: integrations.find(i => i.id === id)?.event_type, active: !active },
+        data: { ...integration, active: !active },
       });
-      setIntegrations(integrations.map(i => i.id === id ? data as Integration : i));
-      setSuccess(`Integración ${active ? "desactivada" : "activada"} con éxito`);
-      setTimeout(() => setSuccess(null), 3000);
+      setIntegrations(integrations.map(i => i.id === id ? data! : i));
+      setSuccess(`Integración ${!active ? "activada" : "desactivada"}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al actualizar integración");
     }
@@ -1105,106 +1134,87 @@ export default function ConfigurePage() {
                 <Switch checked={corsEnabled} onChange={handleToggleCors} />
               </Box>
               {corsEnabled && (
-                <Table>
-                  <TableHead sx={{ backgroundColor: '#333', color: 'white' }}>
-                    <TableRow>
-                      <TableCell sx={{ color: 'white' }}>Origen</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {origins.map((origin, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{origin}</TableCell>
+                <>
+                  <Box component="form" onSubmit={handleAddOrigin} sx={{ mb: 2 }}>
+                    <TextField
+                      label="Nuevo Origen"
+                      value={newOrigin}
+                      onChange={(e) => setNewOrigin(e.target.value)}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+                      Añadir Origen
+                    </Button>
+                  </Box>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Origen</TableCell>
+                        <TableCell>Acciones</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHead>
+                    <TableBody>
+                      {origins.map((origin) => (
+                        <TableRow key={origin}>
+                          <TableCell>{origin}</TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => handleDeleteOrigin(origin)} color="error">
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
               )}
             </Box>
           )}
+
           {/* Integraciones Tab */}
           {activeTab === 2 && (
             <Box>
-              <ConfigGlassCard sx={{ mb: 3 }}>
-                <CardContent>
-                  <Box component="form" onSubmit={handleAddIntegration} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                      label="Nombre de la Integración"
-                      value={newIntegration.name}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Link color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <TextField
-                      label="Webhook URL"
-                      value={newIntegration.webhook_url}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Webhook color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <TextField
-                      label="Tipo de Evento"
-                      value={newIntegration.event_type}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Settings color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <Button type="submit" variant="contained" color="primary" startIcon={<AddCircle />} sx={{ mt: 1 }}>
-                      Crear Integración
-                    </Button>
-                  </Box>
-                </CardContent>
-              </ConfigGlassCard>
-
-              {integrations.length > 0 ? (
-                <Grid container spacing={2}>
-                  {integrations.map((integration) => (
-                    <Grid item xs={12} md={6} key={integration.id}>
-                      <ConfigGlassCard>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Webhook color="primary" />
-                              {integration.name} (User ID: {integration.user_id})
-                            </Typography>
-                            <Box>
-                              <Switch
-                                checked={integration.active}
-                                onChange={() => handleToggleIntegration(integration.id, integration.active)}
-                                color="primary"
-                              />
-                              <IconButton color="error" onClick={() => handleDeleteIntegration(integration.id)}>
-                                <Delete />
-                              </IconButton>
-                            </Box>
-                          </Box>
-                          <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                            <strong>Webhook:</strong> {integration.webhook_url}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Evento:</strong> {integration.event_type}
-                          </Typography>
-                        </CardContent>
-                      </ConfigGlassCard>
-                    </Grid>
+              <Select
+                value={selectedUserId || ""}
+                onChange={(e) => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
+                displayEmpty
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                <MenuItem value="">Todos los usuarios</MenuItem>
+                {/* Añadir opciones dinámicas de usuarios */}
+              </Select>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nombre</TableCell>
+                    <TableCell>Usuario</TableCell>
+                    <TableCell>Estado</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {integrations.filter(i => selectedUserId ? i.user_id === selectedUserId : true).map((integration) => (
+                    <TableRow key={integration.id}>
+                      <TableCell>{integration.name}</TableCell>
+                      <TableCell>{integration.user_id}</TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={integration.active}
+                          onChange={() => handleToggleIntegration(integration.id, integration.active)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleDeleteIntegration(integration.id)} color="error">
+                          <Delete />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </Grid>
-              ) : (
-                <ConfigGlassCard>
-                  <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                    <Webhook sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-                    <Typography variant="h6" color="textSecondary">
-                      No hay integraciones configuradas
-                    </Typography>
-                  </CardContent>
-                </ConfigGlassCard>
-              )}
+                </TableBody>
+              </Table>
             </Box>
           )}
 
@@ -1433,134 +1443,62 @@ export default function ConfigurePage() {
 
           {activeTab === 4 && (
             <Box sx={{ mb: 4 }}>
-              <ConfigGlassCard>
-                <CardContent>
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-                    <LocalActivity sx={{ mr: 1, verticalAlign: 'middle' }} />
-                    Gestión de Cupones
-                  </Typography>
-
-                  {/* Sección de Tipos de Cupones */}
-                  <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Tipos de Cupones</Typography>
-                    <Button
-                      variant="contained"
-                      startIcon={<AddCircle />}
-                      onClick={() => setEditCouponType({ id: 0, name: '', description: '', credits: 0, active: true })}
-                    >
-                      Nuevo Tipo de Cupón
-                    </Button>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Nombre</TableCell>
-                          <TableCell>Descripción</TableCell>
-                          <TableCell>Créditos</TableCell>
-                          <TableCell>Activo</TableCell>
-                          <TableCell>Acciones</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {couponTypes.map((ct) => (
-                          <TableRow key={ct.id}>
-                            <TableCell>{ct.name}</TableCell>
-                            <TableCell>{ct.description || 'Sin descripción'}</TableCell>
-                            <TableCell>{ct.credits}</TableCell>
-                            <TableCell>
-                              <Chip label={ct.active ? "Activo" : "Inactivo"} color={ct.active ? "success" : "error"} />
-                            </TableCell>
-                            <TableCell>
-                              <IconButton onClick={() => setEditCouponType(ct)} color="primary">
-                                <Edit />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-
-                  {/* Sección de Actividad de Cupones */}
-                  <Box>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Última Actividad de Cupones</Typography>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>Tipo</TableCell>
-                          <TableCell>Identificador</TableCell>
-                          <TableCell>Usuario/Sesión</TableCell>
-                          <TableCell>Estado</TableCell>
-                          <TableCell>Fecha de Emisión</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {coupons.map((coupon) => (
-                          <TableRow key={coupon.id}>
-                            <TableCell>{coupon.id}</TableCell>
-                            <TableCell>{coupon.coupon_type.name}</TableCell>
-                            <TableCell>{coupon.unique_identifier}</TableCell>
-                            <TableCell>{coupon.user_id || coupon.session_id || 'No asignado'}</TableCell>
-                            <TableCell>{coupon.status}</TableCell>
-                            <TableCell>{new Date(coupon.issued_at).toLocaleString()}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </CardContent>
-              </ConfigGlassCard>
-
-              {/* Diálogo para crear/editar tipo de cupón */}
-              <Dialog open={!!editCouponType} onClose={() => setEditCouponType(null)}>
-                <DialogTitle>{editCouponType?.id ? 'Editar Tipo de Cupón' : 'Nuevo Tipo de Cupón'}</DialogTitle>
-                <DialogContent>
-                  <Box component="form" onSubmit={handleSubmitCouponType} sx={{ mt: 2 }}>
-                    <TextField
-                      label="Nombre"
-                      fullWidth
-                      value={editCouponType?.name || ''}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, name: e.target.value })}
-                      margin="normal"
-                    />
-                    <TextField
-                      label="Descripción"
-                      fullWidth
-                      value={editCouponType?.description || ''}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, description: e.target.value })}
-                      margin="normal"
-                    />
-                    <TextField
-                      label="Créditos"
-                      type="number"
-                      fullWidth
-                      value={editCouponType?.credits || 0}
-                      onChange={(e) => setEditCouponType({ ...editCouponType!, credits: parseInt(e.target.value) || 0 })}
-                      margin="normal"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={editCouponType?.active || false}
-                          onChange={(e) => setEditCouponType({ ...editCouponType!, active: e.target.checked })}
-                          color="primary"
-                        />
-                      }
-                      label="Activo"
-                      sx={{ mt: 2 }}
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      sx={{ mt: 2 }}
-                    >
-                      {editCouponType?.id ? 'Actualizar' : 'Crear'}
-                    </Button>
-                  </Box>
-                </DialogContent>
-              </Dialog>
+              <Typography variant="h6" sx={{ mb: 2 }}>Tipos de Cupones</Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddCircle />}
+                onClick={() => setEditCouponType({ id: 0, name: '', description: '', credits: 0, active: true })}
+              >
+                Nuevo Tipo de Cupón
+              </Button>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nombre</TableCell>
+                    <TableCell>Descripción</TableCell>
+                    <TableCell>Créditos</TableCell>
+                    <TableCell>Activo</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {couponTypes.map((ct) => (
+                    <TableRow key={ct.id}>
+                      <TableCell>{ct.name}</TableCell>
+                      <TableCell>{ct.description || 'Sin descripción'}</TableCell>
+                      <TableCell>{ct.credits}</TableCell>
+                      <TableCell>
+                        <Chip label={ct.active ? "Activo" : "Inactivo"} color={ct.active ? "success" : "error"} />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => setEditCouponType(ct)} color="primary">
+                          <Edit />
+                        </IconButton>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<LocalActivity />}
+                          onClick={async () => {
+                            try {
+                              const { data } = await fetchAPI<Coupon>("/v1/coupons/test", {
+                                method: "POST",
+                                data: { coupon_type_id: ct.id },
+                              });
+                              setCoupons([...coupons, { ...data!, coupon_type: { name: ct.name }, credits: 5 }]);
+                              setSuccess("Cupón de prueba generado con éxito");
+                              setTimeout(() => setSuccess(null), 3000);
+                            } catch (err) {
+                              setError(err instanceof Error ? err.message : "Error al generar cupón de prueba");
+                            }
+                          }}
+                        >
+                          Generar Prueba
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           )}
 
@@ -1600,7 +1538,6 @@ export default function ConfigurePage() {
                             <Switch
                               checked={provider.active}
                               onChange={(e) => handleTogglePaymentProvider(provider.id, e.target.checked)}
-                              color="primary"
                             />
                           </TableCell>
                           <TableCell>

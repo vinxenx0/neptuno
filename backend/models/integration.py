@@ -11,6 +11,6 @@ class Integration(Base):
     name = Column(String(50), nullable=False)  # "slack", "zapier", "crm_custom"
     webhook_url = Column(String(255), nullable=False)  # URL del webhook externo
     event_type = Column(String(50), nullable=False)  # "credit_usage", "user_login", "payment_added"
-    active = Column(Boolean, default=True)  # Estado de la integración
+    active = Column(Boolean, default=False)  # Estado de la integración
     created_at = Column(DateTime, default=datetime.utcnow)
     last_triggered = Column(DateTime, nullable=True)  # Última vez que se disparó

@@ -2,14 +2,15 @@
 # Punto de entrada principal de la aplicación.
 from api.v1 import payment_providers
 from api.v1 import coupons
-from initial_data import init_db, init_settings_and_users
+from api.v1 import test
+from ini_db import init_db, init_settings_and_users
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
 from services.gamification_service import get_user_gamification, register_event
 from fastapi import Depends, FastAPI, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
-from api.v1 import auth, endpoints, payments, site_settings, integrations, payments
+from api.v1 import auth, payments, site_settings, integrations, payments
 from api.v1 import anonymous_sessions, credit_transactions, error_logs
 from api.v1 import api_logs
 from api.v1 import users
@@ -53,6 +54,19 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]  # Añade esto para headers personalizados
 )
+
+#def configure_cors():
+#    db = next(get_db())
+#    allowed_origins_enabled = get_setting(db, "allowed_origins") == "true"
+#    origins = [origin.origin for origin in db.query(AllowedOrigin).all()] if allowed_origins_enabled else ["*"]
+#    app.add_middleware(
+#        CORSMiddleware,
+#        allow_origins=origins,
+#        allow_credentials=True,
+#        allow_methods=["*"],
+#        allow_headers=["*"],
+#    )#
+#configure_cors()
 
 logger = configure_logging()
 # app.add_middleware(LoggingMiddleware)
@@ -115,7 +129,7 @@ async def get_rate_limit_key(request: Request, user: UserContext = Depends(get_u
 
 app.include_router(auth.router, prefix="/v1/auth", tags=["auth"])
 app.include_router(users.router, prefix="/v1/users", tags=["users"])
-app.include_router(endpoints.router, prefix="/v1/api", tags=["api"])
+app.include_router(test.router, prefix="/v1/test", tags=["test"])
 app.include_router(payments.router, prefix="/v1/payments", tags=["payments"])
 app.include_router(site_settings.router, prefix="/v1/settings", tags=["site_settings"])
 app.include_router(integrations.router, prefix="/v1/integrations", tags=["integrations"])
@@ -189,7 +203,7 @@ async def health_check(db: Session = Depends(get_db)):
 async def root():
     return {"message": "Bienvenido a la API Backend"}
 
-@app.get("/no-login/")
+@app.get("/test/no-login/")
 async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
     """
     Endpoint para probar la API sin necesidad de login.
@@ -242,7 +256,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
 
     return response
 
-@app.get("/restricted")
+@app.get("/test/restricted")
 async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
     """
     Endpoint restringido que requiere login.

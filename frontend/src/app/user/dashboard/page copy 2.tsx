@@ -1181,36 +1181,54 @@ export default function UserDashboard() {
           )}
 
           {tabValue === 6 && (
-            <Box>
-              <Box component="form" onSubmit={handleAddIntegration} sx={{ mb: 2 }}>
-                <TextField label="Nombre" value={newIntegration.name} onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })} />
-                <TextField label="Webhook URL" value={newIntegration.webhook_url} onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })} />
-                <TextField label="Tipo de Evento" value={newIntegration.event_type} onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })} />
-                <Button type="submit" variant="contained">Añadir</Button>
-              </Box>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Nombre</TableCell>
-                    <TableCell>Estado</TableCell>
-                    <TableCell>Acciones</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {integrations.map((integration) => (
-                    <TableRow key={integration.id}>
-                      <TableCell>{integration.name}</TableCell>
-                      <TableCell>{integration.active ? "Activo (Admin)" : "Pendiente"}</TableCell>
-                      <TableCell>
-                        <IconButton onClick={() => handleDeleteIntegration(integration.id)} color="error">
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+              <GlassCard>
+                <CardHeader title="Mis Integraciones" avatar={<Link color="primary" />} />
+                <CardContent>
+                  <Box component="form" onSubmit={handleAddIntegration} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <TextField
+                      label="Nombre de la Integración"
+                      value={newIntegration.name}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <TextField
+                      label="Webhook URL"
+                      value={newIntegration.webhook_url}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <TextField
+                      label="Tipo de Evento"
+                      value={newIntegration.event_type}
+                      onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      size="small"
+                    />
+                    <Button type="submit" variant="contained" color="primary" startIcon={<AddCircle />}>
+                      Añadir Integración
+                    </Button>
+                  </Box>
+                  {integrations.length > 0 && (
+                    <List sx={{ mt: 3 }}>
+                      {integrations.map((integration) => (
+                        <ListItem key={integration.id}>
+                          <ListItemText
+                            primary={integration.name}
+                            secondary={`Webhook: ${integration.webhook_url} | Evento: ${integration.event_type} | Estado: ${integration.active ? "Activo (Admin)" : "Pendiente"}`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </GlassCard>
+            </motion.div>
           )}
         </Box>
       </Box>
