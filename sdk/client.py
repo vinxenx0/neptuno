@@ -1,45 +1,29 @@
 # sdk/client.py
 # sdk/client.py
 
+from os import path
+from typing import Optional
 import httpx
 from sdk.config import settings
 from sdk.exceptions import (
     UnauthorizedError, NotFoundError, ServerError, ValidationError, ConflictError, SDKError
 )
 
-def request(method: str, path: str, data: dict = None, form: bool = False) -> dict:
-    url = settings.base_url + path
-
-    headers = settings.headers.copy()
-
-    # Si es formulario, se espera application/x-www-form-urlencoded
-    if form:
-        headers["Content-Type"] = "application/x-www-form-urlencoded"
-
+def request(method: str, path: str, data: Optional[dict] = None, form: bool = False) -> dict:
+    url = settings.base_url.rstrip("/") + path
+    headers = settings.headers
+    headers = settings.headers
     try:
-        response = httpx.request(
-            method=method.upper(),
-            url=url,
-            headers=headers,
-            timeout=settings.timeout,
-            json=None if form else data,
-            data=data if form else None,
-        )
+        if form:
+            response = httpx.request(method, url, data=data, headers=headers, timeout=settings.timeout)
+        else:
+            response = httpx.request(method, url, json=data, headers=headers, timeout=settings.timeout)
 
-        if response.status_code == 401:
-            raise UnauthorizedError("Unauthorized")
-        elif response.status_code == 404:
-            raise NotFoundError("Resource not found")
-        elif response.status_code == 409:
-            raise ConflictError("Conflict occurred")
-        elif response.status_code == 422:
-            raise ValidationError(response.text)
-        elif response.status_code == 500:
-            print("🔴 Server Error:", response.text)  # Agrega esto para debugging
-            raise ServerError("Internal server error")
-        elif 500 <= response.status_code < 600:
-            raise ServerError("Internal server error")
+        response.raise_for_status()
 
-        return response.json()
-    except httpx.RequestError as e:
-        raise SDKError(f"Network error: {str(e)}")
+    except httpx.HTTPStatusError as e:
+        # Esto asegura que no devolvemos un dict inválido al parsear
+        try:
+            return {"error": response.json()}
+        except Exception:
+            return {"error": {"code": response.status_code, "detail": response.text}}

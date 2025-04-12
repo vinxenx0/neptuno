@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>💼 Presupuesto Anónimo</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 2em; }
+        h1 { color: #444; }
+        .message { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .info { background: #e0f7fa; color: #00796b; }
+        .error { background: #ffcdd2; color: #c62828; }
+        .stat { font-size: 0.9em; color: #777; margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <h1>Presupuesto Anónimo</h1>
+
+    {% for category, msg in messages %}
+        <div class="message {{ category }}">{{ msg }}</div>
+    {% endfor %}
+
+    <form method="post" action="/submit">
+        <fieldset>
+            <legend>Selecciona los servicios:</legend>
+            {% for key, value in options.items() %}
+                <label><input type="checkbox" name="selected" value="{{ key }}"> {{ value }}</label><br>
+            {% endfor %}
+        </fieldset>
+        <button type="submit">Generar Presupuesto</button>
+    </form>
+
+    <div class="stat">🧠 Puntos acumulados: <strong>{{ points }}</strong></div>
+    <div class="stat">💸 Créditos disponibles: <strong>{{ credits }}</strong></div>
+</body>
+</html>

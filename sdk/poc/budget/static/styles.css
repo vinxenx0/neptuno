@@ -1,0 +1,12 @@
+body {
+    font-family: sans-serif;
+    margin: 2rem;
+}
+
+.flash {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+.flash.info { background: #d1ffd1; border: 1px solid #1d7c1d; }
+.flash.error { background: #ffd1d1; border: 1px solid #b20000; }

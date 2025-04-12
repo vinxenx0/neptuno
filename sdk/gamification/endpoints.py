@@ -14,7 +14,12 @@ from sdk.models.gamification import (
 
 def register_event(event: GamificationEventCreate) -> GamificationEventResponse:
     result = request("POST", "/v1/gamification/events", data=event.dict())
+    
+    if "error" in result:
+        raise Exception(result["error"]["detail"])
+
     return GamificationEventResponse(**result)
+
 
 
 def get_my_events() -> List[GamificationEventResponse]:

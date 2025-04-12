@@ -1,7 +1,7 @@
 import sys
 import os
 
-from sdk.poc.rewards import init_gamification
+from sdk.poc.twitter.rewards import init_gamification
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # from fastapi import FlashMiddleware  # Añade este middleware
