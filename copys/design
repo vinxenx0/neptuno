@@ -1,0 +1,21 @@
+create a dashboard for managing the Neptuno API, focusing on its gamification, authentication, configuration, and coupon features. This will be a comprehensive admin interface that allows users to interact with all available endpoints while also providing a user dashboard for testing the gamification elements.
+
+The design evokes modern SaaS dashboards like Stripe, Supabase, or Firebase console, with a clean, professional interface featuring:
+
+Design Inspiration:
+
+    Clear navigation with a sidebar for all API categories
+    Interactive API explorer similar to Swagger UI but more polished
+    User and admin dashboards with data visualization
+    Gamification elements (points, badges, levels) prominently displayed
+
+Color Palette & Styling:
+
+    Primary colors: Deep navy (#0F172A), Vibrant blue (#3B82F6)
+    Secondary accent: Teal (#0EA5E9)
+    Warm accents: Amber (#F59E0B) for gamification elements
+    Clean white space with subtle shadows and rounded corners
+    Monospace fonts for code/API samples, modern sans-serif for UI
+
+
+Refine & Customize: Tweak the design, animations, and layouts via prompts or visual edits.
