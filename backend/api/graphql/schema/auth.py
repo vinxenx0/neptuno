@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from ..rest.auth import router as auth_rest_router
 from core.database import get_db
 from dependencies.auth import get_user_context
-from schemas.auth import TokenResponse
+from schema.auth import TokenResponse
 
 @strawberry.type
 class AuthQueries:

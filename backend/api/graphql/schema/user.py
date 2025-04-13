@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from core.database import get_db
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from schemas.user import UserResponse, UpdateProfileRequest
+from schema.user import UserResponse, UpdateProfileRequest
 
 @strawberry.type
 class UserType:

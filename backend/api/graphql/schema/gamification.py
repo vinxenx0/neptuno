@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from core.database import get_db
 from dependencies.auth import UserContext, get_user_context
-from schemas.gamification import (
+from schema.gamification import (
     EventTypeResponse,
     BadgeResponse,
     GamificationEventResponse,
