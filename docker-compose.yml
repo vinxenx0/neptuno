@@ -70,7 +70,11 @@ services:
     command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M # alta demanda
     container_name: neptuno-db
    
-    #enviroment:
+    environment:
+       - MARIADB_ROOT_PASSWORD=tu_contraseña_segura
+       - MARIADB_DATABASE=tu_base_de_datos
+       - MARIADB_USER=tu_usuario
+       - MARIADB_PASSWORD=contraseña_usuario
     #  - MARIADB_ROOT_PASSWORD="J8#jKpL2!mN9$qR5tXv7zY"
     #  - MARIADB_ROOT_PASSWORD_HASH="*CC6A5B2E4D1F9E8A7B3C5D2E1F0A8B7C6D5E4F3A2B1C0D9E8F7A6B5C4D3E2F1"
     #  - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD="no"  

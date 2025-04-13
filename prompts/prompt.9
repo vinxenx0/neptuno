@@ -60,6 +60,36 @@ Show 1 ignore-listed frame(s)
 ConfigurePage
 src/app/admin/dashboard/page.tsx (1165:40)
 
+Uncaught TypeError: (intermediate value).map is not a function
+    NextJS 12
+        ec
+        lS
+        ot
+        ov
+        ic
+        is
+        is
+        u9
+        iQ
+        iI
+        iV
+        iR
+page-b3bdf275ac6a95ec.js:1:25336
+    NextJS 12
+        ec
+        lS
+        ot
+        ov
+        ic
+        is
+        is
+        u9
+        iQ
+        iI
+        iV
+        iR
+
+
 Te voy a contar algo sobre este bug y creo que lo vamos a solucionar:
 
 1- si yo cargo el panel de admin y entro a la pestaña origenes, me funciona a la perfeccion
@@ -67,4 +97,9 @@ Te voy a contar algo sobre este bug y creo que lo vamos a solucionar:
 
 deduzco que hay algun conflicto con los paneles o las nomenclaturas de las variables quizas y al renderizar
 una pestaña y luego pasar a otra con elementos parecidos se produce el conflicto
+
+otro ejemplo que ilustra este conflicto de componentes es que cuando compro creditos me aparece
+como cantidad a comprar el numero de creditos que tiene el usuario, por lo que hay un cruce de variables ahi
+
+
 

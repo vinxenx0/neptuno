@@ -4438,3 +4438,5 @@
 2025-04-13 12:13:40,423 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
 2025-04-13 12:13:40,432 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-13 12:13:40,534 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-13 21:22:45,456 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-13 21:22:45,479 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
