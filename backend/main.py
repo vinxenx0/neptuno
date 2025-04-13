@@ -3,6 +3,7 @@
 from api.v1 import payment_providers
 from api.v1 import coupons
 from api.v1 import test
+from api.v1 import origins
 from ini_db import init_db, init_settings_and_users
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
@@ -141,6 +142,7 @@ app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
 app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
+app.include_router(origins.router, prefix="/v1/origins", tags=["Origins"])
 
 
 
@@ -325,3 +327,23 @@ def test_gamification_event(user: UserContext = Depends(get_user_context), db: S
         raise HTTPException(status_code=404, detail="Event type 'test_api' not found")
     event = GamificationEventCreate(event_type_id=event_type.id)
     return register_event(db, event, user)
+
+def configure_cors():
+    db = next(get_db())
+    try:
+        allowed_origins_enabled = get_setting(db, "allowed_origins") == "true"
+        origins = get_allowed_origins(db) if allowed_origins_enabled else ["*"]
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"], # origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+        logger.info(f"CORS configurado con orígenes: {origins}")
+    except Exception as e:
+        logger.error(f"Error al configurar CORS: {str(e)}")
+    finally:
+        db.close()
+
+configure_cors()

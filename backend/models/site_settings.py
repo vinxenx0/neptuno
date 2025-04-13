@@ -22,7 +22,8 @@ class SiteSettings(Base):
     # - rate_limit_admin: {"times": int, "seconds": int}
     # - cache_ttl: int (segundos)
     # - cache_enabled: bool
-    # - allowed_origins: list[str]
+    # - allowed_origins: bool indica si CORS está habilitado o no
+    # Los valores de los orígenes permitidos se gestionan en la tabla AllowedOrigin
     # - celery_workers: int
     # - celery_task_timeout: int (segundos)
     # - db_pool_size: int

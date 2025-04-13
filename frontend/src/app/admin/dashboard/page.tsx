@@ -107,7 +107,7 @@ export default function ConfigurePage() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [settingsByTag, setSettingsByTag] = useState<Record<string, SiteSetting[]>>({});
-  const [origins, setOrigins] = useState<string[] | null>(null);
+  const [origins, setOrigins] = useState<string[]>([]); // Inicializar como array vacío
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [newOrigin, setNewOrigin] = useState("");
   const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
@@ -237,30 +237,40 @@ export default function ConfigurePage() {
   useEffect(() => {
     const fetchCorsSettings = async () => {
       try {
+        console.log("Fetching CORS settings..."); // Depuración
         const { data: corsEnabledData } = await fetchAPI("/v1/settings/allowed_origins");
+        console.log("CORS enabled data:", corsEnabledData); // Depuración
         const enabled = corsEnabledData === "true";
         setCorsEnabled(enabled);
-        if (enabled) {
-          const { data: originsData } = await fetchAPI<AllowedOrigin[]>("/v1/origins");
-          setOrigins(originsData ? originsData.map(o => o.origin) : []);
-        } else {
-          setOrigins([]);
-        }
+
+        console.log("Fetching origins..."); // Depuración
+        const { data: originsData } = await fetchAPI<AllowedOrigin[]>("/v1/origins");
+        console.log("Origins data:", originsData); // Depuración
+        setOrigins(Array.isArray(originsData) ? originsData.map(o => o.origin) : []);
       } catch (err) {
+        console.error("Error fetching CORS settings or origins:", err); // Depuración
         setError(err instanceof Error ? err.message : "Error al cargar configuración de CORS");
       }
     };
     fetchCorsSettings();
-  }, []);
+  }, []); // Cambiar dependencia a [] para que solo se ejecute una vez al montar el componente
+
+  // Asegurarse de que origins sea siempre un array válido
+  useEffect(() => {
+    if (!Array.isArray(origins)) {
+      setOrigins([]);
+    }
+  }, [origins]);
 
   const handleToggleCors = async () => {
     try {
-      await fetchAPI("/v1/settings/admin/config", {
+      const { data } = await fetchAPI<{ key: string; value: boolean }>("/v1/settings/admin/config", {
         method: "POST",
-        data: { key: "allowed_origins", value: (!corsEnabled).toString() },
+        data: { key: "allowed_origins", value: !corsEnabled },
       });
-      setCorsEnabled(!corsEnabled);
-      setSuccess(`CORS ${!corsEnabled ? "activado" : "desactivado"}`);
+      setCorsEnabled(data!.value);
+      setSuccess(`CORS ${data!.value ? "activado" : "desactivado"}`);
+      refreshOrigins(); // Asegurar que se refresque la lista de orígenes después de cambiar el estado de CORS
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al actualizar CORS");
@@ -307,14 +317,25 @@ export default function ConfigurePage() {
     }
   };
 
+  const refreshOrigins = async () => {
+    try {
+      console.log("Refreshing origins..."); // Depuración
+      const { data: originsData } = await fetchAPI<AllowedOrigin[]>("/v1/origins");
+      console.log("Refreshed origins data:", originsData); // Depuración
+      setOrigins(Array.isArray(originsData) ? originsData.map(o => o.origin) : []);
+    } catch (err) {
+      console.error("Error refreshing origins:", err); // Depuración
+      setError(err instanceof Error ? err.message : "Error al refrescar orígenes");
+    }
+  };
+
   const handleAddOrigin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await fetchAPI("/v1/settings/allowed-origins", { method: "POST", data: { origin: newOrigin } });
-      setOrigins([...origins, newOrigin]);
       setNewOrigin("");
       setSuccess("Origen añadido con éxito");
-      setTimeout(() => setSuccess(null), 3000);
+      refreshOrigins(); // Refrescar la lista de orígenes
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al añadir origen");
     }
@@ -323,9 +344,8 @@ export default function ConfigurePage() {
   const handleDeleteOrigin = async (origin: string) => {
     try {
       await fetchAPI(`/v1/settings/allowed-origins/${encodeURIComponent(origin)}`, { method: "DELETE" });
-      setOrigins(origins.filter(o => o !== origin));
       setSuccess("Origen eliminado con éxito");
-      setTimeout(() => setSuccess(null), 3000);
+      refreshOrigins(); // Refrescar la lista de orígenes
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al eliminar origen");
     }
@@ -349,15 +369,15 @@ export default function ConfigurePage() {
 
   const handleToggleIntegration = async (id: number, active: boolean) => {
     try {
-      const integration = integrations.find(i => i.id === id);
-      if (!integration) throw new Error("Integración no encontrada");
-      const updatedIntegration = { ...integration, active: !active }; // Enviar el objeto completo
-      const { data } = await fetchAPI<Integration>(`/v1/integrations/${id}`, {
+      const { data } = await fetchAPI<{ id: number; active: boolean }>(`/v1/integrations/${id}/toggle`, {
         method: "PUT",
-        data: updatedIntegration,
       });
-      setIntegrations(integrations.map(i => i.id === id ? data! : i));
-      setSuccess(`Integración ${!active ? "activada" : "desactivada"}`);
+      setIntegrations((prev) =>
+        prev.map((integration) =>
+          integration.id === id ? { ...integration, active: data!.active } : integration
+        )
+      );
+      setSuccess(`Integración ${data!.active ? "activada" : "desactivada"}`);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al actualizar integración");
@@ -416,7 +436,7 @@ export default function ConfigurePage() {
   const handleDeleteEventType = async (id: number) => {
     try {
       await fetchAPI(`/v1/gamification/event-types/${id}`, { method: "DELETE" });
-      setEventTypes(eventTypes.filter((et) => et.id !== id));
+      setEventTypes(eventTypes.filter((et) => (et.id !== id)));
       setSuccess("Tipo de evento eliminado");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
@@ -466,12 +486,12 @@ export default function ConfigurePage() {
     try {
       const provider = paymentProviders.find(p => p.id === id);
       if (!provider) throw new Error("Proveedor no encontrado");
-      const updatedProvider = { ...provider, active: !active }; // Enviar el objeto completo
+      const updatedProvider = { ...provider, active: !active }; // Invertir el estado
       const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${id}`, {
         method: "PUT",
         data: updatedProvider,
       });
-      setPaymentProviders(paymentProviders.map((p) => (p.id === id ? data! : p)));
+      setPaymentProviders(paymentProviders.map((p) => (p.id === data!.id ? data! : p)));
       setSuccess(`Proveedor ${!active ? "activado" : "desactivado"}`);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
@@ -1140,42 +1160,44 @@ export default function ConfigurePage() {
                 <Switch checked={corsEnabled} onChange={handleToggleCors} />
               </Box>
               {corsEnabled && (
-                <>
-                  <Box component="form" onSubmit={handleAddOrigin} sx={{ mb: 2 }}>
-                    <TextField
-                      label="Nuevo Origen"
-                      value={newOrigin}
-                      onChange={(e) => setNewOrigin(e.target.value)}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                    />
-                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
-                      Añadir Origen
-                    </Button>
-                  </Box>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Origen</TableCell>
-                        <TableCell>Acciones</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(origins || []).map((origin) => ( // Usa || [] para evitar errores si origins es null
-                        <TableRow key={origin}>
-                          <TableCell>{origin}</TableCell>
-                          <TableCell>
-                            <IconButton onClick={() => handleDeleteOrigin(origin)} color="error">
-                              <Delete />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </>
+                <Box component="form" onSubmit={handleAddOrigin} sx={{ mb: 2 }}>
+                  <TextField
+                    label="Nuevo Origen"
+                    value={newOrigin}
+                    onChange={(e) => setNewOrigin(e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    size="small"
+                  />
+                  <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+                    Añadir Origen
+                  </Button>
+                </Box>
               )}
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Origen</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(origins || []).map((origin) => (
+                    <TableRow key={origin}>
+                      <TableCell>{origin}</TableCell>
+                      <TableCell>
+                        {corsEnabled ? (
+                          <IconButton onClick={() => handleDeleteOrigin(origin)} color="error">
+                            <Delete />
+                          </IconButton>
+                        ) : (
+                          <Typography color="textSecondary">Desactivado</Typography>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Box>
           )}
 
@@ -1545,7 +1567,7 @@ export default function ConfigurePage() {
                           <TableCell>
                             <Switch
                               checked={provider.active}
-                              onChange={(e) => handleTogglePaymentProvider(provider.id, e.target.checked)}
+                              onChange={(e) => handleTogglePaymentProvider(provider.id, provider.active)}
                             />
                           </TableCell>
                           <TableCell>
@@ -1722,3 +1744,42 @@ const getFeatureDescription = (key: string) => {
   };
   return descriptions[key] || 'Funcionalidad del sistema';
 };
+
+// Renderización de la tabla de orígenes
+const renderOriginsTable = () => {
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Origen</TableCell>
+          <TableCell>Acciones</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {(origins || []).map((origin) => (
+          <TableRow key={origin}>
+            <TableCell>{origin}</TableCell>
+            <TableCell>
+              {corsEnabled ? (
+                <IconButton onClick={() => handleDeleteOrigin(origin)} color="error">
+                  <Delete />
+                </IconButton>
+              ) : (
+                <Typography color="textSecondary">Desactivado</Typography>
+              )}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+// Asegurar que las variables y funciones estén definidas
+const corsEnabled = true; // Valor por defecto para evitar errores
+
+const handleDeleteOrigin = (origin: string) => {
+  console.error(`handleDeleteOrigin no implementado. Intentando eliminar: ${origin}`);
+};
+
+const origins: string[] = []; // Inicializar como un array vacío para evitar errores

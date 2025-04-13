@@ -105,17 +105,24 @@ def delete_integration(
     db.commit()
     return {"message": "Integración eliminada"}
 
-
-@router.put("/integrations/{integration_id}/toggle")
-async def toggle_integration(integration_id: int, current_user: User = Depends(get_user_context), db: Session = Depends(get_db)):
+@router.put("/{integration_id}/toggle", response_model=dict)
+def toggle_integration(
+    integration_id: int,
+    user: UserContext = Depends(get_user_context),
+    db: Session = Depends(get_db)
+):
     integration = db.query(Integration).filter(Integration.id == integration_id).first()
     if not integration:
         raise HTTPException(status_code=404, detail="Integración no encontrada")
-    if current_user.rol != "admin" and integration.user_id != current_user.id:
+    if user.rol != "admin" and integration.user_id != user.user_id:
         raise HTTPException(status_code=403, detail="No autorizado")
     integration.active = not integration.active
     db.commit()
-    return {"message": "Estado actualizado"}
+    db.refresh(integration)  # Asegurarse de devolver el estado actualizado
+    return {
+        "id": integration.id,
+        "active": integration.active
+    }
 
 @router.post("/integrations")
 async def create_integration(integration: IntegrationCreate, user_id: Optional[int] = None, current_user: User = Depends(get_user_context), db: Session = Depends(get_db)):

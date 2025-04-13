@@ -10,6 +10,7 @@ from services.settings_service import get_all_settings, set_setting, update_sett
 from core.database import get_db
 from core.logging import configure_logging
 from pydantic import BaseModel
+import json
 
 router = APIRouter(tags=["site_settings"])
 
@@ -24,21 +25,17 @@ class AddOriginRequest(BaseModel):
 async def add_origin(request: AddOriginRequest,
                      user: UserContext = Depends(get_user_context),
                      db: Session = Depends(get_db)):
-    origin = request.origin
-    allowed_origins = get_setting(db, "allowed_origins") or []
-    if origin in allowed_origins:
-        raise HTTPException(status_code=400, detail="Origen ya existe")
-    allowed_origins.append(origin)
-    return set_setting(db, "allowed_origins", allowed_origins, user.user_id,
-                       "Orígenes permitidos para CORS")
+    if not get_setting(db, "allowed_origins"):
+        raise HTTPException(status_code=400, detail="CORS no está habilitado")
+    return add_allowed_origin(db, request.origin, user.user_id)
 
 
 @router.delete("/allowed-origins/{origin}")
 async def remove_origin(origin: str,
                         user: UserContext = Depends(get_user_context),
                         db: Session = Depends(get_db)):
-    if user.rol != "admin":
-        raise HTTPException(status_code=403, detail="Solo administradores")
+    if not get_setting(db, "allowed_origins"):
+        raise HTTPException(status_code=400, detail="CORS no está habilitado")
     return delete_allowed_origin(db, origin, user.user_id)
 
 
