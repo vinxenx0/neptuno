@@ -32,3 +32,21 @@ def add_allowed_origin(db: Session, origin: str, admin_id: int):
     except Exception as e:
         logger.error(f"Error al añadir origen permitido {origin}: {str(e)}")
         raise HTTPException(status_code=500, detail="Error al añadir origen")
+
+def delete_allowed_origin(db: Session, origin: str, admin_id: int):
+    try:
+        admin = db.query(User).filter(User.id == admin_id, User.rol == "admin").first()
+        if not admin:
+            raise HTTPException(status_code=403, detail="Solo administradores")
+        existing_origin = db.query(AllowedOrigin).filter(AllowedOrigin.origin == origin).first()
+        if not existing_origin:
+            raise HTTPException(status_code=404, detail="Origen no encontrado")
+        db.delete(existing_origin)
+        db.commit()
+        logger.info(f"Origen permitido eliminado: {origin} por admin {admin_id}")
+        return {"message": f"Origen {origin} eliminado"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error al eliminar origen permitido {origin}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error al eliminar origen")

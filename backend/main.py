@@ -1,13 +1,16 @@
 # backend/main.py
 # Punto de entrada principal de la aplicación.
 from api.v1 import payment_providers
+from api.v1 import coupons
+from api.v1 import test
+from ini_db import init_db, init_settings_and_users
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
 from services.gamification_service import get_user_gamification, register_event
 from fastapi import Depends, FastAPI, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
-from api.v1 import auth, endpoints, payments, site_settings, integrations, payments
+from api.v1 import auth, payments, site_settings, integrations, payments
 from api.v1 import anonymous_sessions, credit_transactions, error_logs
 from api.v1 import api_logs
 from api.v1 import users
@@ -38,11 +41,8 @@ app = FastAPI(
     redoc_url=None,
     #root_path="/api"
     proxy_headers=True  # Necesario para X-Forwarded-*
-
     #servers=[{"url": "/api", "description": "Local server"}],
-
     #openapi_url="/api/openapi.json",
-
     #swagger_ui_parameters={"url": "/api/openapi.json"}
 )
 
@@ -54,6 +54,19 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]  # Añade esto para headers personalizados
 )
+
+#def configure_cors():
+#    db = next(get_db())
+#    allowed_origins_enabled = get_setting(db, "allowed_origins") == "true"
+#    origins = [origin.origin for origin in db.query(AllowedOrigin).all()] if allowed_origins_enabled else ["*"]
+#    app.add_middleware(
+#        CORSMiddleware,
+#        allow_origins=origins,
+#        allow_credentials=True,
+#        allow_methods=["*"],
+#        allow_headers=["*"],
+#    )#
+#configure_cors()
 
 logger = configure_logging()
 # app.add_middleware(LoggingMiddleware)
@@ -84,13 +97,15 @@ db = next(get_db())
 #)
 
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 
 
 @app.on_event("startup")
 async def startup_event():
-
+    init_db()  # Crea las tablas si no existen
+    init_settings_and_users()  # Pobla con datos iniciales si es necesario
+    
     try:
         admin_id = 1
         logger.info(f"Iniciando {settings.PROJECT_NAME} en entorno {settings.ENVIRONMENT}")
@@ -103,9 +118,9 @@ async def startup_event():
     finally:
         db.close()
         
-rate_limit_auth = get_setting(db, "rate_limit_auth") or {"times": 20, "seconds": 60}
-rate_limit_api = get_setting(db, "rate_limit_api") or {"times": 100, "seconds": 60}
-rate_limit_admin = get_setting(db, "rate_limit_admin") or {"times": 50, "seconds": 60}
+#rate_limit_auth = get_setting(db, "rate_limit_auth") or {"times": 20, "seconds": 60}
+#rate_limit_api = get_setting(db, "rate_limit_api") or {"times": 100, "seconds": 60}
+#rate_limit_admin = get_setting(db, "rate_limit_admin") or {"times": 50, "seconds": 60}
 
 async def get_rate_limit_key(request: Request, user: UserContext = Depends(get_user_context)):
         if user.user_type == "registered":
@@ -114,7 +129,7 @@ async def get_rate_limit_key(request: Request, user: UserContext = Depends(get_u
 
 app.include_router(auth.router, prefix="/v1/auth", tags=["auth"])
 app.include_router(users.router, prefix="/v1/users", tags=["users"])
-app.include_router(endpoints.router, prefix="/v1/api", tags=["api"])
+app.include_router(test.router, prefix="/v1/test", tags=["test"])
 app.include_router(payments.router, prefix="/v1/payments", tags=["payments"])
 app.include_router(site_settings.router, prefix="/v1/settings", tags=["site_settings"])
 app.include_router(integrations.router, prefix="/v1/integrations", tags=["integrations"])
@@ -125,6 +140,7 @@ app.include_router(credit_transactions.router, prefix="/v1/transactions", tags=[
 app.include_router(api_logs.router, prefix="/v1/logs", tags=["Logs"])
 app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamification"])
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
+app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
 
 
 
@@ -187,7 +203,7 @@ async def health_check(db: Session = Depends(get_db)):
 async def root():
     return {"message": "Bienvenido a la API Backend"}
 
-@app.get("/no-login/")
+@app.get("/test/no-login/")
 async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
     """
     Endpoint para probar la API sin necesidad de login.
@@ -240,7 +256,7 @@ async def no_login_test(user: UserContext = Depends(check_credits), db: Session 
 
     return response
 
-@app.get("/restricted")
+@app.get("/test/restricted")
 async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
     """
     Endpoint restringido que requiere login.

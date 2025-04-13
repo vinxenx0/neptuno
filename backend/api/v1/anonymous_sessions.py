@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
 from models.guests import GuestsSession
-from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
+from schemas.anonymous_session import GuestsSessionResponse 
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
 from math import ceil
@@ -24,8 +24,7 @@ def get_anonymous_sessions(
     query = db.query(GuestsSession)
     total_items = query.count()
     sessions = query.offset(offset).limit(limit).all()
-    
-    # Convertir los modelos SQLAlchemy a esquemas Pydantic
+
     sessions_data = [GuestsSessionResponse.from_orm(session) for session in sessions]
     
     return {

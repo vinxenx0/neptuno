@@ -80,6 +80,7 @@ export interface CreditTransaction {
 }
 
 export interface Integration {
+  user_id: number;
   id: number;
   name: string;
   webhook_url: string;
@@ -183,4 +184,35 @@ export interface InfoResponse {
 
 export interface BadgeWithEventType extends Badge {
   event_type: EventType;
+}
+
+
+// src/lib/types.ts
+
+// Nuevo tipo para cupones
+export interface Coupon {
+  id: number;
+  name: string;
+  description?: string;
+  unique_identifier: string;
+  issued_at: string; // ISO string
+  expires_at?: string; // ISO string, opcional
+  redeemed_at?: string; // ISO string, opcional
+  active: boolean;
+  status: "active" | "redeemed" | "expired" | "disabled";
+  credits: number;
+  user_id?: number; // Opcional, para usuarios registrados
+  session_id?: string; // Opcional, para usuarios anónimos
+  redeemed_by_user_id?: number; // Quién lo canjeó, si aplica
+  redeemed_by_session_id?: string; // Quién lo canjeó (anónimo), si aplica
+}
+
+
+
+export interface CouponType {
+  id: number;
+  name: string;
+  description?: string;
+  credits: number;
+  active: boolean;
 }

@@ -41,6 +41,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {
@@ -60,9 +62,15 @@ import {
   AttachMoney,
   Edit,
   EmojiEvents,
-  MonetizationOn
+  MonetizationOn,
+  LocalActivity
 } from "@mui/icons-material";
-import { SiteSetting, Integration, EventType, Badge, PaymentProvider } from "@/lib/types";
+import { SiteSetting, Integration, EventType, Badge, PaymentProvider, Coupon, CouponType } from "@/lib/types";
+
+interface AllowedOrigin {
+  id: number;
+  origin: string;
+}
 
 const AdminGradientCard = styled(Card)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
@@ -99,7 +107,7 @@ export default function ConfigurePage() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [settingsByTag, setSettingsByTag] = useState<Record<string, SiteSetting[]>>({});
-  const [origins, setOrigins] = useState<string[]>([]);
+  const [origins, setOrigins] = useState<string[] | null>(null);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [newOrigin, setNewOrigin] = useState("");
   const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
@@ -111,7 +119,9 @@ export default function ConfigurePage() {
     enable_payment_methods: true,
     enable_points: true,
     enable_badges: true,
+    enable_coupons: true,
   });
+
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [paymentProviders, setPaymentProviders] = useState<PaymentProvider[]>([]);
@@ -123,6 +133,29 @@ export default function ConfigurePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [expandedSettings, setExpandedSettings] = useState<Record<string, boolean>>({});
   const [allSettingsExpanded, setAllSettingsExpanded] = useState(false);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [editCoupon, setEditCoupon] = useState<Coupon | null>(null);
+  const [couponTypes, setCouponTypes] = useState<CouponType[]>([]);
+  const [editCouponType, setEditCouponType] = useState<CouponType | null>(null);
+  const [corsEnabled, setCorsEnabled] = useState(true);
+
+
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
+        setPaymentProviders(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar proveedores");
+      }
+    };
+    fetchData();
+  }, []);
+
+
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
@@ -165,6 +198,13 @@ export default function ConfigurePage() {
         const paymentProvidersRes = await fetchAPI<PaymentProvider[]>("/v1/payment-providers");
         setPaymentProviders(paymentProvidersRes.data || []);
 
+
+        const couponTypesRes = await fetchAPI<CouponType[]>("/v1/coupons/types");
+        setCouponTypes(couponTypesRes.data || []);
+
+        const couponsRes = await fetchAPI<Coupon[]>("/v1/coupons/");
+        setCoupons(couponsRes.data || []);
+
         const featuresRes = await Promise.all([
           fetchAPI("/v1/settings/enable_registration"),
           fetchAPI("/v1/settings/enable_social_login"),
@@ -173,6 +213,7 @@ export default function ConfigurePage() {
           fetchAPI("/v1/settings/enable_payment_methods"),
           fetchAPI("/v1/settings/enable_points"),
           fetchAPI("/v1/settings/enable_badges"),
+          fetchAPI("/v1/settings/enable_coupons"),
         ]);
         setFeatures({
           enable_registration: featuresRes[0].data === "true",
@@ -182,6 +223,7 @@ export default function ConfigurePage() {
           enable_payment_methods: featuresRes[4].data === "true",
           enable_points: featuresRes[5].data === "true",
           enable_badges: featuresRes[6].data === "true",
+          enable_coupons: featuresRes[7].data === "true",
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar datos");
@@ -191,6 +233,45 @@ export default function ConfigurePage() {
     };
     fetchData();
   }, [user, router]);
+
+  useEffect(() => {
+    const fetchCorsSettings = async () => {
+      try {
+        const { data: corsEnabledData } = await fetchAPI("/v1/settings/allowed_origins");
+        const enabled = corsEnabledData === "true";
+        setCorsEnabled(enabled);
+        if (enabled) {
+          const { data: originsData } = await fetchAPI<AllowedOrigin[]>("/v1/origins");
+          setOrigins(originsData ? originsData.map(o => o.origin) : []);
+        } else {
+          setOrigins([]);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar configuración de CORS");
+      }
+    };
+    fetchCorsSettings();
+  }, []);
+
+  const handleToggleCors = async () => {
+    try {
+      await fetchAPI("/v1/settings/admin/config", {
+        method: "POST",
+        data: { key: "allowed_origins", value: (!corsEnabled).toString() },
+      });
+      setCorsEnabled(!corsEnabled);
+      setSuccess(`CORS ${!corsEnabled ? "activado" : "desactivado"}`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar CORS");
+    }
+  };
+
+
+  //const handleToggleIntegration = async (id: number, active: boolean) => {
+  //  await fetchAPI(`/v1/integrations/${id}/toggle`, { method: "PUT" });
+  // Actualizar estado local
+  //};
 
   const groupedBadges = badges.reduce((acc, badge) => {
     const key = badge.event_type_id;
@@ -239,6 +320,17 @@ export default function ConfigurePage() {
     }
   };
 
+  const handleDeleteOrigin = async (origin: string) => {
+    try {
+      await fetchAPI(`/v1/settings/allowed-origins/${encodeURIComponent(origin)}`, { method: "DELETE" });
+      setOrigins(origins.filter(o => o !== origin));
+      setSuccess("Origen eliminado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar origen");
+    }
+  };
+
   const handleAddIntegration = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -246,12 +338,40 @@ export default function ConfigurePage() {
         method: "POST",
         data: { name: newIntegration.name, webhook_url: newIntegration.webhook_url, event_type: newIntegration.event_type },
       });
-      setIntegrations([...integrations, data!]);
+      setIntegrations([...integrations, data]);
       setNewIntegration({ name: "", webhook_url: "", event_type: "" });
       setSuccess("Integración creada con éxito");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al crear integración");
+    }
+  };
+
+  const handleToggleIntegration = async (id: number, active: boolean) => {
+    try {
+      const integration = integrations.find(i => i.id === id);
+      if (!integration) throw new Error("Integración no encontrada");
+      const updatedIntegration = { ...integration, active: !active }; // Enviar el objeto completo
+      const { data } = await fetchAPI<Integration>(`/v1/integrations/${id}`, {
+        method: "PUT",
+        data: updatedIntegration,
+      });
+      setIntegrations(integrations.map(i => i.id === id ? data! : i));
+      setSuccess(`Integración ${!active ? "activada" : "desactivada"}`);
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al actualizar integración");
+    }
+  };
+
+  const handleDeleteIntegration = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/integrations/${id}`, { method: "DELETE" });
+      setIntegrations(integrations.filter(i => i.id !== id));
+      setSuccess("Integración eliminada con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar integración");
     }
   };
 
@@ -280,6 +400,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdateEventType = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editEventType?.id) return;
     try {
       const { data } = await fetchAPI<EventType>(`/v1/gamification/event-types/${editEventType.id}`, { method: "PUT", data: editEventType });
@@ -317,6 +438,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdateBadge = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editBadge?.id) return;
     try {
       const { data } = await fetchAPI<Badge>(`/v1/gamification/badges/${editBadge.id}`, { method: "PUT", data: editBadge });
@@ -342,12 +464,15 @@ export default function ConfigurePage() {
 
   const handleTogglePaymentProvider = async (id: number, active: boolean) => {
     try {
+      const provider = paymentProviders.find(p => p.id === id);
+      if (!provider) throw new Error("Proveedor no encontrado");
+      const updatedProvider = { ...provider, active: !active }; // Enviar el objeto completo
       const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${id}`, {
         method: "PUT",
-        data: { active },
+        data: updatedProvider,
       });
       setPaymentProviders(paymentProviders.map((p) => (p.id === id ? data! : p)));
-      setSuccess(`Proveedor ${active ? "activado" : "desactivado"}`);
+      setSuccess(`Proveedor ${!active ? "activado" : "desactivado"}`);
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al actualizar proveedor");
@@ -368,6 +493,7 @@ export default function ConfigurePage() {
   };
 
   const handleUpdatePaymentProvider = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!editPaymentProvider?.id) return;
     try {
       const { data } = await fetchAPI<PaymentProvider>(`/v1/payment-providers/${editPaymentProvider.id}`, {
@@ -391,6 +517,44 @@ export default function ConfigurePage() {
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al eliminar proveedor");
+    }
+  };
+
+
+  // Funciones para manejar cupones
+  const handleSubmitCouponType = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editCouponType) return;
+    try {
+      if (editCouponType.id) {
+        const { data } = await fetchAPI<CouponType>(`/v1/coupons/types/${editCouponType.id}`, {
+          method: "PUT",
+          data: editCouponType,
+        });
+        setCouponTypes(couponTypes.map(ct => ct.id === data!.id ? data! : ct));
+      } else {
+        const { data } = await fetchAPI<CouponType>("/v1/coupons/types", {
+          method: "POST",
+          data: editCouponType,
+        });
+        setCouponTypes([...couponTypes, data!]);
+      }
+      setEditCouponType(null);
+      setSuccess("Tipo de cupón guardado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al guardar tipo de cupón");
+    }
+  };
+
+  const handleDeleteCoupon = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/coupons/${id}`, { method: "DELETE" });
+      setCoupons(coupons.filter((c) => c.id !== id));
+      setSuccess("Cupón eliminado con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar cupón");
     }
   };
 
@@ -578,6 +742,7 @@ export default function ConfigurePage() {
             <Tab label="Orígenes" icon={<Security />} iconPosition="start" />
             <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
             <Tab label="Gamificación" icon={<EmojiEvents />} iconPosition="start" />
+            <Tab label="Cupones" icon={<LocalActivity />} iconPosition="start" />
             <Tab label="Pagos" icon={<MonetizationOn />} iconPosition="start" />
             <Tab label="Configuraciones" icon={<Settings />} iconPosition="start" />
           </Tabs>
@@ -915,6 +1080,52 @@ export default function ConfigurePage() {
                         </CardContent>
                       </FeatureCard>
                     </Grid>
+
+                    {/* Tarjeta para Cupones */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <FeatureCard sx={{
+                        borderLeft: `4px solid ${features.enable_coupons ? theme.palette.success.main : theme.palette.error.main}`
+                      }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <EmojiEvents sx={{
+                              fontSize: 40,
+                              mr: 2,
+                              color: features.enable_coupons ? theme.palette.success.main : theme.palette.error.main
+                            }} />
+                            <Box>
+                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Cupones</Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Habilita el sistema de cupones
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Divider sx={{ my: 2 }} />
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="body2" component="span">
+                                Estado actual:
+                              </Typography>
+                              <Chip
+                                label={features.enable_coupons ? "Activado" : "Desactivado"}
+                                size="small"
+                                color={features.enable_coupons ? "success" : "error"}
+                                sx={{ ml: 1 }}
+                              />
+                            </Box>
+                            <Switch
+                              checked={features.enable_coupons}
+                              onChange={(e) => handleToggleFeature('enable_coupons', e.target.checked)}
+                              color="primary"
+                            />
+                          </Box>
+                          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, display: 'block' }}>
+                            {getFeatureDescription('enable_coupons')}
+                          </Typography>
+                        </CardContent>
+                      </FeatureCard>
+                    </Grid>
+
                   </Grid>
                 </CardContent>
               </ConfigGlassCard>
@@ -923,141 +1134,93 @@ export default function ConfigurePage() {
 
           {/* Orígenes Permitidos Tab */}
           {activeTab === 1 && (
-            <Box sx={{ mb: 4 }}>
-              <ConfigGlassCard sx={{ mb: 3 }}>
-                <CardContent>
-                  <Box component="form" onSubmit={handleAddOrigin} sx={{ display: 'flex', gap: 2 }}>
+            <Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h6">Orígenes Permitidos</Typography>
+                <Switch checked={corsEnabled} onChange={handleToggleCors} />
+              </Box>
+              {corsEnabled && (
+                <>
+                  <Box component="form" onSubmit={handleAddOrigin} sx={{ mb: 2 }}>
                     <TextField
-                      label="Nuevo Origen Permitido"
+                      label="Nuevo Origen"
                       value={newOrigin}
                       onChange={(e) => setNewOrigin(e.target.value)}
                       fullWidth
                       variant="outlined"
                       size="small"
-                      placeholder="https://example.com"
-                      InputProps={{ startAdornment: <Public color="action" sx={{ mr: 1 }} /> }}
                     />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      startIcon={<AddCircle />}
-                      sx={{ minWidth: '120px' }}
-                    >
-                      Añadir
+                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+                      Añadir Origen
                     </Button>
                   </Box>
-                </CardContent>
-              </ConfigGlassCard>
-
-              {origins.length > 0 ? (
-                <Grid container spacing={2}>
-                  {origins.map((origin, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                      <ConfigGlassCard>
-                        <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Public color="primary" />
-                            <Typography noWrap sx={{ maxWidth: '200px' }}>{origin}</Typography>
-                          </Box>
-                          <IconButton color="error"><Delete /></IconButton>
-                        </CardContent>
-                      </ConfigGlassCard>
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <ConfigGlassCard>
-                  <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                    <Public sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-                    <Typography variant="h6" color="textSecondary">
-                      No hay orígenes permitidos
-                    </Typography>
-                  </CardContent>
-                </ConfigGlassCard>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Origen</TableCell>
+                        <TableCell>Acciones</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {(origins || []).map((origin) => ( // Usa || [] para evitar errores si origins es null
+                        <TableRow key={origin}>
+                          <TableCell>{origin}</TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => handleDeleteOrigin(origin)} color="error">
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
               )}
             </Box>
           )}
 
           {/* Integraciones Tab */}
           {activeTab === 2 && (
-            <Box sx={{ mb: 4 }}>
-              <ConfigGlassCard sx={{ mb: 3 }}>
-                <CardContent>
-                  <Box component="form" onSubmit={handleAddIntegration} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                      label="Nombre de la Integración"
-                      value={newIntegration.name}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Link color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <TextField
-                      label="Webhook URL"
-                      value={newIntegration.webhook_url}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Webhook color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <TextField
-                      label="Tipo de Evento"
-                      value={newIntegration.event_type}
-                      onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })}
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      InputProps={{ startAdornment: <Settings color="action" sx={{ mr: 1 }} /> }}
-                    />
-                    <Button type="submit" variant="contained" color="primary" startIcon={<AddCircle />} sx={{ mt: 1 }}>
-                      Crear Integración
-                    </Button>
-                  </Box>
-                </CardContent>
-              </ConfigGlassCard>
-
-              {integrations.length > 0 ? (
-                <Grid container spacing={2}>
-                  {integrations.map((integration) => (
-                    <Grid item xs={12} md={6} key={integration.id}>
-                      <ConfigGlassCard>
-                        <CardContent>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Webhook color="primary" />
-                              {integration.name}
-                            </Typography>
-                            <Chip
-                              label={integration.active ? "Activo" : "Inactivo"}
-                              color={integration.active ? "success" : "error"}
-                              size="small"
-                              icon={integration.active ? <CheckCircle /> : <Cancel />}
-                            />
-                          </Box>
-                          <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                            <strong>Webhook:</strong> {integration.webhook_url}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Evento:</strong> {integration.event_type}
-                          </Typography>
-                        </CardContent>
-                      </ConfigGlassCard>
-                    </Grid>
+            <Box>
+              <Select
+                value={selectedUserId || ""}
+                onChange={(e) => setSelectedUserId(e.target.value ? Number(e.target.value) : null)}
+                displayEmpty
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                <MenuItem value="">Todos los usuarios</MenuItem>
+                {/* Añadir opciones dinámicas de usuarios */}
+              </Select>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nombre</TableCell>
+                    <TableCell>Usuario</TableCell>
+                    <TableCell>Estado</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {integrations.filter(i => selectedUserId ? i.user_id === selectedUserId : true).map((integration) => (
+                    <TableRow key={integration.id}>
+                      <TableCell>{integration.name}</TableCell>
+                      <TableCell>{integration.user_id}</TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={integration.active}
+                          onChange={() => handleToggleIntegration(integration.id, integration.active)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleDeleteIntegration(integration.id)} color="error">
+                          <Delete />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </Grid>
-              ) : (
-                <ConfigGlassCard>
-                  <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                    <Webhook sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-                    <Typography variant="h6" color="textSecondary">
-                      No hay integraciones configuradas
-                    </Typography>
-                  </CardContent>
-                </ConfigGlassCard>
-              )}
+                </TableBody>
+              </Table>
             </Box>
           )}
 
@@ -1282,8 +1445,73 @@ export default function ConfigurePage() {
             </Box>
           )}
 
-          {/* Pagos Tab */}
+          {/* CUpones Tab */}
+
           {activeTab === 4 && (
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>Tipos de Cupones</Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddCircle />}
+                onClick={() => setEditCouponType({ id: 0, name: '', description: '', credits: 0, active: true })}
+              >
+                Nuevo Tipo de Cupón
+              </Button>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nombre</TableCell>
+                    <TableCell>Descripción</TableCell>
+                    <TableCell>Créditos</TableCell>
+                    <TableCell>Activo</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {couponTypes.map((ct) => (
+                    <TableRow key={ct.id}>
+                      <TableCell>{ct.name}</TableCell>
+                      <TableCell>{ct.description || 'Sin descripción'}</TableCell>
+                      <TableCell>{ct.credits}</TableCell>
+                      <TableCell>
+                        <Chip label={ct.active ? "Activo" : "Inactivo"} color={ct.active ? "success" : "error"} />
+                      </TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => setEditCouponType(ct)} color="primary">
+                          <Edit />
+                        </IconButton>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<LocalActivity />}
+                          onClick={async () => {
+                            try {
+                              const { data } = await fetchAPI<Coupon>("/v1/coupons/test", {
+                                method: "POST",
+                                data: { coupon_type_id: ct.id },
+                              });
+                              if (data) {
+                                setCoupons([...coupons, data]);
+                                setSuccess("Cupón de prueba generado con éxito");
+                                setTimeout(() => setSuccess(null), 3000);
+                              }
+                            } catch (err) {
+                              setError(err instanceof Error ? err.message : "Error al generar cupón de prueba");
+                            }
+                          }}
+                        >
+                          Generar Prueba
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          )}
+
+          {/* Pagos Tab */}
+          {activeTab === 5 && (
             <Box sx={{ mb: 4 }}>
               <ConfigGlassCard>
                 <CardContent>
@@ -1318,7 +1546,6 @@ export default function ConfigurePage() {
                             <Switch
                               checked={provider.active}
                               onChange={(e) => handleTogglePaymentProvider(provider.id, e.target.checked)}
-                              color="primary"
                             />
                           </TableCell>
                           <TableCell>
@@ -1375,7 +1602,7 @@ export default function ConfigurePage() {
           )}
 
           {/* Configuraciones Tab */}
-          {activeTab === 5 && (
+          {activeTab === 6 && (
             <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Button
@@ -1490,7 +1717,8 @@ const getFeatureDescription = (key: string) => {
     disable_credits: 'Deshabilita el sistema de créditos en la plataforma. Los usuarios no podrán comprar ni gastar créditos.',
     enable_payment_methods: 'Habilita diferentes métodos de pago como tarjetas, PayPal, etc. Requiere configuración previa de cada proveedor.',
     enable_points: 'Activa el sistema de puntos por actividades. Los usuarios ganarán puntos por completar acciones en la plataforma.',
-    enable_badges: 'Permite la obtención de insignias al alcanzar ciertos logros. Configura los requisitos en la pestaña de Gamificación.'
+    enable_badges: 'Permite la obtención de insignias al alcanzar ciertos logros. Configura los requisitos en la pestaña de Gamificación.',
+    enable_coupons: 'Permite la creación y uso de cupones de descuento. Los usuarios podrán canjear cupones para obtener descuentos en compras.'
   };
   return descriptions[key] || 'Funcionalidad del sistema';
 };

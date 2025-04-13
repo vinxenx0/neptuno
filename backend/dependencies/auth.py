@@ -1,6 +1,7 @@
 # backend/dependencies/auth.py
 # Módulo de dependencias de autenticación.
 # backend/dependencies/auth.py
+from models.coupon_type import CouponType
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -9,6 +10,8 @@ from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging
+from services.coupon_service import create_coupon
+from schemas.coupon import CouponCreate
 from uuid import uuid4
 from datetime import datetime
 from pydantic import BaseModel
@@ -93,6 +96,31 @@ async def get_user_context(request: Request, response: Response, db: Session = D
             )
             db.add(new_session)
             db.commit()
+
+            # Crear cupón de bienvenida
+            coupon_type = db.query(CouponType).filter(CouponType.name == "Bienvenida").first()
+            if not coupon_type:
+                logger.error("Tipo de cupón 'Bienvenida' no encontrado")
+                raise HTTPException(status_code=500, detail="Tipo de cupón 'Bienvenida' no encontrado")
+
+            coupon_data = CouponCreate(
+                name="Bienvenida",
+                description="Cupón de bienvenida para usuarios anónimos",
+                credits=5,
+                active=True,
+                session_id=session_id,
+                user_id=session_id,
+                expires_at=None,
+                issued_at=datetime.utcnow(),
+                redeemed_at=None,
+                status="active",
+                unique_identifier=f"WELCOME-{session_id[:8]}",
+                coupon_type_id=coupon_type.id  # Asignar el ID del tipo de cupón
+            )
+            create_coupon(db, coupon_data, user_id=None, session_id=session_id) 
+            logger.info(f"Cupón de bienvenida creado para sesión {session_id}")
+
+        
             logger.info(f"Nueva sesión anónima creada ID {session_id} con username {username} desde IP {client_ip}")
             return UserContext(
                 user_type="anonymous",

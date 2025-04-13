@@ -6,6 +6,10 @@ Tecnicamente ya sabes lo que hemos montado: un sistema dockerizado de servidores
 
 Al utilzar FastAPI y OpenAPI con RESTful nuestra api vuela literalmente...
 
+Ademas hemos creado un SDK que permite a los desarrolladores de frontend integrar nuestro BaaS en sus aplicaciones de una manera sencilla y rapida, y hemos desarrollado un dashboard premium que permite a los usuarios gestionar su cuenta, ver sus estadisticas, y configurar su BaaS de una manera intuitiva y facil de usar.
+Hemos creado una demo online que permite a los usuarios probar nuestro BaaS y ver como funciona, y hemos desarrollado una serie de ejemplos y tutoriales para ayudar a los desarrolladores a integrar nuestro BaaS en sus aplicaciones. 
+
+
 No se si he hecho una buena descripción de nuestro trabajo hasta ahora, quizas tu la puedas mejorar y ampliar...
 
 Con todo esto en mente, he pensado que podriamos darle un enfoque de start up a nuestro software, ¿que opinas? Por supuesto tus respuestas
@@ -15,6 +19,17 @@ pero seguiremos trabajando en el proyecto como hasta ahora, sin presiones ni exp
 
 Me gustaria que valorases la idea de convertirnos en una start up y me dieses tu opinion, y para empezar  a trabajar en esa linea, indicaque que paginas deberiamos poner en nuestro sitio, para que ademas de ser la demo online de nuestro software sea el sitio de nuestra start up de software BaaS (imagino que al menos un road map, una historia de la empresa, quizas?
 
+Como aperitivo habia pensado en un modelo de negocio con estos productos (solo es una idea, pero para que veas mi punto de vista)
+
+modelo gratuito: descargate neptuno o clonalo y usalo
+bussines: te alojamos la api, consultas ilimitadas, modulos premium, soporte premium, etc.
+corporate: desarrollo a medida, soporte premium, etc.
+Quizas deberiamos pensar en un modelo de negocio diferente, o quizas no, pero creo que es un buen punto de partida para empezar a pensar en la idea de convertirnos en una start up.
+Me gustaria que me dieses tu opinion sobre el modelo de negocio tambien, aportando tus ideas y sugerencias de modelos, y si crees que es viable o no, y si crees que deberiamos pensar en otro modelo de negocio diferente.
+
+
 Vamos a tomarnos unos dias pensando  en esta idea para contrastar nuestras opiniones, y después retomamos el diseño, programación, ampliación y mejoras de nuestro backend y frontend.
 
 Es tu turno Grok, y de nuevo gracias por el excelente trabajo hecho hasta ahora.
+
+Mientrtas tu me respondes y piensas en esta cuestion con tiempo y dedicación yo corrijo los bugs y te digo que hacemos.

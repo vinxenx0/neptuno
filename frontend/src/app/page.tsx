@@ -99,7 +99,7 @@ export default function LandingPage() {
   // All handler functions remain exactly the same as in the original code
   const handleTestCreditConsumption = async () => {
     try {
-      const response = await fetchAPI("/v1/api/test-credit-consumption", { method: "GET" });
+      const response = await fetchAPI("/v1/test/test-credit-consumption", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
@@ -481,7 +481,7 @@ export default function LandingPage() {
                 onClick={handleNoLoginTest}
                 startIcon={<LockOpen />}
               >
-                /v1/api/no-login/
+                /v1/test/no-login/
               </EndpointButton>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -492,7 +492,7 @@ export default function LandingPage() {
                 onClick={handleRestrictedTest}
                 startIcon={<Security />}
               >
-                /v1/api/restricted
+                /v1/test/restricted
               </EndpointButton>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -503,7 +503,7 @@ export default function LandingPage() {
                 onClick={handleInfo}
                 startIcon={<Info />}
               >
-                /v1/api/info
+                /v1/test/info
               </EndpointButton>
             </Grid>
 

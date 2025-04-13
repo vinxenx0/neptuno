@@ -44,9 +44,10 @@ def login_for_access_token(request: Request,
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     enable_registration = get_setting(db, "enable_registration")
     if enable_registration != "true":
-        raise HTTPException(status_code=403, detail="El registro de nuevos usuarios está deshabilitado")
-    return register_user(db, data.email, data.username, data.password,
-                         data.ciudad, data.website)
+        raise HTTPException(
+            status_code=403,
+            detail="El registro de nuevos usuarios está deshabilitado")
+    return register_user(db, data.email, data.username, data.password)
 
 
 @router.post("/password-reset", response_model=dict)
@@ -61,13 +62,12 @@ def confirm_password_reset(data: PasswordResetConfirm,
 
 
 @router.post("/refresh", response_model=TokenResponse)
-def refresh_token(
-    request: Request,
-    data: RefreshTokenRequest, 
-    db: Session = Depends(get_db)
-):
+def refresh_token(request: Request,
+                  data: RefreshTokenRequest,
+                  db: Session = Depends(get_db)):
     try:
-        logger.info(f"Intento de refresco de token desde IP {request.client.host}")
+        logger.info(
+            f"Intento de refresco de token desde IP {request.client.host}")
         result = refresh_access_token(db, data.refresh_token)
         logger.info("Refresco de token exitoso")
         return result
@@ -75,21 +75,25 @@ def refresh_token(
         logger.error(f"Error al refrescar token: {e.detail}")
         raise
     except Exception as e:
-        logger.critical(f"Error inesperado en refresh_token: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Error interno del servidor")
+        logger.critical(f"Error inesperado en refresh_token: {str(e)}",
+                        exc_info=True)
+        raise HTTPException(status_code=500,
+                            detail="Error interno del servidor")
 
-    
+
 @router.post("/logout", response_model=dict)
 def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return logout_user(db, token)
 
 
 @router.get("/login/{provider}", response_model=dict)
-def get_provider_login_url(provider: str):
-    enable_social_login = get_setting(db, "enable_social_login")
+def get_provider_login_url(provider: str, db: Session = Depends(get_db)):
+    enable_social_login = get_setting(
+        db, "enable_social_login")  # comprobar he tenido que meter db
     if enable_social_login != "true":
-        raise HTTPException(status_code=403, detail="El login social está deshabilitado")
-    
+        raise HTTPException(status_code=403,
+                            detail="El login social está deshabilitado")
+
     try:
         redirect_url = get_oauth2_redirect_url(provider)
         return {"redirect_url": redirect_url}

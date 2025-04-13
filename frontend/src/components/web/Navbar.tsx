@@ -24,7 +24,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Tooltip
+  Tooltip,
+  Badge
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -43,7 +44,8 @@ import {
   Menu as MenuIcon,
   ContactMail,
   Close,
-  Key
+  Key,
+  LocalActivity
 } from "@mui/icons-material";
 import Image from "next/image";
 
@@ -75,12 +77,13 @@ const NavContainer = styled(Box)(({ theme }) => ({
 export default function Navbar() {
   const theme = useTheme();
   const pathname = usePathname();
-  const { user, credits, gamification, setCredits, setGamification, logout } = useAuth();
+  const { user, credits, gamification, coupons, setCredits, setGamification, logout } = useAuth();
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
   const [enablePoints, setEnablePoints] = useState(true);
+  const [enableCoupons, setEnableCoupons] = useState(true);
   const [enableBadges, setEnableBadges] = useState(true);
   const [enablePaymentMethods, setEnablePaymentMethods] = useState(true);
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
@@ -99,18 +102,21 @@ export default function Navbar() {
           disableCreditsRes,
           enableRegistrationRes,
           enablePointsRes,
+          enableCouponsRes,
           enableBadgesRes,
           enablePaymentMethodsRes,
         ] = await Promise.all([
           fetchAPI("/v1/settings/disable_credits"),
           fetchAPI("/v1/settings/enable_registration"),
           fetchAPI("/v1/settings/enable_points"),
+          fetchAPI("/v1/settings/enable_coupons"),
           fetchAPI("/v1/settings/enable_badges"),
           fetchAPI("/v1/settings/enable_payment_methods"),
         ]);
         setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
         setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
         setEnablePoints(enablePointsRes.data === "true" || enablePointsRes.data === true);
+        setEnableCoupons(enableCouponsRes.data === "true" || enableCouponsRes.data === true);
         setEnableBadges(enableBadgesRes.data === "true" || enableBadgesRes.data === true);
         setEnablePaymentMethods(enablePaymentMethodsRes.data === "true" || enablePaymentMethodsRes.data === true);
       } catch (err) {
@@ -179,6 +185,14 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
+  // Contar cupones activos y no expirados
+  const availableCoupons = (coupons || []).filter(
+    (coupon) =>
+      coupon && // Verifica que coupon no sea null/undefined
+      coupon.status === "active" &&
+      (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
+  ).length;
+
   return (
     <GlassNavbar>
       <NavContainer>
@@ -193,16 +207,16 @@ export default function Navbar() {
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Link href="/" passHref>
-              <Box sx={{ 
-                display: "flex", 
+              <Box sx={{
+                display: "flex",
                 alignItems: "center",
                 gap: 1,
                 cursor: "pointer"
               }}>
-                <Image 
-                  src="/logo.png" 
-                  alt="Logo Neptuno" 
-                  width={40} 
+                <Image
+                  src="/logo.png"
+                  alt="Logo Neptuno"
+                  width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
                 />
@@ -255,6 +269,19 @@ export default function Navbar() {
                     <MonetizationOn />
                     <span className="notification-badge credits-badge">{credits}</span>
                   </IconButton>
+                </Link>
+              )}
+
+              {/* Cupones */}
+              {enableCoupons && (
+                <Link href="/user/coupon" passHref>
+                  <Tooltip title="Tus cupones">
+                    <IconButton className="notification-icon">
+                      <Badge badgeContent={availableCoupons} color="secondary">
+                        <LocalActivity />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
                 </Link>
               )}
 
@@ -339,7 +366,7 @@ export default function Navbar() {
             ) : (
               <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
                 <Box sx={{ position: 'relative' }}>
-                  <IconButton 
+                  <IconButton
                     component={Link}
                     href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
                     className="user-avatar"
@@ -388,10 +415,10 @@ export default function Navbar() {
               borderBottom: `1px solid ${theme.palette.divider}`
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Image 
-                  src="/logo.png" 
-                  alt="Logo Neptuno" 
-                  width={40} 
+                <Image
+                  src="/logo.png"
+                  alt="Logo Neptuno"
+                  width={40}
                   height={40}
                   style={{ borderRadius: "50%" }}
                 />
@@ -474,6 +501,6 @@ export default function Navbar() {
           ¡Felicidades! Has obtenido el badge: {newBadge}
         </Alert>
       </Snackbar>
-    </GlassNavbar>
+    </GlassNavbar >
   );
 }

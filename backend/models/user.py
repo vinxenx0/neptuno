@@ -36,7 +36,10 @@ class User(Base):
     gamification_events = relationship("GamificationEvent", back_populates="user")
     gamification = relationship("UserGamification", back_populates="user")
     
-    
+
+    # Añadir relaciones inversas en los modelos existentes
+    coupons = relationship("Coupon", foreign_keys="Coupon.user_id", back_populates="user")
+
     
       # 📌 Ubicación y demografía
     #pais = Column(String(100), nullable=True)  
@@ -69,3 +72,7 @@ class User(Base):
     #volumen_transacciones = Column(Float, nullable=True)  
     #origen_lead = Column(String(100), nullable=True)  
     #clientes_referidos = Column(Integer, nullable=True)  
+
+    # Añadir relaciones inversas en los modelos existentes
+    coupons = relationship("Coupon", foreign_keys="Coupon.user_id", back_populates="user")
+    

@@ -7,10 +7,11 @@ from schemas.user import UserResponse, UpdateProfileRequest
 from services.user_service import get_user_info, update_user, delete_user, list_users
 from core.database import get_db
 from dependencies.auth import UserContext, get_user_context
+from core.logging import configure_logging
 
 router = APIRouter(tags=["users"])
 
-
+logger = configure_logging()
 
 @router.get("/me", response_model=UserResponse)
 def get_me(user: UserContext = Depends(get_user_context),
@@ -40,26 +41,25 @@ def delete_me(user: UserContext = Depends(get_user_context),
                             detail="Solo usuarios registrados")
     return delete_user(db, int(user.user_id))
 
+
 @router.get("/admin/users", response_model=dict)
-def get_all_users(
-    page: int = Query(1, ge=1),
-    limit: int = Query(10, ge=1, le=100),
-    user=Depends(get_user_context),
-    db: Session = Depends(get_db)
-):
+def get_all_users(page: int = Query(1, ge=1),
+                  limit: int = Query(10, ge=1, le=100),
+                  user=Depends(get_user_context),
+                  db: Session = Depends(get_db)):
     if user.rol != "admin":
         raise HTTPException(
             status_code=403,
             detail="Solo administradores pueden ver la lista de usuarios")
-    
+
     offset = (page - 1) * limit
     query = db.query(User)
     total_items = query.count()
     users = query.offset(offset).limit(limit).all()
-    
+
     # Convertimos los usuarios a esquemas Pydantic
     users_data = [UserResponse.model_validate(user) for user in users]
-    
+
     return {
         "data": users_data,
         "total_items": total_items,
@@ -68,7 +68,6 @@ def get_all_users(
     }
 
 
-# Nuevo endpoint: obtener un usuario específico por ID
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: int,
              user: UserContext = Depends(get_user_context),
@@ -83,7 +82,6 @@ def get_user(user_id: int,
     return user_data
 
 
-# Nuevo endpoint: actualizar un usuario específico por ID
 @router.put("/{user_id}", response_model=UserResponse)
 def update_user_by_id(user_id: int,
                       request: UpdateProfileRequest,
@@ -102,7 +100,6 @@ def update_user_by_id(user_id: int,
     return updated_user
 
 
-# Nuevo endpoint: eliminar un usuario específico por ID
 @router.delete("/{user_id}", response_model=dict)
 def delete_user_by_id(user_id: int,
                       user: UserContext = Depends(get_user_context),

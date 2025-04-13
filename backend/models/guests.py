@@ -26,3 +26,7 @@ class GuestsSession(Base):
     # Relación con gamificación
     gamification_events = relationship("GamificationEvent", back_populates="session")
     gamification = relationship("UserGamification", back_populates="session")
+
+
+    coupons = relationship("Coupon", foreign_keys="Coupon.session_id", back_populates="session")
+    
