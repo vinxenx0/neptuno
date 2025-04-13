@@ -4,8 +4,8 @@ from fastapi import Depends, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from dependencies.auth import UserContext, get_user_context
-from schemas.auth import TokenResponse
-from schemas.user import RegisterRequest
+from schema.auth import TokenResponse
+from schema.user import RegisterRequest
 from services.auth_service import (
     login_user,
     register_user,
