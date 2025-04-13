@@ -2142,3 +2142,203 @@ neptuno/
 ✅ **Rutas accesibles** (`/demo`, `/tienda`, etc.)  
 
 ¿Necesitas que explique con más detalle algún paso en particular o prefieres que prepare un repositorio ejecutable con esta estructura?
+
+Vamos a implementar el **Docker del theme-switcher** y su integración con Nginx en tu estructura actual. Aquí está la solución paso a paso:
+
+---
+
+### 1. **Crear Dockerfile para el Theme-Switcher**
+`/frontend-demo/Dockerfile` (nuevo archivo)
+```dockerfile
+# Etapa de construcción
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Etapa de producción
+FROM node:18-alpine
+
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+
+ENV NEXT_PUBLIC_API_URL=http://backend:8000
+EXPOSE 3001
+
+CMD ["npx", "next", "start", "-p", "3001"]
+```
+
+---
+
+### 2. **Actualizar docker-compose.yml**
+```yaml
+services:
+  # ... (servicios existentes)
+  
+  demo-frontend:
+    container_name: neptuno-demo
+    build: ./frontend-demo
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.5  # Nueva IP fija para el demo
+```
+
+---
+
+### 3. **Configuración Nginx para /demo-site/**
+Modifica `/etc/nginx/sites-available/mysite.conf`:
+```nginx
+server {
+    # ... (configuración existente)
+
+    # Nueva ruta para el theme-switcher
+    location /demo-site/ {
+        proxy_pass http://172.18.0.5:3001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Rewrite para Next.js
+        rewrite ^/demo-site/(.*)$ /$1 break;
+        
+        # Configuración específica para SPA
+        proxy_redirect off;
+        proxy_intercept_errors on;
+        error_page 404 = /demo-site/404.html;
+    }
+
+    # ... (resto de configuración)
+}
+```
+
+---
+
+### 4. **Estructura de Archivos Final**
+```
+neptuno/
+├── frontend-demo/          # Nuevo directorio
+│   ├── Dockerfile          # Config Docker específica
+│   └── (todo el frontend del theme-switcher)
+├── docker-compose.yml      # Actualizado
+└── etc/nginx/
+    └── sites-available/
+        └── mysite.conf     # Config Nginx actualizada
+```
+
+---
+
+### 5. **Pasos de Implementación**
+
+1. **Construir los contenedores:**
+```bash
+docker-compose build demo-frontend
+```
+
+2. **Actualizar Nginx:**
+```bash
+sudo cp etc/nginx/sites-available/mysite.conf /etc/nginx/sites-available/
+sudo nginx -t && sudo systemctl restart nginx
+```
+
+3. **Iniciar los servicios:**
+```bash
+docker-compose up -d demo-frontend
+```
+
+---
+
+### 6. **Verificación**
+
+1. **Check de contenedores:**
+```bash
+docker ps | grep neptuno-demo
+```
+Deberías ver:
+```
+neptuno-demo   Running on port 3001
+```
+
+2. **Probar la ruta:**
+```bash
+curl -I https://tudominio.com/demo-site
+```
+Respuesta esperada:
+```
+HTTP/2 200 
+server: nginx
+content-type: text/html
+```
+
+3. **Acceder desde navegador:**
+```
+https://neptuno.ciberpunk.es/demo-site
+```
+
+---
+
+### 7. **Notas Clave**
+
+1. **Rewrites en Nginx:**  
+   El `rewrite` asegura que Next.js reciba las rutas correctamente sin el prefijo `/demo-site/`.
+
+2. **Variables de Entorno:**  
+   El demo usa la misma API que el frontend principal (`backend:8000`).
+
+3. **Redes Docker:**  
+   Todos los servicios comparten la red `vboxnet` para comunicación interna.
+
+4. **Seguridad:**  
+   El proxy Nginx maneja SSL/TLS, no es necesario configurarlo en el contenedor del demo.
+
+---
+
+### 8. **Posibles Issues y Soluciones**
+
+**Problema:** Rutas de Next.js no funcionan al refrescar.  
+**Solución:** Asegurar que `next.config.js` tenga:
+```javascript
+module.exports = {
+  basePath: '/demo-site',
+  async rewrites() {
+    return [
+      {
+        source: '/demo-site/:path*',
+        destination: '/:path*'
+      }
+    ]
+  }
+}
+```
+
+**Problema:** CORS con la API.  
+**Solución:** Añadir en el backend:
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://172.18.0.5:3001"],
+    allow_methods=["*"]
+)
+```
+
+---
+
+Con esto tendrás:  
+✅ **Demo accesible** en `/demo-site`  
+✅ **Aislamiento** en su propio contenedor  
+✅ **Integración** con el proxy existente  
+✅ **Comunicación** con la API principal  
+
+¿Necesitas ajustar algún detalle específico de la configuración?

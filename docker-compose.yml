@@ -5,7 +5,7 @@ services:
     #image: tucuenta/backend-fastapi:latest
     container_name: neptuno-stack
     build: ./backend
-    ports: 
+    ports:
       - "8000:8000" # Accesible en https://192.168.18.70:8000
     #env_file: ./backend/.env  # Variables de entorno (base de datos, API keys, etc.)
     environment:
@@ -16,8 +16,8 @@ services:
       #- MAX_THREADS=2  # 2 threads por worker
       #- MAX_REQUESTS=1000  # 1000 peticiones por worker
     volumes:
-      - backend_data:/app/data  # Persistencia de datos
-      - backend_logs:/app/logs  # Logs de backend
+      - backend_data:/app/data # Persistencia de datos
+      - backend_logs:/app/logs # Logs de backend
     depends_on:
       - db
     restart: always
@@ -43,7 +43,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - frontend_logs:/app/logs  # Logs de frontend
+      - frontend_logs:/app/logs # Logs de frontend
     restart: always
 
     deploy: #  replicas: 2 # 2 instancias por defecto docker-compose up -d --scale fastapi=2 --scale nextjs=2
@@ -59,7 +59,7 @@ services:
     #    max-file: "3"
 
     #env_file: ./frontend/.env  # Cargar credenciales desde un archivo .env
-    
+
     networks:
       vboxnet:
         ipv4_address: 172.18.0.3 # IP fija para el frontend
@@ -69,12 +69,12 @@ services:
     restart: always
     command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M # alta demanda
     container_name: neptuno-db
-   
+
     environment:
-       - MARIADB_ROOT_PASSWORD=tu_contraseña_segura
-       - MARIADB_DATABASE=tu_base_de_datos
-       - MARIADB_USER=tu_usuario
-       - MARIADB_PASSWORD=contraseña_usuario
+      - MARIADB_ROOT_PASSWORD=tu_contraseña_segura
+      - MARIADB_DATABASE=tu_base_de_datos
+      - MARIADB_USER=tu_usuario
+      - MARIADB_PASSWORD=contraseña_usuario
     #  - MARIADB_ROOT_PASSWORD="J8#jKpL2!mN9$qR5tXv7zY"
     #  - MARIADB_ROOT_PASSWORD_HASH="*CC6A5B2E4D1F9E8A7B3C5D2E1F0A8B7C6D5E4F3A2B1C0D9E8F7A6B5C4D3E2F1"
     #  - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD="no"  
@@ -83,9 +83,9 @@ services:
     #  - MYSQL_DATABASE: ciberpunk_db
     #  - MYSQL_USER: ciberpunk_user
     #  - MYSQL_PASSWORD: tu_contraseña_usuario
-    
-  #  env_file:
-  #    - ./backend/.env
+
+    #  env_file:
+    #    - ./backend/.env
     ports:
       - "3306:3306"
     volumes:
@@ -93,6 +93,19 @@ services:
     networks:
       vboxnet:
         ipv4_address: 172.18.0.4
+
+  demo-frontend:
+    container_name: neptuno-demo
+    build: ./frontend-demo
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.5 # Nueva IP fija para el demo
 
 #mariadb-replica:
 #  image: mariadb:latest
@@ -140,7 +153,6 @@ networks:
       config:
         - subnet: "172.18.0.0/16"
           gateway: "172.18.0.1"
-
 
 volumes:
   backend_data:
