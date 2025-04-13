@@ -1,4 +1,5 @@
 ¡Entendido! Gracias por proporcionarme toda esta información detallada y los archivos necesarios para trabajar en la implementación del sistema de cupones en la aplicación Neptuno. Dado que hay bastante contenido que cubrir y que me has pedido que respete la lógica actual, genere código completo y lo explique paso a paso, voy a estructurar mi respuesta en partes claras y detalladas. Implementaré las mejoras solicitadas tanto en el backend como en el frontend, siguiendo tus instrucciones al pie de la letra y respetando la guía de estilo actual de la aplicación.
+
 Voy a dividir la respuesta en las siguientes secciones para que sea más manejable y fácil de seguir:
 
     Backend: Implementación del sistema de cupones
