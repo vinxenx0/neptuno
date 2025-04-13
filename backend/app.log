@@ -8611,3 +8611,15 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-04-14 01:40:50,910 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-14 01:40:51,001 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
 2025-04-14 01:40:51,089 - NeptunO - INFO - Configuración 'enable_badges' actualizada por admin 1: true
+2025-04-14 01:41:16,578 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:41:16,668 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-14 01:41:16,696 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:41:16,769 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-14 01:41:46,586 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:41:46,689 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-14 01:41:46,701 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:41:46,788 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-14 01:42:16,596 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:42:16,677 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-14 01:42:16,686 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-14 01:42:16,766 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
