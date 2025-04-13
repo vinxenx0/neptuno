@@ -101,7 +101,7 @@ export default function CouponPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [enableCoupons, setEnableCoupons] = useState<boolean | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('active');
 
   useEffect(() => {
     if (!coupons) router.push("/");
@@ -209,7 +209,7 @@ export default function CouponPage() {
             variant="scrollable"
             scrollButtons="auto"
           >
-            <Tab label="Todos" value="all" icon={<LocalOffer fontSize="small" />} iconPosition="start" />
+            
             <Tab label="Activos" value="active" icon={<CheckCircle fontSize="small" />} iconPosition="start" />
             <Tab label="Canjeados" value="redeemed" icon={<Redeem fontSize="small" />} iconPosition="start" />
             <Tab label="Pendientes" value="pending" icon={<Pending fontSize="small" />} iconPosition="start" />

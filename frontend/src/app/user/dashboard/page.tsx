@@ -81,14 +81,42 @@ export default function UserDashboard() {
   const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
   const [integrations, setIntegrations] = useState<Integration[]>([]);
 
+
+
+  // Añadir este useEffect justo después de los useState existentes
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const { data } = await fetchAPI<any[]>("/v1/coupons/"); // Ajusta el endpoint según tu API
+        setCoupons(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar cupones");
+      }
+    };
+    fetchCoupons();
+  }, [setCoupons]);
+
+  // Actualizar la función handleRedeem
   const handleRedeem = async (couponId: number) => {
-    const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, {
-      method: "POST",
-    });
-    setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
-    const { data: info } = await fetchAPI<any>("/info");
-    setCredits(info.credits);
+    try {
+      const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, {
+        method: "POST",
+      });
+      if (data) {
+        setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
+        const { data: info } = await fetchAPI<any>("/info");
+        setCredits(info.credits);
+        setSuccess("Cupón canjeado exitosamente");
+      } else {
+        setError("No se pudo canjear el cupón");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al canjear cupón");
+    }
   };
+
+  // Actualizar el contenido de la pestaña "Coupons" (tabValue === 2)
+
 
   useEffect(() => {
     if (!user) {
@@ -790,9 +818,10 @@ export default function UserDashboard() {
 
           {/* Coupons Tab */}
           {tabValue === 2 && (
+
             <Box>
               <Typography variant="h6">Mis Cupones</Typography>
-              {coupons.length === 0 ? (
+              {(!coupons || coupons.length === 0) ? (
                 <Typography>No tienes cupones</Typography>
               ) : (
                 <Table>
@@ -831,7 +860,9 @@ export default function UserDashboard() {
                 </Table>
               )}
             </Box>
-          )}
+          )
+          }
+
 
 
           {/* Transactions Tab */}
@@ -862,7 +893,7 @@ export default function UserDashboard() {
                     <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
                       {transactions.map((t) => (
                         <motion.div
-                          key={t.id}
+                          key={t.id} // Mover key aquí como primer atributo
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.2 }}

@@ -588,6 +588,12 @@ export default function RegistryPage() {
         case "logs":
           endpoint = "/v1/logs/clear";
           break;
+        case "guests":
+            endpoint = "/v1/guests/clear";
+            break;
+        case "coupons":
+            endpoint = "/v1/coupons/clear";
+            break;
         case "errors":
           endpoint = "/v1/errors/clear";
           break;
