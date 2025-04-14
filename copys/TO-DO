@@ -94,3 +94,9 @@ def create_credit_transaction(
 La Opción 2 usaba una función auxiliar para centralizar la lógica de creación de transacciones, lo que reduce duplicación y facilita el mantenimiento. Sin embargo, como mencionaste, prefieres pasar el valor de user_type directamente en cada endpoint para evitar una capa adicional. Esto es completamente válido, especialmente si valoras la claridad inmediata sobre la abstracción.
 
 
+
+
+ 2025-04-13 16:47:20 0 [Note] mariadbd: ready for connections.
+neptuno-db         | Version: '10.11.11-MariaDB-ubu2204'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+neptuno-stack      | /usr/local/lib/python3.10/site-packages/pydantic/_internal/_config.py:345: UserWarning: Valid config keys have changed in V2:
+neptuno-stack      | * 'orm_mode' has been renamed to 'from_attribute

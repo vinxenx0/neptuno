@@ -294,9 +294,9 @@ def init_settings_and_users():
 
         # Orígenes permitidos
         origins = [
-            "http://localhost:3000", "https://neptuno.app",
-            "https://staging.neptuno.app", "https://api.neptuno.app",
-            "https://admin.neptuno.app"
+            "localhost:3000", "neptuno.app",
+            "staging.neptuno.app", "api.neptuno.app",
+            "admin.neptuno.app"
         ]
         for origin in origins:
             if not db.query(AllowedOrigin).filter(

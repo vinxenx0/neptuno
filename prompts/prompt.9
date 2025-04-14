@@ -1,38 +1,7 @@
-- el bug del panel de user de las transacciones sigue sucediendo:
 
-Console Error
+- en los metodos de pago del panel de admin tengo este bug: no funciona el toggle de los medios de pago,
 
-Each child in a list should have a unique "key" prop.
-
-Check the render method of `ul`. It was passed a child from UserDashboard. See https://react.dev/link/warning-keys for more information.
-
-src/app/user/dashboard/page.tsx (895:25) @ UserDashboard/<.children<.children<.children<.children<.children<.children<.children<
-
-  893 |                     <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
-  894 |                       {transactions.map((t) => (
-> 895 |                         <motion.div
-      |                         ^
-  896 |                           key={t.id} // Mover key aquí como primer atributo
-  897 |                           initial={{ opacity: 0 }}
-  898 |                           animate={{ opacity: 1 }}
-
-Call Stack 24
-Show 22 ignore-listed frame(s)
-UserDashboard/<.children<.children<.children<.children<.children<.children<.children<
-src/app/user/dashboard/page.tsx (895:25)
-UserDashboard
-src/app/user/dashboard/page.tsx (894:37)
-
-y en el badge aparece:
-
-Invalid Date • undefined
-créditos
-N/A via N/A
-
-
-- en los metodos de pago del panel de admin continua el bug: no funciona el toggle de los medios de pago,
-
-creo que es descubierto porque, cuando pulso el tggle el estado que envia es el del toggle no lo cambia,
+creo que es descubierto porque, cuando pulso el toggle el estado que envia es el del toggle no lo cambia,
 siempre envia el mismo estado en el que esté
 
 - en el toggle de las integraciones del panel de admin mismo error: no funciona el toggle, siempre pasa el estado en el que esta
@@ -60,6 +29,36 @@ Show 1 ignore-listed frame(s)
 ConfigurePage
 src/app/admin/dashboard/page.tsx (1165:40)
 
+Uncaught TypeError: (intermediate value).map is not a function
+    NextJS 12
+        ec
+        lS
+        ot
+        ov
+        ic
+        is
+        is
+        u9
+        iQ
+        iI
+        iV
+        iR
+page-b3bdf275ac6a95ec.js:1:25336
+    NextJS 12
+        ec
+        lS
+        ot
+        ov
+        ic
+        is
+        is
+        u9
+        iQ
+        iI
+        iV
+        iR
+
+
 Te voy a contar algo sobre este bug y creo que lo vamos a solucionar:
 
 1- si yo cargo el panel de admin y entro a la pestaña origenes, me funciona a la perfeccion
@@ -67,4 +66,9 @@ Te voy a contar algo sobre este bug y creo que lo vamos a solucionar:
 
 deduzco que hay algun conflicto con los paneles o las nomenclaturas de las variables quizas y al renderizar
 una pestaña y luego pasar a otra con elementos parecidos se produce el conflicto
+
+otro ejemplo que ilustra este conflicto de componentes es que cuando compro creditos me aparece
+como cantidad a comprar el numero de creditos que tiene el usuario, por lo que hay un cruce de variables ahi
+
+
 

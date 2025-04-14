@@ -93,3 +93,544 @@ He implementado todas las mejoras solicitadas respetando la lógica actual:
     Medios de pago: Estructura preparada con patrón de estrategia.
 
 Si necesitas que vea más archivos (como Navbar.tsx o Footer.tsx) o quieres que profundice en algo, ¡avísame! ¿Qué te parece esta implementación?
+
+
+¡Excelente idea! Implementar un **módulo de pagos con conectores reales para producción** es crucial para monetizar tu BaaS. Aquí te propongo una arquitectura profesional, lista para producción, con Stripe, PayPal y tarjetas de crédito (PCI-compliant):
+
+---
+
+### **Arquitectura del Módulo de Pagos**
+**Objetivo**: Permitir a los usuarios de Neptuno:
+1. Configurar múltiples proveedores de pago desde el dashboard.
+2. Realizar cobros en modo **directo** (Stripe Connect) o **plataforma** (tu BaaS como intermediario).
+3. Gestionar suscripciones, reembolsos y webhooks.
+
+---
+
+### **1. Modelos de Datos Clave** (Extensión de tu esquema existente)
+```python
+# backend/models/payments.py
+from sqlalchemy import JSON, Column, String, Enum
+from app.core.db import Base
+
+class PaymentProvider(Base):
+    __tablename__ = "payment_providers"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))  # Dueño de la configuración
+    provider_name = Column(Enum("stripe", "paypal", "credit_card", name="provider_types"))
+    is_live = Column(Boolean, default=False)  # Modo sandbox/producción
+    credentials = Column(JSON)  # { "stripe_secret_key": "...", "paypal_client_id": "..." }
+    webhook_secret = Column(String)  # Firmas de webhooks
+
+class PaymentIntent(Base):
+    __tablename__ = "payment_intents"
+    id = Column(Integer, primary_key=True)
+    provider_id = Column(Integer, ForeignKey("payment_providers.id"))
+    amount = Column(Integer)  # En centavos/centimos
+    currency = Column(String(3), default="USD")
+    status = Column(Enum("requires_payment", "succeeded", "canceled", name="payment_statuses"))
+    customer_email = Column(String)
+    metadata = Column(JSON)  # Datos custom (user_id, plan_id, etc.)
+```
+
+---
+
+### **2. Servicios por Proveedor** (`backend/services/payments/`)
+#### **Stripe Connector** (PCI-DSS Compliant):
+```python
+# stripe.py
+import stripe
+from stripe.error import StripeError
+
+def stripe_create_payment_intent(credentials: dict, amount: int, currency: str, metadata: dict):
+    stripe.api_key = credentials["secret_key"]
+    
+    try:
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency=currency,
+            metadata=metadata,
+            payment_method_types=["card"],
+        )
+        return {
+            "client_secret": intent.client_secret,
+            "id": intent.id
+        }
+    except StripeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+def stripe_handle_webhook(payload: bytes, signature: str, secret: str):
+    event = stripe.Webhook.construct_event(
+        payload, signature, secret
+    )
+    return event
+```
+
+#### **PayPal Connector**:
+```python
+# paypal.py
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnvironment
+
+def paypal_create_order(credentials: dict, amount: int, currency: str):
+    environment = LiveEnvironment(
+        client_id=credentials["client_id"],
+        client_secret=credentials["secret"]
+    ) if credentials["is_live"] else SandboxEnvironment(**credentials)
+    
+    client = PayPalHttpClient(environment)
+    request = OrdersCreateRequest()
+    request.prefer("return=representation")
+    request.request_body({
+        "intent": "CAPTURE",
+        "purchase_units": [{
+            "amount": {
+                "currency_code": currency,
+                "value": str(amount / 100)  # PayPal usa decimales
+            }
+        }]
+    })
+    
+    response = client.execute(request)
+    return response.result.id
+```
+
+#### **Credit Card Direct (PCI-Compliant usando Elements)**:
+```python
+# credit_card.py
+from stripe import StripeClient
+
+def create_credit_card_charge(credentials: dict, token: str, amount: int, currency: str):
+    stripe = StripeClient(credentials["secret_key"])
+    
+    try:
+        charge = stripe.charges.create(
+            amount=amount,
+            currency=currency,
+            source=token,  # Token desde el frontend (Stripe Elements)
+            description="Cargo directo"
+        )
+        return charge.id
+    except StripeError as e:
+        handle_error(e)
+```
+
+---
+
+### **3. Endpoints Unificados** (`backend/api/v1/payments.py`)
+```python
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
+
+router = APIRouter(prefix="/payments", tags=["Payments"])
+
+@router.post("/intent")
+async def create_payment_intent(
+    provider_id: int,
+    amount: int,
+    currency: str,
+    metadata: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Crea un intento de pago en el proveedor seleccionado"""
+    provider = validate_provider_access(provider_id, current_user.id)
+    
+    try:
+        if provider.provider_name == "stripe":
+            result = stripe_create_payment_intent(
+                provider.credentials, amount, currency, metadata
+            )
+        elif provider.provider_name == "paypal":
+            result = paypal_create_order(
+                provider.credentials, amount, currency
+            )
+        
+        # Guardar en PaymentIntent
+        save_payment_intent(provider_id, amount, currency, metadata)
+        
+        return {"payment_data": result}
+    except Exception as e:
+        log_payment_error(provider_id, str(e))
+        raise HTTPException(400, detail="Error al crear pago")
+
+@router.post("/webhook/{provider_id}")
+async def handle_webhook(
+    provider_id: int,
+    request: Request,
+):
+    """Endpoint para webhooks de proveedores (Stripe, PayPal)"""
+    provider = get_provider(provider_id)
+    payload = await request.body()
+    signature = request.headers.get("stripe-signature") or request.headers.get("paypal-auth-algo")
+    
+    try:
+        if provider.provider_name == "stripe":
+            event = stripe_handle_webhook(payload, signature, provider.webhook_secret)
+            handle_stripe_event(event)
+        elif provider.provider_name == "paypal":
+            verify_paypal_webhook(payload, signature, provider.credentials)
+            handle_paypal_event(payload)
+        
+        return JSONResponse(status_code=200, content={"status": "webhook_handled"})
+    except Exception as e:
+        log_webhook_error(provider_id, str(e))
+        raise HTTPException(400, detail="Webhook inválido")
+```
+
+---
+
+### **4. Flujo de Trabajo en Producción**
+1. **Configuración desde el Dashboard**:
+   - El usuario ingresa credenciales de Stripe/PayPal.
+   - Tu backend valida las credenciales y habilita el proveedor.
+2. **Frontend (Next.js)**:
+   ```typescript
+   // Ejemplo con Stripe Elements
+   const { clientSecret } = await axios.post("/payments/intent", {
+     provider_id: 1,
+     amount: 1999, // $19.99
+     currency: "USD",
+     metadata: { user_id: 123 }
+   });
+
+   const elements = useElements();
+   const stripe = useStripe();
+
+   const handlePayment = async () => {
+     const { error } = await stripe.confirmCardPayment(clientSecret, {
+       payment_method: { card: elements.getElement(CardElement) }
+     });
+   };
+   ```
+3. **Webhooks**:
+   - Configurar URLs en Stripe/PayPal apuntando a `/payments/webhook/{provider_id}`.
+   - Procesar eventos como `payment_intent.succeeded` o `charge.refunded`.
+
+---
+
+### **Consideraciones Clave para Producción**
+1. **Seguridad**:
+   - **Encriptación**: Guardar `credentials` en la DB usando cifrado AES-256.
+   - **PCI Compliance**: Usar Stripe.js/PCI-DSS Level 1 para evitar manejar datos sensibles.
+   - **Webhook Signing**: Validar firmas en cada webhook.
+2. **Idempotencia**:
+   ```python
+   # En cada operación crítica
+   idempotency_key = request.headers.get("Idempotency-Key")
+   if not is_valid_key(idempotency_key):
+       raise HTTPException(400, "Clave de idempotencia inválida")
+   ```
+3. **Reintentos y Alertas**:
+   - Implementar colas (RabbitMQ/Celery) para reintentar pagos fallidos.
+   - Alertas en tiempo real para fallos críticos (Sentry, Opsgenie).
+
+---
+
+### **Proveedores Adicionales Recomendados**
+1. **Mercado Pago**: Ideal para Latinoamérica.
+2. **Coinbase Commerce**: Pagos con criptomonedas.
+3. **Adyen**: Solución enterprise con soporte multi-moneda.
+
+---
+
+### **Próximos Pasos**
+1. **Implementación Detallada**: ¿Quieres que desarrolle el código completo de algún conector en particular (ej: Stripe)?
+2. **Frontend**: ¿Necesitas componentes React para los formularios de pago?
+3. **Testing**: ¿Debo añadir pruebas con Stripe-mock y PayPal Sandbox?
+
+¡Estoy listo para llevar esto a producción contigo! 🚀
+
+
+Implementaré los proveedores de pago siguiendo **tu arquitectura propuesta** con el patrón estrategia y mejorando los placeholders para producción. Aquí está la implementación completa y segura:
+
+---
+
+### **1. Implementación Stripe (Client-Side + Server-Side)**
+```typescript
+// src/lib/payments/stripe.ts
+import { loadStripe } from "@stripe/stripe-js";
+import { PaymentProvider, PaymentResult } from "./payments";
+
+export class StripeProvider implements PaymentProvider {
+  name = "stripe";
+  private stripePromise: Promise<any>;
+
+  constructor(publicKey: string) {
+    this.stripePromise = loadStripe(publicKey);
+  }
+
+  async processPayment(
+    amount: number, 
+    currency: string, 
+    description: string,
+    cardElement?: any
+  ): Promise<PaymentResult> {
+    try {
+      const stripe = await this.stripePromise;
+      
+      // 1. Crear Payment Intent en tu backend Neptuno
+      const response = await fetch("/api/payments/stripe/intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, currency })
+      });
+      
+      const { clientSecret } = await response.json();
+
+      // 2. Confirmar pago en cliente
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: cardElement }
+      });
+
+      return error 
+        ? { success: false, error: error.message } 
+        : { success: true, transactionId: paymentIntent.id };
+
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+}
+```
+
+---
+
+### **2. Implementación PayPal (Flow Completo)**
+```typescript
+// src/lib/payments/paypal.ts
+import { PaymentProvider, PaymentResult } from "./payments";
+import { PayPalScriptProvider, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+
+export class PayPalProvider implements PaymentProvider {
+  name = "paypal";
+  private paypalOptions: any;
+
+  constructor(clientId: string, currency: string) {
+    this.paypalOptions = {
+      "client-id": clientId,
+      currency,
+      intent: "capture"
+    };
+  }
+
+  async processPayment(
+    amount: number, 
+    currency: string, 
+    description: string
+  ): Promise<PaymentResult> {
+    return new Promise((resolve) => {
+      const PayPalButton = () => {
+        const [{ isPending }] = usePayPalScriptReducer();
+
+        const createOrder = async () => {
+          const response = await fetch("/api/payments/paypal/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount, currency })
+          });
+          const { orderID } = await response.json();
+          return orderID;
+        };
+
+        const onApprove = async (data: any) => {
+          const response = await fetch(`/api/payments/paypal/capture/${data.orderID}`, {
+            method: "POST"
+          });
+          const result = await response.json();
+          resolve({ success: result.status === "COMPLETED", transactionId: data.orderID });
+        };
+
+        return isPending 
+          ? <div>Loading PayPal...</div>
+          : <PayPalButton 
+              createOrder={createOrder}
+              onApprove={onApprove}
+              style={{ layout: "vertical" }}
+            />;
+      };
+
+      // Renderizar componente PayPal en tu UI
+      // (Requiere contexto de PayPalScriptProvider)
+    });
+  }
+}
+```
+
+---
+
+### **3. Credit Card (PCI-Compliant via Stripe Elements)**
+```typescript
+// src/lib/payments/creditCard.ts
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { StripeProvider } from "./stripe";
+
+export class CreditCardProvider extends StripeProvider {
+  name = "credit_card";
+  
+  async processPayment(
+    amount: number,
+    currency: string,
+    description: string,
+    cardElement: any
+  ): Promise<PaymentResult> {
+    return super.processPayment(amount, currency, description, cardElement);
+  }
+}
+```
+
+---
+
+### **4. Backend Neptuno - Endpoints Esenciales**
+```typescript
+// src/app/api/payments/stripe/intent/route.ts
+import Stripe from "stripe";
+
+export async function POST() {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: req.body.amount,
+    currency: req.body.currency,
+    metadata: { integration_check: "neptuno_baas" }
+  });
+
+  return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+}
+
+// src/app/api/payments/paypal/order/route.ts
+export async function POST() {
+  const auth = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
+  ).toString("base64");
+
+  const response = await fetch(`${process.env.PAYPAL_API_URL}/v2/checkout/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`
+    },
+    body: JSON.stringify({
+      intent: "CAPTURE",
+      purchase_units: [{
+        amount: { currency_code: req.body.currency, value: (req.body.amount / 100).toFixed(2) }
+      }]
+    })
+  });
+
+  return NextResponse.json(await response.json());
+}
+```
+
+---
+
+### **5. Configuración en la Aplicación**
+```typescript
+// src/lib/payments/manager.ts
+import { PaymentManager } from "./manager";
+import { StripeProvider } from "./stripe";
+import { PayPalProvider } from "./paypal";
+import { CreditCardProvider } from "./creditCard";
+
+export const paymentManager = new PaymentManager();
+
+// Inicialización
+if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) {
+  paymentManager.registerProvider(
+    new StripeProvider(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+  );
+  paymentManager.registerProvider(
+    new CreditCardProvider(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+  );
+}
+
+if (process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID) {
+  paymentManager.registerProvider(
+    new PayPalProvider(
+      process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+      process.env.NEXT_PUBLIC_DEFAULT_CURRENCY!
+    )
+  );
+}
+```
+
+---
+
+### **6. Uso en Componentes React**
+```tsx
+// src/components/PaymentForm.tsx
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { paymentManager } from "@/lib/payments/manager";
+
+export const PaymentForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    const result = await paymentManager.processPayment("credit_card", 10000, "USD", "Test Payment", 
+      elements.getElement(CardElement)
+    );
+
+    if (result.success) {
+      // Actualizar estado de la aplicación
+    } else {
+      // Mostrar error
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <CardElement />
+      <button type="submit">Pagar</button>
+    </form>
+  );
+};
+```
+
+---
+
+### **Configuración Requerida en .env**
+```env
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+
+# PayPal
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=AYPwL...
+PAYPAL_SECRET=EC7Af...
+PAYPAL_API_URL=https://api-m.sandbox.paypal.com
+
+# Moneda por defecto
+NEXT_PUBLIC_DEFAULT_CURRENCY=USD
+```
+
+---
+
+### **Recomendaciones de Producción**
+1. **Webhooks**: Implementa endpoints para manejar eventos asíncronos:
+   ```typescript
+   // src/app/api/webhooks/stripe/route.ts
+   export async function POST(request: Request) {
+     const payload = await request.text();
+     const signature = request.headers.get("stripe-signature")!;
+     
+     try {
+       const event = stripe.webhooks.constructEvent(
+         payload,
+         signature,
+         process.env.STRIPE_WEBHOOK_SECRET!
+       );
+       
+       // Manejar event.type (payment_intent.succeeded, etc.)
+       return NextResponse.json({ received: true });
+     } catch (err) {
+       return NextResponse.json({ error: err.message }, { status: 400 });
+     }
+   }
+   ```
+2. **Seguridad**:
+   - Usa HTTPS en producción
+   - Implementa CSRF tokens
+   - Almacena secretos en Vault/KMS
+
+¿Necesitas que desarrolle algún componente adicional o que ajuste algún detalle de la implementación?

@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.allowed_origin import AllowedOrigin
-from schemas.allowed_origins import AllowedOriginCreate, AllowedOriginResponse
+from schemas.allowed_origin import AllowedOriginCreate, AllowedOriginResponse
 
-router = APIRouter(prefix="/v1/origins", tags=["origins"])
+router = APIRouter(tags=["origins"])
 
 @router.get("/", response_model=list[AllowedOriginResponse])
 def get_origins(db: Session = Depends(get_db)):

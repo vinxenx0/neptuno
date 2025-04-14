@@ -1,0 +1,963 @@
+¡Entendido perfectamente! Veo que Neptuno es un proyecto robusto y bien estructurado, y estoy listo para ayudarte a implementar las funcionalidades clave para la próxima versión que presentarás en la feria. Aquí está mi propuesta detallada de implementación para cada uno de los requerimientos:
+
+---
+
+### **1. Base de Datos Gestionada (PostgreSQL + SQLAlchemy)**
+**Recomendación**: Migrar de MariaDB a PostgreSQL (mejor escalabilidad y características avanzadas como JSONB).  
+**Implementación**:
+```python
+# backend/core/database.py
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "postgresql+psycopg2://user:password@host:5432/neptuno"  # Reemplazar con variables de entorno
+
+engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=0)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+```
+
+**Cambios necesarios**:
+- Actualizar `docker-compose.yml` para usar PostgreSQL:
+  ```yaml
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  ```
+- Añadir `psycopg2-binary` a `backend/requirements.txt`.
+
+---
+
+### **2. Almacenamiento de Archivos (AWS S3 + FastAPI)**
+**Implementación**:
+```python
+# backend/services/file_storage.py
+import boto3
+from fastapi import UploadFile
+
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=settings.AWS_ACCESS_KEY,
+    aws_secret_access_key=settings.AWS_SECRET_KEY,
+)
+
+async def upload_to_s3(file: UploadFile, bucket: str, key: str) -> str:
+    s3_client.upload_fileobj(file.file, bucket, key)
+    return f"https://{bucket}.s3.amazonaws.com/{key}"
+```
+
+**Frontend (Next.js)**:
+```typescript
+// frontend/src/components/FileUpload.tsx
+const handleUpload = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data } = await axios.post("/api/v1/files/upload", formData);
+  return data.url;
+};
+```
+
+---
+
+### **3. Mensajería en Tiempo Real (WebSockets + FastAPI)**
+**Backend (WebSockets)**:
+```python
+# backend/api/v1/ws/chat.py
+from fastapi import WebSocket, WebSocketDisconnect
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+manager = ConnectionManager()
+
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await manager.broadcast(f"Message: {data}")
+    except WebSocketDisconnect:
+        manager.active_connections.remove(websocket)
+```
+
+**Frontend (Next.js)**:
+```typescript
+// frontend/src/hooks/useWebSocket.ts
+const useWebSocket = (url: string) => {
+  const [messages, setMessages] = useState<string[]>([]);
+  const ws = new WebSocket(url);
+
+  ws.onmessage = (event) => {
+    setMessages((prev) => [...prev, event.data]);
+  };
+
+  return { messages, send: ws.send.bind(ws) };
+};
+```
+
+---
+
+### **4. Notificaciones Push (Firebase Cloud Messaging)**
+**Backend (FastAPI)**:
+```python
+# backend/services/notifications.py
+from firebase_admin import messaging
+
+def send_push_notification(token: str, title: str, body: str):
+    message = messaging.Message(
+        notification=messaging.Notification(title=title, body=body),
+        token=token,
+    )
+    messaging.send(message)
+```
+
+**Frontend (Next.js - Service Worker)**:
+```javascript
+// frontend/public/firebase-messaging-sw.js
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js");
+
+firebase.initializeApp({
+  apiKey: "YOUR_API_KEY",
+  projectId: "neptuno-app",
+  messagingSenderId: "123456789",
+});
+
+const messaging = firebase.messaging();
+messaging.onBackgroundMessage((payload) => {
+  self.registration.showNotification(payload.notification.title, {
+    body: payload.notification.body,
+  });
+});
+```
+
+---
+
+### **Estructura de Carpetas Actualizada**
+```
+backend/
+├── api/
+│   ├── v1/
+│   │   ├── ws/           # WebSockets
+│   │   ├── notifications/
+│   │   ├── files/        # Endpoints S3
+├── services/
+│   ├── realtime.py       # WebSockets manager
+│   ├── storage.py        # S3/Firebase Storage
+│   ├── notifications.py  # FCM/OneSignal
+```
+
+---
+
+### **Pasos Siguientes**
+1. **Priorización**: ¿Qué funcionalidad es crítica para la feria? Sugiero:
+   - **WebSockets** (para demostrar interactividad).
+   - **Notificaciones Push** (impacto visual).
+2. **Variables de Entorno**: Necesitaré acceso a las credenciales de AWS/Firebase (puedes compartirlas de forma segura).
+3. **Testing**: Configuraré pruebas E2E con pytest y Cypress.
+
+¿Quieres que profundice en alguna área específica o prefieres que empecemos con la implementación? Estoy listo para enviarte los PRs con los cambios. 🚀
+
+**Pregunta clave**: ¿Tienes ya alguna integración con Firebase o prefieres que evalúemos alternativas como Supabase para simplificar el stack (combina DB + Auth + Storage)?
+
+¡Ah, entendido! Lo que necesitas es **diseñar la arquitectura en tu BaaS (Neptuno) para que los clientes que usen tu plataforma puedan integrar estos servicios externos** (Firebase, S3, WebSockets, etc.) de manera modular y sencilla. Vamos a estructurarlo como un **sistema de plugins o módulos** dentro de tu backend.
+
+---
+
+### **Solución Propuesta: Arquitectura de Integraciones en Neptuno**
+El objetivo es que los usuarios de tu BaaS puedan:
+1. **Configurar servicios externos** desde el dashboard de administración.
+2. **Usar APIs predefinidas** en tu backend para interactuar con esos servicios.
+3. **Extender la funcionalidad** sin tocar el core de Neptuno.
+
+---
+
+### **1. Base de Datos Gestionada (Ej: Firebase, Supabase)**
+**Implementación en tu BaaS**:
+- **Paso 1**: Crear un modelo en SQLAlchemy para almacenar credenciales de DBs externas:
+  ```python
+  # backend/models/external_db.py
+  class ExternalDatabase(Base):
+      __tablename__ = "external_databases"
+      id = Column(Integer, primary_key=True)
+      user_id = Column(Integer, ForeignKey("users.id"))  # Dueño de la integración
+      service_name = Column(String)  # "firestore", "supabase", "mongodb"
+      credentials = Column(JSON)     # { "url": "...", "api_key": "..." }
+  ```
+- **Paso 2**: Endpoints genéricos para interactuar con DBs externas:
+  ```python
+  # backend/api/v1/external_db.py
+  @router.post("/query")
+  def query_external_db(
+      db_id: int, 
+      query: str, 
+      current_user: User = Depends(get_current_user)
+  ):
+      external_db = get_db_credentials(db_id, current_user.id)
+      if external_db.service_name == "firestore":
+          return firestore_query(external_db.credentials, query)
+      elif external_db.service_name == "supabase":
+          return supabase_query(external_db.credentials, query)
+  ```
+
+---
+
+### **2. Almacenamiento de Archivos (Ej: S3, Firebase Storage)**
+**Implementación en tu BaaS**:
+- **Paso 1**: Modelo para configurar almacenamientos externos:
+  ```python
+  # backend/models/storage.py
+  class ExternalStorage(Base):
+      __tablename__ = "external_storages"
+      id = Column(Integer, primary_key=True)
+      service_name = Column(String)  # "s3", "firebase_storage"
+      bucket_name = Column(String)
+      credentials = Column(JSON)     # { "access_key": "...", "secret": "..." }
+  ```
+- **Paso 2**: Servicio unificado para subir archivos:
+  ```python
+  # backend/services/external_storage.py
+  def upload_file(file: UploadFile, storage_id: int) -> str:
+      storage = get_storage(storage_id)
+      if storage.service_name == "s3":
+          return s3_upload(storage.credentials, file)
+      elif storage.service_name == "firebase_storage":
+          return firebase_upload(storage.credentials, file)
+  ```
+
+---
+
+### **3. Mensajería en Tiempo Real (WebSockets)**
+**Implementación en tu BaaS**:
+- **Paso 1**: Extender tu API para gestionar canales WebSocket:
+  ```python
+  # backend/api/v1/realtime.py
+  @router.websocket("/realtime/{channel_id}")
+  async def handle_realtime(
+      websocket: WebSocket, 
+      channel_id: str,
+      token: str = Query(...)
+  ):
+      user = authenticate_ws(token)  # Valida el token JWT
+      await realtime_manager.connect(user, channel_id, websocket)
+  ```
+- **Paso 2**: Dashboard para crear canales:
+  ```typescript
+  // frontend/src/app/admin/realtime/page.tsx
+  const createChannel = () => {
+    axios.post("/api/v1/realtime/channels", { name: "notifications" });
+  };
+  ```
+
+---
+
+### **4. Notificaciones Push (Ej: Firebase Cloud Messaging)**
+**Implementación en tu BaaS**:
+- **Paso 1**: Modelo para guardar tokens FCM/OneSignal:
+  ```python
+  # backend/models/notifications.py
+  class PushNotification(Base):
+      __tablename__ = "push_notifications"
+      user_id = Column(Integer, ForeignKey("users.id"))
+      device_token = Column(String)
+      service_name = Column(String)  # "fcm", "onesignal"
+  ```
+- **Paso 2**: Endpoint para enviar notificaciones:
+  ```python
+  # backend/api/v1/notifications.py
+  @router.post("/send")
+  def send_push(
+      user_id: int, 
+      message: str, 
+      service: str = "fcm"
+  ):
+      tokens = get_user_tokens(user_id, service)
+      send_via_service(service, tokens, message)
+  ```
+
+---
+
+### **Estructura Final de Módulos**
+```
+backend/
+├── services/
+│   ├── external/
+│   │   ├── db_connectors.py       # Firebase, Supabase, MongoDB
+│   │   ├── storage_connectors.py  # S3, Firebase Storage
+│   │   ├── push_connectors.py     # FCM, OneSignal
+│   │   └── realtime.py            # WebSockets manager
+├── api/
+│   └── v1/
+│       ├── external_db.py
+│       ├── storage.py
+│       ├── notifications.py
+│       └── realtime.py
+```
+
+---
+
+### **Cómo lo usarían tus clientes (Ejemplo)**
+1. **Desde el Dashboard**:
+   - Añaden sus credenciales de Firebase/S3.
+   - Activan el módulo de notificaciones push.
+2. **Desde su código**:
+   ```javascript
+   // Usando el SDK de Neptuno (frontend)
+   neptuno.storage.upload(file);  // Se sube a S3 configurado
+   neptuno.realtime.subscribe("updates");  // Websockets
+   ```
+
+---
+
+### **Beneficios para tu BaaS**
+- **Modularidad**: Los clientes eligen qué servicios integrar.
+- **Multiplataforma**: Soporta múltiples proveedores (AWS, Firebase, etc.).
+- **Sin cambios en el core**: Cada integración es un plugin.
+
+¿Quieres que desarrolle primero algún módulo en concreto? Por ejemplo, ¿prefieres empezar por el sistema de archivos o por WebSockets?
+
+¡Perfecto! Vamos a desarrollar los módulos **1 (Base de Datos Gestionada)**, **2 (Almacenamiento de Archivos)** y **4 (Notificaciones Push)** en tu BaaS. Aquí está la implementación detallada, lista para integrarse en Neptuno:
+
+---
+
+### **Módulo 1: Base de Datos Gestionada (Firestore/Supabase/MongoDB)**
+**Objetivo**: Permitir que los usuarios de Neptuno conecten sus propias bases de datos externas y ejecuten consultas a través de tu API.
+
+#### **1. Modelo SQLAlchemy para credenciales**:
+```python
+# backend/models/external_db.py
+from sqlalchemy import JSON, Column, ForeignKey, Integer, String
+from app.core.db import Base
+
+class ExternalDatabase(Base):
+    __tablename__ = "external_databases"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))  # Usuario que configura la DB
+    service_name = Column(String)  # "firestore", "supabase", "mongodb"
+    credentials = Column(JSON)     # Ej: { "project_id": "xxx", "api_key": "yyy" }
+    is_active = Column(Boolean, default=True)
+```
+
+#### **2. Servicio de conexión genérico**:
+```python
+# backend/services/external/db_connectors.py
+from google.cloud import firestore
+from supabase import create_client
+from pymongo import MongoClient
+
+def get_firestore_client(credentials: dict):
+    return firestore.Client.from_service_account_info(credentials)
+
+def get_supabase_client(credentials: dict):
+    return create_client(credentials["url"], credentials["key"])
+
+def get_mongodb_client(credentials: dict):
+    return MongoClient(credentials["uri"])
+```
+
+#### **3. Endpoints de la API**:
+```python
+# backend/api/v1/external_db.py
+from fastapi import APIRouter, Depends, HTTPException
+from app.services.external.db_connectors import *
+from app.models.external_db import ExternalDatabase
+
+router = APIRouter(prefix="/external-db", tags=["External DB"])
+
+@router.post("/query")
+async def query_external_db(
+    db_id: int,
+    query: str,
+    operation: str = "get",  # "get", "insert", "update"
+    current_user: User = Depends(get_current_user)
+):
+    db = await get_db_by_id(db_id, current_user.id)  # Validar permisos
+    try:
+        if db.service_name == "firestore":
+            client = get_firestore_client(db.credentials)
+            # Ejemplo: query = "collection/document_id"
+            doc = client.document(query).get()
+            return doc.to_dict()
+        elif db.service_name == "supabase":
+            client = get_supabase_client(db.credentials)
+            return client.from_(query).select("*").execute()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+```
+
+---
+
+### **Módulo 2: Almacenamiento de Archivos (S3/Firebase Storage)**
+**Objetivo**: Ofrecer un sistema unificado para que los usuarios suban archivos a sus propios buckets.
+
+#### **1. Modelo para configuraciones de almacenamiento**:
+```python
+# backend/models/storage.py
+class ExternalStorage(Base):
+    __tablename__ = "external_storages"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    service_name = Column(String)  # "s3", "firebase"
+    bucket_name = Column(String)
+    credentials = Column(JSON)  # S3: { "access_key", "secret" }, Firebase: { "service_account" }
+```
+
+#### **2. Servicio de upload unificado**:
+```python
+# backend/services/external/storage_connectors.py
+import boto3
+from firebase_admin import storage as fb_storage
+
+def upload_to_s3(file: bytes, bucket: str, credentials: dict) -> str:
+    s3 = boto3.client("s3", **credentials)
+    key = f"uploads/{uuid.uuid4()}"
+    s3.put_object(Bucket=bucket, Key=key, Body=file)
+    return f"https://{bucket}.s3.amazonaws.com/{key}"
+
+def upload_to_firebase(file: bytes, bucket: str, credentials: dict) -> str:
+    bucket = fb_storage.bucket(bucket)
+    blob = bucket.blob(f"uploads/{uuid.uuid4()}")
+    blob.upload_from_string(file)
+    return blob.public_url
+```
+
+#### **3. Endpoint de subida de archivos**:
+```python
+# backend/api/v1/storage.py
+from fastapi import UploadFile, File
+
+@router.post("/upload")
+async def upload_file(
+    storage_id: int,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    storage = await validate_storage_access(storage_id, current_user.id)
+    file_bytes = await file.read()
+    
+    if storage.service_name == "s3":
+        url = upload_to_s3(file_bytes, storage.bucket_name, storage.credentials)
+    elif storage.service_name == "firebase":
+        url = upload_to_firebase(file_bytes, storage.bucket_name, storage.credentials)
+    
+    return {"url": url}
+```
+
+---
+
+### **Módulo 4: Notificaciones Push (FCM/OneSignal)**
+**Objetivo**: Enviar notificaciones push a apps móviles configuradas por los usuarios.
+
+#### **1. Modelo para tokens de dispositivos**:
+```python
+# backend/models/notifications.py
+class PushNotificationDevice(Base):
+    __tablename__ = "push_devices"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    device_token = Column(String)
+    platform = Column(String)  # "android", "ios"
+    service_name = Column(String)  # "fcm", "onesignal"
+```
+
+#### **2. Servicio de notificaciones**:
+```python
+# backend/services/external/push_connectors.py
+from pyfcm import FCMNotification
+from onesignal import OneSignal
+
+def send_via_fcm(api_key: str, tokens: list, title: str, body: str):
+    push_service = FCMNotification(api_key=api_key)
+    return push_service.notify_multiple_devices(
+        registration_ids=tokens,
+        message_title=title,
+        message_body=body
+    )
+
+def send_via_onesignal(app_id: str, api_key: str, tokens: list, title: str, body: str):
+    client = OneSignal(app_id, api_key)
+    return client.send_to_users(tokens, {"en": title}, {"en": body})
+```
+
+#### **3. Endpoint para enviar notificaciones**:
+```python
+# backend/api/v1/notifications.py
+@router.post("/send")
+async def send_push(
+    device_ids: list[int],
+    title: str,
+    body: str,
+    current_user: User = Depends(get_current_user)
+):
+    devices = await get_devices(device_ids, current_user.id)
+    service_config = await get_service_config(current_user.id)  # Config FCM/OneSignal del usuario
+    
+    tokens = [d.device_token for d in devices]
+    if service_config.service_name == "fcm":
+        send_via_fcm(service_config.api_key, tokens, title, body)
+    elif service_config.service_name == "onesignal":
+        send_via_onesignal(service_config.app_id, service_config.api_key, tokens, title, body)
+    
+    return {"status": "notifications_sent"}
+```
+
+---
+
+### **Estructura Final**
+```
+backend/
+├── models/
+│   ├── external_db.py
+│   ├── storage.py
+│   └── notifications.py
+├── services/
+│   └── external/
+│       ├── db_connectors.py
+│       ├── storage_connectors.py
+│       └── push_connectors.py
+├── api/
+│   └── v1/
+│       ├── external_db.py
+│       ├── storage.py
+│       └── notifications.py
+```
+
+---
+
+### **Cómo lo usarían tus clientes**:
+1. **Configuración inicial**:
+   - Suben sus credenciales de Firebase/S3/OneSignal desde el dashboard de Neptuno.
+   - Guardan los IDs de configuración en su aplicación.
+2. **Uso en su código**:
+   ```javascript
+   // Subir un archivo a S3
+   await neptuno.storage.upload(file, storage_id: 123);
+
+   // Enviar notificación
+   await neptuno.notifications.send(
+     device_ids: [456],
+     title: "¡Nuevo mensaje!",
+     body: "Tienes una actualización"
+   );
+   ```
+
+---
+
+### **Próximos Pasos**
+1. **Frontend del Dashboard**: ¿Quieres que diseñe también las interfaces para gestionar estos módulos?
+2. **Testing**: ¿Prefieres que añada tests con pytest para cada módulo?
+3. **Documentación API**: ¿Necesitas ayuda para generar la docs con Swagger?
+
+¡Indícame por dónde prefieres continuar! 🚀
+
+¡Perfecto! Aquí tienes una **ampliación detallada de los endpoints** para cada módulo, diseñados para integrarse directamente en Neptuno. Cada endpoint incluye validaciones, manejo de errores y características específicas para un BaaS profesional:
+
+---
+
+### **Módulo 1: Base de Datos Gestionada**  
+**Endpoints completos** (`backend/api/v1/external_db.py`):
+
+```python
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List, Dict, Any
+from app.schemas.external_db import (
+    ExternalDBCreate, 
+    ExternalDBUpdate, 
+    DBQuery,
+    DBInsert,
+    DBUpdate
+)
+from app.services.external.db_connectors import *
+from app.models.user import User
+from app.api.deps import get_current_user, get_db
+
+router = APIRouter(prefix="/external-dbs", tags=["External Databases"])
+
+# ---- Configuración de conexiones ----
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def create_db_connection(
+    db_config: ExternalDBCreate,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Registra una nueva conexión a DB externa (Firestore, Supabase, etc.)"""
+    try:
+        # Validar credenciales
+        test_connection(db_config.service_name, db_config.credentials)
+        
+        new_db = ExternalDatabase(
+            user_id=current_user.id,
+            service_name=db_config.service_name,
+            credentials=db_config.credentials.dict(),
+            is_active=True
+        )
+        db_session.add(new_db)
+        db_session.commit()
+        return {"id": new_db.id, "service": db_config.service_name}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error de conexión: {str(e)}"
+        )
+
+@router.get("/", response_model=List[Dict[str, Any]])
+async def list_db_connections(
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Lista todas las conexiones del usuario"""
+    return db_session.query(ExternalDatabase).filter(
+        ExternalDatabase.user_id == current_user.id
+    ).all()
+
+# ---- Operaciones de Query ----
+@router.post("/{db_id}/query")
+async def execute_query(
+    db_id: int,
+    query: DBQuery,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Ejecuta una consulta (GET) en la DB externa"""
+    db = validate_db_ownership(db_id, current_user.id, db_session)
+    
+    try:
+        if db.service_name == "firestore":
+            result = firestore_query(db.credentials, query.collection, query.document_id)
+        elif db.service_name == "supabase":
+            result = supabase_query(db.credentials, query.table, query.filters)
+        return {"data": result}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Query failed: {str(e)}"
+        )
+
+@router.post("/{db_id}/insert")
+async def insert_data(
+    db_id: int,
+    data: DBInsert,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Inserta datos en la DB externa"""
+    db = validate_db_ownership(db_id, current_user.id, db_session)
+    
+    try:
+        if db.service_name == "firestore":
+            doc_ref = firestore_insert(
+                db.credentials, 
+                data.collection, 
+                data.document_id, 
+                data.data
+            )
+            return {"id": doc_ref.id}
+        elif db.service_name == "supabase":
+            supabase_insert(db.credentials, data.table, data.data)
+            return {"status": "inserted"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e)
+        )
+```
+
+---
+
+### **Módulo 2: Almacenamiento de Archivos**  
+**Endpoints completos** (`backend/api/v1/storage.py`):
+
+```python
+from fastapi import (
+    APIRouter, 
+    Depends, 
+    HTTPException, 
+    UploadFile, 
+    File,
+    status
+)
+from fastapi.responses import JSONResponse
+from app.schemas.storage import StorageConfigCreate
+from app.models.user import User
+from app.api.deps import get_current_user, get_db
+
+router = APIRouter(prefix="/storage", tags=["File Storage"])
+
+# ---- Configuración ----
+@router.post("/config", status_code=status.HTTP_201_CREATED)
+async def create_storage_config(
+    config: StorageConfigCreate,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Registra una nueva configuración de S3/Firebase Storage"""
+    try:
+        # Validar conexión
+        test_storage_connection(config.service_name, config.credentials)
+        
+        new_config = ExternalStorage(
+            user_id=current_user.id,
+            service_name=config.service_name,
+            bucket_name=config.bucket_name,
+            credentials=config.credentials.dict()
+        )
+        db_session.add(new_config)
+        db_session.commit()
+        return {"id": new_config.id}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Configuración inválida: {str(e)}"
+        )
+
+# ---- Operaciones de Archivos ----
+@router.post("/{config_id}/upload")
+async def upload_file(
+    config_id: int,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Sube un archivo al bucket configurado"""
+    config = validate_storage_ownership(config_id, current_user.id, db_session)
+    
+    try:
+        file_bytes = await file.read()
+        if config.service_name == "s3":
+            url = upload_to_s3(file_bytes, config.bucket_name, config.credentials)
+        elif config.service_name == "firebase":
+            url = upload_to_firebase(file_bytes, config.bucket_name, config.credentials)
+        
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={"url": url, "filename": file.filename}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al subir archivo: {str(e)}"
+        )
+
+@router.get("/{config_id}/list")
+async def list_files(
+    config_id: int,
+    prefix: str = "",
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Lista archivos en el bucket"""
+    config = validate_storage_ownership(config_id, current_user.id, db_session)
+    
+    try:
+        if config.service_name == "s3":
+            files = list_s3_files(config.bucket_name, config.credentials, prefix)
+        elif config.service_name == "firebase":
+            files = list_firebase_files(config.bucket_name, config.credentials, prefix)
+        
+        return {"files": files}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e)
+        )
+```
+
+---
+
+### **Módulo 4: Notificaciones Push**  
+**Endpoints completos** (`backend/api/v1/notifications.py`):
+
+```python
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
+from app.schemas.notifications import (
+    DeviceCreate,
+    NotificationSend,
+    ServiceConfigCreate
+)
+from app.models.user import User
+from app.api.deps import get_current_user, get_db
+
+router = APIRouter(prefix="/notifications", tags=["Push Notifications"])
+
+# ---- Configuración del Servicio ----
+@router.post("/config", status_code=status.HTTP_201_CREATED)
+async def create_service_config(
+    config: ServiceConfigCreate,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Registra credenciales de FCM/OneSignal"""
+    try:
+        # Validar credenciales
+        test_notification_service(config.service_name, config.credentials)
+        
+        new_config = NotificationServiceConfig(
+            user_id=current_user.id,
+            service_name=config.service_name,
+            credentials=config.credentials.dict()
+        )
+        db_session.add(new_config)
+        db_session.commit()
+        return {"id": new_config.id}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error en credenciales: {str(e)}"
+        )
+
+# ---- Dispositivos ----
+@router.post("/devices", status_code=status.HTTP_201_CREATED)
+async def register_device(
+    device: DeviceCreate,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Registra un dispositivo para notificaciones push"""
+    existing = db_session.query(PushNotificationDevice).filter(
+        PushNotificationDevice.device_token == device.device_token
+    ).first()
+    
+    if existing:
+        return {"id": existing.id}
+    
+    new_device = PushNotificationDevice(
+        user_id=current_user.id,
+        device_token=device.device_token,
+        platform=device.platform,
+        service_name=device.service_name
+    )
+    db_session.add(new_device)
+    db_session.commit()
+    return {"id": new_device.id}
+
+# ---- Envío ----
+@router.post("/send", status_code=status.HTTP_202_ACCEPTED)
+async def send_notification(
+    payload: NotificationSend,
+    current_user: User = Depends(get_current_user),
+    db_session = Depends(get_db)
+):
+    """Envía notificaciones a dispositivos"""
+    devices = db_session.query(PushNotificationDevice).filter(
+        PushNotificationDevice.id.in_(payload.device_ids),
+        PushNotificationDevice.user_id == current_user.id
+    ).all()
+    
+    if not devices:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No se encontraron dispositivos válidos"
+        )
+    
+    config = get_service_config(current_user.id, db_session)
+    tokens = [d.device_token for d in devices]
+    
+    try:
+        if config.service_name == "fcm":
+            send_via_fcm(config.credentials, tokens, payload.title, payload.body)
+        elif config.service_name == "onesignal":
+            send_via_onesignal(config.credentials, tokens, payload.title, payload.body)
+        
+        return {"sent_to": len(tokens), "service": config.service_name}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al enviar: {str(e)}"
+        )
+```
+
+---
+
+### **Esquemas Pydantic (Obligatorios)**  
+Ubicación: `backend/schemas/`
+
+```python
+# external_db.py
+from pydantic import BaseModel
+from typing import Optional
+
+class ExternalDBCreate(BaseModel):
+    service_name: str  # "firestore", "supabase", etc.
+    credentials: dict  # Credenciales específicas del servicio
+    alias: Optional[str]  # Nombre amigable para la conexión
+
+class DBQuery(BaseModel):
+    collection: str  # Tabla/colección
+    document_id: Optional[str]  # ID específico (opcional)
+    filters: Optional[dict]  # Filtros para Supabase/MongoDB
+```
+
+```python
+# notifications.py
+class DeviceCreate(BaseModel):
+    device_token: str
+    platform: str  # "ios", "android"
+    service_name: str  # "fcm", "onesignal"
+
+class NotificationSend(BaseModel):
+    device_ids: List[int]
+    title: str
+    body: str
+    data: Optional[dict]  # Datos adicionales (opcional)
+```
+
+---
+
+### **Validaciones y Helpers**  
+Ubicación: `backend/api/deps.py`
+
+```python
+# Funciones reutilizables
+def validate_db_ownership(db_id: int, user_id: int, db_session):
+    db = db_session.query(ExternalDatabase).get(db_id)
+    if not db or db.user_id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Conexión no encontrada o no autorizada"
+        )
+    return db
+
+def test_connection(service_name: str, credentials: dict):
+    """Prueba la conexión con la DB externa"""
+    if service_name == "firestore":
+        firestore_client = get_firestore_client(credentials)
+        firestore_client.collection("test").document("test").get()
+```
+
+---
+
+### **Características Clave Implementadas**
+1. **Seguridad**: 
+   - Validación de ownership en cada operación.
+   - Pruebas de conexión al registrar credenciales.
+2. **Manejo de Errores**: 
+   - Códigos HTTP específicos (404, 422, 500).
+   - Mensajes detallados para debugging.
+3. **Extensibilidad**: 
+   - Fácil añadir nuevos servicios (ej: MongoDB, Azure Blob Storage).
+4. **RESTful**: 
+   - Endpoints intuitivos (`POST /external-dbs`, `POST /storage/upload`).
+
+---
+
+### **Próximos Pasos**
+1. **Integración con Frontend**: ¿Necesitas que desarrolle los componentes React para el dashboard de administración?
+2. **Documentación Swagger**: ¿Quieres que genere la documentación interactiva de estos endpoints?
+3. **Tests Automatizados**: ¿Debo implementar tests con pytest para cada módulo?
+
+¡Estoy listo para continuar con lo que más prioridad tenga para ti! 🚀

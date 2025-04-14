@@ -1,5 +1,4 @@
 // src/app/user/dashboard/page.tsx
-// src/app/user/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -150,7 +149,7 @@ export default function UserDashboard() {
       }
     };
     fetchData();
-  }, [user, router]);
+  }, [user, router, credits]);
 
   const handleAddIntegration = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -891,9 +890,9 @@ export default function UserDashboard() {
                     </Typography>
                   ) : (
                     <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
-                      {transactions.map((t) => (
+                      {transactions.map((t, index) => (
                         <motion.div
-                          key={t.id} // Mover key aquí como primer atributo
+                          key={t.id || index} // Usar `index` como respaldo si `t.id` no está definido
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.2 }}
@@ -907,21 +906,9 @@ export default function UserDashboard() {
                               </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                              primary={t.transaction_type}
-                              secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                              primary={t.transaction_type || "N/A"}
+                              secondary={`${t.timestamp ? new Date(t.timestamp).toLocaleString() : "N/A"} • ${t.payment_status || "N/A"}`}
                             />
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                              <Typography
-                                variant="subtitle1"
-                                color={t.amount > 0 ? "success.main" : "error.main"}
-                                fontWeight="bold"
-                              >
-                                {t.amount > 0 ? "+" : ""}{t.amount} créditos
-                              </Typography>
-                              <Typography variant="caption" color="textSecondary">
-                                {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : 'N/A'} via {t.payment_method || 'N/A'}
-                              </Typography>
-                            </Box>
                           </ListItem>
                           <Divider variant="inset" component="li" />
                         </motion.div>
