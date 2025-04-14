@@ -137,11 +137,13 @@ export default function ConfigurePage() {
   const [editCoupon, setEditCoupon] = useState<Coupon | null>(null);
   const [couponTypes, setCouponTypes] = useState<CouponType[]>([]);
   const [editCouponType, setEditCouponType] = useState<CouponType | null>(null);
-  const [corsEnabled, setCorsEnabled] = useState(true);
+  const [corsEnabled, setCorsEnabled] = useState<boolean | null>(null); // Inicializamos como null para indicar que aún no se ha cargado el estado.
 
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
+  // Agregamos un estado de carga para controlar el renderizado inicial del panel.
+  const [loadingPanel, setLoadingPanel] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,7 +240,7 @@ export default function ConfigurePage() {
     const fetchCorsSettings = async () => {
       try {
         console.log("Fetching CORS settings..."); // Depuración
-        const { data: corsEnabledData } = await fetchAPI("/v1/settings/allowed_origins");
+        const { data: corsEnabledData } = await fetchAPI("/v1/settings/cors_enabled");
         console.log("CORS enabled data:", corsEnabledData); // Depuración
         const enabled = corsEnabledData === "true";
         setCorsEnabled(enabled);
@@ -250,6 +252,8 @@ export default function ConfigurePage() {
       } catch (err) {
         console.error("Error fetching CORS settings or origins:", err); // Depuración
         setError(err instanceof Error ? err.message : "Error al cargar configuración de CORS");
+      } finally {
+        setLoadingPanel(false); // Finalizamos el estado de carga del panel
       }
     };
     fetchCorsSettings();
@@ -596,6 +600,10 @@ export default function ConfigurePage() {
     </Box>
   );
 
+  // Modificamos el renderizado del panel para manejar el estado de carga inicial
+  if (loadingPanel) {
+    return <Typography>Cargando panel de administración...</Typography>;
+  }
 
   return (
     <Box sx={{
@@ -1157,7 +1165,11 @@ export default function ConfigurePage() {
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="h6">Orígenes Permitidos</Typography>
-                <Switch checked={corsEnabled} onChange={handleToggleCors} />
+                {corsEnabled === null ? (
+                  <Typography>Cargando configuración de CORS...</Typography>
+                ) : (
+                  <Switch checked={corsEnabled} onChange={handleToggleCors} />
+                )}
               </Box>
               {corsEnabled && (
                 <Box component="form" onSubmit={handleAddOrigin} sx={{ mb: 2 }}>
