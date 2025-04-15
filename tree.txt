@@ -1,253 +1,300 @@
-.
-├── neptuno
-│   ├── alembic.ini
-│   ├── backend
-│   │   ├── api
-│   │   │   ├── __init__.py
-│   │   │   └── v1
-│   │   │       ├── anonymous_sessions.py
-│   │   │       ├── api_logs.py
-│   │   │       ├── auth.py
-│   │   │       ├── auth.py.old
-│   │   │       ├── credit_transactions.py
-│   │   │       ├── endpoints.py
-│   │   │       ├── error_logs.py
-│   │   │       ├── gamification.py
-│   │   │       ├── __init__.py
-│   │   │       ├── integrations.py
-│   │   │       ├── payment_providers.py
-│   │   │       ├── payments.py
-│   │   │       ├── site_settings.py
-│   │   │       └── users.py
-│   │   ├── app.log
-│   │   ├── background.sh
-│   │   ├── check_db.sh
-│   │   ├── core
-│   │   │   ├── config.py
-│   │   │   ├── database.py
-│   │   │   ├── __init__.py
-│   │   │   ├── logging.py
-│   │   │   └── security.py
-│   │   ├── create_db.original.sql
-│   │   ├── create_db.sql
-│   │   ├── dependencies
-│   │   │   ├── auth.py
-│   │   │   ├── credits.py
-│   │   │   └── __init__.py
-│   │   ├── dev.db
-│   │   ├── Dockerfile
-│   │   ├── env.local
-│   │   ├── env.prod
-│   │   ├── env.vpn
-│   │   ├── initial_data.py
+neptuno
+├── README.md
+├── TODO
+├── TODO-LIST
+├── alembic.ini
+├── backend
+│   ├── Dockerfile
+│   ├── __init__.py
+│   ├── api
 │   │   ├── __init__.py
-│   │   ├── main.py
-│   │   ├── middleware
-│   │   │   ├── credits_middleware.py
-│   │   │   ├── gamification.py
-│   │   │   ├── __init__.py
-│   │   │   └── logging.py
-│   │   ├── models
-│   │   │   ├── allowed_origin.py
-│   │   │   ├── credit_transaction.py
-│   │   │   ├── error_log.py
-│   │   │   ├── gamification.py
-│   │   │   ├── guests.py
-│   │   │   ├── guests.stage.py
-│   │   │   ├── __init__.py
-│   │   │   ├── integration.py
-│   │   │   ├── log.py
-│   │   │   ├── payment_method.py
-│   │   │   ├── payment_provider.py
-│   │   │   ├── site_settings.py
-│   │   │   ├── token.py
-│   │   │   └── user.py
-│   │   ├── requirements.txt
-│   │   ├── schemas
-│   │   │   ├── anonymous_session.py
-│   │   │   ├── api_log.py
-│   │   │   ├── auth.py
-│   │   │   ├── credit_transaction.py
-│   │   │   ├── error_log.py
-│   │   │   ├── gamification.py
-│   │   │   ├── integration.py
-│   │   │   ├── payment.py
-│   │   │   ├── site_settings.py
-│   │   │   └── user.py
-│   │   ├── services
-│   │   │   ├── auth_service.py
-│   │   │   ├── credits_service.py
-│   │   │   ├── gamification_service.py
-│   │   │   ├── __init__.py
-│   │   │   ├── integration_service.py
-│   │   │   ├── origin_service.py
-│   │   │   ├── payment_provider_service.py
-│   │   │   ├── payment_service.py
-│   │   │   ├── settings_service.py
-│   │   │   └── user_service.py
-│   │   ├── tasks.py
-│   │   └── up_api.sh
-│   ├── copys
-│   │   ├── ALAMBIC
-│   │   ├── BACKLOG
-│   │   ├── COPY
-│   │   ├── CREDITS_POINTS
-│   │   ├── docker-compose.yml.new
-│   │   ├── FRAMEWORK
-│   │   ├── GAMY.txt
-│   │   ├── PAYMENTS
-│   │   ├── sdk
-│   │   ├── SEO
-│   │   ├── SMTP
-│   │   ├── STARTUP
-│   │   ├── STORYBOARD
-│   │   ├── TO-DO
-│   │   ├── users
-│   │   ├── VOLUMES
-│   │   └── websockes
-│   ├── docker-compose.yml
-│   ├── etc
-│   │   ├── fail2ban
-│   │   │   └── jail.local
-│   │   ├── nginx
-│   │   │   ├── nginx.conf
-│   │   │   ├── nginx.min.conf
-│   │   │   ├── nginx.prod.conf
-│   │   │   └── sites-available
-│   │   │       └── mysite.conf
-│   │   ├── security
-│   │   │   ├── limits.conf
-│   │   │   └── sysctl.conf
-│   │   ├── sysctl.conf
-│   │   └── systemd
-│   │       └── system
-│   │           ├── backend.service
-│   │           ├── frontend.service
-│   │           ├── nginx-monitor.service
-│   │           └── nginx-monitor.service.txt
-│   ├── frontend
-│   │   ├── deploy.sh
-│   │   ├── Dockerfile
-│   │   ├── env.local
-│   │   ├── env.prod
-│   │   ├── env.vbox
-│   │   ├── eslint.config.mjs
-│   │   ├── next.config.ts
-│   │   ├── package.json
-│   │   ├── package-lock.json
-│   │   ├── postcss.config.js
-│   │   ├── public
-│   │   │   ├── apple-touch-icon.ico
-│   │   │   ├── favicon-16x16.ico
-│   │   │   ├── favicon.ico
-│   │   │   └── logo.png
-│   │   ├── reinstall.sh
-│   │   ├── src
-│   │   │   ├── app
-│   │   │   │   ├── about
-│   │   │   │   │   ├── layout copy 2.tsx
-│   │   │   │   │   ├── layout copy 3.tsx
-│   │   │   │   │   ├── layout copy.tsx
-│   │   │   │   │   ├── layout.tsx
-│   │   │   │   │   └── [page]
-│   │   │   │   │       ├── contact.tsx
-│   │   │   │   │       ├── page.tsx
-│   │   │   │   │       ├── policy.tsx
-│   │   │   │   │       ├── privacy.tsx
-│   │   │   │   │       └── us.tsx
-│   │   │   │   ├── admin
-│   │   │   │   │   ├── dashboard
-│   │   │   │   │   │   ├── page copy.tsx
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── registry
-│   │   │   │   │   │   ├── page.copy.tsx
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── reset-credits
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   └── users
-│   │   │   │   │       └── page.tsx
-│   │   │   │   ├── ejemplos
+│   │   ├── graphql
+│   │   │   ├── main.example.py
+│   │   │   ├── p
+│   │   │   ├── readme.md
+│   │   │   ├── router.py
+│   │   │   ├── schema
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── auth.py
+│   │   │   │   ├── coupons.py
+│   │   │   │   ├── gamification.py
+│   │   │   │   ├── payment.py
+│   │   │   │   ├── payment_providers.py
+│   │   │   │   ├── site_settings.py
+│   │   │   │   └── user.py
+│   │   │   ├── schema.py
+│   │   │   └── test.md
+│   │   └── v1
+│   │       ├── __init__.py
+│   │       ├── anonymous_sessions.py
+│   │       ├── api_logs.py
+│   │       ├── auth.py
+│   │       ├── coupons copy.py
+│   │       ├── coupons.py
+│   │       ├── credit_transactions.py
+│   │       ├── error_logs.py
+│   │       ├── gamification.py
+│   │       ├── integrations.py
+│   │       ├── origins.py
+│   │       ├── payment_providers.py
+│   │       ├── payments.py
+│   │       ├── site_settings.py
+│   │       ├── test.py
+│   │       └── users.py
+│   ├── app.log
+│   ├── background.sh
+│   ├── check_db.sh
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── logging.py
+│   │   └── security.py
+│   ├── dependencies
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   └── credits.py
+│   ├── dev.db
+│   ├── dev.db.bak.2
+│   ├── env.local
+│   ├── env.prod
+│   ├── ini_db.py
+│   ├── main.py
+│   ├── middleware
+│   │   ├── __init__.py
+│   │   ├── credits_middleware.py
+│   │   ├── gamification.py
+│   │   └── logging.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── allowed_origin.py
+│   │   ├── coupon copy.py
+│   │   ├── coupon.py
+│   │   ├── coupon_type.py
+│   │   ├── credit_transaction.py
+│   │   ├── error_log.py
+│   │   ├── gamification.py
+│   │   ├── guests.py
+│   │   ├── integration.py
+│   │   ├── log.py
+│   │   ├── payment_method.py
+│   │   ├── payment_provider.py
+│   │   ├── site_settings.py
+│   │   ├── token.py
+│   │   └── user.py
+│   ├── requirements.txt
+│   ├── schemas
+│   │   ├── allowed_origin.py
+│   │   ├── anonymous_session.py
+│   │   ├── api_log.py
+│   │   ├── auth.py
+│   │   ├── coupon copy.py
+│   │   ├── coupon.py
+│   │   ├── credit_transaction.py
+│   │   ├── error_log.py
+│   │   ├── gamification.py
+│   │   ├── integration.py
+│   │   ├── payment.py
+│   │   ├── site_settings.py
+│   │   └── user.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── auth_service.py
+│   │   ├── coupon_service copy.py
+│   │   ├── coupon_service.py
+│   │   ├── credits_service.py
+│   │   ├── gamification_service.py
+│   │   ├── integration_service.py
+│   │   ├── log_service.py
+│   │   ├── origin_service.py
+│   │   ├── payment_provider_service.py
+│   │   ├── payment_service.py
+│   │   ├── settings_service.py
+│   │   └── user_service.py
+│   ├── tasks.py
+│   └── up_api.sh
+├── backlog-ce
+├── copys
+│   ├── ALAMBIC
+│   ├── BACKLOG
+│   ├── COPY
+│   ├── CREDITS_POINTS
+│   ├── DEVELOPER_GUIDE
+│   ├── FRAMEWORK
+│   ├── GAMY.txt
+│   ├── GRAPHQL
+│   ├── IMPROVEMENTS
+│   ├── PAYMENTS
+│   ├── PRO
+│   ├── SEO
+│   ├── SMTP
+│   ├── STARTUP
+│   ├── STORYBOARD
+│   ├── SUBS
+│   ├── TEMPLATE_ENGINE
+│   ├── THEME_MASTER
+│   ├── TO-DO
+│   ├── VITE
+│   ├── VOLUMES
+│   ├── bugs_
+│   ├── coupons
+│   ├── design
+│   ├── docker-compose.yml.new
+│   ├── new_design
+│   ├── sdk
+│   ├── template_funct.md
+│   ├── users
+│   └── websockes
+├── docker-compose.yml
+├── etc
+│   ├── fail2ban
+│   │   └── jail.local
+│   ├── nginx
+│   │   ├── nginx.conf
+│   │   ├── nginx.min.conf
+│   │   ├── nginx.prod.conf
+│   │   └── sites-available
+│   │       └── mysite.conf
+│   ├── security
+│   │   ├── limits.conf
+│   │   └── sysctl.conf
+│   ├── sysctl.conf
+│   └── systemd
+│       └── system
+│           ├── backend.service
+│           ├── frontend.service
+│           ├── nginx-monitor.service
+│           └── nginx-monitor.service.txt
+├── frontend
+│   ├── Dockerfile
+│   ├── deploy.sh
+│   ├── env.local
+│   ├── env.prod
+│   ├── eslint.config.mjs
+│   ├── next.config.ts
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   ├── apple-touch-icon.ico
+│   │   ├── favicon-16x16.ico
+│   │   ├── favicon.ico
+│   │   └── logo.png
+│   ├── src
+│   │   ├── app
+│   │   │   ├── about
+│   │   │   │   ├── [page]
+│   │   │   │   │   ├── contact.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   ├── policy.tsx
+│   │   │   │   │   ├── privacy.tsx
+│   │   │   │   │   └── us.tsx
+│   │   │   │   └── layout.tsx
+│   │   │   ├── admin
+│   │   │   │   ├── dashboard
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── registry
 │   │   │   │   │   ├── page copy.tsx
+│   │   │   │   │   ├── page.copy.tsx
 │   │   │   │   │   └── page.tsx
-│   │   │   │   ├── global copy.css
-│   │   │   │   ├── global.color.css
-│   │   │   │   ├── global.css
-│   │   │   │   ├── layout copy 2.tsx
-│   │   │   │   ├── layout copy.tsx
-│   │   │   │   ├── layout.tsx
-│   │   │   │   ├── page.bnw.tsx
-│   │   │   │   ├── page.copy.tsx
-│   │   │   │   ├── page.tsx
-│   │   │   │   ├── rankings
+│   │   │   │   ├── reset-credits
 │   │   │   │   │   └── page.tsx
-│   │   │   │   ├── sitemap.ts.example
-│   │   │   │   └── user
-│   │   │   │       ├── auth
-│   │   │   │       │   ├── layout copy.tsx
-│   │   │   │       │   ├── layout.tsx
-│   │   │   │       │   ├── page.copy.tsx
-│   │   │   │       │   └── page.tsx
-│   │   │   │       ├── badges
-│   │   │   │       │   ├── page copy.tsx
-│   │   │   │       │   └── page.tsx
-│   │   │   │       ├── change-password
-│   │   │   │       │   └── page.tsx
-│   │   │   │       ├── dashboard
-│   │   │   │       │   ├── page copy.tsx
-│   │   │   │       │   └── page.tsx
-│   │   │   │       ├── points
-│   │   │   │       │   ├── page copy 2.tsx
-│   │   │   │       │   ├── page copy.tsx
-│   │   │   │       │   └── page.tsx
-│   │   │   │       └── transactions
-│   │   │   │           ├── page copy 2.tsx
-│   │   │   │           ├── page copy.tsx
-│   │   │   │           └── page.tsx
-│   │   │   ├── components
-│   │   │   │   ├── admin
-│   │   │   │   │   ├── AdminUsersPage.copy.tsx
-│   │   │   │   │   └── AdminUsersPage.tsx
-│   │   │   │   ├── seo
-│   │   │   │   │   ├── MetaTags.tsx
-│   │   │   │   │   └── ShemaMarkup.tsx
-│   │   │   │   ├── ui
-│   │   │   │   │   └── index.tsx
-│   │   │   │   └── web
-│   │   │   │       ├── Footer copy 2.tsx
-│   │   │   │       ├── Footer copy.tsx
-│   │   │   │       ├── Footer.tsx
-│   │   │   │       ├── Navbar copy.tsx
-│   │   │   │       └── Navbar.tsx
-│   │   │   └── lib
-│   │   │       ├── api.ts
+│   │   │   │   └── users
+│   │   │   │       └── page.tsx
+│   │   │   ├── ejemplos
+│   │   │   │   ├── page copy.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── global.css
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── rankings
+│   │   │   │   ├── page copy.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── sitemap.ts.example
+│   │   │   └── user
 │   │   │       ├── auth
-│   │   │       │   └── context.tsx
-│   │   │       ├── payments
-│   │   │       │   ├── example.tsx
-│   │   │       │   ├── manager.ts
-│   │   │       │   └── stripe.ts
-│   │   │       ├── payments.ts
-│   │   │       └── types.ts
-│   │   ├── tailwind.config.js
-│   │   ├── tsconfig.json
-│   │   └── up_front.sh
-│   ├── migrations
-│   │   ├── env.py
-│   │   ├── README
-│   │   ├── script.py.mako
-│   │   └── versions
-│   │       ├── 1e522797f371_gamification.py
-│   │       ├── 55cb6848c934_actualización_de_modelos.py
-│   │       ├── 571f49c3caec_icp_models.py
-│   │       ├── 592267c90dca_guest_rename.py
-│   │       ├── 59f373d5b1b3_new_updates.py
-│   │       └── 9b4e3132652f_new_updates.py
-│   ├── README.md
-│   ├── TODO
-│   ├── tools
-│   │   ├── backup.sh
-│   │   └── packages.sh
-│   └── update.db.sh
-└── tree.txt
+│   │   │       │   ├── layout copy.tsx
+│   │   │       │   ├── layout.tsx
+│   │   │       │   ├── page.copy.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── badges
+│   │   │       │   ├── page copy 2.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── change-password
+│   │   │       │   └── page.tsx
+│   │   │       ├── coupon
+│   │   │       │   ├── page.ol.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── dashboard
+│   │   │       │   ├── page copy 2.tsx
+│   │   │       │   ├── page copy.tsx
+│   │   │       │   └── page.tsx
+│   │   │       ├── points
+│   │   │       │   ├── page copy 3.tsx
+│   │   │       │   └── page.tsx
+│   │   │       └── transactions
+│   │   │           ├── page copy.tsx
+│   │   │           └── page.tsx
+│   │   ├── components
+│   │   │   ├── admin
+│   │   │   │   ├── AdminUsersPage.copy.tsx
+│   │   │   │   └── AdminUsersPage.tsx
+│   │   │   ├── seo
+│   │   │   │   ├── MetaTags.tsx
+│   │   │   │   └── ShemaMarkup.tsx
+│   │   │   ├── ui
+│   │   │   │   └── index.tsx
+│   │   │   └── web
+│   │   │       ├── Footer.tsx
+│   │   │       └── Navbar.tsx
+│   │   └── lib
+│   │       ├── api.ts
+│   │       ├── auth
+│   │       │   └── context.tsx
+│   │       ├── payments
+│   │       │   ├── example.tsx
+│   │       │   ├── manager.ts
+│   │       │   └── stripe.ts
+│   │       ├── payments.ts
+│   │       └── types.ts
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   └── up_front.sh
+├── migrations
+│   ├── README
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 1e522797f371_gamification.py
+│       ├── 55cb6848c934_actualización_de_modelos.py
+│       ├── 571f49c3caec_icp_models.py
+│       ├── 592267c90dca_guest_rename.py
+│       ├── 59f373d5b1b3_new_updates.py
+│       └── 9b4e3132652f_new_updates.py
+├── openapi.json
+├── p
+├── prompts
+│   ├── prompt
+│   ├── prompt.2
+│   ├── prompt.3
+│   ├── prompt.4
+│   ├── prompt.5
+│   ├── prompt.6
+│   ├── prompt.7
+│   ├── prompt.8
+│   ├── prompt.9
+│   └── pull.sh
+├── tools
+│   ├── backup.sh
+│   ├── backup.sql
+│   ├── check.db.txt
+│   ├── create_db.original.sql
+│   ├── create_db.sql
+│   ├── export_db.sh
+│   ├── initial_data.oldy.py
+│   ├── initial_data.py
+│   └── packages.sh
+├── tree.txt
+└── update.db.sh
 
-49 directories, 201 files
+52 directories, 245 files
