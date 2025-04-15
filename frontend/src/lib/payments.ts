@@ -8,4 +8,4 @@ export interface PaymentProvider {
     success: boolean;
     transactionId?: string;
     error?: string;
-  }
+  } 

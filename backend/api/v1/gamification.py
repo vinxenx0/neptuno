@@ -29,7 +29,7 @@ async def create_event(event: GamificationEventCreate,
                        user: UserContext = Depends(get_user_context),
                        db: Session = Depends(get_db)):
     return register_event(db, event, user)
-
+ 
 
 @router.get("/me", response_model=List[UserGamificationResponse])
 def get_my_gamification(user: UserContext = Depends(get_user_context),

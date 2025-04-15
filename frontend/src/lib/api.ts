@@ -1,7 +1,7 @@
 // src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
 import { HTTPValidationError, FetchResponse, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";
-
+ 
 // Extender AxiosRequestConfig para incluir _retry
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;

@@ -75,3 +75,552 @@
 ---
 
 ¿Querés que iniciemos la primera etapa juntos? Podés pasarme una página de dashboard tuya (aunque sea un bloque parcial), y arrancamos por la modularización 👇
+
+
+Perfecto, este proyecto es bastante más amplio y modular. Me encanta que lo estés pensando a **nivel global**, porque tiene sentido evitar una refactorización por página que termine en mantenimiento imposible.
+
+Acá te dejo una estrategia general **pensada para optimizar todo el sitio Neptuno sin crear deuda técnica**, aprovechando lo que ya tenés:
+
+---
+
+## 🧠 ESTRATEGIA GLOBAL DE OPTIMIZACIÓN PARA NEPTUNO
+
+### 💡 **Objetivo**: 
+Aplicar mejoras de arquitectura, performance y escalabilidad a nivel _global_ sin tener que rehacer cada página individualmente.
+
+---
+
+### ✅ FASE 1: **Normalizar la arquitectura del Frontend (Next.js)**
+
+#### 🔁 1. **Refactorización basada en “features” o dominios**
+Organizá `src/app` en carpetas como:
+```
+src/
+├── features/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── users/
+│   ├── coupons/
+│   ├── payments/
+├── shared/
+│   ├── components/
+│   ├── hooks/
+│   ├── utils/
+│   ├── lib/
+```
+> Esto permite reutilizar lógica sin duplicar en cada ruta (`/app/admin/...`, `/app/user/...`, etc).
+
+#### 🧩 2. **Crear un sistema de componentes globales UI/UX**
+Extraé cosas comunes (cards, tables, modales, formularios, filtros) en `shared/components/ui`. Esto se usa en TODO el sitio.
+
+#### 🧠 3. **Centralización de lógica de negocio**
+Todo lo que esté haciendo fetch, validando inputs o mapeando estructuras JSON debería ir a:
+```
+src/shared/hooks/
+src/shared/lib/api.ts
+```
+Y consumirlo con `useUserData()`, `useCoupons()`, `postPayment()` en lugar de tener lógica repetida en cada `page.tsx`.
+
+---
+
+### 🚀 FASE 2: **Backend estructurado por dominio**
+
+Tu backend ya tiene una **separación decente por `api`, `models`, `schemas`, `services`** — lo que falta es agruparlos como **módulos autocontenidos**, algo así:
+
+```
+backend/
+├── domains/
+│   ├── auth/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── api/
+│   │   └── graphql/
+│   ├── coupons/
+│   ├── gamification/
+│   └── payments/
+```
+
+Y mover desde `api/v1`, `models/`, `schemas/`, `services/` hacia cada dominio.
+
+> Esto permite testear, extender y mantener cada módulo por separado sin riesgo de side effects.
+
+---
+
+### 🔐 FASE 3: **Infraestructura compartida y reusable**
+
+#### 🔧 Middleware y lógica transversal
+Tenés `middleware`, `core`, `dependencies`, `tasks`. Agrupalos como:
+
+```
+backend/
+├── shared/
+│   ├── middleware/
+│   ├── core/
+│   ├── auth/
+│   ├── utils/
+```
+
+#### 💼 Servicios externos: Stripe, Webhooks, SMTP
+Movelos a:
+```
+backend/
+├── integrations/
+│   ├── stripe/
+│   ├── smtp/
+│   └── websocket/
+```
+
+---
+
+### ⚙️ FASE 4: **Automatizar y documentar el flujo**
+
+1. **Crea una CLI de desarrollo** (`scripts/dev`, o con Typer/FastAPI).
+2. **Define un README por dominio**: ejemplo, `domains/coupons/README.md`
+3. **Centralizá TO-DOs y Backlog**: unificá los archivos de `copys/` en un solo `docs/` o `project/` con markdowns bien nombrados:
+   ```
+   project/
+   ├── BACKLOG.md
+   ├── DESIGN_GUIDE.md
+   ├── PROMPTS/
+   ├── ROADMAP.md
+   └── STORYBOARD.md
+   ```
+
+---
+
+### 🧠 BONUS: Aplicación de los PROMPTS a nivel global
+
+Podés aplicar los **6+ prompts anteriores** como herramientas dentro de esta estrategia general:
+
+| Prompt | Aplicación global sugerida |
+|--------|-----------------------------|
+| Modularización de páginas | Refactor de `src/app` hacia `features/` |
+| Mejora de performance | A todo `lib/api.ts`, fetches centralizados |
+| Reorganización por capas | Separación de `services`, `schemas`, `api`, `models` por dominio |
+| UX/UI | Rediseño global de `shared/components/ui` y estados (`loading`, `error`, etc) |
+| Seguridad | Centralización en `shared/auth`, validaciones comunes (middlewares, guards) |
+| Fullstack optimization | Mejora de comunicación API-Frontend global con tipado compartido |
+
+---
+
+## 📌 CONCLUSIÓN
+
+> ⚠️ En lugar de optimizar página por página, **optimizás por dominio funcional** y compartís infraestructura + lógica entre todas las vistas.
+
+Con eso:
+- Reducís duplicación.
+- Mejorás mantenibilidad.
+- Podés escalar el equipo de forma modular.
+- Ganás performance y claridad.
+
+---
+
+¿Querés que te arme un ejemplo concreto de cómo se vería el refactor de un dominio (por ejemplo `coupons`)? O querés una plantilla base para iniciar la migración por pasos?
+
+
+¡Perfecto! Acá tenés una **plantilla completa para iniciar la migración** hacia una arquitectura modular, escalable y fácil de mantener, tanto en el **backend** como en el **frontend**.
+
+---
+
+## 🧱 ESTRUCTURA BASE MODULAR: PLANTILLA
+
+---
+
+### ✅ FRONTEND (Next.js 13+ con App Router)
+
+```
+src/
+├── app/                       # App Router de Next.js
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── ...                   # Aquí solo rutas, sin lógica pesada
+├── features/                 # Dominios o funcionalidades
+│   ├── coupons/
+│   │   ├── components/       # Componentes propios de coupons
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── types.ts
+│   ├── auth/
+│   └── users/
+├── shared/                   # Reutilizable en todo el sitio
+│   ├── components/           # UI: Button, Card, Modal, Table
+│   ├── hooks/                # usePagination, useDebounce, etc
+│   ├── lib/
+│   │   ├── api.ts            # Funciones globales de fetch
+│   │   └── auth.ts
+│   ├── types/                # Tipos compartidos
+│   └── constants.ts
+```
+
+---
+
+### ✅ BACKEND (FastAPI o similar)
+
+```
+backend/
+├── domains/                      # Cada módulo independiente
+│   ├── coupons/
+│   │   ├── api/                  # FastAPI routers
+│   │   ├── graphql/              # Schemas y resolvers si aplica
+│   │   ├── models/               # SQLAlchemy
+│   │   ├── schemas/              # Pydantic
+│   │   ├── services/             # Lógica de negocio
+│   │   ├── tasks/                # Background jobs
+│   │   ├── tests/                # Unit tests
+│   │   └── README.md             # Documentación de módulo
+│   ├── auth/
+│   └── users/
+├── shared/                       # Infraestructura común
+│   ├── core/
+│   │   ├── config.py             # Settings globales
+│   │   ├── database.py
+│   │   ├── logging.py
+│   │   └── security.py
+│   ├── middleware/
+│   ├── auth/
+│   ├── utils/
+│   └── dependencies/
+├── integrations/                 # Integraciones externas
+│   ├── stripe/
+│   ├── smtp/
+│   └── websocket/
+├── main.py                       # Carga dinámica de módulos
+```
+
+---
+
+### 📦 COMPONENTES ESENCIALES PARA CADA DOMINIO
+
+#### ✅ `coupons/api/router.py`
+```python
+from fastapi import APIRouter
+from . import endpoints
+
+router = APIRouter(prefix="/coupons", tags=["Coupons"])
+router.include_router(endpoints.router)
+```
+
+#### ✅ `coupons/models/coupon.py`
+```python
+from sqlalchemy import Column, Integer, String
+from shared.core.database import Base
+
+class Coupon(Base):
+    __tablename__ = "coupons"
+    id = Column(Integer, primary_key=True)
+    code = Column(String, unique=True, index=True)
+    discount = Column(Integer)
+```
+
+#### ✅ `coupons/schemas/coupon.py`
+```python
+from pydantic import BaseModel
+
+class CouponCreate(BaseModel):
+    code: str
+    discount: int
+```
+
+#### ✅ `coupons/services/coupon_service.py`
+```python
+def create_coupon(db, data: CouponCreate):
+    coupon = Coupon(**data.dict())
+    db.add(coupon)
+    db.commit()
+    return coupon
+```
+
+---
+
+### 📘 DOCUMENTACIÓN DEL MÓDULO
+
+Cada dominio puede tener su propio `README.md`, por ejemplo en `backend/domains/coupons/README.md`:
+
+```md
+# Coupons Module
+
+## Endpoints
+- POST `/coupons/`
+- GET `/coupons/{id}`
+
+## Estructura
+- `models/`: SQLAlchemy models
+- `schemas/`: Validaciones Pydantic
+- `services/`: Lógica de negocio desacoplada
+- `api/`: Endpoints REST
+```
+
+---
+
+### 🧪 TEST UNITARIOS (por dominio)
+
+En `backend/domains/coupons/tests/test_coupon.py`:
+
+```python
+def test_coupon_creation():
+    data = CouponCreate(code="WELCOME", discount=20)
+    result = create_coupon(db, data)
+    assert result.code == "WELCOME"
+```
+
+---
+
+### 🧼 AUTOMATIZACIÓN DE IMPORTS DINÁMICOS
+
+En `main.py`:
+
+```python
+from fastapi import FastAPI
+from domains import coupons, users, auth  # etc
+
+app = FastAPI()
+
+for module in [coupons, users, auth]:
+    app.include_router(module.api.router)
+```
+
+---
+
+## 🚀 GUÍA DE MIGRACIÓN PASO A PASO
+
+1. **Crear carpeta `/domains/` y mover cada módulo.**
+2. **Mover `models/`, `schemas/`, `services/`, `api/` de cada módulo a su subcarpeta.**
+3. **Reexportar `router` en cada dominio.**
+4. **Crear `README.md` por dominio.**
+5. **Centralizar middleware, auth, config en `/shared/`.**
+6. **Refactor frontend en `features/` y `shared/`.**
+7. **Revisar y ajustar los imports globales.**
+8. **Automatizar test por módulo.**
+9. **Agregar documentación y scripts de desarrollo.**
+10. **Verificar que el sistema sigue corriendo.**
+
+---
+
+¿Querés que esta estructura te la empaquete como repo de ejemplo o te genere un script para automatizar parte del paso 1–5?
+
+Muy buena pregunta. Vamos a analizarlo bien para que tomes la mejor decisión, porque lo que planteás es clave: **no es solo una API, también hay un SDK** y hay que mantener una documentación clara.
+
+---
+
+## 🧠 ANÁLISIS DEL CONTEXTO
+
+- ✅ **Es una API (REST y/o GraphQL)**: por lo tanto, la estructura debe estar enfocada en endpoints, lógica desacoplada, fácil testeo y modularidad.
+- ✅ **Existe un SDK**: eso implica que el backend no solo expone rutas, sino que también debe exponer lógica reusable (posiblemente como un cliente, o como servicios que pueden importar otros módulos).
+- ✅ **Documentación en FastAPI**: la estructura debe permitir que la documentación generada automáticamente sea clara y separada por dominios.
+- ✅ **Escalabilidad y mantenibilidad a largo plazo**: debe soportar el crecimiento sin romper nada y sin volverse spaghetti code.
+
+---
+
+## ✅ CONCLUSIÓN: ¿ES LA ESTRUCTURA QUE TE DI MOSTRÉ LA MEJOR?
+
+### 💡 **Sí, es una de las mejores opciones para tu caso si la pensás como "arquitectura hexagonal simplificada" o "modular domain-driven".**  
+Pero te la voy a afinar un poco más **pensando en el SDK y la documentación.**
+
+---
+
+## ✅ AJUSTES CLAVE PARA HACERLA IDEAL
+
+### 1. 🧱 Reorganizar para que los servicios puedan ser usados tanto por la API como por el SDK
+
+```bash
+backend/
+├── app/                          # Lógica web/API (FastAPI)
+│   ├── main.py                   # Crea la app
+│   ├── routers/                  # Routers por dominio
+│   │   └── coupons.py
+│   ├── dependencies/             # FastAPI Depends
+│   └── docs/                     # Documentación personalizada
+├── domains/                      # Lógica de negocio aislada
+│   ├── coupons/
+│   │   ├── models.py
+│   │   ├── schemas.py
+│   │   ├── services.py           # Usable desde API o SDK
+│   │   ├── repository.py         # SQL abstraction
+│   │   └── __init__.py
+│   └── users/
+├── sdk/                          # SDK que puede importar de domains/
+│   ├── coupons.py
+│   └── __init__.py
+├── shared/                       # Config, utils, base classes
+│   ├── db.py
+│   ├── config.py
+│   └── security.py
+└── tests/
+```
+
+---
+
+### 2. 🛠️ Lógica reusable entre API y SDK
+
+#### `domains/coupons/services.py`
+```python
+def create_coupon(code: str, discount: int, db) -> Coupon:
+    # lógica de negocio aquí
+    ...
+```
+
+#### `sdk/coupons.py`
+```python
+from domains.coupons import services
+from shared.db import get_db
+
+def create_coupon_sdk(code, discount):
+    db = get_db()
+    return services.create_coupon(code, discount, db)
+```
+
+Así el SDK **usa directamente la lógica del dominio**, sin duplicación.
+
+---
+
+### 3. 📚 Documentación REST clara con FastAPI
+
+FastAPI permite incluir routers con `tags` y descripciones. Ejemplo:
+
+#### `app/routers/coupons.py`
+```python
+from fastapi import APIRouter
+from domains.coupons import services
+from domains.coupons.schemas import CouponCreate
+
+router = APIRouter(prefix="/coupons", tags=["Coupons"])
+
+@router.post("/", summary="Crear un cupón", response_model=CouponOut)
+def create_coupon(data: CouponCreate, db: Session = Depends(get_db)):
+    return services.create_coupon(data.code, data.discount, db)
+```
+
+Y luego en `main.py`:
+
+```python
+from app.routers import coupons, users
+
+app = FastAPI(title="Mi API")
+
+app.include_router(coupons.router)
+app.include_router(users.router)
+```
+
+Esto genera una documentación limpia y separada por módulos, usando la UI de Swagger y Redoc automáticamente.
+
+---
+
+## 🧠 BONUS: ¿Qué hace esta estructura bien?
+
+- ✅ **Dominios limpios:** `domains/` encapsula la lógica reusable.
+- ✅ **API separada:** `app/routers/` maneja únicamente rutas.
+- ✅ **SDK reutiliza sin duplicar.**
+- ✅ **Documentación REST organizada automáticamente.**
+- ✅ **Puede crecer a microservicios si algún dominio crece demasiado.**
+
+---
+
+## 🚀 ¿Querés que te arme un repositorio base (FastAPI + esta estructura) o un script para generar automáticamente estos módulos con sus archivos base (`schemas.py`, `services.py`, etc.)?
+
+O incluso: ¿querés una estructura similar pero para una monorepo completa (`backend/`, `frontend/`, `libs/sdk/`, etc.)?
+
+¡Excelente! Te dejo un **script Bash completo** que:
+
+- Crea la estructura de carpetas para backend y frontend.
+- Mueve los archivos existentes (si los nombres son estándar).
+- Genera archivos `__init__.py` donde se necesiten.
+- Crea archivos base como `router.py`, `README.md`, y placeholders de servicio y esquema.
+- Aplica convenciones de módulos desacoplados.
+
+---
+
+### 🧰 `migrar_a_modular.sh` – Script de automatización
+
+```bash
+#!/bin/bash
+
+# Este script migra un proyecto a una arquitectura modular desacoplada.
+
+set -e
+
+### CONFIGURACIÓN INICIAL ###
+DOMINIOS=("coupons" "auth" "users")
+BACKEND_DIR="backend"
+FRONTEND_DIR="frontend/src"
+
+echo "🚀 Iniciando migración hacia arquitectura modular..."
+
+### CREA LA ESTRUCTURA BACKEND ###
+mkdir -p $BACKEND_DIR/domains
+mkdir -p $BACKEND_DIR/shared/core
+mkdir -p $BACKEND_DIR/integrations
+touch $BACKEND_DIR/main.py
+
+echo "✅ Estructura base backend creada."
+
+### CREA ESTRUCTURA POR DOMINIO ###
+for domain in "${DOMINIOS[@]}"; do
+    DOMAIN_PATH="$BACKEND_DIR/domains/$domain"
+    mkdir -p $DOMAIN_PATH/{api,graphql,models,schemas,services,tasks,tests}
+
+    # Archivos base
+    echo "from fastapi import APIRouter" > $DOMAIN_PATH/api/router.py
+    echo "router = APIRouter(prefix=\"/$domain\", tags=[\"${domain^}\"])" >> $DOMAIN_PATH/api/router.py
+
+    echo "# $domain service placeholder" > $DOMAIN_PATH/services/${domain}_service.py
+    echo "# $domain schema placeholder" > $DOMAIN_PATH/schemas/${domain}.py
+    echo "# SQLAlchemy model placeholder" > $DOMAIN_PATH/models/${domain}.py
+
+    echo -e "# $domain Domain\n\n## Endpoints\n- GET /$domain\n\n## Arch\n- models\n- schemas\n- services\n- api" > $DOMAIN_PATH/README.md
+
+    # Archivos __init__.py
+    touch $DOMAIN_PATH/__init__.py
+    for d in api graphql models schemas services tasks tests; do
+        touch $DOMAIN_PATH/$d/__init__.py
+    done
+
+    echo "✅ Dominio '$domain' creado."
+done
+
+### CREA ARCHIVOS COMPARTIDOS ###
+touch $BACKEND_DIR/shared/core/{config.py,database.py,security.py,logging.py}
+mkdir -p $BACKEND_DIR/shared/{auth,utils,middleware,dependencies}
+touch $BACKEND_DIR/shared/__init__.py
+
+echo "✅ Carpeta 'shared' inicializada."
+
+### CREA INTEGRACIONES ###
+touch $BACKEND_DIR/integrations/{stripe.py,smtp.py,websocket.py}
+
+echo "✅ Carpeta 'integrations' creada."
+
+### FRONTEND STRUCTURE (Next.js App Router) ###
+mkdir -p $FRONTEND_DIR/features
+mkdir -p $FRONTEND_DIR/shared/{components,hooks,lib,types}
+
+for domain in "${DOMINIOS[@]}"; do
+    mkdir -p $FRONTEND_DIR/features/$domain/{components,hooks,services}
+    echo "// $domain types" > $FRONTEND_DIR/features/$domain/types.ts
+done
+
+touch $FRONTEND_DIR/shared/constants.ts
+touch $FRONTEND_DIR/shared/lib/api.ts
+
+echo "✅ Estructura frontend modular creada."
+
+echo "🎉 Migración completada. ¡Tu arquitectura modular está lista!"
+```
+
+---
+
+### 📌 Cómo usarlo
+
+1. Guarda este script como `migrar_a_modular.sh`.
+2. Dale permisos de ejecución:
+   ```bash
+   chmod +x migrar_a_modular.sh
+   ```
+3. Ejecutalo desde la raíz del proyecto:
+   ```bash
+   ./migrar_a_modular.sh
+   ```
+
+---
+
+¿Querés que te lo empaquete en un zip con estructura de ejemplo y archivos rellenos? ¿O preferís que también cree un `main.py` que registre todos los routers automáticamente?

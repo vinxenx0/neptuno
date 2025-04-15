@@ -137,7 +137,7 @@ export interface Badge {
 
 export interface Gamification {
   points: number;
-  badges: Badge[];
+  badges: { name: string }[];
 }
 
 export interface GamificationEventCreate {
@@ -172,6 +172,7 @@ export interface PaymentProvider {
   id: number;
   name: string;
   active: boolean;
+  
 }
 
 
@@ -205,9 +206,10 @@ export interface Coupon {
   session_id?: string; // Opcional, para usuarios anónimos
   redeemed_by_user_id?: number; // Quién lo canjeó, si aplica
   redeemed_by_session_id?: string; // Quién lo canjeó (anónimo), si aplica
+  type_id: number; // ID del tipo de cupón
 }
 
-
+ 
 
 export interface CouponType {
   id: number;
@@ -215,4 +217,4 @@ export interface CouponType {
   description?: string;
   credits: number;
   active: boolean;
-}
+} 

@@ -1,9 +1,13 @@
 # backend/main.py
 # Punto de entrada principal de la aplicación.
+import socketio
+#from wsockets import sio  # import your Socket.IO server instance
+
 from api.v1 import payment_providers
 from api.v1 import coupons
 from api.v1 import test
 from api.v1 import origins
+from api.v1 import messages
 from ini_db import init_db, init_settings_and_users
 from models.gamification import EventType
 from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
@@ -35,6 +39,11 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
+from socketio import AsyncServer, ASGIApp
+
+#Instancia de Socket.IO
+#sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
+#sio_app = socketio.ASGIApp(sio, socketio_path="socket.io")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -47,14 +56,19 @@ app = FastAPI(
     #swagger_ui_parameters={"url": "/api/openapi.json"}
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # En desarrollo (en producción usa dominios exactos)
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"]  # Añade esto para headers personalizados
-)
+
+
+# Mount the Socket.IO ASGI app at /ws with socketio_path="socket.io"
+#app.mount("/ws", socketio.ASGIApp(sio, socketio_path="socket.io"))
+
+#app.add_middleware(
+#    CORSMiddleware,
+#    allow_origins=["*"],  # En desarrollo (en producción usa dominios exactos)
+#    allow_credentials=True,
+##    allow_methods=["*"],
+#    allow_headers=["*"],
+#    expose_headers=["*"]  # Añade esto para headers personalizados
+#)
 
 #def configure_cors():
 #    db = next(get_db())
@@ -100,7 +114,12 @@ db = next(get_db())
 
 #Base.metadata.create_all(bind=engine)
 
+# Initialize the Socket.IO server
+#sio = AsyncServer(async_mode="asgi")
+# Mount the Socket.IO app
+#socket_app = ASGIApp(sio)
 
+#app.mount("/ws", socket_app)
 
 @app.on_event("startup")
 async def startup_event():
@@ -143,7 +162,7 @@ app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamifi
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
 app.include_router(origins.router, prefix="/v1/origins", tags=["Origins"])
-
+app.include_router(messages.router, prefix="/v1/messages", tags=["Messages"])
 
 
 @app.exception_handler(HTTPException)
