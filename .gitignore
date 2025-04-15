@@ -19,6 +19,7 @@ migrations
 .alembic.ini
 .trash
 .pytest_cache
+.prompts
 
 # dependencies
 /node_modules
