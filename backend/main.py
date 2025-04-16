@@ -11,6 +11,7 @@ from api.v1 import (
     payment_providers, coupons, test, origins, auth, payments, site_settings, integrations,
     anonymous_sessions, credit_transactions, error_logs, api_logs, users, gamification
 )
+from schemas.gamification import UserGamificationResponse
 from ini_db import init_db, init_settings_and_users
 from dependencies.auth import UserContext, get_user_context
 from dependencies.credits import check_credits

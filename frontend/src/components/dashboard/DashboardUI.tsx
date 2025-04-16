@@ -1,3 +1,4 @@
+// frontend/src/components/dashboard/DashboardUI.tsx
 // Componentes de UI reutilizables para dashboards
 import { Card, styled } from "@mui/material";
 
