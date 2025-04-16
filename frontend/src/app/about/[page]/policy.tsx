@@ -1,4 +1,5 @@
 // frontend/src/app/about/[page]/policy.tsx
+// Página de política de privacidad del sitio
 export default function Policy() {
     return (
     <div>

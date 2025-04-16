@@ -1,4 +1,5 @@
 // frontend/src/components/ui/index.tsx
+// Componentes UI reutilizables (spinner, glass card, etc)
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 

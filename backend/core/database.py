@@ -1,5 +1,6 @@
 # backend/core/database.py
 # Módulo de conexión a la base de datos.
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -27,4 +28,4 @@ def get_db():
         yield db
     finally:
         db.close()
-        
+

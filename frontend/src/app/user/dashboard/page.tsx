@@ -1,4 +1,5 @@
-// src/app/user/dashboard/page.tsx
+// frontend/src/app/user/dashboard/page.tsx
+// Dashboard principal del usuario con información y acciones
 "use client";
 
 import { useEffect, useState } from "react";

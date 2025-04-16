@@ -1,4 +1,6 @@
 // src/app/reset-credits/page.tsx
+// Página de reseteo de créditos para administradores
+
 "use client";
 
 import { useState, useEffect } from "react";

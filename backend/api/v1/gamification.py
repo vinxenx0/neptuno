@@ -1,4 +1,5 @@
 # backend/api/v1/gamification.py
+# Endpoints para gamificación: eventos, puntos, badges, rankings
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from dependencies.auth import UserContext, get_user_context

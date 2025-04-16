@@ -1,4 +1,5 @@
-// from: frontend/src/app/admin/registry/page.tsx
+// frontend/src/app/admin/registry/page.tsx
+// Página de administración para ver registros, logs y transacciones
 "use client";
 
 import { useEffect, useState, Suspense } from "react";

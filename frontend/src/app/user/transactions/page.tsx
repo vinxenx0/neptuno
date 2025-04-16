@@ -1,4 +1,6 @@
 // frontend/src/app/user/transactions/page.tsx
+// Página de historial y detalles de transacciones de créditos
+
 "use client";
 
 import { useEffect, useState } from "react";

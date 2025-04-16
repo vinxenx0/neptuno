@@ -1,4 +1,5 @@
-// src/app/admin/dashboard/page.tsx
+// frontend/src/app/admin/dashboard/page.tsx
+// Panel de administración principal para configuración y gestión
 "use client";
 
 import { useEffect, useState } from "react";

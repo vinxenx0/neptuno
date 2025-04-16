@@ -1,4 +1,5 @@
 # backend/middleware/gamification.py
+# Middleware para registrar eventos de gamificación
 from fastapi import Depends
 from functools import wraps
 from sqlalchemy.orm import Session

@@ -1,4 +1,5 @@
 # backend/middleware/logging.py
+# Middleware para registrar logs de peticiones y respuestas
 from fastapi import Request, Response
 from sqlalchemy.orm import Session
 from core.database import get_db

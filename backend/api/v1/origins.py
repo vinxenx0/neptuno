@@ -1,11 +1,13 @@
 # backend/api/v1/origins.py
+# Endpoints para gestión de orígenes permitidos (CORS)
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.allowed_origin import AllowedOrigin
 from schemas.allowed_origin import AllowedOriginCreate, AllowedOriginResponse
 
-router = APIRouter(tags=["origins"])
+router = APIRouter(tags=["Origins"])
 
 @router.get("/", response_model=list[AllowedOriginResponse])
 def get_origins(db: Session = Depends(get_db)):

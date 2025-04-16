@@ -1,4 +1,6 @@
 # backend/services/user_service.py
+# Servicio para gestión y actualización de usuarios
+
 from sqlalchemy.orm import Session
 from models.user import User
 from fastapi import HTTPException

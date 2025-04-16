@@ -1,4 +1,6 @@
 # backend/models/payment_provider.py
+# Modelo de proveedores de pago
+
 from sqlalchemy import Column, Integer, String, Boolean
 from models.user import Base
 

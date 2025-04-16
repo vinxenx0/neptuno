@@ -1,3 +1,6 @@
+// frontend/src/lib/api.ts
+// Cliente Axios y funciones para consumir la API
+
 // src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
 import { HTTPValidationError, FetchResponse, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";

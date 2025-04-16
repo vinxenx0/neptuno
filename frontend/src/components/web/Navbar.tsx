@@ -1,5 +1,5 @@
-// src/components/web/Navbar.tsx
-// src/components/web/Navbar.tsx
+// frontend/src/components/web/Navbar.tsx
+// Barra de navegación principal con estado de usuario y notificaciones
 "use client";
 
 import { useState, useEffect } from "react";

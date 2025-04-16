@@ -1,4 +1,6 @@
 # backend/schemas/site_settings.py
+# Esquemas Pydantic para configuración del sitio
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional

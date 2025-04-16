@@ -1,5 +1,5 @@
-// src/app/page.tsx
-// src/app/page.tsx
+// frontend/src/app/page.tsx
+// Landing page principal de Neptuno
 "use client";
 
 import { useAuth } from "@/lib/auth/context";
@@ -130,7 +130,7 @@ export default function LandingPage() {
 
   const handleNoLoginTest = async () => {
     try {
-      const response = await fetchAPI("/no-login/", { method: "GET" });
+      const response = await fetchAPI("/v1/test/no-login/", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
@@ -155,7 +155,7 @@ export default function LandingPage() {
 
   const handleRestrictedTest = async () => {
     try {
-      const response = await fetchAPI("/restricted", { method: "GET" });
+      const response = await fetchAPI("/v1/test/restricted", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");

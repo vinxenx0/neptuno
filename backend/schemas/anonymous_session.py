@@ -1,4 +1,6 @@
-# backend/api/v1/anonymous_sessions.py
+# backend/schemas/anonymous_session.py
+# Esquema Pydantic para sesiones anónimas
+
 from pydantic import BaseModel
 from datetime import datetime
 

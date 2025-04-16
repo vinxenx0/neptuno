@@ -1,5 +1,5 @@
-// src/app/layout.tsx
-// src/app/layout.tsx
+// frontend/src/app/layout.tsx
+// Página de layout general de la app
 "use client";
 
 import { Metadata } from 'next';

@@ -1,4 +1,6 @@
-#backend/schemas/credit_transaction.py
+# backend/schemas/credit_transaction.py
+# Esquema Pydantic para transacciones de crédito
+
 from pydantic import BaseModel
 from datetime import datetime
 

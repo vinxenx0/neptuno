@@ -1,4 +1,5 @@
 # backend/services/settings_service.py
+# Servicio para gestión de configuración del sistema
 import json
 from sqlalchemy.orm import Session
 from models.site_settings import SiteSettings

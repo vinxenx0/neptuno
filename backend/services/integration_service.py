@@ -1,4 +1,6 @@
 # backend/services/integration_service.py
+# Servicio para gestión de integraciones y webhooks
+
 from datetime import datetime
 from sqlalchemy.orm import Session
 from models.integration import Integration

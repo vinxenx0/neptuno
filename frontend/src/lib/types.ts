@@ -1,3 +1,6 @@
+// frontend/src/lib/types.ts
+// Tipos TypeScript para entidades y respuestas de la app
+
 // src/lib/types.ts
 export interface User {
   id: number;

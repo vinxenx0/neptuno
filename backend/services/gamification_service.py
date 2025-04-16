@@ -1,4 +1,6 @@
 # backend/services/gamification_service.py
+# Servicio para lógica de gamificación y ranking
+
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from models.guests import GuestsSession

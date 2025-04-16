@@ -1,4 +1,6 @@
 # backend/schemas/user.py
+# Esquemas Pydantic para usuarios y perfiles
+
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional

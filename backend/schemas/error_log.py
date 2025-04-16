@@ -1,4 +1,6 @@
-# // backend/schemas/error_log.py
+# backend/schemas/error_log.py
+# Esquema Pydantic para logs de errores
+
 from pydantic import BaseModel
 from datetime import datetime
 

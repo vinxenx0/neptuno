@@ -1,4 +1,6 @@
 # backend/models/site_settings.py
+# Modelo de configuración del sitio y sus claves
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
 from core.database import Base

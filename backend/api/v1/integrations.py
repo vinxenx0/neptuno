@@ -1,4 +1,5 @@
 # backend/api/v1/integrations.py
+# Endpoints para gestión de integraciones y webhooks
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session

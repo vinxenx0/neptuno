@@ -1,4 +1,5 @@
 # backend/dependencies/credits.py
+# Dependencia para verificar créditos de usuario o sesión
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction

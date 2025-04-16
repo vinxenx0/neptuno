@@ -1,4 +1,6 @@
 # backend/models/log.py
+# Modelo de logs de actividad de la API
+
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from models.user import Base
 from datetime import datetime

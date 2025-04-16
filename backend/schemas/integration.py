@@ -1,4 +1,6 @@
-# // backend/schemas/integration.py
+# backend/schemas/integration.py
+# Esquema Pydantic para integraciones y webhooks
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional

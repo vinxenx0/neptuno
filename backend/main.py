@@ -1,5 +1,5 @@
 # backend/main.py
-# Punto de entrada principal de la aplicación.
+# Punto de entrada principal de la API FastAPI
 from api.v1 import payment_providers
 from api.v1 import coupons
 from api.v1 import test
@@ -205,99 +205,6 @@ async def health_check(db: Session = Depends(get_db)):
 async def root():
     return {"message": "Bienvenido a la API Backend"}
 
-@app.get("/test/no-login/")
-async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
-    """
-    Endpoint para probar la API sin necesidad de login.
-    Consume créditos si están activos.
-    """
-    # Preparar la respuesta
-    response = {"message": "Consulta realizada sin necesidad de login", "user_type": user.user_type}
-    if user.user_type == "anonymous":
-        response["session_id"] = user.user_id  # Incluir session_id en la respuesta
-
-    # Consumir créditos si no están desactivados
-    disable_credits = get_setting(db, "disable_credits")
-    if disable_credits != "true":
-        try:
-            if user.user_type == "registered":
-                user_db = db.query(User).filter(User.id == int(user.user_id)).first()
-                user_db.credits -= 1
-                transaction = CreditTransaction(
-                    user_id=user_db.id,
-                    user_type="registered",  # Especificar explícitamente
-                    amount=-1,
-                    transaction_type="usage",
-                    description="Consulta realizada"
-                )
-                credits_remaining = user_db.credits
-            else:
-                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
-                session_db.credits -= 1
-                transaction = CreditTransaction(
-                    session_id=session_db.id,
-                    user_type="anonymous",  # Especificar explícitamente para claridad
-                    amount=-1,
-                    transaction_type="usage",
-                    description="Consulta realizada por anónimo"
-                )
-                credits_remaining = session_db.credits
-            
-            db.add(transaction)
-            db.commit()
-
-            trigger_webhook(db, "credit_usage", {
-                "user_id": user.user_id,
-                "user_type": user.user_type,
-                "credits_remaining": credits_remaining
-            })
-            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits_remaining}")
-        except Exception as e:
-            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
-            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
-
-    return response
-
-@app.get("/test/restricted")
-async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
-    """
-    Endpoint restringido que requiere login.
-    Consume créditos si están activos.
-    """
-    if user.user_type != "registered":
-        raise HTTPException(status_code=401, detail="Se requiere autenticación")
-
-    # Preparar la respuesta
-    response = {"message": "Consulta realizada con login", "user_type": user.user_type}
-
-    # Consumir créditos si no están desactivados
-    disable_credits = get_setting(db, "disable_credits")
-    if disable_credits != "true":
-        try:
-            user_db = db.query(User).filter(User.id == int(user.user_id)).first()
-            user_db.credits -= 1
-            transaction = CreditTransaction(
-                user_id=user_db.id,
-                user_type="registered",  # Especificar explícitamente
-                amount=-1,
-                transaction_type="usage",
-                description="Consulta realizada"
-            )
-            db.add(transaction)
-            db.commit()
-
-            trigger_webhook(db, "credit_usage", {
-                "user_id": user.user_id,
-                "user_type": user.user_type,
-                "credits_remaining": user_db.credits
-            })
-            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user_db.credits}")
-        except Exception as e:
-            logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
-            raise HTTPException(status_code=500, detail="Error al procesar los créditos")
-
-    return response
-
 @app.get("/info")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     disable_anonymous = get_setting(db, "disable_anonymous_users")
@@ -319,14 +226,6 @@ async def get_info(user: UserContext = Depends(get_user_context), db: Session = 
 
     return {**base_info, "gamification": gamification_data}
 
-
-@app.post("/test-event", response_model=GamificationEventResponse)
-def test_gamification_event(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
-    event_type = db.query(EventType).filter(EventType.name == "test_api").first()
-    if not event_type:
-        raise HTTPException(status_code=404, detail="Event type 'test_api' not found")
-    event = GamificationEventCreate(event_type_id=event_type.id)
-    return register_event(db, event, user)
 
 def configure_cors():
     db = next(get_db())

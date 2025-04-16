@@ -1,3 +1,6 @@
+# backend/tasks.py
+# Tareas asíncronas y limpieza con Celery
+
 from datetime import datetime, timedelta
 from celery import Celery
 from models.guests import GuestsSession

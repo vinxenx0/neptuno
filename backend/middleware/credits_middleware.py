@@ -1,4 +1,6 @@
-# backend/middleware/credits.py
+# backend/middleware/credits_middleware.py
+# Middleware para controlar y descontar créditos en endpoints
+
 from schemas.gamification import GamificationEventCreate
 from services.gamification_service import register_event
 from fastapi import Depends, HTTPException

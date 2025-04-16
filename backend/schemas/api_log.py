@@ -1,4 +1,6 @@
 # backend/schemas/api_log.py
+# Esquema Pydantic para logs de API
+
 from pydantic import BaseModel
 from datetime import datetime
 

@@ -1,3 +1,5 @@
+// frontend/src/lib/payments/example.tsx
+// Ejemplo de integración de pagos con PaymentManager y Stripe
 import { PaymentManager } from "@/lib/payments/manager";
 import { StripeProvider } from "@/lib/payments/stripe";
 

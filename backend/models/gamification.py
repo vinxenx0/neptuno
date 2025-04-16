@@ -1,4 +1,6 @@
 # backend/models/gamification.py
+# Modelo de gamificación: eventos, badges, puntos, ranking
+
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from core.database import Base

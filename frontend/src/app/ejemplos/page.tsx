@@ -1,4 +1,6 @@
 // frontend/src/app/ejemplos/page.tsx
+// Página de ejemplos interactivos de gamificación y cupones
+
 "use client";
 
 import { useState, useEffect } from "react";

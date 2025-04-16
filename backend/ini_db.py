@@ -1,3 +1,6 @@
+# backend/ini_db.py
+# Inicialización y carga de datos de ejemplo en la base de datos
+
 import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session

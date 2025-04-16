@@ -1,4 +1,6 @@
 # backend/services/origin_service.py
+# Servicio para gestión de orígenes permitidos (CORS)
+
 from sqlalchemy.orm import Session
 from models.user import User
 from models.allowed_origin import AllowedOrigin

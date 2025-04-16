@@ -1,5 +1,5 @@
 # backend/api/v1/credit_transactions.py
-# backend/api/v1/credit_transactions.py
+# Endpoints para logs de transacciones de crédito (v1)
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
