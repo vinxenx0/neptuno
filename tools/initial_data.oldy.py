@@ -12,7 +12,7 @@ from models.integration import Integration
 from models.log import APILog
 from models.payment_method import PaymentMethod
 from models.gamification import EventType, Badge, GamificationEvent, UserGamification
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken, PasswordResetToken
 from core.security import hash_password
 import json

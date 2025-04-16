@@ -23,7 +23,10 @@ import {
   ArrowDownward,
   Paid,
   CreditCard,
-  AccountBalance
+  AccountBalance,
+  CheckCircle,
+  Pending,
+  Error
 } from "@mui/icons-material";
 
 interface CreditTransaction {
@@ -101,7 +104,8 @@ export default function TransactionsPage() {
   const theme = useTheme();
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [enableCredits, setEnableCredits] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -118,16 +122,24 @@ export default function TransactionsPage() {
         const { data } = await fetchAPI<CreditTransaction[]>("/v1/payments/transactions");
         setTransactions(data || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar transacciones");
+        setError((err as Error)?.message || "Error al cargar transacciones");
       }
     };
     checkSettingsAndFetchTransactions();
   }, [router]);
 
   const filtered = transactions.filter(t => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'in') return t.amount > 0;
-    if (activeTab === 'out') return t.amount < 0;
+    // Filtro por tipo (entrada/salida)
+    if (typeFilter === 'in') return t.amount > 0;
+    if (typeFilter === 'out') return t.amount < 0;
+    if (typeFilter !== 'all') return false;
+    
+    // Filtro por estado
+    if (statusFilter === 'completed') return t.payment_status === 'completed';
+    if (statusFilter === 'pending') return t.payment_status === 'pending';
+    if (statusFilter === 'failed') return t.payment_status === 'failed';
+    
+    // Todos
     return true;
   });
 
@@ -194,26 +206,52 @@ export default function TransactionsPage() {
           </Typography>
         </motion.div>
 
-        <StyledTabs
-          value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
-          textColor="primary"
-          indicatorColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{ 
-            mb: 4,
-            background: 'rgba(255, 255, 255, 0.7)',
-            borderRadius: '12px',
-            padding: '4px',
-            maxWidth: 'fit-content',
-            boxShadow: theme.shadows[1]
-          }}
-        >
-          <Tab label="Todas" value="all" />
-          <Tab label="Entradas" value="in" icon={<ArrowDownward fontSize="small" />} iconPosition="start" />
-          <Tab label="Salidas" value="out" icon={<ArrowUpward fontSize="small" />} iconPosition="start" />
-        </StyledTabs>
+        <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
+          <StyledTabs
+            value={typeFilter}
+            onChange={(e, newValue) => {
+              setTypeFilter(newValue);
+              setStatusFilter('all'); // Reset status filter when changing type
+            }}
+            textColor="primary"
+            indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ 
+              background: 'rgba(255, 255, 255, 0.7)',
+              borderRadius: '12px',
+              padding: '4px',
+              boxShadow: theme.shadows[1]
+            }}
+          >
+            <Tab label="Todas" value="all" />
+            <Tab label="Entradas" value="in" icon={<ArrowDownward fontSize="small" />} iconPosition="start" />
+            <Tab label="Salidas" value="out" icon={<ArrowUpward fontSize="small" />} iconPosition="start" />
+          </StyledTabs>
+
+          <StyledTabs
+            value={statusFilter}
+            onChange={(e, newValue) => {
+              setStatusFilter(newValue);
+              setTypeFilter('all'); // Reset type filter when changing status
+            }}
+            textColor="primary"
+            indicatorColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={{ 
+              background: 'rgba(255, 255, 255, 0.7)',
+              borderRadius: '12px',
+              padding: '4px',
+              boxShadow: theme.shadows[1]
+            }}
+          >
+            <Tab label="Todos estados" value="all" />
+            <Tab label="Completadas" value="completed" icon={<CheckCircle fontSize="small" />} iconPosition="start" />
+            <Tab label="Pendientes" value="pending" icon={<Pending fontSize="small" />} iconPosition="start" />
+            <Tab label="Fallidas" value="failed" icon={<Error fontSize="small" />} iconPosition="start" />
+          </StyledTabs>
+        </Box>
 
         {filtered.length === 0 ? (
           <Box sx={{

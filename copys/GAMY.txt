@@ -692,7 +692,7 @@ def delete_user_by_id(user_id: int,
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
@@ -867,7 +867,7 @@ from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging

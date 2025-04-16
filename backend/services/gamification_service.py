@@ -1,7 +1,7 @@
 # backend/services/gamification_service.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
 from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
 from dependencies.auth import UserContext
@@ -21,14 +21,9 @@ from dependencies.auth import UserContext
 # backend/services/gamification_service.py
 
 def register_event(db: Session, event: GamificationEventCreate, user: UserContext) -> GamificationEvent:
-    """Registra un evento de gamificación y actualiza los puntos del usuario."""
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-
     db_event = GamificationEvent(
         event_type_id=event.event_type_id,
-        user_id=user_id,
-        session_id=session_id
+        user_id=int(user.user_id)
     )
     db.add(db_event)
     db.commit()
@@ -37,60 +32,39 @@ def register_event(db: Session, event: GamificationEventCreate, user: UserContex
     return db_event
 
 def get_user_gamification(db: Session, user: UserContext) -> List[UserGamification]:
-    """Obtiene todos los registros de gamificación del usuario."""
-    if user.user_type == "registered":
-        return db.query(UserGamification).filter(UserGamification.user_id == int(user.user_id)).all()
-    return db.query(UserGamification).filter(UserGamification.session_id == user.session_id).all()
+    return db.query(UserGamification).filter(UserGamification.user_id == int(user.user_id)).all()
 
 def get_user_events(db: Session, user: UserContext) -> List[GamificationEvent]:
-    """Obtiene todos los eventos de gamificación del usuario."""
-    if user.user_type == "registered":
-        return db.query(GamificationEvent).filter(GamificationEvent.user_id == int(user.user_id)).all()
-    return db.query(GamificationEvent).filter(GamificationEvent.session_id == user.session_id).all()
+    return db.query(GamificationEvent).filter(GamificationEvent.user_id == int(user.user_id)).all()
+
 
 def get_event_details(db: Session, event_id: int, user: UserContext) -> Optional[GamificationEvent]:
-    """Obtiene los detalles de un evento específico si pertenece al usuario."""
     event = db.query(GamificationEvent).filter(GamificationEvent.id == event_id).first()
-    if not event:
+    if not event or event.user_id != int(user.user_id):
         return None
-    if (user.user_type == "registered" and event.user_id == int(user.user_id)) or \
-       (user.user_type == "anonymous" and event.session_id == user.session_id):
-        return event
-    return None
+    return event
 
 def get_badges_for_event(db: Session, event_type_id: int) -> List[Badge]:
     """Obtiene todos los badges asociados a un tipo de evento."""
     return db.query(Badge).filter(Badge.event_type_id == event_type_id).all()
 
 def get_user_progress_for_event(db: Session, user: UserContext, event_type_id: int) -> Optional[UserGamification]:
-    """Obtiene el progreso del usuario para un tipo de evento específico."""
-    if user.user_type == "registered":
-        return db.query(UserGamification).filter(
-            UserGamification.user_id == int(user.user_id),
-            UserGamification.event_type_id == event_type_id
-        ).first()
     return db.query(UserGamification).filter(
-        UserGamification.session_id == user.session_id,
+        UserGamification.user_id == int(user.user_id),
         UserGamification.event_type_id == event_type_id
     ).first()
 
 
-
 def update_user_gamification(db: Session, user: UserContext, event_type_id: int) -> UserGamification:
-    logging.info(f"Actualizando gamificación para user_type={user.user_type}, user_id={user.user_id}, session_id={user.session_id}, event_type_id={event_type_id}")
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-
+    logging.info(f"Actualizando gamificación para user_id={user.user_id}, event_type_id={event_type_id}")
     gamification = get_user_progress_for_event(db, user, event_type_id)
     if not gamification:
         gamification = UserGamification(
-            user_id=user_id,
-            session_id=session_id,
+            user_id=int(user.user_id),
             event_type_id=event_type_id,
             points=0
         )
         db.add(gamification)
-        logging.info("Creado nuevo registro de UserGamification")
 
     event_type = db.query(EventType).filter(EventType.id == event_type_id).first()
     if not event_type:
@@ -98,7 +72,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
 
     events_count = db.query(GamificationEvent).filter(
         GamificationEvent.event_type_id == event_type_id,
-        (GamificationEvent.user_id == user_id) if user_id else (GamificationEvent.session_id == session_id)
+        GamificationEvent.user_id == int(user.user_id)
     ).count()
     logging.info(f"Contados {events_count} eventos para event_type_id={event_type_id}")
 
@@ -115,6 +89,7 @@ def update_user_gamification(db: Session, user: UserContext, event_type_id: int)
     db.commit()
     db.refresh(gamification)
     return gamification
+
 # Funciones para EventType
 def create_event_type(db: Session, event_type: EventTypeCreate):
     db_event_type = EventType(**event_type.dict())

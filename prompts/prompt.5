@@ -194,7 +194,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from models.coupon import Coupon
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.coupon import CouponCreate, CouponResponse, CouponUpdate
 from core.logging import configure_logging
 from fastapi import HTTPException
@@ -5095,7 +5095,7 @@ from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging

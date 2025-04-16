@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 
 
 # backend/models/gamification.py
@@ -39,19 +39,16 @@ class GamificationEvent(Base):
     id = Column(Integer, primary_key=True, index=True)
     event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
     
     event_type = relationship("EventType", back_populates="gamification_events")
     user = relationship("User", back_populates="gamification_events")
-    session = relationship("GuestsSession", back_populates="gamification_events")
 
 class UserGamification(Base):
     __tablename__ = "user_gamification"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column( Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    session_id = Column(String(36), ForeignKey("sesiones_anonimas.id"), nullable=True)
     event_type_id = Column(Integer, ForeignKey("event_types.id"), nullable=False)
     points = Column(Integer, default=0)
     badge_id = Column(Integer, ForeignKey("badges.id"), nullable=True)
@@ -59,4 +56,3 @@ class UserGamification(Base):
     event_type = relationship("EventType", back_populates="user_gamification")
     badge = relationship("Badge", back_populates="user_gamification")
     user = relationship("User", back_populates="gamification")
-    session = relationship("GuestsSession", back_populates="gamification")

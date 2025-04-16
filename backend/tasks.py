@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from celery import Celery
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.config import settings
 from core.database import SessionLocal
 from services.credits_service import deduct_credit

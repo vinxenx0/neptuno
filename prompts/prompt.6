@@ -199,7 +199,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from models.coupon import Coupon
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.coupon import CouponCreate, CouponResponse, CouponUpdate
 from core.logging import configure_logging
 from fastapi import HTTPException
@@ -4346,7 +4346,7 @@ from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 
 
 # backend/models/gamification.py
@@ -4481,7 +4481,7 @@ class RankingResponse(BaseModel):
 # backend/services/gamification_service.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
 from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
 from dependencies.auth import UserContext
@@ -5062,7 +5062,7 @@ def get_credit_transactions(
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
@@ -6337,7 +6337,7 @@ from models.integration import Integration
 from models.log import APILog
 from models.payment_method import PaymentMethod
 from models.gamification import EventType, Badge, GamificationEvent, UserGamification
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken, PasswordResetToken
 from core.security import hash_password
 import json
@@ -7877,7 +7877,7 @@ from api.v1 import users
 from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits

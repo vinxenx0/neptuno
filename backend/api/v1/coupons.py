@@ -77,9 +77,7 @@ def get_my_coupons(user: UserContext = Depends(get_user_context),
         raise HTTPException(
             status_code=403,
             detail="La funcionalidad de cupones está deshabilitada")
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-    return get_user_coupons(db, user_id, session_id)
+    return get_user_coupons(db, user_id=int(user.user_id))
 
 
 @router.get("/", response_model=List[CouponResponse])
@@ -124,36 +122,28 @@ def redeem_coupon_endpoint(coupon_id: int,
         raise HTTPException(
             status_code=403,
             detail="La funcionalidad de cupones está deshabilitada")
-    user_id = int(user.user_id) if user.user_type == "registered" else None
-    session_id = user.session_id if user.user_type == "anonymous" else None
-    return redeem_coupon(db, coupon_id, user_id, session_id)
+    return redeem_coupon(db, coupon_id, user_id=int(user.user_id))
 
 
 @router.post("/generate-demo-coupon", response_model=CouponResponse)
 def generate_demo_coupon(credits: int,
                          db: Session = Depends(get_db),
                          current_user: UserContext = Depends(get_user_context)):
-
-    # Determinar user_id y session_id según el tipo de usuario
-    user_id = current_user.user_id if current_user.user_type == "registered" else None
-    session_id = current_user.session_id if current_user.user_type == "anonymous" else None
-
     coupon_data = CouponCreate(
         name="Demo Coupon",
         description="Cupón de demostración",
         credits=credits,
         active=True,
         unique_identifier=str(uuid.uuid4()),
-        session_id=session_id,
-        user_id=user_id,
+        user_id=int(current_user.user_id),
         expires_at=None,
         issued_at=datetime.utcnow(),
         redeemed_at=None,
         status="active",
-        coupon_type_id=1,  # Asignar un tipo de cupón por defecto
+        coupon_type_id=1,
     )
 
-    coupon = create_coupon(db, coupon_data, user_id=user_id, session_id=session_id)
+    coupon = create_coupon(db, coupon_data, user_id=int(current_user.user_id))
     return coupon
 
 

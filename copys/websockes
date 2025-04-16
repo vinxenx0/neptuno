@@ -1055,7 +1055,7 @@ import socketio
 from fastapi import FastAPI
 from core.database import get_db
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.security import decode_token
 from fastapi import Depends
 from sqlalchemy.orm import Session

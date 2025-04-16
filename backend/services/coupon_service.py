@@ -4,7 +4,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from models.coupon import Coupon
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.coupon import CouponCreate, CouponResponse, CouponUpdate
 from core.logging import configure_logging
 from fastapi import HTTPException
@@ -70,11 +70,10 @@ def get_coupon_activity(db: Session, page: int = 1, limit: int = 10) -> dict:
         "current_page": page,
     }
 
-def create_coupon(db: Session, coupon_data: CouponCreate, user_id: Optional[int] = None, session_id: Optional[str] = None) -> Coupon:
+def create_coupon(db: Session, coupon_data: CouponCreate, user_id: int) -> Coupon:
     unique_identifier = str(uuid.uuid4())
     while db.query(Coupon).filter(Coupon.unique_identifier == unique_identifier).first():
         unique_identifier = str(uuid.uuid4())
-
     coupon = Coupon(
         coupon_type_id=coupon_data.coupon_type_id,
         name=coupon_data.name,
@@ -83,8 +82,7 @@ def create_coupon(db: Session, coupon_data: CouponCreate, user_id: Optional[int]
         unique_identifier=unique_identifier,
         expires_at=coupon_data.expires_at,
         active=coupon_data.active,
-        user_id=user_id,
-        session_id=session_id
+        user_id=user_id
     )
     db.add(coupon)
     db.commit()
@@ -98,13 +96,8 @@ def get_coupon_by_id(db: Session, coupon_id: int) -> Coupon:
         raise HTTPException(status_code=404, detail="Cupón no encontrado")
     return coupon
 
-def get_user_coupons(db: Session, user_id: Optional[int], session_id: Optional[str]) -> list[Coupon]:
-    query = db.query(Coupon)
-    if user_id:
-        query = query.filter(Coupon.user_id == user_id)
-    elif session_id:
-        query = query.filter(Coupon.session_id == session_id)
-    return query.all()
+def get_user_coupons(db: Session, user_id: int) -> list[Coupon]:
+    return db.query(Coupon).filter(Coupon.user_id == user_id).all()
 
 def get_all_coupons(db: Session) -> list[Coupon]:
     return db.query(Coupon).all()
@@ -125,7 +118,29 @@ def delete_coupon(db: Session, coupon_id: int):
     logger.info(f"Cupón eliminado: {coupon.unique_identifier}")
     return {"message": "Cupón eliminado"}
 
-def redeem_coupon(db: Session, coupon_id: int, user_id: Optional[int], session_id: Optional[str]) -> Coupon:
+def redeem_coupon(db: Session, coupon_id: int, user_id: int) -> Coupon:
+    coupon = get_coupon_by_id(db, coupon_id)
+    if coupon.status != "active":
+        raise HTTPException(status_code=400, detail="Cupón no está activo")
+    if coupon.expires_at and coupon.expires_at < datetime.utcnow():
+        coupon.status = "expired"
+        db.commit()
+        raise HTTPException(status_code=400, detail="Cupón expirado")
+    if coupon.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Cupón no pertenece a este usuario")
+
+    coupon.redeemed_at = datetime.utcnow()
+    coupon.status = "redeemed"
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    user.credits += coupon.credits
+    coupon.redeemed_by_user_id = user_id
+
+    db.commit()
+    db.refresh(coupon)
+    logger.info(f"Cupón canjeado: {coupon.unique_identifier} por usuario ID {user_id}")
+    return coupon
     coupon = get_coupon_by_id(db, coupon_id)
     
     if coupon.status != "active":

@@ -1,3 +1,5 @@
+// src/components/web/Navbar.tsx
+// src/components/web/Navbar.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -84,8 +86,14 @@ export default function Navbar() {
   const [enableCoupons, setEnableCoupons] = useState(true);
   const [enableBadges, setEnableBadges] = useState(true);
   const [enablePaymentMethods, setEnablePaymentMethods] = useState(true);
+  const [anonUsername, setAnonUsername] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [newBadge, setNewBadge] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedAnonUsername = localStorage.getItem("anonUsername");
+    setAnonUsername(storedAnonUsername);
+  }, []);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -118,12 +126,16 @@ export default function Navbar() {
     fetchSettings();
   }, []);
 
+  interface InfoData {
+    credits: number;
+  }
+
   useEffect(() => {
     if (!enablePoints && !enableBadges) return;
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<any>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/info");
         if (infoData) {
           setCredits(infoData.credits);
         }
@@ -173,15 +185,18 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
+  // Contar cupones activos y no expirados
   const availableCoupons = (coupons || []).filter(
     (coupon) =>
-      coupon && coupon.status === "active" &&
+      coupon && // Verifica que coupon no sea null/undefined
+      coupon.status === "active" &&
       (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
   ).length;
 
   return (
     <GlassNavbar>
       <NavContainer>
+        {/* Sección izquierda: Logo y menú hamburguesa */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
             onClick={handleDrawerOpen}
@@ -211,7 +226,10 @@ export default function Navbar() {
                   className="app-logo"
                   sx={{
                     fontWeight: "bold",
-                    display: { xs: 'none', md: 'block' }
+                    display: {
+                      xs: 'none', // Oculto en móvil
+                      md: 'block' // Visible en desktop
+                    }
                   }}
                 >
                   Neptuno
@@ -221,8 +239,11 @@ export default function Navbar() {
           </Box>
         </Box>
 
+        {/* Sección derecha: Todos los elementos */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Enlaces desktop + iconos */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {/* Enlaces desktop */}
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2, mr: 1 }}>
               <Button
                 component={Link}
@@ -240,8 +261,9 @@ export default function Navbar() {
               </Button>
             </Box>
 
+            {/* Iconos de notificaciones */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {!disableCredits && credits >= 0 && (
+              {!disableCredits && credits > 0 && (
                 <Link href="/user/transactions" passHref>
                   <IconButton className="notification-icon">
                     <MonetizationOn />
@@ -250,6 +272,7 @@ export default function Navbar() {
                 </Link>
               )}
 
+              {/* Cupones */}
               {enableCoupons && (
                 <Link href="/user/coupon" passHref>
                   <Tooltip title="Tus cupones">
@@ -285,6 +308,7 @@ export default function Navbar() {
             </Box>
           </Box>
 
+          {/* Menú admin y usuario */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {user?.rol === "admin" && (
               <>
@@ -321,6 +345,7 @@ export default function Navbar() {
               </>
             )}
 
+            {/* Avatar de usuario */}
             {user ? (
               <Tooltip title={user.username} arrow>
                 <IconButton
@@ -339,11 +364,11 @@ export default function Navbar() {
                 </IconButton>
               </Tooltip>
             ) : (
-              <Tooltip title="Iniciar sesión o registrarse" arrow>
+              <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
                 <Box sx={{ position: 'relative' }}>
                   <IconButton
                     component={Link}
-                    href="/user/auth/#login"
+                    href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
                     className="user-avatar"
                   >
                     <Avatar sx={{
@@ -352,17 +377,36 @@ export default function Navbar() {
                       height: 40,
                       color: theme.palette.common.white
                     }}>
-                      <Person />
+                      {anonUsername ? <Person /> : <Key />}
                     </Avatar>
                   </IconButton>
+                  {anonUsername && (
+                    <Box sx={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      backgroundColor: theme.palette.secondary.main,
+                      borderRadius: '50%',
+                      width: 20,
+                      height: 20,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: `2px solid ${theme.palette.background.paper}`
+                    }}>
+                      <Key sx={{ fontSize: 12, color: theme.palette.common.white }} />
+                    </Box>
+                  )}
                 </Box>
               </Tooltip>
             )}
           </Box>
         </Box>
 
+        {/* Menú hamburguesa */}
         <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
           <List>
+            {/* Header del menú */}
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
@@ -457,6 +501,6 @@ export default function Navbar() {
           ¡Felicidades! Has obtenido el badge: {newBadge}
         </Alert>
       </Snackbar>
-    </GlassNavbar>
+    </GlassNavbar >
   );
 }

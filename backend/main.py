@@ -18,7 +18,7 @@ from api.v1 import users
 from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits
@@ -104,8 +104,11 @@ db = next(get_db())
 
 @app.on_event("startup")
 async def startup_event():
-    init_db()  # Crea las tablas si no existen
+    Base.metadata.create_all(bind=engine)
+    #init_db()  # Crea las tablas si no existen
     init_settings_and_users()  # Pobla con datos iniciales si es necesario
+    
+    Base.metadata.create_all(bind=engine)
     
     try:
         admin_id = 1
@@ -207,56 +210,35 @@ async def root():
 
 @app.get("/test/no-login/")
 async def no_login_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
-    """
-    Endpoint para probar la API sin necesidad de login.
-    Consume créditos si están activos.
-    """
-    # Preparar la respuesta
     response = {"message": "Consulta realizada sin necesidad de login", "user_type": user.user_type}
-    if user.user_type == "anonymous":
-        response["session_id"] = user.user_id  # Incluir session_id en la respuesta
 
-    # Consumir créditos si no están desactivados
     disable_credits = get_setting(db, "disable_credits")
     if disable_credits != "true":
         try:
-            if user.user_type == "registered":
-                user_db = db.query(User).filter(User.id == int(user.user_id)).first()
-                user_db.credits -= 1
-                transaction = CreditTransaction(
-                    user_id=user_db.id,
-                    user_type="registered",  # Especificar explícitamente
-                    amount=-1,
-                    transaction_type="usage",
-                    description="Consulta realizada"
-                )
-                credits_remaining = user_db.credits
-            else:
-                session_db = db.query(GuestsSession).filter(GuestsSession.id == user.user_id).first()
-                session_db.credits -= 1
-                transaction = CreditTransaction(
-                    session_id=session_db.id,
-                    user_type="anonymous",  # Especificar explícitamente para claridad
-                    amount=-1,
-                    transaction_type="usage",
-                    description="Consulta realizada por anónimo"
-                )
-                credits_remaining = session_db.credits
-            
+            user_db = db.query(User).filter(User.id == int(user.user_id)).first()
+            user_db.credits -= 1
+            transaction = CreditTransaction(
+                user_id=user_db.id,
+                user_type=user.user_type,
+                amount=-1,
+                transaction_type="usage",
+                description="Consulta realizada"
+            )
             db.add(transaction)
             db.commit()
 
             trigger_webhook(db, "credit_usage", {
                 "user_id": user.user_id,
                 "user_type": user.user_type,
-                "credits_remaining": credits_remaining
+                "credits_remaining": user_db.credits
             })
-            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {credits_remaining}")
+            logger.debug(f"Créditos actualizados para {user.user_type} ID {user.user_id}: {user_db.credits}")
         except Exception as e:
             logger.error(f"Error al consumir créditos para {user.user_type} ID {user.user_id}: {str(e)}")
             raise HTTPException(status_code=500, detail="Error al procesar los créditos")
 
     return response
+
 
 @app.get("/test/restricted")
 async def restricted_test(user: UserContext = Depends(check_credits), db: Session = Depends(get_db)):
@@ -301,6 +283,9 @@ async def restricted_test(user: UserContext = Depends(check_credits), db: Sessio
 @app.get("/info")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     disable_anonymous = get_setting(db, "disable_anonymous_users")
+    if disable_anonymous == "true" and user.user_type == "anonymous":
+        raise HTTPException(status_code=403, detail="Usuarios anónimos están deshabilitados")
+
     base_info = {
         "user_id": user.user_id,
         "email": user.email,
@@ -308,9 +293,29 @@ async def get_info(user: UserContext = Depends(get_user_context), db: Session = 
         "user_type": user.user_type,
         "subscription": user.subscription,
         "credits": user.credits,
-        "rol": user.rol,
-        "session_id": user.session_id if user.user_type == "anonymous" else None
+        "rol": user.rol
     }
+
+    gamification = get_user_gamification(db, user)
+    gamification_data = [
+        UserGamificationResponse.from_orm(g) for g in gamification
+    ]
+
+    return {**base_info, "gamification": gamification_data}
+    
+#@app.get("/info")
+#async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
+#    disable_anonymous = get_setting(db, "disable_anonymous_users")
+#    base_info = {
+###        "user_id": user.user_id,
+#        "email": user.email,
+#        "username": user.username,
+#        "user_type": user.user_type,
+#        "subscription": user.subscription,
+#        "credits": user.credits,
+#        "rol": user.rol,
+#        "session_id": user.session_id if user.user_type == "anonymous" else None
+#    }
 
     gamification = get_user_gamification(db, user)
     gamification_data = [

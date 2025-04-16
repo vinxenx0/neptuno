@@ -438,7 +438,7 @@ from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 
 
 # backend/models/gamification.py
@@ -963,7 +963,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
@@ -979,7 +979,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
@@ -1147,7 +1147,7 @@ from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging
@@ -1281,7 +1281,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
@@ -1727,7 +1727,7 @@ def trigger_webhook(db: Session, event_type: str, payload: dict):
 # backend/services/gamification_service.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.gamification import GamificationEvent, UserGamification, EventType, Badge
 from schemas.gamification import GamificationEventCreate, EventTypeCreate, BadgeCreate, RankingResponse
 from dependencies.auth import UserContext
@@ -2367,7 +2367,7 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
@@ -3640,7 +3640,7 @@ from api.v1 import users
 from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits

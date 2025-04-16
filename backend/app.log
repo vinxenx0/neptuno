@@ -881,3 +881,1245 @@
 2025-04-15 13:31:37,080 - NeptunO - INFO - Procesando solicitud: token=False, session_id=e6179be3-c7d1-4123-92a8-9d0ac50996a1, ip=127.0.0.1
 2025-04-15 13:31:37,080 - NeptunO - INFO - Buscando sesión anónima con ID e6179be3-c7d1-4123-92a8-9d0ac50996a1 desde header
 2025-04-15 13:31:37,086 - NeptunO - INFO - Sesión anónima ID e6179be3-c7d1-4123-92a8-9d0ac50996a1 actualizada desde IP 127.0.0.1
+2025-04-16 01:04:44,572 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 01:04:44,572 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 01:04:45,391 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 01:04:45,391 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 01:08:17,864 - NeptunO - INFO - Procesando solicitud: token=False, ip=127.0.0.1
+2025-04-16 01:08:17,870 - NeptunO - INFO - Creando nuevo usuario anónimo desde IP 127.0.0.1
+2025-04-16 01:08:17,893 - NeptunO - INFO - Usuario anónimo ID 3 procesado desde IP 127.0.0.1
+2025-04-16 01:08:17,897 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:08:43,952 - NeptunO - ERROR - HTTP Error 403 en POST http://localhost:8000/v1/auth/register: El registro de nuevos usuarios está deshabilitado
+2025-04-16 01:09:52,222 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 01:09:52,226 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 01:09:52,240 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:52,256 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:52,359 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:52,374 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:52,379 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:09:57,952 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:57,962 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:57,991 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,002 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,005 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,020 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,046 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,059 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,061 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 01:09:58,071 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 01:09:58,080 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,091 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,095 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,108 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,119 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,131 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,133 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 01:09:58,150 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 01:09:58,164 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 01:09:58,173 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,184 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,188 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,199 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:09:58,203 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 01:09:58,338 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:09:58,346 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:10:28,544 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:10:28,577 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:10:28,579 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:10:28,591 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:10:28,598 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:10:28,600 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:10:54,248 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:10:54,286 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:10:54,288 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:10:54,587 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:10:54,598 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:10:54,660 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:10:54,673 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:23,621 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:23,654 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:23,656 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:11:24,061 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:24,084 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:24,308 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:24,323 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:43,850 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:43,888 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:43,889 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:11:53,982 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:54,015 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:54,017 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:11:54,029 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:11:54,036 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:11:54,038 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:12:23,991 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:12:24,023 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:12:24,025 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:12:24,036 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:12:24,041 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:12:24,043 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:12:54,413 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:12:54,437 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:12:54,438 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 01:12:54,448 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 01:12:54,457 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 01:12:54,458 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:27:44,701 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 14:27:44,712 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 14:27:44,712 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 14:28:24,940 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:28:24,943 - NeptunO - WARNING - Token expirado
+2025-04-16 14:28:24,944 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-04-16 14:28:24,950 - NeptunO - ERROR - HTTP Error 401 en GET http://localhost:8000/info: Token inválido o no es de acceso
+2025-04-16 14:28:25,008 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-04-16 14:28:25,048 - NeptunO - INFO - Refresco de token exitoso
+2025-04-16 14:28:25,072 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:28:25,099 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:28:25,105 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:28:36,158 - NeptunO - INFO - Procesando solicitud: token=False, ip=127.0.0.1
+2025-04-16 14:28:36,165 - NeptunO - INFO - Creando nuevo usuario anónimo desde IP 127.0.0.1
+2025-04-16 14:28:36,189 - NeptunO - INFO - Usuario anónimo ID 4 procesado desde IP 127.0.0.1
+2025-04-16 14:28:36,214 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:28:41,359 - NeptunO - INFO - Procesando solicitud: token=False, ip=127.0.0.1
+2025-04-16 14:28:41,360 - NeptunO - INFO - Creando nuevo usuario anónimo desde IP 127.0.0.1
+2025-04-16 14:28:41,368 - NeptunO - INFO - Usuario anónimo ID 5 procesado desde IP 127.0.0.1
+2025-04-16 14:28:41,372 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:11,769 - NeptunO - INFO - Procesando solicitud: token=False, ip=127.0.0.1
+2025-04-16 14:29:11,771 - NeptunO - INFO - Creando nuevo usuario anónimo desde IP 127.0.0.1
+2025-04-16 14:29:11,809 - NeptunO - INFO - Usuario anónimo ID 6 procesado desde IP 127.0.0.1
+2025-04-16 14:29:11,811 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:12,141 - NeptunO - INFO - Procesando solicitud: token=False, ip=127.0.0.1
+2025-04-16 14:29:12,142 - NeptunO - INFO - Creando nuevo usuario anónimo desde IP 127.0.0.1
+2025-04-16 14:29:12,175 - NeptunO - INFO - Usuario anónimo ID 7 procesado desde IP 127.0.0.1
+2025-04-16 14:29:12,177 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:19,417 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:29:19,421 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 14:29:19,434 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:19,444 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:19,585 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:19,596 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:19,600 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:23,372 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,421 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,422 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,450 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,472 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:29:23,505 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,521 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,523 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,539 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,564 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:29:23,582 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:23,633 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,648 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,667 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,683 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,684 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,698 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,705 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,720 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,721 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:29:23,734 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,747 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:23,749 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:29:23,762 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:23,789 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:23,806 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:32,864 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:32,874 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:32,875 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:32,884 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:32,911 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:32,922 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:32,940 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:32,954 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:32,985 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:32,994 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,001 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:33,023 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,035 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,040 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,050 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,054 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:33,067 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,076 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,085 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,095 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,106 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,118 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,127 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,136 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,146 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,158 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,166 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,178 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,191 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,200 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,205 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,216 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:33,228 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:33,239 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:36,075 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:36,112 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:36,129 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 1: true
+2025-04-16 14:29:38,608 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:38,617 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:38,630 - NeptunO - INFO - Configuración 'enable_payment_methods' actualizada por admin 1: true
+2025-04-16 14:29:39,682 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:39,699 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:39,710 - NeptunO - INFO - Configuración 'enable_coupons' actualizada por admin 1: true
+2025-04-16 14:29:40,670 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:40,714 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:40,725 - NeptunO - INFO - Configuración 'enable_badges' actualizada por admin 1: true
+2025-04-16 14:29:42,128 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:42,135 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:42,148 - NeptunO - INFO - Configuración 'enable_points' actualizada por admin 1: true
+2025-04-16 14:29:47,824 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,840 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,841 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,854 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,857 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,877 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,878 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,889 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,895 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,908 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,915 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:29:47,924 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:47,938 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:29:47,960 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,973 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,974 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:47,987 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:47,989 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:48,000 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:48,004 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:48,016 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:48,018 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:29:48,026 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:29:48,040 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:29:48,052 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:48,063 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:52,606 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:52,614 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:52,623 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:55,581 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:55,605 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:55,607 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:29:58,206 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:29:58,218 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:29:58,224 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:28,827 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:28,865 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:28,870 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:29,207 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:29,216 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:29,218 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:56,256 - NeptunO - INFO - Usuario registrado ID 8 con subscription freemium
+2025-04-16 14:30:56,648 - NeptunO - DEBUG - Usuario encontrado: ID=8, email=test@test.com, subscription=subscriptionEnum.FREEMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:30:56,650 - NeptunO - INFO - Login exitoso para usuario ID 8 desde IP 127.0.0.1
+2025-04-16 14:30:56,656 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:56,662 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:56,712 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:56,719 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:56,720 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:56,732 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:56,732 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:56,741 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:56,744 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:56,758 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:56,778 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:57,114 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,120 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,122 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:30:57,544 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,591 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,593 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/coupons/: Solo administradores pueden ver todos los cupones
+2025-04-16 14:30:57,618 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,636 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,639 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:30:57,657 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,673 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,675 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:30:57,707 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,728 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,734 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:30:57,800 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,825 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,861 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/coupons/: Solo administradores pueden ver todos los cupones
+2025-04-16 14:30:57,884 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,905 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,906 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,922 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,923 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,937 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,938 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:57,952 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:57,972 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:30:58,022 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:30:58,037 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payment-providers/: Acceso no autorizado
+2025-04-16 14:30:58,076 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:30:58,123 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:30:58,160 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:30:58,166 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payment-providers/: Acceso no autorizado
+2025-04-16 14:31:06,873 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:06,907 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:06,908 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:06,913 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:06,914 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:06,920 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:06,923 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:06,930 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:06,932 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:31:06,939 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:06,947 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:31:06,955 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payment-providers/: Acceso no autorizado
+2025-04-16 14:31:22,906 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:31:22,908 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 14:31:22,915 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:22,954 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,021 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,028 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,029 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:31:23,452 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,466 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,478 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,489 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,492 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:31:23,506 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,517 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,521 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:31:23,538 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,550 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,552 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:23,622 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,634 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,648 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,667 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,670 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:31:23,686 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,702 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,721 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:31:23,742 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,753 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,755 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,765 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:23,769 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:23,844 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:23,855 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,786 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,796 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,810 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,816 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,842 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,850 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,857 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,868 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,898 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,910 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,916 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:27,935 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,946 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,947 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,958 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,962 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:27,977 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,984 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:27,990 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:27,998 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,011 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,022 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,030 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,041 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,049 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,059 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,063 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,073 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,083 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,095 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,097 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,107 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:28,116 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:28,129 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:41,421 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:41,426 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:41,433 - NeptunO - INFO - Configuración 'allowed_origins' actualizada por admin 1: 1
+2025-04-16 14:31:53,314 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:53,347 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:53,348 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:31:53,673 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:53,678 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:53,680 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:31:58,295 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,335 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,353 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,363 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,365 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:31:58,379 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,390 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,396 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:31:58,415 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,424 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,429 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:58,444 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,456 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,468 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,481 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,483 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:31:58,498 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,508 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,514 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:31:58,531 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,540 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,547 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:31:58,582 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,596 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:31:58,610 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:31:58,622 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:08,437 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:08,449 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:08,454 - NeptunO - ERROR - HTTP Error 403 en POST http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden añadir métodos de pago
+2025-04-16 14:32:25,036 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:25,048 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:25,052 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:32:25,330 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:25,342 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:25,419 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:25,432 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:34,749 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:34,762 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:34,767 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:32:45,629 - NeptunO - DEBUG - Usuario encontrado: ID=8, email=test@test.com, subscription=subscriptionEnum.FREEMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:32:45,633 - NeptunO - INFO - Login exitoso para usuario ID 8 desde IP 127.0.0.1
+2025-04-16 14:32:45,640 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:45,675 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:45,746 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:45,752 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:45,754 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:32:46,822 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:46,840 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:46,841 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:46,858 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:46,860 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:46,877 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:46,878 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:46,893 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:46,908 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:32:46,938 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/coupons/: Solo administradores pueden ver todos los cupones
+2025-04-16 14:32:46,950 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:32:46,965 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:32:47,003 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,020 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,022 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,040 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,074 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payment-providers/: Acceso no autorizado
+2025-04-16 14:32:47,095 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:32:47,112 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,128 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,138 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,154 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,155 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,170 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,175 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:32:47,187 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:32:47,206 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/coupons/: Solo administradores pueden ver todos los cupones
+2025-04-16 14:32:47,221 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:32:47,237 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:32:47,240 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payment-providers/: Acceso no autorizado
+2025-04-16 14:33:13,745 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:13,756 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:13,759 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:14,010 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:14,021 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:14,025 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:16,082 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:16,095 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:16,097 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:16,427 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:16,434 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:16,438 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:16,685 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:16,698 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:16,704 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:16,779 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:16,790 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:16,793 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:17,119 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:17,128 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:17,130 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:17,139 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:17,142 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:17,155 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:17,510 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:17,517 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:17,519 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:17,776 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:17,784 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:17,787 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:19,920 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:19,926 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:19,927 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:20,300 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:20,307 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:20,310 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:20,567 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:20,576 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:20,577 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:20,742 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:20,750 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:20,754 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:20,972 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:20,981 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:20,983 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:21,403 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:21,412 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:21,415 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:21,908 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:21,914 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:21,915 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:22,303 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:22,310 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:22,313 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:22,322 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:22,330 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:26,799 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:26,810 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:26,813 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:57,798 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:57,813 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:57,821 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:33:57,850 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:33:57,862 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:33:57,865 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:34:28,085 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:34:28,100 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:34:28,112 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:34:28,342 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:34:28,354 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:34:28,357 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:34:57,766 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:34:57,775 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:34:57,778 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:34:58,112 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:34:58,121 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:34:58,123 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:35:27,779 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:35:27,820 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:35:27,825 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:35:28,160 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:35:28,194 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:35:28,196 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:36:55,076 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:36:55,082 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:36:55,085 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:36:55,328 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:36:55,361 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:36:55,362 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:37:32,623 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:37:32,657 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:37:32,659 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:37:32,982 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:37:32,990 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:37:32,992 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:37:57,771 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:37:57,780 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:37:57,783 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:37:58,114 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:37:58,148 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:37:58,150 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:38:27,758 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:38:27,765 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:38:27,767 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:38:28,084 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:38:28,118 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:38:28,120 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:38:58,769 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:38:58,778 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:38:58,782 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:38:59,114 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:38:59,121 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:38:59,123 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:39:27,866 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:27,912 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:27,915 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:39:28,242 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:28,254 - NeptunO - INFO - Usuario registrado ID 8 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:28,261 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:39:39,018 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:39:39,020 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 14:39:39,031 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:39,038 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:39,130 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:39,138 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:39,140 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:39:39,921 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:39,939 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:39,969 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:39,988 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:39,995 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:39:40,071 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,091 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,097 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:39:40,123 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,143 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,172 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:39:40,209 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,228 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,231 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,268 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,305 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:39:40,353 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,370 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,376 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,395 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,404 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,431 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:39:40,434 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:39:40,459 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:39:40,569 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:39:40,581 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:14,948 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 14:59:14,956 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 14:59:14,956 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 14:59:37,699 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:37,723 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:37,727 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:59:41,791 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:41,798 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:41,801 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:59:44,407 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:44,422 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:44,426 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:59:52,551 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 14:59:52,554 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 14:59:52,562 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:52,572 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:52,650 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:52,662 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:52,665 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: 'UserContext' object has no attribute 'session_id'
+2025-04-16 14:59:56,142 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,155 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,168 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,182 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,184 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:59:56,200 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,213 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,215 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:59:56,234 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,249 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,251 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:59:56,341 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,358 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,359 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,380 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,382 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,403 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,413 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,429 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,444 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 14:59:56,459 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 14:59:56,479 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 14:59:56,494 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,507 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 14:59:56,519 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 14:59:56,531 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:20,184 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:20,198 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:20,235 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/users/admin/users?page=1&limit=10: 1 validation error for UserResponse
+email
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-04-16 15:00:20,335 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:20,352 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:20,374 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/users/admin/users?page=1&limit=10: 1 validation error for UserResponse
+email
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-04-16 15:00:26,761 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:26,796 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:26,799 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:00:27,112 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:27,145 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:27,147 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:00:32,255 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,264 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,274 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,283 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,285 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 15:00:32,300 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,314 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,317 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 15:00:32,335 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,347 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,350 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:00:32,367 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,381 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,396 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,410 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,412 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 15:00:32,428 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,441 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,444 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 15:00:32,468 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,484 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,490 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:00:32,509 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,523 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:32,537 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:32,552 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,188 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,226 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,231 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,240 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,258 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,266 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,280 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,289 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,317 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,326 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,331 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:00:41,346 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,357 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,360 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:00:41,369 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,381 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,395 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,402 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,407 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,416 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,429 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,438 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,447 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,456 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,467 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,475 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,481 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,490 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,502 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,513 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,516 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,526 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:41,537 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:41,549 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:45,450 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:45,483 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:45,486 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:00:56,769 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:56,803 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:56,805 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:00:57,132 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:00:57,166 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:00:57,167 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:01:12,597 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:01:12,632 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:01:12,634 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:01:26,763 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:01:26,768 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:01:26,770 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:01:27,097 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:01:27,103 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:01:27,104 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:01:56,773 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:01:56,806 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:01:56,808 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:01:57,132 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:01:57,167 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:01:57,168 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:02:38,415 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:02:38,453 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:02:38,456 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:02:38,793 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:02:38,827 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:02:38,830 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:02:56,775 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:02:56,811 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:02:56,813 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:02:57,133 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:02:57,167 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:02:57,168 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:03:26,761 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:03:26,794 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:03:26,796 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:03:27,116 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:03:27,150 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:03:27,152 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:04:46,077 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:04:46,087 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:04:46,089 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:04:46,342 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:04:46,372 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:04:46,376 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:04:57,029 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:04:57,074 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:04:57,078 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:04:57,420 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:04:57,433 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:04:57,437 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:05:32,763 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:05:32,770 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:05:32,772 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:05:33,094 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:05:33,104 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:05:33,106 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:06:55,077 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:06:55,113 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:06:55,115 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:06:55,327 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:06:55,338 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:06:55,342 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:07:54,762 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:07:54,797 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:07:54,799 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:07:55,127 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:07:55,160 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:07:55,162 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:08:54,775 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:08:54,838 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:08:54,874 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:08:55,193 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:08:55,228 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:08:55,230 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:09:54,770 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:09:54,780 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:09:54,783 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:09:55,123 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:09:55,157 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:09:55,158 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:10:54,764 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:10:54,796 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:10:54,798 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:10:55,119 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:10:55,154 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:10:55,156 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:11:54,766 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:11:54,800 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:11:54,803 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:11:55,132 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:11:55,165 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:11:55,166 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:12:54,768 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:12:54,801 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:12:54,803 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:12:55,114 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:12:55,149 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:12:55,152 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 'UserContext' object has no attribute 'session_id'
+2025-04-16 15:13:15,982 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:13:16,003 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:13:16,004 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:13:35,333 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:13:35,346 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:13:35,347 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:13:48,318 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:13:48,340 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:13:48,341 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:13:55,084 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:13:55,121 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:13:55,133 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:13:55,139 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:14:04,620 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:14:04,634 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:14:04,635 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:14:55,079 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:14:55,119 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:14:55,137 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:14:55,146 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:15:48,086 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Class <class 'models.coupon.Coupon'> does not have a mapped column named 'session_id'
+2025-04-16 15:15:48,087 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:17:11,102 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:17:11,102 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:17:49,508 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:17:49,509 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:18:06,388 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:18:06,389 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:26:37,256 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:26:37,257 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:27:08,003 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:08,004 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:27:08,018 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:27:08,019 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:27:08,019 - NeptunO - ERROR - Error al reiniciar créditos: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:08,020 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-16 15:27:11,624 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:11,624 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:27:11,631 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:27:11,632 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:27:11,632 - NeptunO - ERROR - Error al reiniciar créditos: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:11,632 - NeptunO - ERROR - Error HTTP en startup: Error al reiniciar créditos
+2025-04-16 15:27:26,256 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:27:26,257 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:26,258 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-04-16 15:27:26,258 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:26,478 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:27:26,479 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:27:26,479 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/gamification/me: Error al procesar la autenticación
+2025-04-16 15:27:26,479 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,138 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:28:22,139 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,140 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-04-16 15:28:22,140 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,892 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,892 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,892 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,892 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,893 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,894 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,895 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:28:22,897 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,979 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:28:22,979 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,983 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:28:22,984 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,989 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:28:22,990 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:22,996 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:28:22,997 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,003 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:28:23,004 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,293 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,293 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,294 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:28:23,295 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,300 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:28:23,300 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,310 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,311 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,315 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:28:23,316 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,317 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,322 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:28:23,322 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,326 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,327 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:28:23,328 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:28:23,332 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:28:23,333 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:29,557 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:33:29,558 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:29,559 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-04-16 15:33:29,560 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:29,833 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:29,834 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:33:29,835 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,146 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,146 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,146 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,146 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,147 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,148 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:33:30,150 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,159 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:33:30,159 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,162 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:33:30,163 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,166 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:30,167 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,172 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:33:30,173 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,181 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,182 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:33:30,183 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,476 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,476 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,476 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,478 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:33:30,479 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,483 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:33:30,484 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,487 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:33:30,488 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,496 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,497 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,499 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:30,500 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:30,509 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:33:30,510 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,342 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:33:32,343 - NeptunO - CRITICAL - Error inesperado en get_user_context desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,344 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/info: Error al procesar la autenticación
+2025-04-16 15:33:32,344 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,602 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,604 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:33:32,605 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,896 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,897 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,897 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,897 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,898 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,899 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:33:32,900 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,906 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:33:32,907 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,912 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:33:32,913 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,916 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:33:32,917 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,922 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:32,924 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,934 - NeptunO - ERROR - Error al obtener ajuste disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:32,935 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/disable_credits: Error al obtener ajuste
+2025-04-16 15:33:32,936 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/disable_credits: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,227 - NeptunO - ERROR - Error al obtener ajuste enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,227 - NeptunO - ERROR - Error al obtener ajuste enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,228 - NeptunO - ERROR - Error al obtener ajuste enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,229 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_badges: Error al obtener ajuste
+2025-04-16 15:33:33,230 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_badges: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,233 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_points: Error al obtener ajuste
+2025-04-16 15:33:33,233 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_points: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,239 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_coupons: Error al obtener ajuste
+2025-04-16 15:33:33,240 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_coupons: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,246 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,247 - NeptunO - ERROR - Error al obtener ajuste enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,248 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:33,249 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:33,253 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_payment_methods: Error al obtener ajuste
+2025-04-16 15:33:33,253 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_payment_methods: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:42,650 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:42,656 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:42,657 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:42,926 - NeptunO - ERROR - Error al obtener ajuste enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:33:42,951 - NeptunO - ERROR - HTTP Error 500 en GET http://localhost:8000/v1/settings/enable_registration: Error al obtener ajuste
+2025-04-16 15:33:42,952 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/settings/enable_registration: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:34:00,233 - NeptunO - CRITICAL - Error inesperado en login para admin@example.com desde IP 127.0.0.1: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno/backend/services/auth_service.py", line 74, in login_user
+    user = db.query(User).filter(User.email == email).first()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2955, in query
+    return self._query_cls(entities, self, **kwargs)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 276, in __init__
+    self._set_entities(entities)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 288, in _set_entities
+    self._raw_columns = [
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 289, in <listcomp>
+    coercions.expect(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/coercions.py", line 388, in expect
+    insp._post_inspect
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 1257, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/mapper.py", line 2724, in _post_inspect
+    self._check_configure()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/mapper.py", line 2401, in _check_configure
+    _configure_registries({self.registry}, cascade=True)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/mapper.py", line 4214, in _configure_registries
+    _do_configure_registries(registries, cascade)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/mapper.py", line 4251, in _do_configure_registries
+    raise e
+sqlalchemy.exc.InvalidRequestError: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:34:00,256 - NeptunO - ERROR - HTTP Error 500 en POST http://localhost:8000/v1/auth/token: Error al iniciar sesión
+2025-04-16 15:34:00,256 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/auth/token: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[GuestsSession(sesiones_anonimas)]'. Original exception was: Could not determine join condition between parent/child tables on relationship GuestsSession.gamification_events - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-04-16 15:35:55,611 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:35:55,611 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:36:17,128 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:36:17,128 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:37:42,049 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:37:42,050 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:37:56,447 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:37:56,448 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:38:05,140 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:38:05,140 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:38:44,186 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:38:44,186 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:38:55,758 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:38:55,758 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:39:14,510 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:39:14,510 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:40:13,270 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:40:13,288 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:40:13,288 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:40:23,705 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:40:23,705 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:41:11,224 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:41:11,246 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:41:11,247 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:41:17,482 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:41:17,482 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:41:39,839 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-16 15:41:39,863 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:41:39,863 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:41:47,453 - NeptunO - ERROR - Error al obtener ajuste allowed_origins: (sqlite3.OperationalError) no such table: site_settings
+[SQL: SELECT site_settings.id AS site_settings_id, site_settings."key" AS site_settings_key, site_settings.value AS site_settings_value, site_settings.description AS site_settings_description, site_settings.tag AS site_settings_tag, site_settings.updated_by AS site_settings_updated_by, site_settings.updated_at AS site_settings_updated_at 
+FROM site_settings 
+WHERE site_settings."key" = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('allowed_origins', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-16 15:41:47,453 - NeptunO - ERROR - Error al configurar CORS: 500: Error al obtener ajuste
+2025-04-16 15:41:48,399 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-16 15:41:48,400 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-16 15:41:56,422 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-16 15:41:56,428 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-16 15:41:56,437 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:41:56,446 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:41:56,521 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:41:56,530 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:41:56,550 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/gamification/events: Event type not found
+2025-04-16 15:42:03,209 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,250 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,301 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,311 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,315 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,327 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,330 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,342 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,353 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 15:42:03,364 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:42:03,376 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 15:42:03,419 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,430 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,431 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,440 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,446 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,460 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,469 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/transactions: Solo usuarios registrados pueden ver sus transacciones
+2025-04-16 15:42:03,485 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,497 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,499 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,512 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:03,513 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:42:03,524 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/payments/methods: Solo usuarios registrados pueden ver sus métodos de pago
+2025-04-16 15:42:03,539 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:03,549 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,189 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,200 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,202 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,211 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,244 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,258 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,276 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,287 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,322 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,331 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,338 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:42:12,359 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,373 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,378 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,388 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,393 - NeptunO - ERROR - HTTP Error 403 en GET http://localhost:8000/v1/integrations/: Solo usuarios registrados
+2025-04-16 15:42:12,408 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,420 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,421 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,432 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,454 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,464 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,468 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,478 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,501 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,510 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,511 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,520 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,535 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,546 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,551 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,561 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:12,576 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:12,590 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:14,031 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:14,040 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:14,054 - NeptunO - INFO - Configuración 'enable_registration' actualizada por admin 1: true
+2025-04-16 15:42:14,813 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:14,850 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:14,861 - NeptunO - INFO - Configuración 'enable_social_login' actualizada por admin 1: true
+2025-04-16 15:42:16,289 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:16,300 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:16,319 - NeptunO - INFO - Configuración 'enable_badges' actualizada por admin 1: true
+2025-04-16 15:42:16,943 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:16,983 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:16,997 - NeptunO - INFO - Configuración 'enable_coupons' actualizada por admin 1: true
+2025-04-16 15:42:17,633 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:17,672 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:17,686 - NeptunO - INFO - Configuración 'enable_payment_methods' actualizada por admin 1: true
+2025-04-16 15:42:18,463 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:18,477 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:18,489 - NeptunO - INFO - Configuración 'enable_points' actualizada por admin 1: true
+2025-04-16 15:42:29,193 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:29,208 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:29,362 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:29,377 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:32,755 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:32,788 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:32,794 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 1 validation error for UserGamificationResponse
+session_id
+  Field required [type=missing, input_value=<models.gamification.User...bject at 0x7fe566e099f0>, input_type=UserGamification]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-04-16 15:42:32,827 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:32,835 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:32,842 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/v1/gamification/me: 1 validation errors:
+  {'type': 'missing', 'loc': ('response', 0, 'session_id'), 'msg': 'Field required', 'input': <models.gamification.UserGamification object at 0x7fe566e0a200>}
+
+2025-04-16 15:42:34,210 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:34,222 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:34,232 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 1 validation error for UserGamificationResponse
+session_id
+  Field required [type=missing, input_value=<models.gamification.User...bject at 0x7fe566e0a200>, input_type=UserGamification]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+2025-04-16 15:42:38,782 - NeptunO - INFO - Procesando solicitud: token=True, ip=127.0.0.1
+2025-04-16 15:42:38,793 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-16 15:42:38,799 - NeptunO - CRITICAL - Error inesperado en GET http://localhost:8000/info: 1 validation error for UserGamificationResponse
+session_id
+  Field required [type=missing, input_value=<models.gamification.User...bject at 0x7fe566e09d50>, input_type=UserGamification]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing

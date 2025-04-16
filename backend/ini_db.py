@@ -12,7 +12,7 @@ from models.integration import Integration
 from models.log import APILog
 from models.payment_method import PaymentMethod
 from models.gamification import EventType, Badge, GamificationEvent, UserGamification
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken, PasswordResetToken
 from models.coupon import Coupon
 from models.coupon_type import CouponType
@@ -304,18 +304,18 @@ def init_settings_and_users():
                 db.add(AllowedOrigin(origin=origin))
 
         # Sesiones anónimas
-        anonymous_sessions = []
-        for i in range(2):
-            session_id = str(uuid.uuid4())
-            session = GuestsSession(
-                id=session_id,
-                username=f"anon_user_{i+1}",
-                credits=100 - (i * 15),
-                create_at=datetime.utcnow() - timedelta(days=i * 2),
-                ultima_actividad=datetime.utcnow() - timedelta(hours=i),
-                last_ip=f"192.168.1.{100 + i}")
-            db.add(session)
-            anonymous_sessions.append(session)
+        # anonymous_sessions = []
+        # for i in range(2):
+         #    session_id = str(uuid.uuid4())
+        #     session = GuestsSession(
+         #        id=session_id,
+         #        username=f"anon_user_{i+1}",
+         #        credits=100 - (i * 15),
+          #       create_at=datetime.utcnow() - timedelta(days=i * 2),
+           #      ultima_actividad=datetime.utcnow() - timedelta(hours=i),
+           #      last_ip=f"192.168.1.{100 + i}")
+        #     db.add(session)
+         #    anonymous_sessions.append(session)
 
         # Proveedores de pago
         payment_providers = [{
@@ -358,15 +358,6 @@ def init_settings_and_users():
             "url": "/api/v1/users",
             "method": "POST",
             "ip_address": "192.168.1.100"
-        }, {
-            "session_id": anonymous_sessions[0].id,
-            "user_type": "anonymous",
-            "error_code": 429,
-            "message": "Rate limit exceeded",
-            "details": "Too many requests",
-            "url": "/api/v1/process",
-            "method": "POST",
-            "ip_address": "192.168.1.101"
         }]
 
         for error in error_logs:
@@ -479,7 +470,6 @@ def init_settings_and_users():
             "active": True,
             "status": "active",
             "user_id": users[0].id,
-            "session_id": anonymous_sessions[0].id,
             "credits": 50
         }]
         for coupon in coupons:

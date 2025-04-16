@@ -1,7 +1,7 @@
 # backend/models/coupon.py
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.user import User
 from core.database import Base
 from datetime import datetime
@@ -18,20 +18,11 @@ class Coupon(Base):
     expires_at = Column(DateTime, nullable=True)
     redeemed_at = Column(DateTime, nullable=True)
     active = Column(Boolean, default=True)
-    status = Column(String(20), default="active")  # "active", "redeemed", "expired", "disabled"
+    status = Column(String(20), default="active")
     credits = Column(Integer, nullable=False)
 
-    # Relaciones con usuario registrado o sesión anónima
     user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    session_id = Column(String, ForeignKey("sesiones_anonimas.id"), nullable=True)
-
-    # Quién canjeó el cupón
     redeemed_by_user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)
-    redeemed_by_session_id = Column(String, ForeignKey("sesiones_anonimas.id"), nullable=True)
 
-    # Relaciones ORM
     user = relationship("User", foreign_keys=[user_id], back_populates="coupons")
-    session = relationship("GuestsSession", foreign_keys=[session_id], back_populates="coupons")
     redeemed_by_user = relationship("User", foreign_keys=[redeemed_by_user_id])
-    redeemed_by_session = relationship("GuestsSession", foreign_keys=[redeemed_by_session_id])
-

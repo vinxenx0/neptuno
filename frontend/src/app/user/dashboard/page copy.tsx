@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableHead, TableRow, Link } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Box, Grid, Card, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
@@ -13,8 +13,10 @@ import {
 } from "@mui/material";
 import {
   AccountCircle, Lock, Payment, CreditCard, AddCircle, Delete, ExpandMore, Edit, History, AttachMoney, Security, Logout, Person,
-  LocationOn, Language, Star, StarBorder
+  LocationOn, Language, Star, StarBorder,
+  LocalActivity
 } from "@mui/icons-material";
+import { Integration } from "@/lib/types";
 
 // Styled Components
 const GradientCard = styled(Card)(({ theme }) => ({
@@ -25,13 +27,12 @@ const GradientCard = styled(Card)(({ theme }) => ({
 }));
 
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.8)', // Usando el casi blanco con transparencia
+  background: 'rgba(248, 249, 250, 0.8)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(222, 226, 230, 0.5)', // Usando el gris claro para bordes
+  border: '1px solid rgba(222, 226, 230, 0.5)',
   borderRadius: '16px',
   boxShadow: theme.shadows[2]
 }));
-
 
 interface PaymentMethod {
   id: number;
@@ -75,6 +76,46 @@ export default function UserDashboard() {
   const [tabValue, setTabValue] = useState(0);
   const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
   const [deleteMethodId, setDeleteMethodId] = useState<number | null>(null);
+  const { coupons, setCoupons } = useAuth();
+  const [newIntegration, setNewIntegration] = useState({ name: "", webhook_url: "", event_type: "" });
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+
+
+
+  // Añadir este useEffect justo después de los useState existentes
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const { data } = await fetchAPI<any[]>("/v1/coupons/"); // Ajusta el endpoint según tu API
+        setCoupons(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar cupones");
+      }
+    };
+    fetchCoupons();
+  }, [setCoupons]);
+
+  // Actualizar la función handleRedeem
+  const handleRedeem = async (couponId: number) => {
+    try {
+      const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, {
+        method: "POST",
+      });
+      if (data) {
+        setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
+        const { data: info } = await fetchAPI<any>("/info");
+        setCredits(info.credits);
+        setSuccess("Cupón canjeado exitosamente");
+      } else {
+        setError("No se pudo canjear el cupón");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al canjear cupón");
+    }
+  };
+
+  // Actualizar el contenido de la pestaña "Coupons" (tabValue === 2)
+
 
   useEffect(() => {
     if (!user) {
@@ -90,15 +131,16 @@ export default function UserDashboard() {
 
     const fetchData = async () => {
       try {
-        const [transRes, methRes, providersRes] = await Promise.all([
+        const [transRes, methRes, providersRes, integrationsRes] = await Promise.all([
           fetchAPI<CreditTransaction[]>("/v1/payments/transactions"),
           fetchAPI<PaymentMethod[]>("/v1/payments/methods"),
-          fetchAPI<PaymentProvider[]>("/v1/payment-providers"), // Nueva llamada
+          fetchAPI<PaymentProvider[]>("/v1/payment-providers"),
+          fetchAPI<Integration[]>("/v1/integrations/"),
         ]);
         setTransactions(transRes.data || []);
         setMethods(methRes.data || []);
         setPaymentProviders(providersRes.data?.filter(p => p.active) || []);
-        // Establecer el primer proveedor activo como predeterminado
+        setIntegrations(integrationsRes.data || []);
         if (providersRes.data && providersRes.data.length > 0) {
           setNewMethod(prev => ({ ...prev, payment_type: providersRes.data.find(p => p.active)?.name || "" }));
         }
@@ -107,7 +149,34 @@ export default function UserDashboard() {
       }
     };
     fetchData();
-  }, [user, router]);
+  }, [user, router, credits]);
+
+  const handleAddIntegration = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await fetchAPI<Integration>("/v1/integrations/", {
+        method: "POST",
+        data: { name: newIntegration.name, webhook_url: newIntegration.webhook_url, event_type: newIntegration.event_type },
+      });
+      setIntegrations([...integrations, data!]);
+      setNewIntegration({ name: "", webhook_url: "", event_type: "" });
+      setSuccess("Integración creada con éxito");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al crear integración");
+    }
+  };
+
+  const handleDeleteIntegration = async (id: number) => {
+    try {
+      await fetchAPI(`/v1/integrations/${id}`, { method: "DELETE" });
+      setIntegrations(integrations.filter((i) => i.id !== id));
+      setSuccess("Integración eliminada");
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar integración");
+    }
+  };
 
   const handleEditMethod = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,7 +206,6 @@ export default function UserDashboard() {
       setError(err instanceof Error ? err.message : "Error al eliminar método");
     }
   };
-
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,7 +268,6 @@ export default function UserDashboard() {
     }
   };
 
-
   const handleSetDefault = async (id: number) => {
     try {
       await fetchAPI(`/v1/payments/methods/${id}/default`, { method: "PUT" });
@@ -223,7 +290,6 @@ export default function UserDashboard() {
       }
     }
   };
-
 
   if (!user) return (
     <Box sx={{
@@ -304,27 +370,70 @@ export default function UserDashboard() {
           </Badge>
         </Box>
 
-        {/* Credits Card */}
+        {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <GradientCard sx={{ mb: 4 }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
-                    Tus Créditos
-                  </Typography>
-                  <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                    {user.credits ?? 0}
-                  </Typography>
-                </Box>
-                <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
-              </Box>
-            </CardContent>
-          </GradientCard>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
+            {/* Credits Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Tus Créditos
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {user.credits ?? 0}
+                      </Typography>
+                    </Box>
+                    <AttachMoney sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+
+            {/* Transactions Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Transacciones
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {transactions.length}
+                      </Typography>
+                    </Box>
+                    <History sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+
+            {/* Payment Methods Card */}
+            <Grid item xs={12} md={4}>
+              <GradientCard sx={{ background: 'linear-gradient(135deg, #a6c1ee 0%, #fbc2eb 100%)' }}>
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="overline" color="inherit" sx={{ opacity: 0.8 }}>
+                        Métodos de Pago
+                      </Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                        {methods.length}
+                      </Typography>
+                    </Box>
+                    <Payment sx={{ fontSize: 48, opacity: 0.8 }} />
+                  </Box>
+                </CardContent>
+              </GradientCard>
+            </Grid>
+          </Grid>
         </motion.div>
 
         {/* Tabs Navigation */}
@@ -344,9 +453,11 @@ export default function UserDashboard() {
             >
               <Tab label="Perfil" icon={<Person />} iconPosition="start" />
               <Tab label="Seguridad" icon={<Security />} iconPosition="start" />
+              <Tab label="Cupones" icon={<LocalActivity />} iconPosition="start" />
               <Tab label="Transacciones" icon={<History />} iconPosition="start" />
               <Tab label="Métodos de Pago" icon={<Payment />} iconPosition="start" />
               <Tab label="Comprar Créditos" icon={<CreditCard />} iconPosition="start" />
+              <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
             </Tabs>
           </Paper>
         </motion.div>
@@ -565,6 +676,39 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
+
+              {/* Danger Zone moved to Profile Tab */}
+              <GlassCard sx={{ mt: 3 }}>
+                <CardHeader
+                  title="Zona Peligrosa"
+                  avatar={<Security color="error" />}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                    Estas acciones son irreversibles. Por favor, procede con precaución.
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      onClick={logout}
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<Logout />}
+                      sx={{ flex: 1 }}
+                    >
+                      Cerrar Sesión
+                    </Button>
+                    <Button
+                      onClick={handleDeleteAccount}
+                      variant="contained"
+                      color="error"
+                      startIcon={<Delete />}
+                      sx={{ flex: 1 }}
+                    >
+                      Eliminar Cuenta
+                    </Button>
+                  </Box>
+                </CardContent>
+              </GlassCard>
             </motion.div>
           )}
 
@@ -668,43 +812,60 @@ export default function UserDashboard() {
                   </GlassCard>
                 </Grid>
               </Grid>
-
-              <GlassCard sx={{ mt: 3 }}>
-                <CardHeader
-                  title="Zona Peligrosa"
-                  avatar={<Security color="error" />}
-                />
-                <CardContent>
-                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                    Estas acciones son irreversibles. Por favor, procede con precaución.
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button
-                      onClick={logout}
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<Logout />}
-                      sx={{ flex: 1 }}
-                    >
-                      Cerrar Sesión
-                    </Button>
-                    <Button
-                      onClick={handleDeleteAccount}
-                      variant="contained"
-                      color="error"
-                      startIcon={<Delete />}
-                      sx={{ flex: 1 }}
-                    >
-                      Eliminar Cuenta
-                    </Button>
-                  </Box>
-                </CardContent>
-              </GlassCard>
             </motion.div>
           )}
 
-          {/* Transactions Tab */}
+          {/* Coupons Tab */}
           {tabValue === 2 && (
+
+            <Box>
+              <Typography variant="h6">Mis Cupones</Typography>
+              {(!coupons || coupons.length === 0) ? (
+                <Typography>No tienes cupones</Typography>
+              ) : (
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Nombre</TableCell>
+                      <TableCell>Créditos</TableCell>
+                      <TableCell>Estado</TableCell>
+                      <TableCell>Acciones</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {coupons.map((coupon) => (
+                      <TableRow key={coupon.id}>
+                        <TableCell>{coupon.name}</TableCell>
+                        <TableCell>{coupon.credits}</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={coupon.status}
+                            color={coupon.status === "active" ? "success" : "error"}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {coupon.status === "active" && (
+                            <Button
+                              variant="contained"
+                              onClick={() => handleRedeem(coupon.id)}
+                            >
+                              Canjear
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </Box>
+          )
+          }
+
+
+
+          {/* Transactions Tab */}
+          {tabValue === 3 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -729,9 +890,9 @@ export default function UserDashboard() {
                     </Typography>
                   ) : (
                     <List sx={{ maxHeight: '500px', overflow: 'auto' }}>
-                      {transactions.map((t) => (
+                      {transactions.map((t, index) => (
                         <motion.div
-                          key={t.id}
+                          key={t.id || index} // Usar `index` como respaldo si `t.id` no está definido
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.2 }}
@@ -745,21 +906,9 @@ export default function UserDashboard() {
                               </Avatar>
                             </ListItemAvatar>
                             <ListItemText
-                              primary={t.transaction_type}
-                              secondary={`${new Date(t.timestamp).toLocaleString()} • ${t.payment_status}`}
+                              primary={t.transaction_type || "N/A"}
+                              secondary={`${t.timestamp ? new Date(t.timestamp).toLocaleString() : "N/A"} • ${t.payment_status || "N/A"}`}
                             />
-                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                              <Typography
-                                variant="subtitle1"
-                                color={t.amount > 0 ? "success.main" : "error.main"}
-                                fontWeight="bold"
-                              >
-                                {t.amount > 0 ? "+" : ""}{t.amount} créditos
-                              </Typography>
-                              <Typography variant="caption" color="textSecondary">
-                                {t.payment_amount ? `$${t.payment_amount.toFixed(2)}` : 'N/A'} via {t.payment_method || 'N/A'}
-                              </Typography>
-                            </Box>
                           </ListItem>
                           <Divider variant="inset" component="li" />
                         </motion.div>
@@ -772,7 +921,7 @@ export default function UserDashboard() {
           )}
 
           {/* Payment Methods Tab */}
-          {tabValue === 3 && (
+          {tabValue === 4 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               <GlassCard>
                 <CardHeader
@@ -949,7 +1098,7 @@ export default function UserDashboard() {
           )}
 
           {/* Buy Credits Tab */}
-          {tabValue === 4 && (
+          {tabValue === 5 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
@@ -987,7 +1136,7 @@ export default function UserDashboard() {
                           onChange={(e) => {
                             const selectedMethod = methods.find((m) => m.id === parseInt(e.target.value));
                             if (selectedMethod) {
-                              handleSetDefault(selectedMethod.id); // Actualiza el método predeterminado al seleccionarlo
+                              handleSetDefault(selectedMethod.id);
                             }
                           }}
                           fullWidth
@@ -1048,6 +1197,39 @@ export default function UserDashboard() {
               </Grid>
             </motion.div>
           )}
+
+          {tabValue === 6 && (
+            <Box>
+              <Box component="form" onSubmit={handleAddIntegration} sx={{ mb: 2 }}>
+                <TextField label="Nombre" value={newIntegration.name} onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })} />
+                <TextField label="Webhook URL" value={newIntegration.webhook_url} onChange={(e) => setNewIntegration({ ...newIntegration, webhook_url: e.target.value })} />
+                <TextField label="Tipo de Evento" value={newIntegration.event_type} onChange={(e) => setNewIntegration({ ...newIntegration, event_type: e.target.value })} />
+                <Button type="submit" variant="contained">Añadir</Button>
+              </Box>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nombre</TableCell>
+                    <TableCell>Estado</TableCell>
+                    <TableCell>Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {integrations.map((integration) => (
+                    <TableRow key={integration.id}>
+                      <TableCell>{integration.name}</TableCell>
+                      <TableCell>{integration.active ? "Activo (Admin)" : "Pendiente"}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleDeleteIntegration(integration.id)} color="error">
+                          <Delete />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -1098,6 +1280,6 @@ export default function UserDashboard() {
           </Snackbar>
         )}
       </AnimatePresence>
-    </Box>
+    </Box >
   );
 }

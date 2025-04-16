@@ -335,7 +335,7 @@ from api.v1 import users
 from api.v1 import gamification
 from dependencies.credits import check_credits
 from models.credit_transaction import CreditTransaction
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.user import User
 from services.integration_service import trigger_webhook
 from middleware.credits_middleware import require_credits
@@ -765,7 +765,7 @@ from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from models.token import RevokedToken
 from core.security import decode_token
 from core.logging import configure_logging
@@ -973,7 +973,7 @@ class User(Base):
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.anonymous_session import GuestsSessionResponse  # Asegúrate de que este esquema existe
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db

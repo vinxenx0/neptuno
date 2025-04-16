@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from schemas.anonymous_session import GuestsSessionResponse 
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db

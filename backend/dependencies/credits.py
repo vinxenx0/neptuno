@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from models.credit_transaction import CreditTransaction
 from dependencies.auth import UserContext, get_user_context
 from models.user import User
-from models.guests import GuestsSession
+# from models.guests import GuestsSession
 from core.database import get_db
 from core.logging import configure_logging
 from services.integration_service import trigger_webhook
