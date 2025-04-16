@@ -137,3 +137,24 @@ Aquí está el código:
 ---
 
 ¿Querés que iniciemos la primera etapa juntos? Podés pasarme una página de dashboard tuya (aunque sea un bloque parcial), y arrancamos por la modularización 👇
+
+
+-------
+
+He detectado varios patrones de código duplicado y oportunidades de mejora general en los archivos abiertos:
+
+1. Componentes de UI repetidos (Styled Components)
+StyledTabs, StatusChip, y variantes de tarjetas (GlassCard, GradientCard, CouponCard, TransactionCard) se definen con estilos similares en varias páginas: page.tsx, page.tsx, page.tsx, y page.tsx.
+Propuesta: Extraer estos componentes a un archivo común, por ejemplo, frontend/src/components/ui/Styled.tsx o similar, para reutilizarlos y mantener la consistencia visual.
+2. Manejo de estados de habilitación/deshabilitación de funcionalidades
+El patrón de chequear si una funcionalidad está habilitada (enablePoints, enableCredits, enableCoupons) y mostrar un mensaje si no lo está, se repite en varias páginas.
+Propuesta: Crear un componente reutilizable, por ejemplo, <FeatureDisabled message="..."/>, que reciba el mensaje y el estado, y centralice este comportamiento.
+3. Fetch y filtrado de datos
+El uso de fetchAPI para obtener datos y luego filtrarlos por estado/tipo (por ejemplo, cupones, transacciones, puntos) se repite con lógica similar.
+Propuesta: Abstraer hooks personalizados como useCoupons, useTransactions, usePointsHistory que manejen la carga, filtrado y estados de error.
+4. Tabs y lógica de filtrado
+El patrón de tabs con filtros (StyledTabs, Tab, y el manejo de selectedTab, typeFilter, statusFilter) es muy similar en varias páginas.
+Propuesta: Crear un componente de Tabs filtrables reutilizable, que reciba las opciones y callbacks de filtro.
+5. Manejo de errores y notificaciones
+El uso de Snackbar y Alert para mostrar errores y mensajes de éxito se repite.
+Propuesta: Extraer un hook o componente de notificaciones globales.

@@ -9,6 +9,8 @@ import json
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Callable
 
+# Limpieza: todos los imports son usados en este archivo.
+
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         db = next(get_db())

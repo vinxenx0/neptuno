@@ -1,40 +1,29 @@
 # backend/main.py
 # Punto de entrada principal de la API FastAPI
-from api.v1 import payment_providers
-from api.v1 import coupons
-from api.v1 import test
-from api.v1 import origins
-from ini_db import init_db, init_settings_and_users
-from models.gamification import EventType
-from schemas.gamification import GamificationEventCreate, GamificationEventResponse, UserGamificationResponse
-from services.gamification_service import get_user_gamification, register_event
-from fastapi import Depends, FastAPI, HTTPException, Request, Depends
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
-from api.v1 import auth, payments, site_settings, integrations, payments
-from api.v1 import anonymous_sessions, credit_transactions, error_logs
-from api.v1 import api_logs
-from api.v1 import users
-from api.v1 import gamification
-from dependencies.credits import check_credits
-from models.credit_transaction import CreditTransaction
-from models.guests import GuestsSession
-from models.user import User
-from services.integration_service import trigger_webhook
-from middleware.credits_middleware import require_credits
-from middleware.logging import LoggingMiddleware
-from dependencies.auth import UserContext, get_user_context
-from services.settings_service import get_setting
-from services.origin_service import get_allowed_origins
-from core.database import Base, engine, get_db
-from core.logging import configure_logging
-from core.config import settings
-from services.credits_service import reset_credits
-from models.error_log import ErrorLog
-from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
+
+from api.v1 import (
+    payment_providers, coupons, test, origins, auth, payments, site_settings, integrations,
+    anonymous_sessions, credit_transactions, error_logs, api_logs, users, gamification
+)
+from ini_db import init_db, init_settings_and_users
+from dependencies.auth import UserContext, get_user_context
+from dependencies.credits import check_credits
+from services.gamification_service import get_user_gamification, register_event
+from services.integration_service import trigger_webhook
+from services.settings_service import get_setting
+from services.origin_service import get_allowed_origins
+from services.credits_service import reset_credits
+from core.database import get_db
+from core.logging import configure_logging
+from core.config import settings
+from models.error_log import ErrorLog
+from sqlalchemy.orm import Session
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

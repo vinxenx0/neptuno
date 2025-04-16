@@ -9,7 +9,7 @@ import fetchAPI from "@/lib/api";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableHead, TableRow, Link } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Box, Grid, Card, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
+  Box, Grid, CardContent, CardHeader, TextField, Button, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton,
   Snackbar, Alert, MenuItem, Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemText, Badge, Paper, Tabs, Tab, useTheme, styled
 } from "@mui/material";
 import {
@@ -18,22 +18,7 @@ import {
   LocalActivity
 } from "@mui/icons-material";
 import { Integration } from "@/lib/types";
-
-// Styled Components
-const GradientCard = styled(Card)(({ theme }) => ({
-  background: `linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)`,
-  color: 'white',
-  borderRadius: '16px',
-  boxShadow: theme.shadows[4]
-}));
-
-const GlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(248, 249, 250, 0.8)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(222, 226, 230, 0.5)',
-  borderRadius: '16px',
-  boxShadow: theme.shadows[2]
-}));
+import { GradientCard, GlassCard } from "@/components/dashboard/DashboardUI";
 
 interface PaymentMethod {
   id: number;

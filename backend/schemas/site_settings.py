@@ -1,6 +1,8 @@
 # backend/schemas/site_settings.py
 # Esquemas Pydantic para configuración del sitio
 
+# Limpieza: todos los imports son usados en este archivo.
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional

@@ -8,6 +8,8 @@ from core.config import settings
 from core.database import SessionLocal
 from services.credits_service import deduct_credit
 
+# Limpieza: todos los imports son usados en este archivo.
+
 celery_app = Celery("tasks", broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/0")
 
 @celery_app.task

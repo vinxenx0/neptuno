@@ -75,3 +75,5 @@ class User(Base):
 
     # Añadir relaciones inversas en los modelos existentes
     coupons = relationship("Coupon", foreign_keys="Coupon.user_id", back_populates="user")
+
+# Limpieza: todos los imports son usados en este archivo.

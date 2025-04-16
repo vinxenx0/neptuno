@@ -67,40 +67,12 @@ import {
   LocalActivity
 } from "@mui/icons-material";
 import { SiteSetting, Integration, EventType, Badge, PaymentProvider, Coupon, CouponType } from "@/lib/types";
+import { AdminGradientCard, ConfigGlassCard, FeatureCard } from "@/components/dashboard/DashboardUI";
 
 interface AllowedOrigin {
   id: number;
   origin: string;
 }
-
-const AdminGradientCard = styled(Card)(({ theme }) => ({
-  background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
-  color: theme.palette.primary.contrastText,
-  borderRadius: '16px',
-  boxShadow: theme.shadows[10],
-  transition: 'transform 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)'
-  }
-}));
-
-const ConfigGlassCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  borderRadius: '16px',
-  boxShadow: theme.shadows[5]
-}));
-
-const FeatureCard = styled(Card)(({ theme }) => ({
-  borderRadius: '16px',
-  boxShadow: theme.shadows[4],
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[8]
-  }
-}));
 
 export default function ConfigurePage() {
   const { user } = useAuth();
