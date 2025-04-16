@@ -1337,3 +1337,9 @@
 2025-04-16 17:24:04,792 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
 2025-04-16 17:24:04,801 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-16 17:24:04,809 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-17 00:26:45,467 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-17 00:26:45,481 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-17 00:26:45,481 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-17 01:24:27,946 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-17 01:24:27,962 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-17 01:24:27,962 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar

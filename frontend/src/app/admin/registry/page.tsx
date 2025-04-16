@@ -41,6 +41,7 @@ import {
   LocalActivity,
 } from "@mui/icons-material";
 import { LoadingSpinner } from "@/components/ui";
+import { CreditTransaction, CouponActivity } from '@/lib/types';
 
 // Styled Components
 const AdminGlassCard = styled(Paper)(({ theme }) => ({
@@ -105,29 +106,6 @@ interface GuestsSession {
   create_at: string;
   ultima_actividad?: string;
   last_ip?: string;
-}
-
-interface CreditTransaction {
-  id: number;
-  user_id?: number;
-  session_id?: string;
-  amount: number;
-  transaction_type: string;
-  payment_amount?: number;
-  payment_method?: string;
-  payment_status: string;
-  timestamp: string;
-}
-
-interface CouponActivity {
-  id: number;
-  coupon_type: string;
-  unique_identifier: string;
-  user_id?: number;
-  session_id?: string;
-  status: string;
-  issued_at: string;
-  redeemed_at?: string;
 }
 
 const TabContent = ({ tab }: { tab: string }) => {

@@ -29,6 +29,7 @@ import {
 } from "@mui/icons-material";
 import FeatureDisabled from '@/components/ui/FeatureDisabled';
 import { StyledTabs, StatusChip } from '@/components/ui/Styled';
+import { CreditTransaction } from '@/lib/types';
 
 const TransactionCard = styled(Box)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.85)',
@@ -42,16 +43,6 @@ const TransactionCard = styled(Box)(({ theme }) => ({
     boxShadow: theme.shadows[6],
   },
 }));
-
-interface CreditTransaction {
-  id: number;
-  amount: number;
-  transaction_type: string;
-  payment_amount?: number;
-  payment_method?: string;
-  payment_status: string;
-  timestamp: string;
-}
 
 export default function TransactionsPage() {
   const { user } = useAuth();

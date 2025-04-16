@@ -67,7 +67,7 @@ import {
   LocalActivity
 } from "@mui/icons-material";
 import { SiteSetting, Integration, EventType, Badge, PaymentProvider, Coupon, CouponType } from "@/lib/types";
-import { AdminGradientCard, ConfigGlassCard, FeatureCard } from "@/components/dashboard/DashboardUI";
+import { AdminGradientCard, ConfigGlassCard, FeatureCard } from '@/components/ui/Styled';
 
 interface AllowedOrigin {
   id: number;

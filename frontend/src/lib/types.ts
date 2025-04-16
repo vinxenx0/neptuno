@@ -78,7 +78,7 @@ export interface CreditTransaction {
   transaction_type: string;
   payment_amount?: number;
   payment_method?: string;
-  payment_status?: string;
+  payment_status: string;
   timestamp: string; // ISO string
 }
 
@@ -218,4 +218,20 @@ export interface CouponType {
   description?: string;
   credits: number;
   active: boolean;
+}
+
+export interface CouponActivity {
+  id: number;
+  coupon_type: string;
+  unique_identifier: string;
+  user_id?: number;
+  session_id?: string;
+  status: string;
+  issued_at: string;
+  redeemed_at?: string;
+}
+
+export interface AllowedOrigin {
+  id: number;
+  origin: string;
 }
