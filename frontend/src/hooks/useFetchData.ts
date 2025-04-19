@@ -1,3 +1,6 @@
+// frontend/src/hooks/useFetchData.ts
+// frontend/src/hooks/useFetchData.ts
+// Custom hook para realizar peticiones HTTP y manejar el estado de carga, error y datos.
 import { useState, useEffect } from 'react';
 
 interface FetchDataResult<T> {

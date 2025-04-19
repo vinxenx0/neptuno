@@ -19,6 +19,14 @@ Color Palette & Styling:
 
 
 
+The design evokes modern SaaS dashboards like Stripe, Supabase, Appwrite or Firebase console, with a clean, professional interface featuring:
+
+Design Inspiration:
+
+    Clear navigation with a sidebar for all API categories
+    Interactive API explorer similar to Swagger UI but more polished
+    User and admin dashboards with data visualization
+    Gamification elements (points, badges, levels) prominently displayed
 
 Refine & Customize: Tweak the design, animations, and layouts via prompts or visual edits.
 

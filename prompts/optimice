@@ -193,3 +193,19 @@ El uso de Snackbar y Alert para mostrar errores y mensajes de éxito se repite.
 Propuesta: Extraer un hook o componente de notificaciones globales.
 
 Los cambios no deben afectar a la logica de aplicación, solo se trata de reutilizar y optimizar codigo, revisar si hay repetido y organizar mejor esta parte.
+
+
+Exclente, arregla este error: Build unsucessful que te da desde que has refactorizado el navbar.
+
+- src/components/Navbar.tsx(58,34): error TS2552: Cannot find name 'navigate'. Did you mean 'navigator'?
+
+Ademas debes:
+
+- añadir el footer de la pagina al dashboard de admin y user
+- ampliar el megamenu con una tercera columna donde aparezca una imagen y un enlace, será un tip destacado esa tercera columna.
+
+- el hover del mega menu de las opciones es un poco ilegible
+
+- el color de los botones del navbar ahora mismo es azulado, pero quiero que este integrado en el navbar
+
+- añadismo bloque vibe code ready

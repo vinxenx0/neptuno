@@ -1,3 +1,7 @@
+// frontend/src/hooks/useNotifications.tsx
+// Custom hook para manejar notificaciones en la aplicación.
+// Este hook utiliza Material-UI y Framer Motion para mostrar notificaciones de manera elegante.
+// El hook devuelve una función para mostrar notificaciones y un componente para renderizarlas.
 import { useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';

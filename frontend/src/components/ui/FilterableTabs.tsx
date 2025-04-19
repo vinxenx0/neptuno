@@ -1,3 +1,7 @@
+// frontend/src/components/ui/FilterableTabs.tsx
+// This component renders a set of tabs that can be filtered based on the provided props.
+// It uses Material-UI's Tabs and Tab components for styling and functionality.
+// The tabs are passed as props, and the selected tab is managed using React's useState hook.
 import React, { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 

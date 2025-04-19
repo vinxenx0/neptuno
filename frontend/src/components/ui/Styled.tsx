@@ -1,3 +1,7 @@
+// frontend/src/components/ui/Styled.tsx
+// This file contains styled components for the application using Material-UI's styled API.
+// It includes custom styles for tabs, chips, cards, and other UI elements.
+// The styles are defined using the theme provided by Material-UI, allowing for consistent theming across the application.
 import { styled } from '@mui/material/styles';
 import { Chip, Tabs, Paper, Card } from '@mui/material';
 
