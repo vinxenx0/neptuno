@@ -1,7 +1,10 @@
 # backend/api/v1/gamification.py
 # Endpoints para gamificación: eventos, puntos, badges, rankings
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import case, desc, func
 from sqlalchemy.orm import Session
+from models.gamification import Badge, EventType, GamificationEvent, UserGamification
+from models.user import User
 from dependencies.auth import UserContext, get_user_context
 from core.database import get_db
 from services.gamification_service import (
@@ -150,3 +153,59 @@ def delete_badge_endpoint(badge_id: int,
         raise HTTPException(status_code=403, detail="No autorizado")
     delete_badge(db, badge_id)
     return {"message": "Badge eliminado"}
+
+
+# backend/api/v1/admin.py
+@router.get("/kpis")
+def get_gamification_kpis(user=Depends(get_user_context), db: Session = Depends(get_db)):
+    if user.rol != "admin":
+        raise HTTPException(status_code=403, detail="Solo administradores")
+
+    # Total de eventos
+    total_events = db.query(GamificationEvent).count()
+
+    # Usuarios activos en gamificación
+    active_users = db.query(GamificationEvent).distinct(
+        case(
+            (GamificationEvent.user_id.isnot(None), GamificationEvent.user_id),
+            else_=GamificationEvent.session_id
+        )
+    ).count()
+
+    # Total de badges otorgados
+    total_badges = db.query(UserGamification).filter(UserGamification.badge_id.isnot(None)).count()
+
+    # Puntos totales
+    total_points = db.query(func.sum(UserGamification.points)).scalar() or 0
+
+    # Ranking global
+    rankings = db.query(
+        User.username,
+        func.sum(UserGamification.points).label("points"),
+        func.count(UserGamification.badge_id).label("badges")
+    ).outerjoin(UserGamification, User.id == UserGamification.user_id
+    ).group_by(User.id).order_by(desc("points")).limit(10).all()
+
+    # Distribución de badges
+    badge_dist = db.query(
+        Badge.name,
+        func.count(UserGamification.id).label("count")
+    ).outerjoin(UserGamification, Badge.id == UserGamification.badge_id
+    ).group_by(Badge.id).all()
+
+    # Actividad por tipo de evento
+    event_dist = db.query(
+        EventType.name,
+        func.count(GamificationEvent.id).label("count")
+    ).outerjoin(GamificationEvent, EventType.id == GamificationEvent.event_type_id
+    ).group_by(EventType.id).all()
+
+    return {
+        "total_events": total_events,
+        "active_users": active_users,
+        "total_badges": total_badges,
+        "total_points": total_points,
+        "rankings": [{"username": r[0], "points": r[1], "badges": r[2]} for r in rankings],
+        "badge_distribution": [{"name": b[0], "count": b[1]} for b in badge_dist],
+        "event_distribution": [{"name": e[0], "count": e[1]} for e in event_dist]
+    }

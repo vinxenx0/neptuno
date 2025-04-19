@@ -333,7 +333,13 @@ export default function Navbar() {
                   }}
                 >
                   <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
-                    <Dashboard sx={{ mr: 1 }} /> Dashboard
+                    <Dashboard sx={{ mr: 1 }} /> Config
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/gamification">
+                    <EmojiEvents sx={{ mr: 1 }} /> Gamification
+                  </MenuItem>
+                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/revenues">
+                    <MonetizationOn sx={{ mr: 1 }} /> Revenues
                   </MenuItem>
                   <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
                     <ListAlt sx={{ mr: 1 }} /> Registros

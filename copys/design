@@ -237,3 +237,10 @@ Convertir Neptuno en una startup es un desafío emocionante, pero lo mejor es qu
 
 
 
+----------
+
+- El error de los estilos de letra persiste
+- simplifica el funcionamiento del slot machine ya que no es elegante ni smooth, vuelve a lo sencillo, creo que es el efecto rebote el que esta haciendo que falle el slot.
+- al cargar la web el slot se pondrá en marcha automaticamente con 1 tirada
+- has vuelto a poner color en los botones del megamenu, esos botones no tienen fondo
+- te paso un pantallazo para que veas que las typografias no se están cogiendo
