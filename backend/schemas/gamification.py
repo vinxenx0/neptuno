@@ -1,4 +1,5 @@
 # backend/schemas/gamification.py
+# Esquemas Pydantic para gamificación y ranking
 
 from pydantic import BaseModel
 from datetime import datetime

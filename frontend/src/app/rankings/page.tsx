@@ -1,4 +1,5 @@
 // frontend/src/app/rankings/page.tsx
+// Página de ranking global de usuarios y gamificación
 "use client";
 
 import { useState, useEffect, useRef } from "react";

@@ -1,4 +1,6 @@
 # backend/schemas/coupon.py
+# Esquema Pydantic para cupones y tipos de cupones
+
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional

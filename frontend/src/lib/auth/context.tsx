@@ -1,4 +1,6 @@
-// src/lib/auth/context.tsx
+// frontend/src/lib/auth/context.tsx
+// Contexto de autenticación y estado global del usuario
+
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";

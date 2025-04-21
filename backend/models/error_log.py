@@ -1,4 +1,6 @@
-#backend/models/error_log.py
+# backend/models/error_log.py
+# Modelo de logs de errores en la base de datos
+
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text
 from models.user import Base
 from datetime import datetime

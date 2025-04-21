@@ -1,4 +1,6 @@
 # backend/models/payment_method.py
+# Modelo de métodos de pago de usuario
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from models.user import Base
 from datetime import datetime

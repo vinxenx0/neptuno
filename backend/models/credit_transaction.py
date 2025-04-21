@@ -1,5 +1,5 @@
-#backend/models/credit_transaction.py
 # backend/models/credit_transaction.py
+# Modelo de transacciones de crédito en la base de datos
 from sqlalchemy import CheckConstraint, Column, Integer, String, ForeignKey, DateTime, Float
 from models.user import Base
 from datetime import datetime

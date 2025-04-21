@@ -1,6 +1,7 @@
 # backend/models/token.py
-# modelo para tokens revocados
+# Modelo para tokens revocados y de reseteo de contraseña
 
+# Limpieza: todos los imports son usados en este archivo.
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from core.database import Base
 from datetime import datetime, timedelta

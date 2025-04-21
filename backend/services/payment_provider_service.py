@@ -1,4 +1,6 @@
 # backend/services/payment_provider_service.py
+# Servicio para gestión de proveedores de pago
+
 from sqlalchemy.orm import Session
 from models.payment_provider import PaymentProvider
 from schemas.payment import PaymentProviderCreate

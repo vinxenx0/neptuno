@@ -1,4 +1,5 @@
 // frontend/src/components/ui/index.tsx
+// Componentes UI reutilizables (spinner, glass card, etc)
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
 
@@ -85,3 +86,7 @@ export const InteractiveDemo = ({ children }: { children: React.ReactNode }) => 
     </div>
   </motion.div>
 );
+
+export { StyledTabs, StatusChip, StyledCard } from './Styled';
+export { default as FeatureDisabled } from './FeatureDisabled';
+export { GradientCard, AdminGradientCard, ConfigGlassCard, FeatureCard } from './Styled';

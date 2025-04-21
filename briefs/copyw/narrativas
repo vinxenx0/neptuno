@@ -1,0 +1,271 @@
+¡Claro! Aquí van varias **narrativas** para posicionar **Neptuno**, cada una adaptada a distintos públicos o estilos de comunicación. Así puedes usarlas para web, pitch, redes sociales o incluso en Product Hunt.
+
+---
+
+## 🔥 1. **Narrativa para Developers Pragmáticos**
+> **"Lanza tu SaaS con lógica real de negocio, sin perder tiempo en reinventar la rueda."**
+
+- ¿Cuántas veces has empezado un side project y te has perdido entre configurar auth, pagos, base de datos y gestión de usuarios?
+- Neptuno te da una base sólida con **autenticación, gamificación, monetización y APIs listas para producción**, desde el minuto uno.
+- Está construido con tecnologías modernas como **FastAPI + Next.js**, es **modular**, **autoalojable** y 100% tuyo.
+- ¿Frontend con React, Vue, Svelte o Angular? Conéctalo como quieras. Tú decides.
+
+👉 _Es tu backend, tus reglas. Pero esta vez, sin drama._
+
+---
+
+## 🚀 2. **Narrativa de Velocidad & Time to Market**
+> **"Tu MVP en días, no meses. Sin depender de terceros."**
+
+- Neptuno no es solo una API. Es un **starter kit full-stack** con toda la lógica necesaria para lanzar un SaaS completo o una campaña gamificada en tiempo récord.
+- Autenticación avanzada, pagos, roles, niveles, retos, dashboards, webhooks… todo lo que normalmente te lleva semanas, ya está listo.
+- Solo añade tu lógica de negocio y tu UI. El resto ya está hecho.
+
+👉 _Ideal para hackathons, validaciones de negocio o productos que necesitan tracción **ya**._
+
+---
+
+## 🧠 3. **Narrativa para Equipos de Marketing & Growth**
+> **"Diseñado para convertir. Desde el primer clic hasta el pago."**
+
+- Neptuno gestiona todo el **recorrido del usuario**: del anonimato a la conversión, con herramientas de gamificación y monetización integradas.
+- Configura retos, badges, niveles, puntos y recompensas en minutos. Automatiza triggers que convierten interacciones en ventas.
+- Y todo con API documentada, dashboard personalizable y analítica lista para integrar con tu CRM.
+
+👉 _Convierte tráfico en usuarios, y usuarios en clientes. Así de simple._
+
+---
+
+## 🎮 4. **Narrativa para productos gamificados**
+> **"¿Gamificación real sin montarte tu propio RPG backend? Aquí lo tienes."**
+
+- Dale a tu app el toque que la hace adictiva: **niveles, recompensas, logros, puntos, créditos y desafíos personalizados**.
+- Olvídate de reinventar el sistema de progresión o los engines de logros. Neptuno ya lo tiene hecho por ti.
+- 100% extensible y combinable con cualquier stack frontend.
+
+👉 _Convierte tu producto en una experiencia._
+
+---
+
+## 🧩 5. **Narrativa tipo open-source builder**
+> **"Un starter kit para construir como quieras. Sin límites ni vendor lock-in."**
+
+- Neptuno no es una caja cerrada. Es un proyecto open source que puedes extender, adaptar o romper según tus necesidades.
+- ¿Quieres usar MariaDB o PostgreSQL? ¿Backend Python o añadir Node? ¿Cambiar Next.js por SvelteKit? Adelante.
+- Todo corre en contenedores Docker y se integra con cualquier stack moderno.
+
+👉 _Construye como un pro, sin depender de terceros._
+
+---
+
+## 🛠️ 6. **Narrativa para consultoras y freelancers**
+> **"Lanza SaaS para clientes en tiempo récord (y sin que te explote la cabeza)."**
+
+- Ahorra semanas de desarrollo básico en cada proyecto. Neptuno incluye todo lo esencial que tus clientes necesitan para apps con auth, pagos, CRM y más.
+- Con un par de personalizaciones y diseño encima, puedes entregar MVPs o productos comerciales sin hacer malabares técnicos.
+- Soporte de pago disponible si te atascas o necesitas adaptarlo.
+
+👉 _Más proyectos entregados. Menos estrés técnico._
+
+---
+
+## 🪄 7. **Narrativa corta para redes sociales**
+> 💥 ¿Gamificación, auth, pagos y roles listos en tu SaaS en minutos?  
+> 📦 Con Neptuno, solo construyes lo que importa: tu producto.  
+> 🧩 Backend FastAPI + Frontend Next.js + Docker  
+> 🔗 Gratis. Extensible. Modular.  
+
+---
+
+---
+
+## 🚀 Narrativa: **Velocidad & Time to Market**  
+> _"Tu MVP en días, no meses. Sin depender de terceros."_
+
+### 💡 El tiempo es tu recurso más valioso  
+En un mercado donde la velocidad lo es todo, **Neptuno** te permite lanzar en **horas, no semanas**. Ya sea un SaaS, una campaña con gamificación o un micrositio con monetización, lo tienes todo preconfigurado y listo para producción.
+
+---
+
+### ⚙️ Todo lo esencial ya está hecho  
+**Sin boilerplate. Sin integraciones interminables. Sin configuraciones agobiantes.**
+
+✅ Autenticación avanzada con OAuth2, JWT, roles y permisos  
+✅ Monetización con suscripciones, pasarelas de pago y modelos freemium  
+✅ Gestión de usuarios y leads  
+✅ Lógica de gamificación lista para usar: puntos, badges, niveles, desafíos  
+✅ Backend en FastAPI + Frontend en Next.js  
+✅ Base de datos con MariaDB y arquitectura Docker lista para escalar
+
+---
+
+### 🧪 Ideal para:
+- Validar ideas de negocio rápidamente  
+- Lanzar MVPs funcionales con lógica real de negocio  
+- Hackathons, proyectos internos o prototipos avanzados  
+- Freelancers y consultoras que quieren entregar más con menos  
+
+---
+
+### ⚡ Ejemplo real:  
+```ts
+// Asigna puntos al usuario al completar una acción
+await sdk.gamification.rewardUser({
+  userId: "abc123",
+  points: 50,
+  badge: "early-adopter"
+});
+
+// Activa una suscripción premium en segundos
+await sdk.payments.activatePlan({
+  userId: "abc123",
+  planId: "pro-monthly"
+});
+```
+
+👉 _Conecta tu frontend, y lo tienes online. No hay pasos intermedios. Solo foco._
+
+---
+
+## 🧠 Narrativa: **Para Equipos de Marketing & Growth**  
+> _"Diseñado para convertir. Desde el primer clic hasta el pago."_
+
+### 🎯 Convierte usuarios anónimos en clientes fieles  
+**Neptuno** no es solo backend. Es una plataforma pensada para ayudarte a optimizar el **recorrido completo del usuario**:
+
+📍 Desde el primer clic en tu campaña  
+🏃‍♂️ Hasta la conversión, la suscripción o la compra  
+🏆 Y más allá, fidelizándolos con gamificación inteligente
+
+---
+
+### 🧰 Tu kit de herramientas para crecimiento rápido  
+✅ Gamificación integrada: puntos, retos, badges, niveles  
+✅ Automatización de triggers para activar recompensas y upgrades  
+✅ Dashboard con analítica e integración CRM-ready  
+✅ Autenticación y tracking sin depender de herramientas externas  
+✅ Webhooks y eventos para marketing automation  
+
+---
+
+### 🧪 ¿Qué puedes hacer?
+
+- Lanzar **micrositios** con autenticación y recompensas por acciones  
+- Ejecutar **campañas virales** con niveles y retos compartibles  
+- Usar badges y puntos para **gamificar el onboarding**  
+- Automatizar upgrades de cuenta al completar tareas clave  
+- Trackear usuarios de forma **completa**, sin herramientas extra
+
+---
+
+### ⚡ Ejemplo real:
+```ts
+// Trigger dinámico para upgrade de plan si el usuario completa 3 retos
+if (await sdk.gamification.getCompletedChallenges(userId) >= 3) {
+  await sdk.payments.upgradeUser(userId, "premium");
+}
+```
+
+👉 _Neptuno está pensado para growth hackers, marketers y equipos que miden resultados. No para perderse en código._
+
+---
+
+---
+
+## 🎮 Narrativa: **Para Productos Gamificados**  
+> _"Diseñado para enganchar. Construido para convertir."_  
+> Convierte cada interacción en una oportunidad de retención y cada reto en una vía de monetización.
+
+### 🌟 Dale superpoderes a tu app desde el día uno  
+Con Neptuno puedes lanzar productos con gamificación avanzada **sin reinventar la rueda**. En vez de gastar meses en construir lógica de puntos, retos, niveles y recompensas, lo tienes todo **listo, modular y ampliable**.
+
+---
+
+### 🎁 Funciones pensadas para el engagement:
+✅ Recompensas dinámicas: puntos, créditos, badges, objetos virtuales  
+✅ Retos y misiones configurables desde la API  
+✅ Niveles, rankings y progresión para fidelizar  
+✅ Triggers y eventos personalizables para automatizar la experiencia  
+✅ Integración con sistemas de pagos para monetizar los logros  
+
+---
+
+### 💥 Crea experiencias como:
+- Apps de aprendizaje con XP y progresión por módulos  
+- Plataformas de salud/fitness con retos semanales y logros  
+- Comunidades que premian la participación y aportes  
+- SaaS que convierten el onboarding en un juego  
+- Programas de fidelización con puntos canjeables  
+
+---
+
+### 🧪 Ejemplo real:
+```ts
+// Crea un reto semanal personalizado
+await sdk.gamification.createChallenge({
+  title: "Comparte en redes",
+  points: 100,
+  repeatable: false,
+  trigger: "social-share"
+});
+
+// Subir de nivel automáticamente
+await sdk.gamification.levelUp(userId);
+```
+
+👉 _Engancha como un juego. Vende como un negocio._
+
+---
+
+## 🧭 Narrativa: **Para Product Managers y COO**  
+> _"Una infraestructura estratégica para lanzar, escalar y evolucionar productos digitales."_  
+> Menos dependencia de ingeniería. Más foco en el roadmap y el crecimiento.
+
+---
+
+### 🔍 Visibilidad total. Control absoluto.  
+Neptuno te ofrece un **starter kit full-stack**, con todas las capas clave del producto ya resueltas:
+
+✅ Backend robusto y extensible en FastAPI  
+✅ Frontend modular en Next.js (opcional)  
+✅ API documentada y lista para conectar con cualquier sistema  
+✅ Gestión de usuarios, permisos y flujos de pago  
+✅ Lógica de negocio reutilizable: gamificación, triggers, monetización  
+
+---
+
+### 🏗️ Ideal para:
+- Validar hipótesis de producto sin comprometer calidad  
+- Acelerar lanzamientos sin reinventar la infraestructura  
+- Escalar sin fricciones: Docker, MariaDB, API modular  
+- Coordinar producto, diseño, marketing y desarrollo en el mismo entorno  
+- Medir resultados desde el día uno, con eventos y webhooks listos
+
+---
+
+### 💼 ¿Por qué te conviene?
+
+- Menos ciclos de desarrollo = más entregas por sprint  
+- Los equipos de marketing y growth pueden avanzar sin bloqueos  
+- Fácil integración con tu stack actual o herramientas de terceros  
+- La lógica del negocio ya está encapsulada y lista para usar  
+
+---
+
+### ⚡ Ejemplo real:
+```ts
+// Crear un nuevo modelo freemium con upgrade automático
+await sdk.payments.createPlan({
+  name: "Pro",
+  price: 19.99,
+  features: ["analytics", "priority-support"],
+  upgradeTrigger: "completed-onboarding"
+});
+```
+
+👉 _Desde el backlog hasta producción. Sin perder tiempo. Sin perder foco._
+
+---
+
+¿Quieres que prepare variantes según el tipo de producto (B2B, B2C, educativo, etc.) o una versión en inglés también?
+

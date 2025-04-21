@@ -1,4 +1,6 @@
-#backend/models/allowed_origin.py
+# backend/models/allowed_origin.py
+# Modelo de orígenes permitidos para CORS
+
 from sqlalchemy import Column, Integer, String
 from models.user import Base
 

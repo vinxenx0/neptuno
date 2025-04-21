@@ -1,4 +1,6 @@
 # backend/models/integration.py
+# Modelo de integraciones y webhooks externos
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from models.user import Base
 from datetime import datetime

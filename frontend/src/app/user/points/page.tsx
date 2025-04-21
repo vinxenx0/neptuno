@@ -1,4 +1,6 @@
 // frontend/src/app/user/points/page.tsx
+// Página de historial y progreso de puntos y gamificación
+
 "use client";
 
 import { useEffect, useState } from "react";

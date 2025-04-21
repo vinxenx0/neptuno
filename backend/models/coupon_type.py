@@ -1,4 +1,5 @@
 # backend/models/coupon_type.py
+# Modelo de tipos de cupones para la base de datos
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from core.database import Base
 from datetime import datetime

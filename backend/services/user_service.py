@@ -1,7 +1,11 @@
 # backend/services/user_service.py
+# Servicio para gestión y actualización de usuarios
+
 from sqlalchemy.orm import Session
 from models.user import User
 from fastapi import HTTPException
+
+# Limpieza: todos los imports son usados en este archivo.
 
 def get_user_info(db: Session, user_id: int):
     user = db.query(User).filter(User.id == user_id).first()

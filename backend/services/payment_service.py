@@ -1,4 +1,5 @@
 # backend/services/payment_service.py
+# Servicio para pagos y métodos de pago de usuarios
 from sqlalchemy.orm import Session
 from schemas.payment import PaymentMethodResponse
 from models.payment_method import PaymentMethod

@@ -1,4 +1,5 @@
 # backend/services/credits_service.py
+# Servicio para gestión y deducción de créditos
 # Permitir la renovación automática o manual de créditos para usuarios registrados y anónimos.
 from sqlalchemy.orm import Session
 from models.user import User, subscriptionEnum

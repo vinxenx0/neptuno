@@ -1,4 +1,6 @@
 # backend/services/coupon_service.py
+# Servicio para gestión y canje de cupones
+
 from typing import Optional
 from sqlalchemy import desc
 from sqlalchemy.orm import Session

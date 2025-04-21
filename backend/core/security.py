@@ -1,5 +1,5 @@
 # backend/core/security.py
-# Usar OAuth2 con Password Flow para autenticación segur
+# Seguridad y autenticación OAuth2 y JWT
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import jwt

@@ -1,5 +1,5 @@
 # backend/api/v1/auth.py
-# Módulo de autenticación de la API v1.
+# Endpoints de autenticación y registro de usuarios (v1)
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session

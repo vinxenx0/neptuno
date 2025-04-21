@@ -1,6 +1,5 @@
 # backend/dependencies/auth.py
-# Módulo de dependencias de autenticación.
-# backend/dependencies/auth.py
+# Módulo de dependencias de autenticación y contexto de usuario
 from models.coupon_type import CouponType
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session

@@ -1,4 +1,5 @@
 # backend/models/guests.py
+# Modelo de sesiones anónimas para usuarios no identificados
 # Módulo del modelo de sesión para usuarios anonimos que no estan identificados.
 from sqlalchemy import Column, String, Integer, DateTime, Float
 from sqlalchemy.orm import relationship
@@ -29,4 +30,4 @@ class GuestsSession(Base):
 
 
     coupons = relationship("Coupon", foreign_keys="Coupon.session_id", back_populates="session")
-    
+

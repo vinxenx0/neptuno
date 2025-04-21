@@ -1,4 +1,5 @@
-#backend/schemas/payment.py
+# backend/schemas/payment.py
+# Esquemas Pydantic para pagos y métodos de pago
 
 from pydantic import BaseModel
 from datetime import datetime

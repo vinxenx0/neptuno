@@ -1,3 +1,6 @@
+# backend/schemas/allowed_origin.py
+# Esquema Pydantic para orígenes permitidos (CORS)
+
 from pydantic import BaseModel
 
 class AllowedOrigin(BaseModel):

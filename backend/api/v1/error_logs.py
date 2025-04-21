@@ -1,4 +1,5 @@
 # backend/api/v1/error_logs.py
+# Endpoints para logs de errores (v1)
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List

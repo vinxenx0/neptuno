@@ -86,7 +86,7 @@ export default function UserDashboard() {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const { data } = await fetchAPI<any[]>("/v1/coupons/"); // Ajusta el endpoint según tu API
+        const { data } = await fetchAPI<any[]>("/v1/coupons/me"); // Ajusta el endpoint según tu API
         setCoupons(data || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar cupones");

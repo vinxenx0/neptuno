@@ -1,3 +1,17 @@
+- el bug de los creditos y el storage en front page
+
+- en admin/registry:
+- Vaciar logs : Function not implemented pero si funciona
+- Guest logs: tb vaciar logs
+- cupones logs: vaciar tb
+
+- limpiar cupones q no pertenecen a nadie
+
+- reflejo de los creditos consistencia en los journey
+
+/// CREDITOS POR REGISTRARSE: 100 
+// CREDITOS POR REGISTRARSE con otro proveedor: 200
+
 Comprobar tema SEO no se ven las meta tags
 
 Comprobar los badges y puntos de los anonimos -> revisar las aventuras de la db
@@ -17,6 +31,7 @@ Comprobar los badges y puntos de los anonimos -> revisar las aventuras de la db
 -- avisar del registro de usuarios (añadir info bar arriba)
 
 -- preparar del docker-compose yaml para que tenga un nginx dockerizado para el resto de users (probarlo tb)
+
 --- ya esta comentado solo falta copiarle los archivos del finetuning y los del hosting (irian a default)
 
 

@@ -1,4 +1,6 @@
 # backend/models/coupon.py
+# Modelo de cupones y sus relaciones en la base de datos
+
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from models.guests import GuestsSession

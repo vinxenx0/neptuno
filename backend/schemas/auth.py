@@ -1,4 +1,6 @@
-#backend/schemas/auth.py
+# backend/schemas/auth.py
+# Esquema Pydantic para autenticación y tokens
+
 from pydantic import BaseModel, EmailStr
 
 # Respuesta de tokens tras autenticación exitosa

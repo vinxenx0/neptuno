@@ -1,5 +1,5 @@
 # backend/models/user.py
-# Módulo del modelo de usuario.
+# Modelo de usuario y sus atributos principales
 from datetime import datetime
 from sqlalchemy import Column, Float, Integer, String, DateTime, Boolean, Enum
 from core.database import Base
@@ -75,4 +75,5 @@ class User(Base):
 
     # Añadir relaciones inversas en los modelos existentes
     coupons = relationship("Coupon", foreign_keys="Coupon.user_id", back_populates="user")
-    
+
+# Limpieza: todos los imports son usados en este archivo.

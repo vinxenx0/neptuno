@@ -1,5 +1,6 @@
 # backend/core/config.py
 # Módulo de configuración de la aplicación.
+
 from dotenv import load_dotenv
 import os
 

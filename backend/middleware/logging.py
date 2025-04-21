@@ -1,4 +1,5 @@
 # backend/middleware/logging.py
+# Middleware para registrar logs de peticiones y respuestas
 from fastapi import Request, Response
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -7,6 +8,8 @@ from models.log import APILog
 import json
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Callable
+
+# Limpieza: todos los imports son usados en este archivo.
 
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
