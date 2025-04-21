@@ -30,17 +30,6 @@ KO - Pruebas de carga
     -- a futuro: panel de tracking de usuarios
     -- avanzar en la configuracion modular del sitio para activar o desactivar features
     -todo: mejorar la configuración (  archivos o db para los limites?, ) hacerla mas escalable y desactivar features
-
-
-
-
-- Nuevas plantillas para front:
-  - Login/register/ etc tiene otra base layout sin menu
-  - Menu superior mas robusto (iconos, opciones, etc  )
-  - Renderizar moviles
-  - Mejor mejor plantilla de profile
-  - Dashboard admin mas bonito, tarjetas, etc
-  - Añadir paginas de about/
   - Ordenar la API abierta (whoamin,etc)
 
 - Nuevas caracteristicas:

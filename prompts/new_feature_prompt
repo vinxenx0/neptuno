@@ -1,0 +1,259 @@
+¡Entendido! Gracias por proporcionarme toda esta información detallada y los archivos necesarios para trabajar en la implementación del sistema de cupones en la aplicación Neptuno. Dado que hay bastante contenido que cubrir y que me has pedido que respete la lógica actual, genere código completo y lo explique paso a paso, voy a estructurar mi respuesta en partes claras y detalladas. Implementaré las mejoras solicitadas tanto en el backend como en el frontend, siguiendo tus instrucciones al pie de la letra y respetando la guía de estilo actual de la aplicación.
+
+Voy a dividir la respuesta en las siguientes secciones para que sea más manejable y fácil de seguir:
+
+    Backend: Implementación del sistema de cupones
+        Modelo de datos
+        Esquemas Pydantic
+        Servicios
+        Endpoints
+        Configuración del SiteSetting
+        Datos iniciales de ejemplo
+        Endpoint de demostración
+        Actualización de archivos existentes (como main.py)
+    Frontend: Implementación del sistema de cupones
+        Tipados y actualizaciones en el contexto de autenticación
+        Modificación de la Navbar
+        Página /users/coupon/
+        Actualización del dashboard de usuario
+        Actualización del dashboard de administrador
+    Integración con gamificación y acciones
+        Generación de cupones desde eventos de gamificación y acciones
+    Actualización de la página de ejemplos
+        Ampliación de /ejemplos para probar cupones
+
+Dado que es una implementación extensa, generaré el código completo para cada sección y explicaré cada paso para que puedas aprender cómo abordar módulos similares en el futuro. Si en algún momento necesito más archivos o tengo dudas, te lo indicaré claramente. Por ahora, parece que tengo todo lo necesario para empezar.
+Comencemos con la primera parte: Backend.
+Parte 1: Backend - Implementación del sistema de cupones
+1.1 Modelo de datos (backend/models/coupon.py)
+Primero, necesitamos definir el modelo de datos para los cupones en la base de datos. Este modelo incluirá todos los atributos solicitados y establecerá relaciones con los modelos de usuarios registrados (User) y sesiones anónimas (GuestsSession). Usaré SQLAlchemy como en los demás modelos existentes.
+Código completo:
+python
+
+# backend/models/coupon.py
+
+Explicación:
+
+    Atributos: Incluyo todos los campos solicitados: name, description, unique_identifier, issued_at, expires_at, redeemed_at, active, status, y credits.
+    Relaciones: Los cupones pueden pertenecer a un usuario registrado (user_id) o a una sesión anónima (session_id). También rastreo quién canjeó el cupón con redeemed_by_user_id y redeemed_by_session_id.
+    Relaciones inversas: Actualizo los modelos User y GuestsSession para que tengan una relación inversa (coupons) con el modelo Coupon, manteniendo la coherencia con la estructura existente.
+    Índices y restricciones: El campo unique_identifier tiene una restricción de unicidad para garantizar que no haya duplicados.
+
+1.2 Esquemas Pydantic (backend/schemas/coupon.py)
+Los esquemas Pydantic se usarán para validar y serializar los datos de los cupones en los endpoints de la API. Crearé esquemas para crear, actualizar y responder.
+Código completo:
+python
+
+# backend/schemas/coupon.py
+
+Explicación:
+
+    CouponBase: Contiene los campos comunes a todos los esquemas.
+    CouponCreate: Se usa para crear nuevos cupones, hereda de CouponBase.
+    CouponUpdate: Permite actualizar campos opcionalmente, ideal para endpoints PATCH/PUT.
+    CouponResponse: Incluye todos los campos del modelo para las respuestas, con from_attributes=True para serializar objetos SQLAlchemy.
+
+1.3 Servicios (backend/services/coupon_service.py)
+El servicio contendrá la lógica de negocio para gestionar los cupones: crear, listar, actualizar, eliminar y canjear.
+Código completo:
+python
+
+# backend/services/coupon_service.py
+
+Explicación:
+
+    create_coupon: Genera un identificador único y crea un cupón asociado a un usuario o sesión.
+    get_coupon_by_id: Obtiene un cupón por ID, lanza una excepción si no existe.
+    get_user_coupons: Lista los cupones de un usuario o sesión específica.
+    get_all_coupons: Lista todos los cupones (para administradores).
+    update_coupon: Actualiza los campos especificados de un cupón.
+    delete_coupon: Elimina un cupón.
+    redeem_coupon: Verifica la validez del cupón y lo canjea, sumando créditos al usuario o sesión correspondiente.
+
+1.4 Endpoints (backend/api/v1/coupons.py)
+Definiré los endpoints RESTful para gestionar los cupones, siguiendo la estructura de gamification.py.
+Código completo:
+python
+
+# backend/api/v1/coupons.py
+
+Explicación:
+
+    POST /coupons/: Solo administradores pueden crear cupones.
+    GET /coupons/me: Lista los cupones del usuario autenticado (registrado o anónimo).
+    GET /coupons/: Lista todos los cupones (solo administradores).
+    PUT /coupons/{coupon_id}: Actualiza un cupón (solo administradores).
+    DELETE /coupons/{coupon_id}: Elimina un cupón (solo administradores).
+    POST /coupons/redeem/{coupon_id}: Canjea un cupón, verificando el estado de enable_coupons.
+    POST /coupons/generate-demo-coupon: Endpoint público para generar cupones de demostración.
+
+1.5 Configuración del SiteSetting
+Añadiré un nuevo SiteSetting para habilitar/deshabilitar los cupones.
+Código a añadir en backend/initial_data.py:
+python
+
+# backend/initial_data.py (añadir al final de la función existente)
+def init_db(db: Session):
+    # ... código existente ...
+
+    # Añadir SiteSetting para cupones
+  
+Explicación:
+
+    Esto asegura que al iniciar la base de datos, se cree un ajuste enable_coupons con valor predeterminado true.
+
+1.6 Datos iniciales de ejemplo
+Añadiré algunos cupones de ejemplo en initial_data.py.
+Código a añadir:
+python
+
+# backend/initial_data.py (añadir al final de la función existente)
+def init_db(db: Session):
+    # ... código existente ...
+
+    # Añadir cupones de ejemplo
+   
+
+Explicación:
+
+    Creo dos cupones iniciales: uno asociado a un usuario y otro con fecha de expiración.
+
+1.7 Actualización de main.py
+Incluyo el router de cupones en la aplicación principal.
+Código modificado:
+python
+
+# backend/main.py (fragmento relevante)
+# ... imports existentes ...
+from api.v1 import coupons
+
+# ... código existente ...
+
+app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
+
+# ... resto del código ...
+
+Explicación:
+
+    Añado el router de cupones al app, siguiendo la estructura existente de otros módulos.
+
+Esto completa la implementación en el backend. En la siguiente parte, abordaré el frontend. ¿Te parece bien que continúe con esa sección ahora, o prefieres revisar esta parte primero? Si necesitas ajustes o más archivos, házmelo saber. ¡Estoy aquí para asegurarme de que todo quede perfecto!
+
+
+¡Entendido! Gracias por proporcionarme el script actualizado para los datos de prueba en MySQL. He notado que este script no incluye la tabla de cupones (coupons), lo cual implica que debo crearla y adaptarla para que sea compatible con el frontend que implementaré. Dado que el script está diseñado para MySQL pero la aplicación también soporta SQLite, me aseguraré de que cualquier nueva estructura sea compatible con ambos motores de base de datos.
+A continuación, continuaré con la implementación del sistema de cupones en el frontend, siguiendo los puntos que me indicaste. Generaré el código completo para cada sección y explicaré cada paso detalladamente para que puedas aprender cómo abordar módulos similares en el futuro. Si necesito más archivos o tengo dudas, lo indicaré claramente. ¡Empecemos!
+
+Frontend: Implementación del sistema de cupones
+2.1 Tipados y actualizaciones en el contexto de autenticación
+Primero, necesitamos definir los tipos para los cupones y actualizar el contexto de autenticación para incluir esta información. Esto permitirá que los cupones estén disponibles globalmente en la aplicación.
+2.1.1 Definición de tipos para cupones
+Crearé (o actualizaré) un archivo types.ts en src/lib/ para incluir la interfaz de los cupones. Como el script SQL no incluye la tabla coupons, diseñaré una interfaz basada en las necesidades del sistema y en lo que sería típico para un modelo de cupones.
+Código para src/lib/types.ts:
+typescript
+
+// src/lib/types.ts
+// Tipos existentes (suponiendo que ya están definidos User, Gamification, etc.)
+Explicación:
+
+    Propósito: La interfaz Coupon define la estructura de un cupón, incluyendo campos esenciales como id, name, credits, status, y campos opcionales para asociarlo con usuarios registrados (user_id) o anónimos (session_id).
+    Compatibilidad: Uso tipos que funcionan tanto en TypeScript como en el backend, y reflejan una tabla que podríamos añadir al script SQL (ver más adelante).
+    Aprendizaje: Define siempre tus tipos en un lugar centralizado (types.ts) para reutilizarlos en toda la aplicación y evitar duplicación.
+
+2.1.2 Actualización del contexto de autenticación
+Actualizaré el AuthContext para incluir los cupones del usuario, permitiendo que estén disponibles en cualquier componente que use el hook useAuth.
+Código para src/lib/auth/context.tsx:
+typescript
+
+// src/lib/auth/context.tsx
+Explicación:
+
+    Estado coupons: Añadí coupons al estado del contexto y una función setCoupons para actualizarlo.
+    Carga inicial: En el useEffect, después de obtener la info del usuario y gamificación, hago una llamada a /v1/coupons/me para cargar los cupones.
+    Aprendizaje: Usa contextos para manejar estado global (como autenticación o datos compartidos). Asegúrate de tipar correctamente la interfaz del contexto (AuthContextType) para que TypeScript te ayude a detectar errores.
+
+2.2 Modificación de la Navbar
+Añadiré un ícono de cupones a la Navbar con un badge que muestre la cantidad de cupones activos.
+Código para src/components/web/Navbar.tsx:
+typescript
+
+// src/components/web/Navbar.tsx
+Explicación:
+
+    Ícono de cupones: Usé LocalActivity de MUI y un Badge para mostrar el número de cupones activos.
+    Filtro: Calculo availableCoupons filtrando los cupones por status y fecha de expiración.
+    Aprendizaje: Integra datos dinámicos en la UI (como badges) para mejorar la experiencia del usuario. Usa tooltips para dar contexto adicional.
+
+2.3 Página /users/coupon/
+Crearé una página para mostrar y canjear cupones.
+Código para src/app/user/coupon/page.tsx:
+typescript
+
+// src/app/user/coupon/page.tsx
+
+
+Explicación:
+
+    Tabla: Muestra los cupones con un botón para canjear los activos.
+    Canjeo: Al canjear, actualizo los cupones y los créditos del usuario mediante una llamada al backend.
+    Aprendizaje: Usa tablas para datos tabulares y maneja estados locales (como error y success) para feedback inmediato.
+
+2.4 Actualización del dashboard de usuario
+Añadiré una pestaña "Cupones" al dashboard de usuario.
+Código para src/app/user/dashboard/page.tsx:
+typescript
+
+// src/app/user/dashboard/page.tsx
+Explicación:
+
+    Pestaña: Añadí una pestaña "Cupones" con una tabla similar a la página dedicada.
+    Aprendizaje: Reutiliza componentes y lógica (como la tabla de cupones) para mantener la consistencia y reducir código duplicado.
+
+2.5 Actualización del dashboard de administrador
+Añadiré una opción para activar/desactivar cupones y una pestaña para gestionarlos.
+Código para src/app/admin/dashboard/page.tsx:
+typescript
+
+// src/app/admin/dashboard/page.tsx
+
+Explicación:
+
+    Funcionalidad: Añadí una tarjeta para activar/desactivar cupones en la pestaña "Funcionalidades".
+    Pestaña: Incluí una pestaña "Cupones" con un placeholder para la gestión (puedes añadir una tabla y formulario similar a gamificación).
+    Aprendizaje: Diseña interfaces de administración con controles claros (como switches) y pestañas para organizar funcionalidades.
+
+2.6 Integración con gamificación y acciones
+Para generar cupones desde eventos de gamificación, necesitaré una tabla coupons en el backend y lógica para crearla. Aquí te doy el SQL y el código del backend.
+SQL para añadir la tabla coupons al script:
+sql
+
+Código backend (Python, suponiendo FastAPI):
+python
+
+# backend/services/coupon_service.py
+
+# backend/services/gamification_service.py
+Explicación:
+
+    Tabla: Creé una tabla coupons compatible con el script SQL.
+    Lógica: Al completar una encuesta, se genera un cupón.
+    Aprendizaje: Integra sistemas (como gamificación y cupones) definiendo puntos de contacto claros y manejando transacciones en el backend.
+
+2.7 Actualización de la página de ejemplos
+Añadiré funcionalidad para generar cupones de prueba.
+Código para src/app/ejemplos/page.tsx:
+typescript
+
+// src/app/ejemplos/page.tsx
+Explicación:
+
+    Generación: Un botón genera un cupón de prueba y lo añade al estado.
+    Aprendizaje: Usa páginas de prueba para validar funcionalidades nuevas y proporcionar feedback al usuario.
+
+Notas finales
+
+    Archivos faltantes: Si no tienes fetchAPI en src/lib/api.ts, necesitarás implementarlo como una función para hacer peticiones HTTP (por ejemplo, con axios).
+    Backend: La implementación completa requiere endpoints como /v1/coupons/me y /v1/coupons/redeem/:id. Si necesitas ayuda con esto, indícalos.
+    Aprendizaje general: Divide el desarrollo en pasos claros (tipado, contexto, UI, integración), reutiliza código, y mantén consistencia en el diseño.
+
+¿Necesitas más detalles o ajustes? ¡Estoy aquí para ayudarte!
+

@@ -1,0 +1,48 @@
+
+========================0
+
+lovable
+
+========================
+
+Maravilloso!!
+
+Haz los siguientes cambios mas:
+
+- nueva organizacion de la landing:
+
+- Revisa alguna libreria moderna como mui por si te apatece poner alguna animación en alguno sitio.
+
+- la web es responsive perfecto, pero por razones de diseño los iconos de las notificaciones serán siempre visibles a todas las resoluciones, al menu hamburguesa solo van las opciones de la landing y la opcion perfil (avatar en los iconos)
+
+- haz otro ejemplo Journey en el bloque Prueba la gamificación que sea un itinerario de atención al cliente/soporte para clientes y leads, 
+el cliente si la responde y hace varios pasos como valorar, otorgar puntuacion, indicar en que areas esta interesado de negocio o futuros productos, etc, obtendrá un cupon para canjearlo por creditos y una insignia por participar
+
+en el pie debes añadir las opciones que faltan:
+
+Información
+Sobre Nosotros
+Privacidad
+Términos Legales
+Soporte
+API Docs
+Contacto
+
+Avenida Miguel Indurain, Murcia, 30008 España
+info@neptuno.com
++34 987 654 321
+
+y quitar actualizar las nomenclaturas.
+
+por ultimo, probamos con otros colores mas atrevidos que no sean el azul marino? pon abajo de forma temporal solo para el diseño una paleta de colores que se pueda alternar el tema para ver cual me gusta mas, se creativo y atrevido con tus combinaciones.
+
+
+===========================
+
+----------
+
+- El error de los estilos de letra persiste
+- simplifica el funcionamiento del slot machine ya que no es elegante ni smooth, vuelve a lo sencillo, creo que es el efecto rebote el que esta haciendo que falle el slot.
+- al cargar la web el slot se pondrá en marcha automaticamente con 1 tirada
+- has vuelto a poner color en los botones del megamenu, esos botones no tienen fondo
+- te paso un pantallazo para que veas que las typografias no se están cogiendo
