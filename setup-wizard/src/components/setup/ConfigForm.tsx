@@ -38,7 +38,7 @@ const ConfigForm = ({ section, config, onUpdate, onNext, onBack }: ConfigFormPro
         return (
           <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Database Configuration</h3>
+              <h3 className="text-lg font-semibold mb-4">Database Server Configuration</h3>
               <div className="space-y-4">
                 <div className="input-group">
                   <Label htmlFor="dbType" className="text-base font-medium mb-1 block">Database Type</Label>
