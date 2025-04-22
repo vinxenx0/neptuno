@@ -1,5 +1,6 @@
 # backend/api/v1/api_logs.py
 # Endpoints para logs de actividad de la API (v1)
+# revisar
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
