@@ -1,0 +1,184 @@
+Perfecto, aquí tienes una **guía paso a paso para desarrolladores** que quieran integrar el SDK de Neptuno en su aplicación. Ideal para arrancar un proyecto desde cero o conectar tu frontend existente a nuestra API en minutos.
+
+---
+
+# 🚀 Guía para Desarrolladores: Integra Neptuno en 5 pasos
+
+> **Neptuno SDK** te permite autenticar usuarios, aplicar gamificación, gestionar pagos y automatizar la conversión de leads de forma ultra rápida.  
+Compatible con **React, Vue, Angular, Next.js** y cualquier stack moderno de frontend.
+
+---
+
+## 1. 🧱 Instala el SDK en tu proyecto
+
+```bash
+npm install @neptuno/sdk
+```
+
+O si usas Yarn:
+
+```bash
+yarn add @neptuno/sdk
+```
+
+---
+
+## 2. ⚙️ Configura el cliente
+
+Importa el SDK y crea una instancia con la URL de tu backend de Neptuno (o usa el entorno cloud `https://api.tunea.io`).
+
+```ts
+import { Neptuno } from '@neptuno/sdk'
+
+const neptuno = new Neptuno({
+  baseUrl: 'https://api.tunea.io', // o tu propia instancia self-hosted
+})
+```
+
+Puedes inyectar este cliente en tu contexto global o servicio de frontend.
+
+---
+
+## 3. 🔐 Autenticación de usuarios
+
+Registra y autentica usuarios en segundos.
+
+```ts
+// Registro
+await neptuno.auth.register({
+  username: 'ash.ketchum@pallet.com',
+  password: 'pikachu123',
+})
+
+// Login
+await neptuno.auth.login({
+  username: 'ash.ketchum@pallet.com',
+  password: 'pikachu123',
+})
+
+// Cargar perfil del usuario
+const user = await neptuno.users.me()
+console.log(user.username, user.points, user.level)
+```
+
+---
+
+## 4. 🎮 Añade gamificación
+
+### 🔸 Otorga puntos y desbloquea badges
+
+```ts
+await neptuno.gamification.awardPoints({
+  userId: user.id,
+  amount: 150,
+  reason: 'completed_survey'
+})
+
+await neptuno.gamification.unlockBadge({
+  userId: user.id,
+  badgeId: 'feedback_champion'
+})
+```
+
+### 🔸 Desafíos y niveles automáticos
+
+```ts
+await neptuno.gamification.startChallenge({
+  userId: user.id,
+  challengeId: 'daily_visit'
+})
+
+await neptuno.gamification.updateChallengeProgress({
+  userId: user.id,
+  challengeId: 'daily_visit',
+  progress: 1,
+})
+```
+
+### 🔸 Subir de nivel
+
+```ts
+const { canLevelUp, nextLevel } = await neptuno.gamification.checkLevelUp({ userId: user.id })
+
+if (canLevelUp) {
+  await neptuno.gamification.levelUp({ userId: user.id })
+  console.log(`🎉 Subiste al nivel ${nextLevel}!`)
+}
+```
+
+---
+
+## 5. 💸 Activa pagos y monetización
+
+Integra pagos, suscripciones y modelos freemium sin complicarte.
+
+```ts
+// Crear una suscripción para un usuario
+await neptuno.billing.subscribe({
+  userId: user.id,
+  planId: 'premium_monthly',
+  paymentMethod: 'stripe',
+})
+```
+
+También puedes:
+
+- Configurar planes en el dashboard
+- Sincronizar con Stripe o PayPal
+- Usar Webhooks para automatizar upgrades o downgrades
+
+---
+
+## 6. 📡 Extra: Automatiza con eventos y triggers
+
+Define triggers en el backend para recompensar acciones automáticamente:
+
+```ts
+await neptuno.events.track({
+  name: 'invited_friend',
+  metadata: { referral_code: 'ABCD123' },
+})
+```
+
+Por ejemplo: al invitar a un amigo, el usuario puede recibir puntos, badges y hasta un mes premium gratis.
+
+---
+
+## 🧪 Bonus: Revisa el estado de cualquier recurso
+
+```ts
+const badges = await neptuno.gamification.listBadges()
+const activeChallenges = await neptuno.gamification.listUserChallenges(user.id)
+const subscription = await neptuno.billing.getSubscription(user.id)
+```
+
+---
+
+## 🧑‍💻 Recomendado: estructura de proyecto
+
+```
+/src
+  /api     → Funciones que usan el SDK
+  /hooks   → Custom hooks (useAuth, useGamification, etc.)
+  /pages   → Vistas protegidas o públicas
+  /context → NeptunoProvider con el SDK como contexto global
+```
+
+---
+
+## ✅ ¿Y ahora qué?
+
+- Crea una cuenta o despliega tu propio backend con Neptuno
+- Usa los dashboards para definir retos, niveles, planes y más
+- Conecta tu frontend en minutos y empieza a escalar tu producto
+
+---
+
+## 🧭 ¿Quieres el boilerplate ya montado?
+
+👉 Escríbenos o accede al repositorio de ejemplo: `neptuno-sdk-demo`  
+Incluye autenticación, gamificación, pagos y dashboards preconfigurados.
+
+---
+
+¿Te gustaría que esta guía esté también en PDF o Markdown para tu repo? ¿O te creo una versión en inglés para devs internacionales?
