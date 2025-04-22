@@ -1,0 +1,127 @@
+
+export const esTranslations = {
+  // Common
+  language: "Idioma",
+  back: "Atrás",
+  nextStep: "Siguiente Paso",
+  generateEnv: "Generar .env",
+  downloadDockerCompose: "Descargar docker-compose.yml",
+  
+  // Sections
+  projectConfiguration: "Configuración del Proyecto",
+  environmentSettings: "Configuración del Entorno",
+  serverConfiguration: "Configuración del Servidor",
+  authenticationSettings: "Configuración de Autenticación",
+  redisConfiguration: "Configuración de Redis",
+  frontendSettings: "Configuración del Frontend",
+  dockerConfiguration: "Configuración de Docker",
+  downloadConfigurations: "Descargar Configuraciones",
+  
+  // Section descriptions
+  projectDescription: "Define la información básica y configuración de tu proyecto",
+  environmentDescription: "Configura los ajustes específicos del entorno",
+  serverDescription: "Configura tu servidor backend y la conexión a la base de datos",
+  authDescription: "Configura los proveedores de autenticación y credenciales",
+  redisDescription: "Configura el servidor de caché Redis",
+  frontendDescription: "Configura los ajustes de tu aplicación frontend",
+  dockerDescription: "Configura los contenedores y servicios Docker",
+  downloadDescription: "Descarga todos los archivos de configuración para tu proyecto",
+  
+  // Database
+  database: "Base de Datos",
+  loadBalancing: "Balanceo de Carga",
+  databaseConfiguration: "Configuración de Base de Datos",
+  databaseType: "Tipo de Base de Datos",
+  databaseEngineType: "Tipo de motor de base de datos",
+  selectDatabaseType: "Selecciona el tipo de base de datos",
+  databaseHost: "Host de Base de Datos",
+  databaseServerHostname: "Nombre del servidor de base de datos",
+  databasePort: "Puerto de Base de Datos",
+  databaseServerPort: "Puerto del servidor de base de datos",
+  databaseUser: "Usuario de Base de Datos",
+  databaseUsername: "Nombre de usuario de la base de datos",
+  databasePassword: "Contraseña de Base de Datos",
+  databasePasswordDesc: "Contraseña de la base de datos",
+  enterDatabasePassword: "Introduce la contraseña de la base de datos",
+  databaseName: "Nombre de Base de Datos",
+  databaseNameDesc: "Nombre de la base de datos",
+  enterDatabaseName: "Introduce el nombre de la base de datos",
+  
+  // Environment
+  enableDebugMode: "Activar Modo Debug",
+  enableDebugModeDesc: "Habilita el modo de depuración para desarrollo",
+  
+  // Auth
+  googleCustomerId: "ID de Cliente de Google",
+  googleOAuthClientId: "ID de cliente OAuth de Google",
+  yourGoogleCustomerId: "Tu ID de Cliente de Google",
+  googleCustomerSecret: "Secreto de Cliente de Google",
+  googleOAuthClientSecret: "Secreto de cliente OAuth de Google",
+  yourGoogleCustomerSecret: "Tu Secreto de Cliente de Google",
+  googleRedirectUri: "URI de Redirección de Google",
+  googleOAuthRedirectUri: "URI de redirección OAuth de Google",
+  metaClientId: "ID de Cliente de Meta",
+  metaOAuthClientId: "ID de cliente OAuth de Meta/Facebook",
+  yourMetaClientId: "Tu ID de Cliente de Meta",
+  metaClientSecret: "Secreto de Cliente de Meta",
+  metaOAuthClientSecret: "Secreto de cliente OAuth de Meta/Facebook",
+  yourMetaClientSecret: "Tu Secreto de Cliente de Meta",
+  metaRedirectUri: "URI de Redirección de Meta",
+  metaOAuthRedirectUri: "URI de redirección OAuth de Meta/Facebook",
+  
+  // Redis
+  redisHost: "Host de Redis",
+  redisHostDesc: "El nombre del servidor Redis",
+  redisPort: "Puerto de Redis",
+  redisPortDesc: "El puerto del servidor Redis",
+  
+  // Frontend
+  frontendURL: "URL del Frontend",
+  frontendURLDesc: "La URL de tu aplicación frontend",
+  frontendHost: "Host del Frontend",
+  frontendHostDesc: "El host de tu aplicación frontend",
+  publicApiURL: "URL Pública de la API",
+  publicApiURLDesc: "La URL pública de tu API",
+  secretKey: "Clave Secreta",
+  secretKeyDesc: "Clave secreta para encriptaci���n",
+  yourSecretKey: "Tu Clave Secreta",
+  desktopFramework: "Framework de Escritorio",
+  desktopFrameworkDesc: "Elige tu framework frontend preferido",
+  
+  // Docker
+  backend: "Backend",
+  frontend: "Frontend",
+  workersPerCore: "Trabajadores Por Núcleo",
+  workersPerCoreDesc: "Número de procesos trabajadores por núcleo de CPU",
+  maxWorkers: "Máximo de Trabajadores",
+  maxWorkersDesc: "Número máximo de procesos trabajadores",
+  enableThreadLimits: "Habilitar Límites de Hilos",
+  enableThreadLimitsDesc: "Establecer máximo de hilos y peticiones por trabajador",
+  maxThreads: "Máximo de Hilos",
+  maxThreadsDesc: "Número máximo de hilos por trabajador",
+  maxRequests: "Máximo de Peticiones",
+  maxRequestsDesc: "Número máximo de peticiones por trabajador antes de reciclar",
+  cpuLimit: "Límite de CPU",
+  cpuLimitDesc: "Límite de CPU para el contenedor (ej. 0.5 = media CPU)",
+  memoryLimit: "Límite de Memoria",
+  memoryLimitDesc: "Límite de memoria para el contenedor en MB",
+  enableReplicas: "Habilitar Réplicas",
+  enableReplicasDesc: "Ejecutar múltiples instancias del servicio frontend",
+  replicas: "Réplicas",
+  replicasDesc: "Número de instancias del servicio frontend",
+  dockerDatabaseTypeDesc: "Motor de base de datos a usar en Docker",
+  rootPassword: "Contraseña Root",
+  rootPasswordDesc: "Contraseña del usuario root de la base de datos",
+  enterRootPassword: "Introduce la contraseña root",
+  enableUserDb: "Habilitar Base de Datos de Usuario",
+  enableUserDbDesc: "Crear una base de datos y usuario dedicados",
+  enterUsername: "Introduce nombre de usuario",
+  enterPassword: "Introduce contraseña",
+  
+  // Footer
+  allRightsReserved: "Todos los derechos reservados.",
+  
+  // Download
+  finish: "Finalizar",
+  finishAndInstall: "Finalizar e Instalar",
+};

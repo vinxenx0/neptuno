@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 
@@ -37,10 +36,10 @@ const StepIndicator = ({ currentStep, totalSteps }: StepIndicatorProps) => {
               )}
               <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-500 whitespace-nowrap">
                 {i === 0 ? "Project" : 
-                 i === 1 ? "Environment" : 
-                 i === 2 ? "Server" : 
-                 i === 3 ? "Auth" : 
-                 i === 4 ? "Redis" : "Frontend"}
+                 i === 1 ? "Server" : 
+                 i === 2 ? "Auth" : 
+                 i === 3 ? "Frontend" :
+                 i === 4 ? "Docker" : "Download"}
               </span>
             </div>
           ))}
