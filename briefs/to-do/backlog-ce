@@ -1,3 +1,191 @@
 el sistema de puntos navbar funciona aunque el site settings este deshabilitado ¿cache? si cache es eso 
 el bug con el toggle de origins al cargar - > revisar el true y el site seettings
 - no tienes ranking cuando apareces el primero siendo anonimous
+
+neptuno-stack      | CRITICAL:NeptunO:Error inesperado en POST https://neptuno.ciberpunk.es/v1/gamification/events: Event type not found
+neptuno-stack      | [2025-04-22 01:11:18 +0000] [7] [ERROR] Exception in ASGI application
+neptuno-stack      | Traceback (most recent call last):
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+neptuno-stack      |     result = await app(  # type: ignore[func-returns-value]
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+neptuno-stack      |     return await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+neptuno-stack      |     await super().__call__(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+neptuno-stack      |     await self.app(scope, receive, _send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+neptuno-stack      |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+neptuno-stack      |     await route.handle(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+neptuno-stack      |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+neptuno-stack      |     response = await f(request)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+neptuno-stack      |     raw_response = await run_endpoint_function(
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+neptuno-stack      |     return await dependant.call(**values)
+neptuno-stack      |   File "/app/api/v1/gamification.py", line 35, in create_event
+neptuno-stack      |     return register_event(db, event, user)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 38, in register_event
+neptuno-stack      |     update_user_gamification(db, user, event.event_type_id)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 99, in update_user_gamification
+neptuno-stack      |     raise ValueError("Event type not found")
+neptuno-stack      | ValueError: Event type not found
+neptuno-stack      | 2025-04-22 01:11:18,312 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | INFO:NeptunO:Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:18,313 - NeptunO - INFO - Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | INFO:NeptunO:Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | 2025-04-22 01:11:18,317 - NeptunO - INFO - Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | INFO:NeptunO:Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:18,635 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | INFO:NeptunO:Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:18,635 - NeptunO - INFO - Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | INFO:NeptunO:Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | 2025-04-22 01:11:18,640 - NeptunO - INFO - Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | INFO:NeptunO:Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:18,645 - NeptunO - CRITICAL - Error inesperado en POST https://neptuno.ciberpunk.es/v1/gamification/events: Event type not found
+neptuno-stack      | CRITICAL:NeptunO:Error inesperado en POST https://neptuno.ciberpunk.es/v1/gamification/events: Event type not found
+neptuno-stack      | [2025-04-22 01:11:18 +0000] [7] [ERROR] Exception in ASGI application
+neptuno-stack      | Traceback (most recent call last):
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+neptuno-stack      |     result = await app(  # type: ignore[func-returns-value]
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+neptuno-stack      |     return await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+neptuno-stack      |     await super().__call__(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+neptuno-stack      |     await self.app(scope, receive, _send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+neptuno-stack      |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+neptuno-stack      |     await route.handle(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+neptuno-stack      |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+neptuno-stack      |     response = await f(request)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+neptuno-stack      |     raw_response = await run_endpoint_function(
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+neptuno-stack      |     return await dependant.call(**values)
+neptuno-stack      |   File "/app/api/v1/gamification.py", line 35, in create_event
+neptuno-stack      |     return register_event(db, event, user)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 38, in register_event
+neptuno-stack      |     update_user_gamification(db, user, event.event_type_id)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 99, in update_user_gamification
+neptuno-stack      |     raise ValueError("Event type not found")
+neptuno-stack      | ValueError: Event type not found
+neptuno-stack      | 2025-04-22 01:11:18,686 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | INFO:NeptunO:Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:18,686 - NeptunO - INFO - Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | INFO:NeptunO:Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | 2025-04-22 01:11:18,690 - NeptunO - INFO - Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | INFO:NeptunO:Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:19,100 - NeptunO - INFO - Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | INFO:NeptunO:Procesando solicitud: token=False, session_id=5b441b17-15ff-468d-8012-0dde125647f6, ip=92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:19,100 - NeptunO - INFO - Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | INFO:NeptunO:Buscando sesión anónima con ID 5b441b17-15ff-468d-8012-0dde125647f6 desde header
+neptuno-stack      | 2025-04-22 01:11:19,105 - NeptunO - INFO - Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | INFO:NeptunO:Sesión anónima ID 5b441b17-15ff-468d-8012-0dde125647f6 actualizada desde IP 92.246.83.1
+neptuno-stack      | 2025-04-22 01:11:19,110 - NeptunO - CRITICAL - Error inesperado en POST https://neptuno.ciberpunk.es/v1/gamification/events: Event type not found
+neptuno-stack      | CRITICAL:NeptunO:Error inesperado en POST https://neptuno.ciberpunk.es/v1/gamification/events: Event type not found
+neptuno-stack      | [2025-04-22 01:11:19 +0000] [7] [ERROR] Exception in ASGI application
+neptuno-stack      | Traceback (most recent call last):
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+neptuno-stack      |     result = await app(  # type: ignore[func-returns-value]
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+neptuno-stack      |     return await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+neptuno-stack      |     await super().__call__(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+neptuno-stack      |     await self.app(scope, receive, _send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+neptuno-stack      |     await self.simple_response(scope, receive, send, request_headers=headers)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+neptuno-stack      |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+neptuno-stack      |     await self.middleware_stack(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+neptuno-stack      |     await route.handle(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+neptuno-stack      |     await self.app(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+neptuno-stack      |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+neptuno-stack      |     raise exc
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+neptuno-stack      |     await app(scope, receive, sender)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+neptuno-stack      |     response = await f(request)
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+neptuno-stack      |     raw_response = await run_endpoint_function(
+neptuno-stack      |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 212, in run_endpoint_function
+neptuno-stack      |     return await dependant.call(**values)
+neptuno-stack      |   File "/app/api/v1/gamification.py", line 35, in create_event
+neptuno-stack      |     return register_event(db, event, user)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 38, in register_event
+neptuno-stack      |     update_user_gamification(db, user, event.event_type_id)
+neptuno-stack      |   File "/app/services/gamification_service.py", line 99, in update_user_gamification
+neptuno-stack      |     raise ValueError("Event type not found")

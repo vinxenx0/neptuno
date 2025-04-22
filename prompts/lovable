@@ -1,0 +1,114 @@
+Vamos a realizar los siguientes cambios en la version actual, sin modificar ninguna parte mas, solo realizando los 6 cambios siguientes en la pagina:
+
+
+
+1.- Quitamos el slot del hero y toda su logica de la landing y lo cambiamos por Captura o simulación de de dashboard premium mostrando:  
+
+    Monitorización de usuarios anónimos vs. registrados  
+    Panel de gamificación con puntos, badges y métricas (dark-mode, gradiente azul).
+
+Ademas añadimos Logos de confianza de las tecnologias utilizadas en nuestro stack.
+
+2.- Despues del bloque hero añadimos un bloque sobre la propuesta de valor
+
+Por ejemplo (hazlo como tu creas esto solo es una referencia) :
+
+**Formato 3 columnas / bullets**  
+
+| 🧱 Stack listo para producción | ⚡ Desarrollo en tiempo récord | 🧠 Para freelancers & makers |
+|--------------------------------|-------------------------------|-----------------------------|
+| Python + FastAPI, OpenAPI, MariaDB, Docker, Nginx. | Tu MVP en horas, no semanas. | Ideal para micro‑agencias y makers. |
+| Frontend Next.js optimizado para SEO y SSR. | Autenticación, pagos, gamificación y webhooks out‑of‑the‑box. | Sin vendor lock‑in. 100% open source. citeturn0file0 |
+
+**Copy de apoyo**  
+> “Neptuno es un starter kit backend + frontend que elimina semanas de trabajo repetitivo. Autenticación avanzada, gamificación y pagos listos desde el día uno.” citeturn0file0  
+
+
+3.- En el bloque de las caracteristicas añadimos (amplialo con lo que sabes de la herramienta):
+
+
+API REST
+	
+Documentada con OpenAPI, GraphQL-ready, SDK JS/TS incluido.
+⚡
+	
+Frontend Next.js
+	
+SSR, SEO-ready, UI modular y dashboards de gestión.
+🐳
+	
+Despliegue Docker
+	
+Deploy en Railway, Render o local; balanceo con Nginx/Gunicorn.
+Infraestructura lista para producción  
+
+    HTTP/2, CORS, CSRF, HTTPS.  
+    Auto-scaling, balanceo de carga, réplicas de base de datos.  
+    Scripts de desarrollo y despliegue “one-click”.
+
+
+Ademas debes añadir a cada nuevo bloque los ejemplos de la parte derecha correspondiente como al resto de caracteristicas
+
+
+4.- El bloque “Casos de Uso Ideales” lo subimos antes de “Prueba la Gamificación”
+
+5- Invierte el gradiente del hero para que el blanco del gradiente se quede arriba.
+
+6- Fix this Build error
+
+last Monday at 11:45 AM
+
+src/components/games/SlotMachineJackpot.tsx(268,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+  Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+src/pages/journey/MarketplaceJourney.tsx(255,20): error TS2322: Type '{ children: Element[]; journeyTitle: string; progress: number; currentPoints: number; }' is not assignable to type 'IntrinsicAttributes & JourneyLayoutProps'.
+  Property 'journeyTitle' does not exist on type 'IntrinsicAttributes & JourneyLayoutProps'.
+src/pages/journey/MarketplaceJourney.tsx(573,23): error TS2322: Type '{ title: string; points: number; }' is not assignable to type 'IntrinsicAttributes & RewardCardProps'.
+  Property 'points' does not exist on type 'IntrinsicAttributes & RewardCardProps'.
+src/pages/journey/MarketplaceJourney.tsx(585,9): error TS2322: Type '{ title: string; points: number; open: boolean; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & RewardPopupProps'.
+  Property 'points' does not exist on type 'IntrinsicAttributes & RewardPopupProps'.
+src/pages/journey/PizzaJourney.tsx(377,20): error TS2322: Type '{ children: Element[]; journeyTitle: string; progress: number; currentPoints: number; }' is not assignable to type 'IntrinsicAttributes & JourneyLayoutProps'.
+  Property 'journeyTitle' does not exist on type 'IntrinsicAttributes & JourneyLayoutProps'.
+src/pages/journey/PizzaJourney.tsx(511,23): error TS2322: Type '{ title: string; points: number; }' is not assignable to type 'IntrinsicAttributes & RewardCardProps'.
+  Property 'points' does not exist on type 'IntrinsicAttributes & RewardCardProps'.
+src/pages/journey/PizzaJourney.tsx(1022,9): error TS2322: Type '{ title: string; points: number; open: boolean; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & RewardPopupProps'.
+  Property 'points' does not exist on type 'IntrinsicAttributes & RewardPopupProps'.
+
+7- Despues del bloque A letter from the CEO crea un bloque con tres testimonios breves tipo twitter con cards
+
+8- El bloque Vide code ready subelo antes de Paneles de control incluidos
+
+9 – Antes del bloque Empieza Gratis, Escala según Necesites, vamos a poner una tabla comparativa de funcionalidades de Neptuno vs Firebase, supabase, shipfa.st y appwrite
+
+10 – Despues del bloque A letter from the CEO, añade el bloque 
+🚀 Por qué elegir Neptuno
+
+    Ahorra tiempo: Lanza tu MVP en minutos y tu producto en días.
+    Escalable y modular: Crece sin límites, desde un micrositio hasta un SaaS complejo.
+    Todo en uno: Autenticación, gamificación, pagos y tracking en una sola solución.
+    Integrable: Conecta con cualquier frontend o sistema externo.
+
+11 – Completar el diagrama de Listo para Producción añadiendo otro diagrama más al ya existente que que representen Módulos integrables  en la infraestructura ya representada
+
+    Webhooks, eventos, SDK y dashboards.  
+    Compatible con React, Vue, Angular, Svelte, etc.
+
+maquetalo como mejor veas siguiendo el estilo actual
+
+En cuanto al desarrollo tecnico a la hora de generar el codifo fuente de los cambios solicitados, debes seguir estas indicaciones:
+
+los criterios a seguir son: usabilidad, legibilidad, jerarquia de contenidos,, facilidad, orden, sentido comun, visualización
+
+
+- reutiliza elementos visuales y componentes visuales / UI a la hora de programar, manteniendo la robusted y solidez del codigo fuente.
+
+- haz tu codigo fuente modular y escalable
+
+- no rompas el desarrollo actual
+
+- recuerda organizar de forma modular y escalable las carpetas y ficheros de la app
+
+- recuerda que los elementos y componentes visuales que utilices deben ser reutilizables sin alterar la logica de la web
+
+vamos!
+
+ADELANTE CON LOS CAMBIOS!
