@@ -314,23 +314,8 @@ export default function Navbar() {
               </Button>
             </Box>
 
-            {/* Iconos de notificaciones - Orden modificado */}
+            {/* Iconos de notificaciones */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {/* Nuevo orden: corazón primero */}
-              <Tooltip title="Likes (próximamente)">
-                <IconButton sx={{ color: theme.palette.text.disabled }}>
-                  <Favorite />
-                </IconButton>
-              </Tooltip>
-
-              {/* Mensaje segundo */}
-              <Tooltip title="Mensajes (próximamente)">
-                <IconButton sx={{ color: theme.palette.text.disabled }}>
-                  <Mail />
-                </IconButton>
-              </Tooltip>
-
-              {/* Créditos tercero */}
               {!disableCredits && credits > 0 && (
                 <Link href="/user/transactions" passHref>
                   <IconButton className="notification-icon">
@@ -372,6 +357,18 @@ export default function Navbar() {
                   )}
                 </>
               )}
+
+              <Tooltip title="Mensajes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Mail />
+                </IconButton>
+              </Tooltip>
+              
+              <Tooltip title="Likes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Favorite />
+                </IconButton>
+              </Tooltip>
             </Box>
 
             {/* Menú admin y usuario */}
@@ -626,12 +623,11 @@ export default function Navbar() {
           </Tooltip>
         )}
 
-        {/* Mostrar icono de puntos incluso cuando es 0 */}
-        {enablePoints && gamification && (
+        {gamification?.points && enablePoints && (
           <Link href="/user/points" passHref>
             <IconButton className="notification-icon">
               <Star />
-              <span className="notification-badge points-badge">{gamification.points || 0}</span>
+              <span className="notification-badge points-badge">{gamification.points}</span>
             </IconButton>
           </Link>
         )}
