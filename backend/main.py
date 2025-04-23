@@ -8,9 +8,12 @@ from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 
 from api.v1 import (
-    payment_providers, coupons, test, origins, auth, payments, site_settings, integrations,
+    payment_providers, coupons, origins, payments, integrations,
     anonymous_sessions, credit_transactions, error_logs, api_logs, users, gamification
 )
+from api.v1.health import test
+from api.v1.auth import auth
+from api.v1.config import site_settings
 from schemas.gamification import UserGamificationResponse
 from ini_db import init_db, init_settings_and_users
 from dependencies.auth import UserContext, get_user_context

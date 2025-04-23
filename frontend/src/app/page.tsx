@@ -4,7 +4,7 @@
 import { useAuth } from "@/lib/auth/context";
 import fetchAPI from "@/lib/api";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Button,
   Snackbar,
@@ -136,18 +136,18 @@ export default function SplashPage() {
   }, [user, setCredits]);
 
   // Ejemplos Page Effects
-  const updateGamification = async () => {
+  const updateGamification = useCallback(async () => {
     const { data } = await fetchAPI<InfoResponse>("/info");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
       const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
       setGamification({ points: totalPoints, badges });
     }
-  };
+  }, [setGamification]);
 
   useEffect(() => {
     updateGamification();
-  }, []);
+  }, [updateGamification]);
 
   // Landing Page Handlers
   const handleTestCreditConsumption = async () => {

@@ -1,6 +1,8 @@
 // app/(default-site)/sitemap.xml/route.ts
 import { NextResponse } from 'next/server';
 
+
+
 export async function GET() {
   const baseUrl = 'https://tusitio.com'; // Cambia esto por tu dominio real
 
@@ -10,7 +12,7 @@ export async function GET() {
 
   const urls = staticPages.map((page) => `
     <url>
-      <loc>${baseUrl}/${page}</loc>
+      <loc>${baseUrl}${page ? `/${page}` : ''}</loc>
       <changefreq>monthly</changefreq>
       <priority>0.8</priority>
     </url>

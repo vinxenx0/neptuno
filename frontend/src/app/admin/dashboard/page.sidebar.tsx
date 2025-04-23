@@ -97,6 +97,7 @@ export default function ConfigurePage() {
   const [couponTypes, setCouponTypes] = useState<CouponType[]>([]);
   const [editCouponType, setEditCouponType] = useState<CouponType | null>(null);
   const [corsEnabled, setCorsEnabled] = useState<boolean | null>(null);
+  const theme = useTheme();
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
@@ -425,7 +426,7 @@ export default function ConfigurePage() {
                   sx={{
                     borderRadius: 1,
                     '&.Mui-selected': {
-                      backgroundColor: useTheme().palette.action.selected,
+                      backgroundColor: theme.palette.action.selected,
                     },
                   }}
                 >

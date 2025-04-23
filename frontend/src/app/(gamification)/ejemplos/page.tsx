@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -24,7 +24,7 @@ import { n } from "framer-motion/dist/types.d-B50aGbjN";
 import { Session } from "inspector/promises";
 
 export default function Ejemplos() {
-  const { setGamification } = useAuth();
+  const { setGamification, user, coupons, setCoupons } = useAuth();
   const [snackMessage, setSnackMessage] = useState<string | null>(null);
   const [registroFields, setRegistroFields] = useState({ name: "", email: "", phone: "" });
   const [newsletterSubs, setNewsletterSubs] = useState({ tech: false, marketing: false, design: false });
@@ -35,22 +35,20 @@ export default function Ejemplos() {
   const [formFields, setFormFields] = useState({ name: "", email: "", phone: "" });
   const [subscriptions, setSubscriptions] = useState({ list1: false, list2: false, list3: false });
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
-  const { setCoupons } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
-  const { user, coupons } = useAuth();
 
-  const updateGamification = async () => {
+  const updateGamification = useCallback(async () => {
     const { data } = await fetchAPI<InfoResponse>("/info");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
       const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
       setGamification({ points: totalPoints, badges });
     }
-  };
+  }, [setGamification]);
 
   useEffect(() => {
     updateGamification();
-  }, []);
+  }, [updateGamification]);
 
   const handleGenerateCoupon = async () => {
     try {
@@ -126,7 +124,7 @@ export default function Ejemplos() {
           },
         });
         if (coupon) {
-          setCoupons([...useAuth().coupons, coupon]);
+          setCoupons([...coupons, coupon]);
           setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos + un cupón de 10 créditos!");
         } else {
           setSnackMessage("¡Completaste la encuesta y ganaste 10 puntos!");

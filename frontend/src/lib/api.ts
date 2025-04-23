@@ -212,7 +212,7 @@ export const useFetchData = <T>(
     };
 
     fetchData();
-  }, dependencies);
+  }, [endpoint, options, dependencies]); // Asegurar que la lista de dependencias sea un array literal y agregar endpoint y options como dependencias
 
   return { data, loading, error };
 };

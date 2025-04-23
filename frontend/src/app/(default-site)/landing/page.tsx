@@ -1,10 +1,10 @@
-import { Head } from "next/document";
+import Head from 'next/head';
 
 export default function LandingPage() {
     return (
       <>
       <Head>
-        <title>Sobre nosotros - Tu SaaS</title>
+        <title>Landing Page</title>
         <meta name="description" content="Conoce al equipo detrás de Tu SaaS y nuestra misión." />
       </Head>
       <section className="px-6 py-20 text-center bg-white">
@@ -17,4 +17,3 @@ export default function LandingPage() {
       </>
   );
 }
-     

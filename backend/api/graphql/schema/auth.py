@@ -1,4 +1,5 @@
 # backend/api/v1/graphql/schema/auth.py
+from api.graphql.schema.user import UserType
 import strawberry
 from typing import Optional
 from fastapi import Depends
