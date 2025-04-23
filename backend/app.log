@@ -2236,3 +2236,7 @@
 2025-04-24 00:18:59,047 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
 2025-04-24 00:18:59,056 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-24 00:18:59,158 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-24 00:19:28,645 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-24 00:19:28,735 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-24 00:19:28,743 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-24 00:19:28,846 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
