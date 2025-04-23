@@ -111,7 +111,7 @@ export const simulateStep = async ({
     setLog(prev => prev + `\n${status}\nExecuting: ${command}\n`);
     
     // Get current progress - fix the TypeError by using a number instead of a callback
-    let currentProgress = 0;
+    const currentProgress = 0;
     
     // Simulate progress over time
     const startProgress = currentProgress;
