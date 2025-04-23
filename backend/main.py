@@ -1,6 +1,5 @@
 # backend/main.py
 # Punto de entrada principal de la API FastAPI
-# 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
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
