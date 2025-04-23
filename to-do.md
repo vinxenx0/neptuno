@@ -28,7 +28,7 @@ Objetivo: Hacer que Neptuno sea más flexible, escalable y personalizable median
         ◦ Almacenar session_id como cookie segura en lugar de localStorage.
     • Añadir endpoints específicos para gestionar usuarios anónimos (ej. /v1/anonymous/users).
 1.3 Ordenación de la API Abierta
-    • Reorganizar endpoints públicos (ej. /whoami, /info) para una estructura más clara y consistente.
+    • Reorganizar endpoints públicos (ej. /whoami, /whoami) para una estructura más clara y consistente.
         ◦ Ejemplo: Agrupar endpoints bajo /v1/public/* para diferenciarlos de los autenticados.
 
  2. Nuevas Características y Módulos
@@ -138,6 +138,8 @@ Objetivo: Optimizar Neptuno para manejar alto tráfico y facilitar la escalabili
         ◦ Renovación de créditos.
         ◦ Procesamiento de notificaciones.
     • Configurar workers y timeouts en site_settings.
+
+==OK==
 5.4 Balanceo de Carga
     • Mantener configuración de balanceo con Nginx y réplicas de FastAPI en Docker.
     • Ejemplo:
@@ -147,6 +149,7 @@ Objetivo: Optimizar Neptuno para manejar alto tráfico y facilitar la escalabili
           server 127.0.0.1:8000;
           server 127.0.0.1:8001;
       }
+==OK==
 
  6. Monitoreo y Pruebas
 Objetivo: Garantizar la estabilidad y visibilidad del rendimiento de la API.

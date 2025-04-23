@@ -27,7 +27,7 @@ Objetivo: Validar la demanda, generar tracción inicial y construir una comunida
     Publicar testimonios de early adopters como prueba social.
     Implementar plantillas modulares básicas: componentes predefinidos (landing, dashboard) y CLI para aplicarlas.
     Desarrollar demo interactiva en /demo con datos de ejemplo para probar plantillas.
-    Reorganizar API pública bajo /v1/public/* (ej. /whoami, /info).
+    Reorganizar API pública bajo /v1/public/* (ej. /whoami, /whoami).
 
 📌 Éxito: 100+ desarrolladores probando, feedback actionable y primeros fans.
 💼 FASE 2 – Tracción y Monetización Inicial (Meses 5-8)

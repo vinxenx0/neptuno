@@ -135,7 +135,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }

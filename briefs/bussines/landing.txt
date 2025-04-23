@@ -228,7 +228,7 @@ Olvídate de construir desde cero. Neptuno acelera tu desarrollo y escala contig
 ### El journey completo del usuario:
 
 ```bash
-curl -s -X GET 127.0.0.1:8000/info | jq
+curl -s -X GET 127.0.0.1:8000/whoami | jq
 {
   "session_id": "...",
   "user_id": "...",
@@ -374,7 +374,7 @@ curl -X POST 127.0.0.1:8000/v1/auth/token -d 'grant_type=password&username=admin
 - Seguridad lista desde el inicio
 
 ```bash
-curl -s -X GET 127.0.0.1:8000/info | jq
+curl -s -X GET 127.0.0.1:8000/whoami | jq
 {
   "user_id": "anonymous",
   "email": "anonymous@example.com",

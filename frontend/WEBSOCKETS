@@ -144,7 +144,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }
@@ -597,7 +597,7 @@ export default function Ejemplos() {
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
 
   const updateGamification = async () => {
-    const { data } = await fetchAPI<InfoResponse>("/info");
+    const { data } = await fetchAPI<InfoResponse>("/whoami");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
       const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
@@ -1393,7 +1393,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<{ credits: number }>("/info");
+        const { data: infoData } = await fetchAPI<{ credits: number }>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }

@@ -30,7 +30,7 @@ Ejemplo de uso (API)
     Usuario anónimo:
     bash
 
-    curl -s -X GET 127.0.0.1:8000/info | jq
+    curl -s -X GET 127.0.0.1:8000/whoami | jq
     {
       "session_id": "441a7d2b-ba3d-4308-8b63-e827a8028698",
       "user_id": "441a7d2b-ba3d-4308-8b63-e827a8028698",

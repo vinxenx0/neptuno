@@ -1,7 +1,7 @@
 # backend/main.py
 from fastapi import FastAPI
 from backend.api.v1.auth.auth import router as auth_router
-from api.v1.users import router as users_router
+from backend.api.v1.users.users import router as users_router
 from api.v1.gamification import router as gamification_router
 from api.graphql.router import router as graphql_router
 

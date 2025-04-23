@@ -242,7 +242,7 @@ export default function UserDashboard() {
       const { data } = await fetchAPI<any>(`/v1/coupons/redeem/${couponId}`, { method: "POST" });
       if (data) {
         setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
-        const { data: info } = await fetchAPI<any>("/info");
+        const { data: info } = await fetchAPI<any>("/whoami");
         setSuccess("Cupón canjeado exitosamente");
       } else {
         setError("No se pudo canjear el cupón");

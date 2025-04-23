@@ -7,7 +7,10 @@
 -- Implantar:
 MIDDDLEWARE q controla user_type
 
-No hay una forma completamente global de aplicar user_type sin algún nivel de intervención en el código, pero la combinación de un UserContext robusto y una función auxiliar es lo más cercano a una solución práctica y mantenible para tu API. Implementa la función create_credit_transaction y actualiza los endpoints relevantes (como /v1/payments/purchase) para usarla con el user_type del contexto. Esto asegurará que el user_type se maneje de manera consistente y eficiente.
+No hay una forma completamente global de aplicar user_type sin algún nivel de intervención en el código, 
+pero la combinación de un UserContext robusto y una función auxiliar es lo más cercano a una solución práctica y mantenible para tu API. 
+Implementa la función create_credit_transaction y actualiza los endpoints relevantes (como /v1/payments/purchase)
+ para usarla con el user_type del contexto. Esto asegurará que el user_type se maneje de manera consistente y eficiente.
 
 Centralizar la creación de transacciones en una función auxiliar
 Puedes crear una función auxiliar como create_credit_transaction que maneje la lógica de creación de las transacciones de créditos y siempre reciba el user_type desde el UserContext. Esto no es completamente "global", pero reduce la duplicación de código y asegura consistencia.

@@ -28,7 +28,7 @@ Objetivo: Hacer que Neptuno sea más flexible, escalable y personalizable median
         ◦ Almacenar session_id como cookie segura en lugar de localStorage.
     • Añadir endpoints específicos para gestionar usuarios anónimos (ej. /v1/anonymous/users).
 1.3 Ordenación de la API Abierta
-    • Reorganizar endpoints públicos (ej. /whoami, /info) para una estructura más clara y consistente.
+    • Reorganizar endpoints públicos (ej. /whoami, /whoami) para una estructura más clara y consistente.
         ◦ Ejemplo: Agrupar endpoints bajo /v1/public/* para diferenciarlos de los autenticados.
 
  2. Nuevas Características y Módulos

@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data } = await fetchAPI<UserInfo>("/info");
+        const { data } = await fetchAPI<UserInfo>("/whoami");
         if (data) {
           if (data.user_type === "registered") {
             setUser({
@@ -648,7 +648,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }
@@ -1121,7 +1121,7 @@ export interface UserInfo {
   credits: number;
   rol: string | null;
   session_id?: string;
-  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /whoami
 }
 
 export interface EventType {
@@ -2278,7 +2278,7 @@ export default function LandingPage() {
 
   const handleInfo = async () => {
     try {
-      const response = await fetchAPI("/info", { method: "GET" });
+      const response = await fetchAPI("/whoami", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
@@ -2607,7 +2607,7 @@ export default function LandingPage() {
                 onClick={handleInfo}
                 startIcon={<Info />}
               >
-                /v1/api/info
+                /v1/api/whoami
               </EndpointButton>
             </Grid>
 

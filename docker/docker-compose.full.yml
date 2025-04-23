@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  backend:
+    image: tucuenta/backend-fastapi:latest
+    container_name: neptuno-stack
+    build: ./backend
+    ports: 
+      - "8000:8000"
+    env_file: ./backend/.env
+    environment:
+      - WORKERS_PER_CORE=0.5
+      - MAX_WORKERS=2
+      - UVICORN_HOST=0.0.0.0
+      - UVICORN_PORT=8000
+      - MAX_THREADS=2
+      - MAX_REQUESTS=1000
+    volumes:
+      - backend_data:/app/data
+      - backend_logs:/app/logs
+    depends_on:
+      - db
+    restart: always
+    deploy:
+      replicas: 2
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.2
+
+  frontend:
+    image: tucuenta/frontend-nextjs:latest
+    container_name: neptuno-dashboard
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    env_file: 
+      - ./backend/.env
+      - ./frontend/.env
+    environment: 
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    volumes:
+      - frontend_logs:/app/logs
+    restart: always
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.3
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M
+    container_name: neptuno-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=tu_contraseña_segura
+      - MARIADB_DATABASE=tu_base_de_datos
+      - MARIADB_USER=tu_usuario
+      - MARIADB_PASSWORD=contraseña_usuario
+      - MARIADB_ROOT_PASSWORD="J8#jKpL2!mN9$qR5tXv7zY"
+      - MARIADB_ROOT_PASSWORD_HASH="*CC6A5B2E4D1F9E8A7B3C5D2E1F0A8B7C6D5E4F3A2B1C0D9E8F7A6B5C4D3E2F1"
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD="no"
+      - MARIADB_RANDOM_ROOT_PASSWORD="yes"
+      - MYSQL_ROOT_PASSWORD: tu_contraseña_root
+      - MYSQL_DATABASE: ciberpunk_db
+      - MYSQL_USER: ciberpunk_user
+      - MYSQL_PASSWORD: tu_contraseña_usuario
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.4
+
+  mariadb-replica:
+    image: mariadb:latest
+    environment:
+      MYSQL_REPLICATION_MODE: slave
+      MYSQL_MASTER_HOST: db
+      MYSQL_ROOT_PASSWORD: tu_contraseña_root
+    volumes:
+      - mariadb-replica-data:/var/lib/mysql
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ssl_certs:/etc/nginx/certs
+      - ./ssl:/etc/nginx/certs:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.5
+
+networks:
+  vboxnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.0.0/16"
+          gateway: "172.18.0.1"
+
+volumes:
+  backend_data:
+  backend_logs:
+  frontend_logs:
+  mariadb_data:
+  postgres_data:
+  ssl_certs:
+  mariadb-replica-data:

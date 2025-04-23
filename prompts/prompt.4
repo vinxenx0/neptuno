@@ -601,7 +601,7 @@ async def restricted_test(user: UserContext = Depends(check_credits), db: Sessio
 
     return response
 
-@app.get("/info")
+@app.get("/whoami")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     disable_anonymous = get_setting(db, "disable_anonymous_users")
     base_info = {
@@ -1454,7 +1454,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data } = await fetchAPI<UserInfo>("/info");
+        const { data } = await fetchAPI<UserInfo>("/whoami");
         if (data) {
           if (data.user_type === "registered") {
             setUser({
@@ -1775,7 +1775,7 @@ export interface UserInfo {
   credits: number;
   rol: string | null;
   session_id?: string;
-  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /whoami
 }
 
 export interface EventType {
@@ -1979,7 +1979,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }
@@ -5709,7 +5709,7 @@ export default function Ejemplos() {
   const [surveyAnswers, setSurveyAnswers] = useState<number[]>([]);
 
   const updateGamification = async () => {
-    const { data } = await fetchAPI<InfoResponse>("/info");
+    const { data } = await fetchAPI<InfoResponse>("/whoami");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
       const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];

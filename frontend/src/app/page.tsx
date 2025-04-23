@@ -137,7 +137,7 @@ export default function SplashPage() {
 
   // Ejemplos Page Effects
   const updateGamification = useCallback(async () => {
-    const { data } = await fetchAPI<InfoResponse>("/info");
+    const { data } = await fetchAPI<InfoResponse>("/whoami");
     if (data?.gamification) {
       const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
       const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
@@ -227,7 +227,7 @@ export default function SplashPage() {
 
   const handleInfo = async () => {
     try {
-      const response = await fetchAPI("/info", { method: "GET" });
+      const response = await fetchAPI("/whoami", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
@@ -612,7 +612,7 @@ export default function SplashPage() {
                         onClick={handleInfo}
                         startIcon={<Info />}
                       >
-                        /v1/test/info
+                        /v1/test/whoami
                       </EndpointButton>
                     </Grid>
                     <Grid item xs={12} sm={6}>
