@@ -8,7 +8,7 @@ import { ServerForm } from "./forms/ServerForm";
 import { AuthForm } from "./forms/AuthForm";
 import { FrontendSettingsForm } from "./forms/FrontendSettingsForm";
 import { DockerForm } from "./forms/DockerForm";
-import { DownloadForm } from "./forms/DownloadForm";
+import { InstallForm } from "./forms/InstallForm";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface ConfigFormProps {
@@ -19,14 +19,13 @@ interface ConfigFormProps {
   onBack?: () => void;
 }
 
-const sectionIcons: Record<string, React.ReactNode> = {
+const sectionIcons: Record<ConfigSection, React.ReactNode> = {
   project: <Globe className="h-5 w-5 text-blue-500" />,
   server: <Server className="h-5 w-5 text-amber-500" />,
   auth: <Key className="h-5 w-5 text-purple-500" />,
   frontend: <Settings className="h-5 w-5 text-cyan-500" />,
   docker: <Box className="h-5 w-5 text-orange-500" />,
-  download: <Download className="h-5 w-5 text-gray-500" />,
-  // These won't be directly used but prevent TypeScript errors
+  install: <Download className="h-5 w-5 text-gray-500" />,
   environment: <Settings className="h-5 w-5 text-teal-500" />,
   redis: <Server className="h-5 w-5 text-red-500" />
 };
@@ -40,7 +39,7 @@ const ConfigForm = ({ section, config, onUpdate, onNext, onBack }: ConfigFormPro
         return (
           <ProjectSettingsForm
             data={{ project: config.project, environment: config.environment }}
-            onChange={(section, data) => onUpdate(section, data)}
+            onChange={(section: "project" | "environment", data) => onUpdate(section, data)}
           />
         );
       case "server":
@@ -51,44 +50,42 @@ const ConfigForm = ({ section, config, onUpdate, onNext, onBack }: ConfigFormPro
         return (
           <FrontendSettingsForm
             data={{ frontend: config.frontend, redis: config.redis }}
-            onChange={(section, data) => onUpdate(section, data)}
+            onChange={(section: "frontend" | "redis", data) => onUpdate(section, data)}
           />
         );
       case "docker":
         return <DockerForm data={config[section]} onChange={(data) => onUpdate(section, data)} />;
-      case "download":
-        return <DownloadForm config={config} />;
+      case "install":
+        return <InstallForm config={config} />;
       default:
         return null;
     }
   };
 
-  const sectionTitles: Record<string, string> = {
+  const sectionTitles: Record<ConfigSection, string> = {
     project: t("projectConfiguration"),
     server: t("serverConfiguration"),
     auth: t("authenticationSettings"),
     frontend: t("frontendSettings"),
     docker: t("dockerConfiguration"),
-    download: t("downloadConfigurations"),
-    // These won't be directly used but prevent TypeScript errors
+    install: t("installConfiguration"),
     environment: t("environmentSettings"),
     redis: t("redisConfiguration")
   };
 
-  const sectionDescriptions: Record<string, string> = {
+  const sectionDescriptions: Record<ConfigSection, string> = {
     project: t("projectDescription"),
     server: t("serverDescription"),
     auth: t("authDescription"),
     frontend: t("frontendDescription"),
     docker: t("dockerDescription"),
-    download: t("downloadDescription"),
-    // These won't be directly used but prevent TypeScript errors
+    install: t("installDescription"),
     environment: t("environmentDescription"),
     redis: t("redisDescription")
   };
 
   const isLastStep = section === "docker";
-  const isDownloadStep = section === "download";
+  const isInstallStep = section === "install";
 
   return (
     <Card className="w-full max-w-3xl mx-auto bg-white shadow-md border-slate-200">
@@ -119,7 +116,7 @@ const ConfigForm = ({ section, config, onUpdate, onNext, onBack }: ConfigFormPro
               onClick={onNext} 
               className="ml-auto gradient-btn text-white"
             >
-              {isDownloadStep ? t("finish") : isLastStep ? t("finishAndInstall") : t("nextStep")}
+              {isInstallStep ? t("install") : isLastStep ? t("finishAndInstall") : t("nextStep")}
             </Button>
           </div>
         </form>

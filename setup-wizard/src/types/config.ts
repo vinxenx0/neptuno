@@ -1,3 +1,4 @@
+
 export interface NeptunoConfig {
   project: {
     name: string;
@@ -17,6 +18,10 @@ export interface NeptunoConfig {
   environment: {
     debug: boolean;
     mode: 'development' | 'production' | 'staging';
+    gitRepoUrl: string;
+    gitUser: string;
+    gitToken: string;
+    installDirectory: string;
   };
   server: {
     host: string;
@@ -96,6 +101,6 @@ export type ConfigSection =
   | "auth"
   | "frontend"
   | "docker"
-  | "download"
+  | "install"
   | "environment"
   | "redis";
