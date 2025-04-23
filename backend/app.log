@@ -5464,3 +5464,766 @@ fastapi.exceptions.HTTPException: 401: Credenciales inválidas
 2025-04-22 01:42:10,850 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
 2025-04-22 01:42:10,850 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
 2025-04-22 01:42:10,925 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:48:16,881 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-23 08:48:16,904 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-23 08:48:16,904 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-23 08:52:20,456 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:20,474 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:20,819 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:20,933 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:20,933 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:21,075 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:21,193 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:21,193 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:21,386 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:21,816 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:21,817 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:22,086 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:22,098 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:22,099 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:22,308 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:51,733 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:51,733 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:52,019 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:52,040 - NeptunO - INFO - Procesando solicitud: token=False, session_id=b567e8d4-4c18-4dd5-9b48-2ab422670f34, ip=127.0.0.1
+2025-04-23 08:52:52,040 - NeptunO - INFO - Buscando sesión anónima con ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 desde header
+2025-04-23 08:52:52,208 - NeptunO - INFO - Sesión anónima ID b567e8d4-4c18-4dd5-9b48-2ab422670f34 actualizada desde IP 127.0.0.1
+2025-04-23 08:52:56,303 - NeptunO - DEBUG - Usuario encontrado: ID=1, email=admin@example.com, subscription=subscriptionEnum.PREMIUM, type=<enum 'subscriptionEnum'>
+2025-04-23 08:52:56,305 - NeptunO - INFO - Login exitoso para usuario ID 1 desde IP 127.0.0.1
+2025-04-23 08:52:56,401 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:52:56,531 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:52:56,706 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:52:56,953 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:52:57,272 - NeptunO - CRITICAL - Error inesperado en POST http://127.0.0.1:8000/v1/gamification/events: Event type not found
+2025-04-23 08:53:03,212 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:03,386 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:03,491 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:03,664 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:03,664 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:03,786 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:03,786 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:03,919 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:03,929 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,110 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:04,161 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,319 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:04,322 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,452 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:04,453 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,588 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:04,590 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,797 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:04,804 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:04,930 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:23,350 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:23,708 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:23,708 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:23,888 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:24,081 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:24,197 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:24,199 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:24,320 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:24,650 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:24,852 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:24,853 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:25,052 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:25,113 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:25,297 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:25,297 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:25,574 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:25,634 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:26,152 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:26,152 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:26,374 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:26,468 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:26,619 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:26,622 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:26,741 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:26,842 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:27,019 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:27,020 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:27,174 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:36,535 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:36,674 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:36,775 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:36,930 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:37,035 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:37,163 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:37,357 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:37,599 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:37,616 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:37,752 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:37,863 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,043 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:38,050 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,164 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:38,222 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,374 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:38,374 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,497 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:38,567 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,774 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:38,775 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:38,930 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,013 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:39,153 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,156 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:39,307 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,367 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:39,519 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,568 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:39,707 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,709 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:39,874 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:39,881 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:40,086 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:53,959 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:54,074 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:53:54,079 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:53:54,185 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:07,312 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:07,507 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:07,517 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:07,652 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:23,413 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:23,786 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:23,794 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:23,929 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:37,320 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:37,418 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:54:37,438 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:54:37,540 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:55:07,319 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:55:07,429 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:55:07,445 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:55:07,551 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:55:37,299 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:55:37,386 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:55:37,415 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:55:37,817 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:56:07,304 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:56:07,417 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:56:07,427 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:56:07,517 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:56:37,299 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:56:37,383 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:56:37,395 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:56:37,483 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:57:07,309 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:57:07,427 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:57:07,439 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:57:07,549 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:57:37,300 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:57:37,395 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:57:37,416 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:57:37,518 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:58:07,300 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:58:07,404 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:58:07,413 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:58:07,517 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:58:37,300 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:58:37,404 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:58:37,431 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:58:37,539 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:59:07,302 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:59:07,426 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:59:07,436 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:59:07,570 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:59:37,686 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:59:37,836 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 08:59:37,845 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 08:59:37,936 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:00:07,691 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:00:07,792 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:00:07,810 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:00:07,903 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:00:37,690 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:00:37,780 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:00:37,789 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:00:37,903 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:01:07,691 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:01:07,780 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:01:07,791 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:01:07,880 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:01:37,688 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:01:37,804 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:01:37,832 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:01:37,935 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:02:07,913 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:02:08,001 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:02:08,012 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:02:08,112 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:02:37,913 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:02:38,023 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:02:38,033 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:02:38,134 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:03:08,450 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:03:08,545 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:03:08,555 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:03:08,667 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:03:38,457 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:03:38,638 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:03:38,737 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:03:38,825 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:04:08,458 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:04:08,566 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:04:08,579 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:04:08,688 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:04:38,455 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:04:38,555 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:04:38,566 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:04:38,677 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:05:08,523 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:05:08,643 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:05:08,655 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:05:08,765 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:05:38,533 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:05:38,633 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:05:38,662 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:05:38,754 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:06:08,524 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:06:08,620 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:06:08,631 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:06:08,742 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:06:38,523 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:06:38,620 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:06:38,627 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:06:38,743 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:07:08,523 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:07:08,631 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:07:08,642 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:07:08,830 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:07:38,601 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:07:38,719 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:07:38,729 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:07:38,888 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:08:08,542 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:08:08,663 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:08:08,676 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:08:08,785 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:08:38,592 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:08:38,707 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:08:38,715 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:08:38,829 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:08,583 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:08,674 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:08,685 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:08,807 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:38,601 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:38,685 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:38,701 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:38,828 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:53,402 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:53,540 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:09:53,543 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:09:53,673 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:10:08,786 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:10:08,930 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:10:08,960 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:10:09,062 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:10:38,784 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:10:38,884 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:10:38,892 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:10:38,984 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:11:08,795 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:11:08,950 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:11:08,958 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:11:09,061 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:11:38,786 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:11:38,884 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:11:38,895 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:11:39,017 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:12:08,785 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:12:08,871 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:12:08,880 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:12:08,993 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:12:38,785 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:12:38,893 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:12:38,902 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:12:39,004 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:08,786 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:08,984 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:09,015 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:09,215 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:12,701 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:12,804 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:12,823 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:12,948 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:13,052 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:13,148 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:43,743 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:43,838 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:13:43,936 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:13:44,038 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:14:13,760 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:14:13,914 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:14:13,932 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:14:14,193 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:14:43,760 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:14:43,849 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:14:43,864 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:14:43,972 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:15:13,764 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:15:13,863 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:15:13,877 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:15:13,975 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:15:43,763 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:15:43,883 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:15:43,911 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:15:44,114 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:16:13,766 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:16:13,849 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:16:13,858 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:16:13,960 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:16:43,777 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:16:43,891 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:16:43,903 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:16:44,003 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:17:14,750 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:17:14,873 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:17:14,880 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:17:14,973 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:17:44,749 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:17:44,935 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:17:44,945 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:17:45,035 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:18:14,749 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:18:14,830 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:18:14,840 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:18:14,930 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:18:45,614 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:18:45,712 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:18:45,751 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:18:45,857 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:19:15,785 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:19:15,877 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:19:15,908 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:19:16,031 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:19:45,990 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:19:46,087 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:19:46,098 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:19:46,198 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:15,031 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:15,213 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:15,251 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:15,389 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:15,440 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:15,545 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:31,528 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:31,625 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:31,634 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:31,724 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:20:31,780 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:20:31,881 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:21:02,698 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:21:02,785 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:21:02,796 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:21:02,929 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:21:32,978 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:21:33,189 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:21:33,198 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:21:33,301 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:00,847 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:01,039 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:01,044 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:01,227 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:03,135 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:03,295 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:03,305 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:03,406 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:33,588 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:33,696 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:22:33,728 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:22:33,862 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:23:03,845 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:23:03,957 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:23:03,966 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:23:04,079 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:23:33,848 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:23:33,937 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:23:33,947 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:23:34,037 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:24:04,287 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:24:04,377 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:24:04,472 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:24:04,577 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:24:34,288 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:24:34,465 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:24:34,472 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:24:34,601 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:25:04,683 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:25:04,875 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:25:04,886 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:25:04,986 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:25:34,684 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:25:34,876 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:25:34,885 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:25:34,978 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:26:05,525 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:26:05,811 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:26:05,823 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:26:05,945 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:26:35,524 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:26:35,658 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:26:35,667 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:26:35,802 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:27:06,388 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:27:06,512 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:27:06,531 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:27:06,633 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:27:36,411 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:27:36,521 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:27:36,550 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:27:36,663 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:28:06,819 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:28:06,963 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:28:06,977 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:28:07,073 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:28:36,811 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:28:36,918 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:28:36,947 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:28:37,039 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:29:06,821 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:29:06,938 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:29:06,947 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:29:07,060 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:29:36,900 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:29:37,027 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:29:37,035 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:29:37,138 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:30:06,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:30:06,983 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:30:06,991 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:30:07,105 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:30:36,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:30:37,119 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:30:37,146 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:30:37,284 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:31:06,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:31:07,007 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:31:07,032 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:31:07,131 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:31:36,891 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:31:36,997 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:31:37,005 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:31:37,108 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:32:07,225 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:32:07,311 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:32:07,333 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:32:07,431 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:32:37,218 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:32:37,355 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:32:37,363 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:32:37,477 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:33:07,220 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:33:07,312 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:33:07,322 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:33:07,426 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:33:37,220 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:33:37,314 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:33:37,322 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:33:37,425 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:34:07,225 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:34:07,315 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:34:07,415 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:34:07,584 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:34:37,222 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:34:37,328 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:34:37,339 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:34:37,462 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:35:07,228 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:35:07,341 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:35:07,348 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:35:07,452 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:35:37,231 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:35:37,339 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:35:37,347 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:35:37,439 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:36:07,222 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:36:07,325 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:36:07,333 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:36:07,449 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:36:37,221 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:36:37,313 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:36:37,341 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:36:37,444 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:37:07,222 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:37:07,331 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:37:07,345 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:37:07,453 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:37:37,225 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:37:37,329 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:37:37,340 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:37:37,473 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:38:07,233 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:38:07,339 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:38:07,348 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:38:07,517 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:38:37,223 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:38:37,304 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:38:37,314 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:38:37,426 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:39:07,226 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:39:07,315 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:39:07,346 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:39:07,481 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:39:37,224 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:39:37,369 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:39:37,380 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:39:37,491 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:40:07,224 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:40:07,302 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:40:07,311 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:40:07,492 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:40:38,111 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:40:38,236 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:40:38,464 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:40:38,824 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:41:07,335 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:41:07,458 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:41:07,469 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:41:08,092 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:41:37,552 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:41:37,668 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:41:37,679 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:41:37,779 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:42:07,553 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:42:07,646 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:42:07,656 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:42:07,768 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:42:37,554 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:42:37,669 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:42:37,678 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:42:37,791 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:43:07,557 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:43:07,658 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:43:07,667 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:43:07,758 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:43:37,564 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:43:37,658 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:43:37,672 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:43:37,781 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:44:08,340 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:44:08,425 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:44:08,538 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:44:08,638 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:44:38,335 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:44:38,460 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:44:38,468 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:44:38,571 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:45:08,339 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:45:08,438 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:45:08,466 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:45:08,572 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:45:38,340 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:45:38,439 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:45:38,452 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:45:38,550 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:46:08,337 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:46:08,429 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:46:08,440 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:46:08,552 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:46:38,362 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:46:38,474 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:46:38,483 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:46:38,585 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:47:08,363 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:47:08,441 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:47:08,451 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:47:08,575 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:47:39,372 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:47:39,477 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:47:39,505 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:47:39,642 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:09,438 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:09,567 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:09,598 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:09,710 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:22,791 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:22,911 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:22,960 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:23,099 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:23,195 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:23,333 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:23,335 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:23,466 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:23,608 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:23,744 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:23,750 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:23,866 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:23,915 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:24,044 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:24,047 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:24,166 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:24,339 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:24,456 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:24,501 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:24,644 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:24,658 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:24,800 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:24,802 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:25,177 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:25,279 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:25,388 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:25,388 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:25,501 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:35,220 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:35,322 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:35,335 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:35,435 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:35,553 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:35,644 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:35,969 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,088 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,093 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,210 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,325 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,433 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,434 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,545 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,603 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,711 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,713 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,822 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,831 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:36,967 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:36,971 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,078 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,208 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,466 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,468 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,568 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,593 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,722 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,724 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,833 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,890 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:37,977 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:48:37,978 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:48:38,069 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:05,873 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:05,978 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:05,989 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:06,079 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:06,151 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:06,290 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:09,389 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:09,490 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:09,500 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:09,612 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:09,665 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:09,768 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,339 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:16,457 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,462 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:16,568 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,569 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:16,657 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,661 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:16,757 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,844 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:16,980 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:16,990 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,124 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,194 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,335 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,339 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,468 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,528 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,657 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,657 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,779 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,796 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:17,923 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:17,930 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:18,057 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:18,059 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:18,490 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:18,543 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:18,712 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:18,714 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:18,923 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:18,983 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:19,113 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:24,621 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:24,735 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:24,737 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:24,846 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:40,724 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:40,813 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:49:40,825 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:49:40,913 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:50:11,362 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:50:11,481 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:50:11,490 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:50:11,582 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:50:41,361 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:50:41,449 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:50:41,458 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:50:41,560 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:12,315 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:12,427 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:12,435 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:12,528 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:20,971 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:21,072 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:21,082 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:21,184 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:21,246 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:21,350 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:21,720 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:21,828 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:21,912 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:22,017 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:24,728 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:24,828 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:51:24,832 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:51:24,918 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:52:25,389 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:52:25,485 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:52:25,495 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:52:25,620 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:52:25,678 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:52:25,785 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:53:30,915 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:53:30,917 - NeptunO - WARNING - Token expirado
+2025-04-23 09:53:30,917 - NeptunO - ERROR - Token inválido recibido desde IP 127.0.0.1
+2025-04-23 09:53:30,918 - NeptunO - ERROR - HTTP Error 401 en GET http://127.0.0.1:8000/info: Token inválido o no es de acceso
+2025-04-23 09:53:31,096 - NeptunO - INFO - Intento de refresco de token desde IP 127.0.0.1
+2025-04-23 09:53:31,262 - NeptunO - INFO - Refresco de token exitoso
+2025-04-23 09:53:31,312 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:53:31,429 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:53:31,480 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:53:31,595 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:53:31,644 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:53:31,784 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:02,003 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:02,104 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:02,135 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:02,247 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:32,021 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:32,121 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:32,215 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:32,321 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:51,918 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:52,019 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:52,039 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:52,174 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:54:52,224 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:54:52,329 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:55:22,503 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:55:22,671 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:55:22,679 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:55:22,917 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:55:52,499 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:55:52,590 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:55:52,601 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:55:52,713 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:56:22,493 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:56:22,578 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:56:22,596 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:56:22,766 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:56:52,501 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:56:52,619 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-23 09:56:52,628 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
+2025-04-23 09:56:52,731 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1

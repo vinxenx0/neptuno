@@ -1,0 +1,14 @@
+
+  // blog/[slug]/page.tsx
+  import { useParams } from "next/navigation";
+  
+  export default function BlogPostPage() {
+    const { slug } = useParams();
+    return (
+      <div className="max-w-3xl mx-auto py-16 px-4">
+        <h1 className="text-3xl font-bold mb-4">Artículo: {slug}</h1>
+        <p className="text-gray-600">Aquí va el contenido del post dinámico con slug: {slug}</p>
+      </div>
+    );
+  }
+  

@@ -1,0 +1,275 @@
+¡Vamos a envolver los microdatos en **componentes reutilizables** y a **inyectarlos automáticamente** en las páginas clave de tu SaaS!
+
+---
+
+### ✅ 1. Crea los componentes de SEO estructurado
+
+📁 `src/components/seo/SeoOrganization.tsx`
+
+```tsx
+"use client";
+import { JsonLd, Organization } from "react-schemaorg";
+
+export default function SeoOrganization() {
+  return (
+    <JsonLd>
+      <Organization
+        name="Tu SaaS"
+        url="https://tusitio.com"
+        logo="https://tusitio.com/logo.png"
+        sameAs={[
+          "https://twitter.com/tusaas",
+          "https://www.linkedin.com/company/tusaas",
+        ]}
+        contactPoint={{
+          "@type": "ContactPoint",
+          telephone: "+34-600-000-000",
+          contactType: "customer support",
+          areaServed: "ES",
+          availableLanguage: "Spanish",
+        }}
+      />
+    </JsonLd>
+  );
+}
+```
+
+📁 `src/components/seo/SeoPricing.tsx`
+
+```tsx
+"use client";
+import { JsonLd, Product, Offer } from "react-schemaorg";
+
+export default function SeoPricing() {
+  return (
+    <JsonLd>
+      <Product
+        name="Plan Pro"
+        description="Accede a todas las funcionalidades premium de Tu SaaS"
+        brand="Tu SaaS"
+        offers={
+          <Offer
+            price="29.99"
+            priceCurrency="EUR"
+            url="https://tusitio.com/pricing"
+            availability="https://schema.org/InStock"
+          />
+        }
+      />
+    </JsonLd>
+  );
+}
+```
+
+📁 `src/components/seo/SeoFaq.tsx`
+
+```tsx
+"use client";
+import { JsonLd, FAQPage, Question, Answer } from "react-schemaorg";
+
+export default function SeoFaq() {
+  return (
+    <JsonLd>
+      <FAQPage>
+        <Question name="¿Cómo empiezo?">
+          <Answer text="Puedes registrarte gratis en nuestra plataforma." />
+        </Question>
+        <Question name="¿Ofrecen soporte?">
+          <Answer text="Sí, soporte vía chat y correo electrónico." />
+        </Question>
+      </FAQPage>
+    </JsonLd>
+  );
+}
+```
+
+📁 `src/components/seo/SeoBlogPost.tsx`
+
+```tsx
+"use client";
+import { JsonLd, BlogPosting } from "react-schemaorg";
+
+export default function SeoBlogPost({ title }: { title: string }) {
+  return (
+    <JsonLd>
+      <BlogPosting
+        headline={title}
+        image="https://tusitio.com/images/blog/default.jpg"
+        author={{ "@type": "Person", name: "Equipo Tu SaaS" }}
+        datePublished="2025-04-01"
+        dateModified="2025-04-02"
+        publisher={{
+          "@type": "Organization",
+          name: "Tu SaaS",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tusitio.com/logo.png",
+          },
+        }}
+        description={`Artículo del blog: ${title}`}
+      />
+    </JsonLd>
+  );
+}
+```
+
+---
+
+### ✅ 2. Impleméntalos en las páginas correspondientes
+
+#### 🟦 `/about-us/page.tsx`
+
+```tsx
+import SeoOrganization from "@/components/seo/SeoOrganization";
+
+// En tu componente:
+<>
+  <SeoOrganization />
+  {/* resto del contenido... */}
+</>
+```
+
+#### 🟦 `/faq/page.tsx`
+
+```tsx
+import SeoFaq from "@/components/seo/SeoFaq";
+
+<>
+  <SeoFaq />
+  {/* resto del contenido... */}
+</>
+```
+
+#### 🟦 `/pricing/page.tsx`
+
+```tsx
+import SeoPricing from "@/components/seo/SeoPricing";
+
+<>
+  <SeoPricing />
+  {/* resto del contenido... */}
+</>
+```
+
+#### 🟦 `/blog/[slug]/page.tsx`
+
+```tsx
+import SeoBlogPost from "@/components/seo/SeoBlogPost";
+
+export default function BlogPostPage() {
+  const { slug } = useParams();
+  const title = slug.toString().replace(/-/g, " ");
+
+  return (
+    <div className="max-w-3xl mx-auto py-16 px-4">
+      <SeoBlogPost title={title} />
+      <h1 className="text-3xl font-bold mb-4">Artículo: {title}</h1>
+      <p className="text-gray-600">Aquí va el contenido del post dinámico.</p>
+    </div>
+  );
+}
+```
+
+---
+
+### 🧪 Resultado
+
+- Ahora cada página **declara su contexto semántico** con microdatos estructurados.
+- Google podrá mostrar **FAQs, precios, posts y datos de empresa enriquecidos** directamente en sus resultados.
+
+---
+
+¿Quieres que te lo prepare todo como un `plugin de SEO global` o un `hook` que se aplique automáticamente por ruta? También puedo ayudarte a generar los test con `jest` y `react-testing-library` para estos componentes si lo deseas.
+
+Perfecto — vamos a crear un **hook de SEO inteligente** que detecta automáticamente la ruta actual (`pathname`) y renderiza el componente de microdatos estructurados correspondiente ✅
+
+---
+
+### 🛠️ Paso 1: Hook `useStructuredDataByRoute`
+
+📁 `src/hooks/useStructuredDataByRoute.tsx`
+
+```tsx
+"use client";
+import { usePathname } from "next/navigation";
+
+// Importa los componentes SEO individuales
+import SeoOrganization from "@/components/seo/SeoOrganization";
+import SeoPricing from "@/components/seo/SeoPricing";
+import SeoFaq from "@/components/seo/SeoFaq";
+import SeoBlogPost from "@/components/seo/SeoBlogPost";
+
+export function useStructuredDataByRoute() {
+  const pathname = usePathname();
+
+  if (pathname === "/about-us") return <SeoOrganization />;
+  if (pathname === "/pricing") return <SeoPricing />;
+  if (pathname === "/faq") return <SeoFaq />;
+  if (pathname?.startsWith("/blog/")) {
+    const slug = pathname.split("/blog/")[1]?.replace(/-/g, " ") || "Artículo del blog";
+    return <SeoBlogPost title={slug} />;
+  }
+
+  return null; // No se renderiza nada si no aplica
+}
+```
+
+---
+
+### 🧩 Paso 2: Usarlo en el layout principal o en cada página
+
+#### Opción A) Añádelo en el **`layout.tsx`** para que se autoejecute por ruta:
+
+📁 `src/app/layout.tsx`
+
+```tsx
+import { useStructuredDataByRoute } from "@/hooks/useStructuredDataByRoute";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const structuredData = useStructuredDataByRoute();
+
+  return (
+    <html lang="es">
+      <body className="min-h-screen flex flex-col bg-gray-100">
+        <AuthProvider>
+          {!isAuthPage && <Navbar />}
+          {structuredData} {/* <-- Aquí se inyectan los microdatos automáticamente */}
+          <main className="flex-grow w-full pt-20">
+            {children}
+          </main>
+          {!isAuthPage && <Footer />}
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+#### Opción B) O puedes usarlo dentro de cada página si prefieres más control granular:
+
+```tsx
+import { useStructuredDataByRoute } from "@/hooks/useStructuredDataByRoute";
+
+export default function SomePage() {
+  const structuredData = useStructuredDataByRoute();
+
+  return (
+    <>
+      {structuredData}
+      {/* Resto del contenido */}
+    </>
+  );
+}
+```
+
+---
+
+### ✅ Beneficios del enfoque
+
+- 🔍 **SEO inteligente** según la ruta actual
+- 🧼 Evita repetir código en cada página
+- 🔄 Fácil de extender: solo añades nuevas rutas al `hook`
+
+---
+
+¿Quieres que extienda este hook para que también maneje `schema.org/BreadcrumbList`, `Event`, `Service`, o productos con múltiples variantes (`ProductVariant`)? Te lo puedo dejar todo listo 😎
