@@ -119,7 +119,7 @@ export interface UserInfo {
   credits: number;
   rol: string | null;
   session_id?: string;
-  gamification: UserGamificationResponse[]; // Actualizado para reflejar /info
+  gamification: UserGamificationResponse[]; // Actualizado para reflejar /whoami
 }
 
 export interface EventType {

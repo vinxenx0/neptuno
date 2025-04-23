@@ -1,0 +1,217 @@
+¡Impresionante proyecto! Entiendo perfectamente el objetivo: **crear un sistema de plantillas modular que permita a los usuarios construir páginas combinando componentes predefinidos o personalizados**. Aquí tienes una propuesta técnica detallada para implementarlo en Neptuno:
+
+---
+
+### **Arquitectura General del Sistema de Plantillas**
+Propongo un enfoque híbrido que aproveche las fortalezas de Next.js (ya en tu stack) para el renderizado dinámico/estático, combinado con un motor de plantillas basado en JSON Schema + React Server Components.
+
+```bash
+📂 neptuno/
+├── 📂 frontend/
+│   ├── 📂 src/
+│   │   ├── 📂 app/
+│   │   │   └── 📂 templates/  # Nueva sección
+│   │   │       ├── 📄 builder/  # Editor de plantillas
+│   │   │       ├── 📄 gallery/  # Galería de plantillas
+│   │   │       └── 📄 [slug]/   # Páginas generadas
+│   │   ├── 📂 components/
+│   │   │   └── 📂 template-engine/  # Motor de plantillas
+│   │   │       ├── TemplateRenderer.tsx  # Intérprete de JSON
+│   │   │       ├── ComponentRegistry.ts  # Registro de bloques
+│   │   │       └── DynamicForm.tsx  # Configuración de componentes
+│   │   └── 📂 lib/
+│   │       └── template-service.ts  # Cliente API para plantillas
+```
+
+---
+
+### **1. Backend (FastAPI): Sistema de Plantillas como Servicio**
+**Nuevos endpoints en `/api/v1/templates`**:
+```python
+# services/template_service.py
+class TemplateService:
+    async def create_template(self, user: User, template_data: TemplateCreate):
+        # Lógica para almacenar estructura JSON + assets
+        pass
+
+    async def render_template(self, template_id: UUID, context: dict):
+        # Generar HTML/CSS/JS final con datos del usuario
+        pass
+
+# api/v1/templates.py
+@router.post("/templates", dependencies=[Depends(require_admin)])
+async def create_template(
+    template: TemplateCreate,
+    service: TemplateService = Depends(get_template_service)
+):
+    return await service.create_template(template)
+
+@router.get("/templates/{template_id}/preview")
+async def preview_template(
+    template_id: UUID,
+    service: TemplateService = Depends(get_template_service)
+):
+    return await service.render_template(template_id)
+```
+
+**Modelo de datos para plantillas**:
+```python
+# models/templates.py
+class Template(Base):
+    __tablename__ = "templates"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True)
+    name = Column(String(100))
+    type = Column(Enum(TemplateType))  # landing/survey/funnel/etc
+    schema = Column(JSON)  # JSON Schema con estructura
+    styles = Column(JSON)  # Sistema de diseño (Tailwind classes)
+    is_public = Column(Boolean, default=False)
+    user_id = Column(UUID, ForeignKey("users.id"))
+```
+
+---
+
+### **2. Frontend (Next.js): Constructor Visual de Plantillas**
+Implementa un **drag & drop builder** usando [React Grid Layout](https://github.com/react-grid-layout/react-grid-layout) + [Craft.js](https://craft.js.org/) para la interfaz de usuario:
+
+```tsx
+// components/template-engine/ComponentRegistry.ts
+export const componentRegistry = {
+  'hero': {
+    component: HeroBlock,
+    configForm: HeroConfigForm,
+    defaultData: { title: "Default Hero", ctaText: "Get Started" }
+  },
+  'pricing-table': {
+    component: PricingTable,
+    configForm: PricingConfigForm
+  }
+};
+
+// components/template-engine/TemplateRenderer.tsx
+const TemplateRenderer = ({ schema }) => {
+  return (
+    <div className="template-container">
+      {schema.blocks.map((block) => {
+        const Component = componentRegistry[block.type].component;
+        return <Component key={block.id} {...block.props} />;
+      })}
+    </div>
+  );
+};
+```
+
+---
+
+### **3. Flujo de Trabajo del Usuario**
+1. **Selección de Plantilla**:
+   - Galería con filtros por tipo (landing/survey/etc)
+   - Previsualización en tiempo real con datos de ejemplo
+
+2. **Edición**:
+   - Drag & drop de componentes
+   - Panel lateral con configuración por bloque
+   - Modo "Desktop/Tablet/Mobile"
+   - Integración con sistema de diseño de Neptuno (Tailwind)
+
+3. **Publicación**:
+   - Generar página estática (SSG)
+   - Obtener URL única: `neptunoapp.com/user-slug/template-id`
+   - Opción de descargar como HTML/CSS/JS
+
+---
+
+### **4. Sistema de Componentes Personalizables**
+**Estructura de un componente**:
+```tsx
+// components/template-engine/blocks/HeroBlock.tsx
+interface HeroProps {
+  title: string;
+  ctaText: string;
+  backgroundColor?: string;
+}
+
+const HeroBlock = ({ title, ctaText }: HeroProps) => (
+  <section className="hero-section bg-gradient-to-r from-blue-500 to-purple-600">
+    <h1 className="text-4xl font-bold text-white">{title}</h1>
+    <button className="cta-button bg-white text-blue-600 px-8 py-3 rounded-lg">
+      {ctaText}
+    </button>
+  </section>
+);
+
+// Formulario de configuración asociado
+const HeroConfigForm = ({ config, onUpdate }) => (
+  <div className="space-y-4">
+    <Input 
+      label="Title" 
+      value={config.title} 
+      onChange={(e) => onUpdate({ title: e.target.value })}
+    />
+    <Input
+      label="CTA Text"
+      value={config.ctaText}
+      onChange={(e) => onUpdate({ ctaText: e.target.value })}
+    />
+  </div>
+);
+```
+
+---
+
+### **5. Integración con Sistema Existente**
+- **Autenticación**: Usar mismo contexto de usuario (`useAuth`)
+- **Monetización**: 
+  - Componentes premium (ej: "Pricing Table" solo para plan Pro)
+  - Plantillas como productos en CreditSystem
+- **Gamificación**:
+  - Logros por crear primeras plantillas
+  - Sistema de votación para plantillas públicas
+
+---
+
+### **6. Optimizaciones Clave**
+1. **Rendimiento**:
+   - Generación estática de páginas (SSG)
+   - Lazy loading de componentes con `next/dynamic`
+   - Cache de plantillas en CDN (usando Redis)
+
+2. **Seguridad**:
+   - Sandbox de ejecución para código custom (usando IFrames)
+   - Sanitización de HTML (con DOMPurify)
+   - Validación de esquemas en backend
+
+3. **Extensibilidad**:
+   - API para desarrolladores: registrar componentes custom
+   - Webhooks al publicar/actualizar plantillas
+   - Sistema de plugins (ej: integración con Figma)
+
+---
+
+### **Stack Adicional Recomendado**
+| Capa           | Tecnologías                                                                 |
+|----------------|-----------------------------------------------------------------------------|
+| State Management | Zustand (para estado global del builder)                                   |
+| Drag & Drop     | React DnD + React Grid Layout                                               |
+| Styling         | Tailwind CSS + Framer Motion (para animaciones)                            |
+| Backend Assets  | MinIO (para almacenamiento de imágenes/archivos)                           |
+| Real-Time       | Liveblocks (para edición colaborativa)                                     |
+
+---
+
+### **Hoja de Ruta MVP**
+1. **Fase 1 (2 semanas)**:
+   - Sistema básico de componentes (hero, text, CTA)
+   - Editor con preview básico
+   - API para guardar/recuperar plantillas
+
+2. **Fase 2 (3 semanas)**:
+   - Integración con sistema de diseño (Tailwind)
+   - Componentes avanzados (forms, pricing tables)
+   - Modo mobile preview
+
+3. **Fase 3 (1 semana)**:
+   - Publicación como páginas estáticas
+   - Sistema de plantillas públicas/compartidas
+
+¿Necesitas que profundice en algún área específica? ¿O prefieres que primero revisemos los archivos actuales para ajustar la propuesta a tu código base?

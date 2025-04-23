@@ -3906,7 +3906,7 @@ async def restricted_test(user: UserContext = Depends(check_credits), db: Sessio
 
     return response
 
-@app.get("/info")
+@app.get("/whoami")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     disable_anonymous = get_setting(db, "disable_anonymous_users")
     base_info = {

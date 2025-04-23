@@ -174,7 +174,7 @@ export default function LandingPage() {
 
   const handleInfo = async () => {
     try {
-      const response = await fetchAPI("/info", { method: "GET" });
+      const response = await fetchAPI("/whoami", { method: "GET" });
       if (response.error) {
         setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
         setSnackbarSeverity("error");
@@ -503,7 +503,7 @@ export default function LandingPage() {
                 onClick={handleInfo}
                 startIcon={<Info />}
               >
-                /v1/test/info
+                /v1/test/whoami
               </EndpointButton>
             </Grid>
 

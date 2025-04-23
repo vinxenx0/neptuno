@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data } = await fetchAPI<any>("/info"); // Endpoint para obtener info del usuario
+        const { data } = await fetchAPI<any>("/whoami"); // Endpoint para obtener info del usuario
         if (data) {
           if (data.user_type === "registered") {
             setUser({

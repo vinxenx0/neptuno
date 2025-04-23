@@ -662,7 +662,7 @@ CREATE TABLE error_logs (
 	FOREIGN KEY(user_id) REFERENCES usuarios (id), 
 	FOREIGN KEY(session_id) REFERENCES sesiones_anonimas (id)
 );
-INSERT INTO error_logs VALUES(1,NULL,NULL,'anonymous',400,'Sesión anónima inválida',NULL,'http://127.0.0.1:8000/info','GET','127.0.0.1','2025-04-10 10:17:11.100311');
+INSERT INTO error_logs VALUES(1,NULL,NULL,'anonymous',400,'Sesión anónima inválida',NULL,'http://127.0.0.1:8000/whoami','GET','127.0.0.1','2025-04-10 10:17:11.100311');
 
 CREATE TABLE user_gamification (
 	id INTEGER NOT NULL, 

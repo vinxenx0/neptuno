@@ -116,7 +116,7 @@ export default function CouponPage() {
       });
       if (data) {
         setCoupons(coupons.map((c) => (c.id === couponId ? data : c)));
-        const { data: info } = await fetchAPI<any>("/info");
+        const { data: info } = await fetchAPI<any>("/whoami");
         setCredits(info.credits);
         setSuccess("Cupón canjeado exitosamente");
       }

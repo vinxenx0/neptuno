@@ -1,7 +1,7 @@
 // src/components/admin/AdminUsersPage.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { getAllUsers, updateUser, deleteUser, createUser } from "@/lib/api";
 import { User, RegisterRequest, UpdateProfileRequest } from "@/lib/types";
@@ -86,16 +86,7 @@ const AdminUsersPage = () => {
     totalPages: 1,
   });
 
-  useEffect(() => {
-    if (user?.rol !== "admin") {
-      setError("No tienes permisos para acceder a esta página");
-      setLoading(false);
-      return;
-    }
-    fetchUsers();
-  }, [user, pagination.page]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await getAllUsers(pagination.page, pagination.limit);
@@ -128,7 +119,16 @@ const AdminUsersPage = () => {
       setError(err instanceof Error ? err.message : "Error desconocido");
     }
     setLoading(false);
-  };
+  }, [pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    if (user?.rol !== "admin") {
+      setError("No tienes permisos para acceder a esta página");
+      setLoading(false);
+      return;
+    }
+    fetchUsers();
+  }, [user, pagination.page, fetchUsers]);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPagination(prev => ({ ...prev, page: newPage }));

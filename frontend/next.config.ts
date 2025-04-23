@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   eslint: {
-    ignoreDuringBuilds: true, // Optional: to ignore ESLint warnings during build
+    ignoreDuringBuilds: false, // Optional: true to ignore ESLint warnings during build
   },
 
   

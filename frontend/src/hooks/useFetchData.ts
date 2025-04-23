@@ -32,7 +32,7 @@ export function useFetchData<T>(url: string, dependencies: any[] = []): FetchDat
     };
 
     fetchData();
-  }, dependencies);
+  }, [url, dependencies]);
 
   return { data, error, loading };
 }

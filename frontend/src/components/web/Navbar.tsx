@@ -45,9 +45,29 @@ import {
   ContactMail,
   Close,
   Key,
-  LocalActivity
+  LocalActivity,
+  Mail,
+  Favorite
 } from "@mui/icons-material";
 import Image from "next/image";
+
+const MobileBottomNav = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  background: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+  borderTop: `1px solid ${theme.palette.divider}`,
+  padding: theme.spacing(1),
+  zIndex: 999,
+  justifyContent: 'space-around',
+  alignItems: 'center',
+  display: 'flex',
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+}));
 
 const GlassNavbar = styled("nav")(({ theme }) => ({
   background: "rgba(255, 255, 255, 0.1)",
@@ -135,7 +155,7 @@ export default function Navbar() {
 
     const interval = setInterval(async () => {
       try {
-        const { data: infoData } = await fetchAPI<InfoData>("/info");
+        const { data: infoData } = await fetchAPI<InfoData>("/whoami");
         if (infoData) {
           setCredits(infoData.credits);
         }
@@ -185,66 +205,99 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
-  // Contar cupones activos y no expirados
   const availableCoupons = (coupons || []).filter(
     (coupon) =>
-      coupon && // Verifica que coupon no sea null/undefined
+      coupon &&
       coupon.status === "active" &&
       (!coupon.expires_at || new Date(coupon.expires_at) > new Date())
   ).length;
 
   return (
-    <GlassNavbar>
-      <NavContainer>
-        {/* Sección izquierda: Logo y menú hamburguesa */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton
-            onClick={handleDrawerOpen}
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
+    <>
+      <GlassNavbar>
+        <NavContainer>
+          {/* Sección izquierda: Logo y menú hamburguesa */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Link href="/" passHref>
-              <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                cursor: "pointer"
-              }}>
-                <Image
-                  src="/logo.png"
-                  alt="Logo Neptuno"
-                  width={40}
-                  height={40}
-                  style={{ borderRadius: "50%" }}
-                />
-                <Typography
-                  variant="h6"
-                  component="span"
-                  className="app-logo"
-                  sx={{
-                    fontWeight: "bold",
-                    display: {
-                      xs: 'none', // Oculto en móvil
-                      md: 'block' // Visible en desktop
-                    }
-                  }}
-                >
-                  Neptuno
-                </Typography>
-              </Box>
-            </Link>
-          </Box>
-        </Box>
+            <IconButton
+              onClick={handleDrawerOpen}
+              sx={{ display: { xs: "block", md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
 
-        {/* Sección derecha: Todos los elementos */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {/* Enlaces desktop + iconos */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Link href="/" passHref>
+                <Box sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  cursor: "pointer"
+                }}>
+                  <Image
+                    src="/logo.png"
+                    alt="Logo Neptuno"
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <Typography
+                    variant="h6"
+                    component="span"
+                    className="app-logo"
+                    sx={{
+                      fontWeight: "bold",
+                      display: {
+                        xs: 'none',
+                        md: 'block'
+                      }
+                    }}
+                  >
+                    Neptuno
+                  </Typography>
+                </Box>
+              </Link>
+            </Box>
+          </Box>
+
+          {/* Sección derecha: Elementos específicos para móvil */}
+          <Box sx={{ 
+            display: { xs: "flex", md: "none" },
+            alignItems: "center",
+            gap: 1
+          }}>
+            {/* Mensajes */}
+            <Tooltip title="Mensajes (próximamente)">
+              <IconButton sx={{ color: theme.palette.text.disabled }}>
+                <Mail />
+              </IconButton>
+            </Tooltip>
+
+            {/* Favoritos */}
+            <Tooltip title="Likes (próximamente)">
+              <IconButton sx={{ color: theme.palette.text.disabled }}>
+                <Favorite />
+              </IconButton>
+            </Tooltip>
+
+            {/* Settings solo para admin */}
+            {user?.rol === "admin" && (
+              <IconButton
+                onClick={handleSettingsMenuOpen}
+                sx={{ color: "inherit" }}
+              >
+                <Settings />
+              </IconButton>
+            )}
+          </Box>
+
+          {/* Sección derecha: Versión desktop */}
+          <Box sx={{ 
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            gap: 2
+          }}>
             {/* Enlaces desktop */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2, mr: 1 }}>
+            <Box sx={{ display: "flex", gap: 2, mr: 1 }}>
               <Button
                 component={Link}
                 href="/ejemplos"
@@ -272,7 +325,6 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* Cupones */}
               {enableCoupons && (
                 <Link href="/user/coupon" passHref>
                   <Tooltip title="Tus cupones">
@@ -305,208 +357,290 @@ export default function Navbar() {
                   )}
                 </>
               )}
-            </Box>
-          </Box>
 
-          {/* Menú admin y usuario */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {user?.rol === "admin" && (
-              <>
-                <IconButton
-                  onClick={handleSettingsMenuOpen}
-                  sx={{ color: "inherit" }}
-                >
-                  <Settings />
-                </IconButton>
-                <Menu
-                  anchorEl={settingsAnchorEl}
-                  open={Boolean(settingsAnchorEl)}
-                  onClose={handleSettingsMenuClose}
-                  PaperProps={{
-                    sx: {
-                      background: "rgba(255, 255, 255, 0.9)",
-                      backdropFilter: "blur(10px)",
-                      borderRadius: "12px",
-                      mt: 1,
-                      minWidth: "200px",
-                    },
-                  }}
-                >
-                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
-                    <Dashboard sx={{ mr: 1 }} /> Config
-                  </MenuItem>
-                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/gamification">
-                    <EmojiEvents sx={{ mr: 1 }} /> Gamification
-                  </MenuItem>
-                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/revenues">
-                    <MonetizationOn sx={{ mr: 1 }} /> Revenues
-                  </MenuItem>
-                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
-                    <ListAlt sx={{ mr: 1 }} /> Registros
-                  </MenuItem>
-                  <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
-                    <People sx={{ mr: 1 }} /> Usuarios
-                  </MenuItem>
-                </Menu>
-              </>
-            )}
-
-            {/* Avatar de usuario */}
-            {user ? (
-              <Tooltip title={user.username} arrow>
-                <IconButton
-                  component={Link}
-                  href="/user/dashboard"
-                  className="user-avatar"
-                >
-                  <Avatar sx={{
-                    bgcolor: theme.palette.primary.main,
-                    width: 40,
-                    height: 40,
-                    fontSize: '1rem'
-                  }}>
-                    {user.username[0].toUpperCase()}
-                  </Avatar>
+              <Tooltip title="Mensajes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Mail />
                 </IconButton>
               </Tooltip>
-            ) : (
-              <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
-                <Box sx={{ position: 'relative' }}>
+              
+              <Tooltip title="Likes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Favorite />
+                </IconButton>
+              </Tooltip>
+            </Box>
+
+            {/* Menú admin y usuario */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {user?.rol === "admin" && (
+                <>
+                  <IconButton
+                    onClick={handleSettingsMenuOpen}
+                    sx={{ color: "inherit" }}
+                  >
+                    <Settings />
+                  </IconButton>
+                  <Menu
+                    anchorEl={settingsAnchorEl}
+                    open={Boolean(settingsAnchorEl)}
+                    onClose={handleSettingsMenuClose}
+                    PaperProps={{
+                      sx: {
+                        background: "rgba(255, 255, 255, 0.9)",
+                        backdropFilter: "blur(10px)",
+                        borderRadius: "12px",
+                        mt: 1,
+                        minWidth: "200px",
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
+                      <Dashboard sx={{ mr: 1 }} /> Config
+                    </MenuItem>
+                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/gamification">
+                      <EmojiEvents sx={{ mr: 1 }} /> Gamification
+                    </MenuItem>
+                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/revenues">
+                      <MonetizationOn sx={{ mr: 1 }} /> Revenues
+                    </MenuItem>
+                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
+                      <ListAlt sx={{ mr: 1 }} /> Registros
+                    </MenuItem>
+                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
+                      <People sx={{ mr: 1 }} /> Usuarios
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+
+              {user ? (
+                <Tooltip title={user.username} arrow>
                   <IconButton
                     component={Link}
-                    href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+                    href="/user/dashboard"
                     className="user-avatar"
                   >
                     <Avatar sx={{
-                      bgcolor: theme.palette.grey[500],
+                      bgcolor: theme.palette.primary.main,
                       width: 40,
                       height: 40,
-                      color: theme.palette.common.white
+                      fontSize: '1rem'
                     }}>
-                      {anonUsername ? <Person /> : <Key />}
+                      {user.username[0].toUpperCase()}
                     </Avatar>
                   </IconButton>
-                  {anonUsername && (
-                    <Box sx={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      backgroundColor: theme.palette.secondary.main,
-                      borderRadius: '50%',
-                      width: 20,
-                      height: 20,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: `2px solid ${theme.palette.background.paper}`
-                    }}>
-                      <Key sx={{ fontSize: 12, color: theme.palette.common.white }} />
-                    </Box>
-                  )}
-                </Box>
-              </Tooltip>
-            )}
-          </Box>
-        </Box>
-
-        {/* Menú hamburguesa */}
-        <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
-          <List>
-            {/* Header del menú */}
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2,
-              borderBottom: `1px solid ${theme.palette.divider}`
-            }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Image
-                  src="/logo.png"
-                  alt="Logo Neptuno"
-                  width={40}
-                  height={40}
-                  style={{ borderRadius: "50%" }}
-                />
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "bold",
-                    background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    display: "inline-block",
-                  }}
-                >
-                  Neptuno
-                </Typography>
-              </Box>
-              <IconButton onClick={handleDrawerClose}>
-                <Close />
-              </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
+                  <Box sx={{ position: 'relative' }}>
+                    <IconButton
+                      component={Link}
+                      href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+                      className="user-avatar"
+                    >
+                      <Avatar sx={{
+                        bgcolor: theme.palette.grey[500],
+                        width: 40,
+                        height: 40,
+                        color: theme.palette.common.white
+                      }}>
+                        {anonUsername ? <Person /> : <Key />}
+                      </Avatar>
+                    </IconButton>
+                    {anonUsername && (
+                      <Box sx={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        backgroundColor: theme.palette.secondary.main,
+                        borderRadius: '50%',
+                        width: 20,
+                        height: 20,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: `2px solid ${theme.palette.background.paper}`
+                      }}>
+                        <Key sx={{ fontSize: 12, color: theme.palette.common.white }} />
+                      </Box>
+                    )}
+                  </Box>
+                </Tooltip>
+              )}
             </Box>
+          </Box>
 
-            <ListItem component={Link} href="/">
-              <ListItemIcon><Home /></ListItemIcon>
-              <ListItemText primary="Inicio" />
-            </ListItem>
-            <ListItem component={Link} href="/ejemplos">
-              <ListItemIcon><School /></ListItemIcon>
-              <ListItemText primary="Ejemplos" />
-            </ListItem>
-            <ListItem component={Link} href="/rankings">
-              <ListItemIcon><Leaderboard /></ListItemIcon>
-              <ListItemText primary="Rankings" />
-            </ListItem>
-            <ListItem component={Link} href="/about/contact">
-              <ListItemIcon><ContactMail /></ListItemIcon>
-              <ListItemText primary="Contacto" />
-            </ListItem>
+          {/* Menú hamburguesa */}
+          <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
+            <List>
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p: 2,
+                borderBottom: `1px solid ${theme.palette.divider}`
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Image
+                    src="/logo.png"
+                    alt="Logo Neptuno"
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: "bold",
+                      background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      display: "inline-block",
+                    }}
+                  >
+                    Neptuno
+                  </Typography>
+                </Box>
+                <IconButton onClick={handleDrawerClose}>
+                  <Close />
+                </IconButton>
+              </Box>
 
-            {user?.rol === "admin" && (
-              <>
-                <ListItem component={Link} href="/admin/dashboard">
-                  <ListItemIcon><Dashboard /></ListItemIcon>
-                  <ListItemText primary="Dashboard" />
-                </ListItem>
-                <ListItem component={Link} href="/admin/registry">
-                  <ListItemIcon><ListAlt /></ListItemIcon>
-                  <ListItemText primary="Registros" />
-                </ListItem>
-                <ListItem component={Link} href="/admin/users">
-                  <ListItemIcon><People /></ListItemIcon>
-                  <ListItemText primary="Usuarios" />
-                </ListItem>
-              </>
-            )}
-            {user ? (
-              <ListItem component={Link} href="/user/dashboard">
-                <ListItemIcon><Person /></ListItemIcon>
-                <ListItemText primary={user.username} />
+              <ListItem component={Link} href="/">
+                <ListItemIcon><Home /></ListItemIcon>
+                <ListItemText primary="Inicio" />
               </ListItem>
-            ) : (
-              <>
-                <ListItem component={Link} href="/user/auth/#login">
-                  <ListItemIcon><Login /></ListItemIcon>
-                  <ListItemText primary="Iniciar Sesión" />
-                </ListItem>
-                {enableRegistration && (
-                  <ListItem component={Link} href="/user/auth/#register">
-                    <ListItemIcon><PersonAdd /></ListItemIcon>
-                    <ListItemText primary="Registrarse" />
-                  </ListItem>
-                )}
-              </>
-            )}
-          </List>
-        </Drawer>
-      </NavContainer>
+              <ListItem component={Link} href="/ejemplos">
+                <ListItemIcon><School /></ListItemIcon>
+                <ListItemText primary="Ejemplos" />
+              </ListItem>
+              <ListItem component={Link} href="/rankings">
+                <ListItemIcon><Leaderboard /></ListItemIcon>
+                <ListItemText primary="Rankings" />
+              </ListItem>
+              <ListItem component={Link} href="/about/contact">
+                <ListItemIcon><ContactMail /></ListItemIcon>
+                <ListItemText primary="Contacto" />
+              </ListItem>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
-          ¡Felicidades! Has obtenido el badge: {newBadge}
-        </Alert>
-      </Snackbar>
-    </GlassNavbar >
+              {user?.rol === "admin" && (
+                <>
+                  <ListItem component={Link} href="/admin/dashboard">
+                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemText primary="Dashboard" />
+                  </ListItem>
+                  <ListItem component={Link} href="/admin/registry">
+                    <ListItemIcon><ListAlt /></ListItemIcon>
+                    <ListItemText primary="Registros" />
+                  </ListItem>
+                  <ListItem component={Link} href="/admin/users">
+                    <ListItemIcon><People /></ListItemIcon>
+                    <ListItemText primary="Usuarios" />
+                  </ListItem>
+                </>
+              )}
+              {user ? (
+                <ListItem component={Link} href="/user/dashboard">
+                  <ListItemIcon><Person /></ListItemIcon>
+                  <ListItemText primary={user.username} />
+                </ListItem>
+              ) : (
+                <>
+                  <ListItem component={Link} href="/user/auth/#login">
+                    <ListItemIcon><Login /></ListItemIcon>
+                    <ListItemText primary="Iniciar Sesión" />
+                  </ListItem>
+                  {enableRegistration && (
+                    <ListItem component={Link} href="/user/auth/#register">
+                      <ListItemIcon><PersonAdd /></ListItemIcon>
+                      <ListItemText primary="Registrarse" />
+                    </ListItem>
+                  )}
+                </>
+              )}
+            </List>
+          </Drawer>
+        </NavContainer>
+
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+          <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+            ¡Felicidades! Has obtenido el badge: {newBadge}
+          </Alert>
+        </Snackbar>
+      </GlassNavbar>
+
+      <MobileBottomNav>
+        {!disableCredits && credits > 0 && (
+          <Link href="/user/transactions" passHref>
+            <IconButton className="notification-icon">
+              <MonetizationOn />
+              <span className="notification-badge credits-badge">{credits}</span>
+            </IconButton>
+          </Link>
+        )}
+
+        {enableCoupons && (
+          <Link href="/user/coupon" passHref>
+            <Tooltip title="Tus cupones">
+              <IconButton className="notification-icon">
+                <Badge badgeContent={availableCoupons} color="secondary">
+                  <LocalActivity />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+          </Link>
+        )}
+
+        {user ? (
+          <Tooltip title={user.username} arrow>
+            <IconButton component={Link} href="/user/dashboard">
+              <Avatar sx={{
+                bgcolor: theme.palette.primary.main,
+                width: 32,
+                height: 32,
+                fontSize: '0.9rem'
+              }}>
+                {user.username[0].toUpperCase()}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
+            <IconButton
+              component={Link}
+              href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+            >
+              <Avatar sx={{
+                bgcolor: theme.palette.grey[500],
+                width: 32,
+                height: 32,
+                color: theme.palette.common.white
+              }}>
+                {anonUsername ? <Person fontSize="small" /> : <Key fontSize="small" />}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        )}
+
+        {gamification?.points && enablePoints && (
+          <Link href="/user/points" passHref>
+            <IconButton className="notification-icon">
+              <Star />
+              <span className="notification-badge points-badge">{gamification.points}</span>
+            </IconButton>
+          </Link>
+        )}
+
+        {gamification?.badges && enableBadges && (
+          <Link href="/user/badges" passHref>
+            <IconButton className="notification-icon">
+              <EmojiEvents />
+              <span className="notification-badge badges-badge">{gamification.badges.length}</span>
+            </IconButton>
+          </Link>
+        )}
+      </MobileBottomNav>
+    </>
   );
 }

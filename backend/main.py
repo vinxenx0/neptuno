@@ -7,10 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 
-from api.v1 import (
-    payment_providers, coupons, test, origins, auth, payments, site_settings, integrations,
-    anonymous_sessions, credit_transactions, error_logs, api_logs, users, gamification
-)
+from api.v1.users import users
+from api.v1.health import test
+from api.v1.transactions import payment_providers, payments, credit_transactions
+from api.v1.logs import api_logs, error_logs
+from api.v1.gamification import coupons, gamification
+from api.v1.auth import auth
+from api.v1.config import site_settings
+from api.v1.config import integrations, origins
+from api.v1.users import anonymous_sessions
 from schemas.gamification import UserGamificationResponse
 from ini_db import init_db, init_settings_and_users
 from dependencies.auth import UserContext, get_user_context
@@ -195,7 +200,7 @@ async def health_check(db: Session = Depends(get_db)):
 async def root():
     return {"message": "Bienvenido a la API Backend"}
 
-@app.get("/info")
+@app.get("/whoami")
 async def get_info(user: UserContext = Depends(get_user_context), db: Session = Depends(get_db)):
     disable_anonymous = get_setting(db, "disable_anonymous_users")
     base_info = {

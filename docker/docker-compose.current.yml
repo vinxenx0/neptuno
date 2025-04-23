@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: neptuno-stack
+    build: ./backend
+    ports: 
+      - "8000:8000"
+    environment:
+      - WORKERS_PER_CORE=0.5
+      - MAX_WORKERS=2
+    volumes:
+      - backend_data:/app/data
+      - backend_logs:/app/logs
+    depends_on:
+      - db
+    restart: always
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.2
+
+  frontend:
+    container_name: neptuno-dashboard
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - frontend_logs:/app/logs
+    restart: always
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.3
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    command: --innodb_buffer_pool_size=512M --query_cache_size=64M --tmp_table_size=64M
+    container_name: neptuno-db
+    environment:
+      - MARIADB_ROOT_PASSWORD=tu_contraseña_segura
+      - MARIADB_DATABASE=tu_base_de_datos
+      - MARIADB_USER=tu_usuario
+      - MARIADB_PASSWORD=contraseña_usuario
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      vboxnet:
+        ipv4_address: 172.18.0.4
+
+networks:
+  vboxnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.0.0/16"
+          gateway: "172.18.0.1"
+
+volumes:
+  backend_data:
+  backend_logs:
+  frontend_logs:
+  mariadb_data:

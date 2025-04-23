@@ -1,0 +1,131 @@
+Aquí tienes el boceto de la landing de **Neptuno** con la nueva estructura estilo Supabase/Stripe/Stripe
+---
+
+## 1. 🚀 Hero (Above the Fold)
+
+**Headline fuerte (elige una variante)**  
+- “Lanza tu propio SaaS en 24 horas. Sin reinventar la rueda.”  
+- “Tu SaaS en un día: gamificación, auth y pagos listos.”  
+
+**Subheadline (elige una variante)**  
+- “Gamificación, auth, pagos y dashboards incluidos. Integra tu frontend y lanza.”  
+- “Starter kit full‑stack con FastAPI, Next.js, OpenAPI y Docker para producción inmediata.” citeturn0file0  
+
+**Primary CTA**  
+- [🔍 Ver demo técnica]  
+- [🚀 Probar ahora – Gratis]
+
+**Visual**  
+> Captura real del dashboard premium mostrando:  
+> - Monitorización de usuarios anónimos vs. registrados  
+> - Panel de gamificación con puntos y badges citeturn0file1  
+
+---
+
+## 2. 🎯 Propuesta de valor
+
+**Formato 3 columnas / bullets**  
+
+| 🧱 Stack listo para producción | ⚡ Desarrollo en tiempo récord | 🧠 Para freelancers & makers |
+|--------------------------------|-------------------------------|-----------------------------|
+| Python + FastAPI, OpenAPI, MariaDB, Docker, Nginx. | Tu MVP en horas, no semanas. | Ideal para micro‑agencias y makers. |
+| Frontend Next.js optimizado para SEO y SSR. | Autenticación, pagos, gamificación y webhooks out‑of‑the‑box. | Sin vendor lock‑in. 100% open source. citeturn0file0 |
+
+**Copy de apoyo (elige variante)**  
+> “Neptuno es un starter kit backend + frontend que elimina semanas de trabajo repetitivo. Autenticación avanzada, gamificación y pagos listos desde el día uno.” citeturn0file0  
+
+---
+
+## 3. 🔍 Qué incluye
+
+| Ícono | Módulo | Descripción |
+|:-----:|:------:|:-----------|
+| 🔐 | **Auth avanzada** | JWT, OAuth2, social logins, roles y permisos avanzados citeturn0file0 |
+| 💳 | **Monetización** | Stripe, suscripciones, freemium y gestión de pagos listos citeturn0file0 |
+| 🎮 | **Gamificación** | Puntos, créditos, badges, niveles, desafíos y referidos citeturn0file0 |
+| 📦 | **API REST** | Documentada con OpenAPI; GraphQL‑ready, SDK JS/TS incluido citeturn0file1 |
+| ⚡ | **Frontend Next.js** | SSR, SEO‑ready, UI modular y dashboards de gestión citeturn0file0 |
+| 🐳 | **Docker** | Deploy en Railway, Render o local; balanceo con Nginx/Gunicorn citeturn0file1 |
+
+---
+
+## 4. 🛠 Casos de uso listos para lanzar
+
+> **“¿Qué puedes construir hoy?”** 
+
+| Caso de uso                                  | Tiempo aprox. | CTA          |
+|-----------------------------------------------|--------------|--------------|
+| App de membresía con auth y niveles           | 2 h          | [Probar este caso] |
+| Campaña viral con referidos y rewards         | 1 h          | [Ver tutorial]     |
+| SaaS MVP con login, pago y gamificación       | 4 h          | [Probar ahora]     |
+| Programa de fidelización para clientes        | 2 h          | [Iniciar demo]     |
+
+---
+
+## 5. 📈 Cómo funciona (flujo visual / arquitectura)
+
+**Diagrama simplificado**  
+```
+Tu Frontend  
+    ↓  
+API REST Neptuno  
+    ↓  
+MariaDB + Lógica de negocio  
+    ↙     ↘  
+Gamificación  Monetización  
+```
+- **Módulos integrables**: Webhooks, eventos, SDK, dashboards. citeturn0file1  
+
+---
+
+## 6. 📦 Planes y monetización
+
+| Plan                        | Precio    | Qué incluye                                                 |
+|-----------------------------|-----------|-------------------------------------------------------------|
+| Starter Kit (Gratis)        | $0        | Código abierto, API + frontend, comunidad GitHub            |
+| Pro                         | $29/mes   | Plantillas premium, soporte prioritario, Slack privado      |
+| White‑label                 | $99/mes   | Branding custom, formación in‑house, actualizaciones SLA    |
+| SaaS‑as‑a‑Service (Enterprise) | Custom    | Integración completa, consultoría estratégica, SLA 24/7     |
+
+---
+
+## 7. ✅ Prueba social / validación
+
+- **Empresas & creadores**: Logo de proyectos reales (Agencia X, Startup Y…)  
+- **Mini‑testimonios**:  
+  - “Reducimos 10× el tiempo de lanzamiento.” – Dev Lead @StartupZ  
+  - “Nuestro onboarding ahora es un juego.” – Growth @AgenciaA  
+- **Screenshots**: Vista del journey de usuario y dashboard de métricas citeturn0file1  
+
+---
+
+## 8. 🔥 CTA final + Demo / Get Started
+
+**Título de cierre**  
+> “Empieza a lanzar en minutos. Gratis. Sin vendor lock‑in.”  
+
+**CTAs**  
+- [🚀 Descargar Kit]  
+- [🔍 Ver demo técnica]  
+- Microcopy: “Sin registro. Sin tarjeta. Solo código.”  
+
+---
+
+- **Comparativa vs. Firebase/Supabase** 
+
+Funcionalidad | Neptuno | Firebase | Supabase | Retool
+Autenticación | ✅ | ✅ | ✅ | ⚠️ solo UI
+Gamificación nativa | ✅ | ❌ | ❌ | ❌
+Monetización lista | ✅ | ❌ | ⚠️ parcial | ❌
+Integración flexible | ✅ | ❌ | ✅ | ⚠️ UI limitada
+Open Source | ✅ | ❌ | ✅ | ❌
+
+### Opcionales (según scroll y objetivo)
+
+ 
+- **Newsletter técnica**: “5 hacks de gamificación para SaaS que convierten.”  
+- **Showcase de proyectos reales**: “Hecho con Neptuno”  
+- **FAQ técnico + comercial**  
+
+---
+

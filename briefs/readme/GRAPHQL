@@ -1,0 +1,1212 @@
+# Integrating GraphQL into Your Existing FastAPI Project
+
+Given your extensive API structure, I'll provide a comprehensive approach to integrating GraphQL that maintains your existing REST endpoints while adding GraphQL capabilities.
+
+## Option 1: Coexistence in the Same Project (Recommended)
+
+This is the most maintainable approach for most projects, allowing you to gradually migrate or offer both APIs.
+
+### Implementation Strategy
+
+1. **Directory Structure Update**:
+
+```
+backend/
+├── api/
+│   ├── v1/
+│   │   ├── rest/          # Existing REST endpoints
+│   │   │   ├── auth.py
+│   │   │   ├── users.py
+│   │   │   └── ...
+│   │   └── graphql/       # New GraphQL implementation
+│   │       ├── schema/
+│   │       │   ├── auth.py
+│   │       │   ├── users.py
+│   │       │   └── ...
+│   │       ├── resolvers/
+│   │       ├── mutations/
+│   │       ├── queries/
+│   │       └── router.py
+```
+
+2. **Implementation Steps**:
+
+a. **Move existing REST endpoints** to `rest/` subdirectory (optional but recommended for clarity)
+
+b. **Create GraphQL schema modules** that mirror your REST structure:
+
+```python
+# backend/api/v1/graphql/schema/auth.py
+import strawberry
+from typing import Optional
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from ..rest.auth import router as auth_rest_router
+from core.database import get_db
+from dependencies.auth import get_user_context
+from schemas.auth import TokenResponse
+
+@strawberry.type
+class AuthQueries:
+    @strawberry.field
+    async def me(self, info) -> Optional[UserType]:
+        # Reuse your existing dependency
+        user = await get_user_context(info.context["request"])
+        if not user:
+            return None
+        return UserType.from_orm(user)
+
+@strawberry.type
+class AuthMutations:
+    @strawberry.mutation
+    async def login(self, info, username: str, password: str) -> TokenResponse:
+        # Reuse your REST endpoint logic
+        db = info.context["db"]
+        request = info.context["request"]
+        form_data = OAuth2PasswordRequestForm(
+            username=username,
+            password=password,
+            scope=""
+        )
+        return await auth_rest_router.login_for_access_token(
+            request=request,
+            form_data=form_data,
+            db=db
+        )
+```
+
+c. **Create a central schema** that combines all modules:
+
+```python
+# backend/api/v1/graphql/schema/__init__.py
+import strawberry
+from .auth import AuthQueries, AuthMutations
+from .users import UserQueries, UserMutations
+
+@strawberry.type
+class Query(AuthQueries, UserQueries):
+    pass
+
+@strawberry.type
+class Mutation(AuthMutations, UserMutations):
+    pass
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
+```
+
+d. **Create GraphQL router**:
+
+```python
+# backend/api/v1/graphql/router.py
+from fastapi import APIRouter, Depends, Request
+from strawberry.fastapi import GraphQLRouter
+from .schema import schema
+from core.database import get_db
+from dependencies.auth import get_user_context
+
+async def get_context(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    return {
+        "request": request,
+        "db": db,
+        "user": await get_user_context(request, db)
+    }
+
+router = APIRouter()
+graphql_app = GraphQLRouter(
+    schema,
+    context_getter=get_context,
+    graphiql=True
+)
+
+router.include_router(graphql_app, prefix="/graphql")
+```
+
+3. **Update main.py**:
+
+```python
+from fastapi import FastAPI
+from api.v1.rest.auth import router as auth_router
+from api.v1.graphql.router import router as graphql_router
+
+app = FastAPI()
+
+# Existing REST API
+app.include_router(auth_router, prefix="/v1/rest")
+
+# New GraphQL API
+app.include_router(graphql_router, prefix="/v1")
+```
+
+### Advantages of Coexistence
+
+1. **Shared Business Logic**: Reuse your existing services, models, and dependencies
+2. **Gradual Migration**: Move endpoints to GraphQL at your own pace
+3. **Consistent Authentication**: Use the same auth system for both APIs
+4. **Easier Maintenance**: Single codebase to update
+
+## Option 2: Separate Repository (Alternative)
+
+Only recommended if:
+
+- You want completely separate deployments
+- You need different scaling characteristics
+- Your team wants to maintain them independently
+
+### Implementation Approach
+
+1. **GraphQL Service Repository**:
+
+```
+graphql-service/
+├── src/
+│   ├── main.py            # FastAPI app
+│   ├── schema/            # GraphQL schema definitions
+│   ├── clients/           # REST API clients
+│   └── config.py          # Configuration
+├── requirements.txt
+└── Dockerfile
+```
+
+2. **Create REST API Clients**:
+
+```python
+# graphql-service/src/clients/rest_client.py
+import httpx
+from typing import Optional
+
+class RESTClient:
+    def __init__(self, base_url: str):
+        self.client = httpx.AsyncClient(base_url=base_url)
+    
+    async def login(self, username: str, password: str):
+        response = await self.client.post(
+            "/v1/auth/token",
+            data={
+                "username": username,
+                "password": password,
+                "grant_type": "password"
+            }
+        )
+        return response.json()
+```
+
+3. **GraphQL Resolvers** would call these clients:
+
+```python
+@strawberry.type
+class AuthMutations:
+    @strawberry.mutation
+    async def login(self, info, username: str, password: str) -> TokenResponse:
+        client = info.context["rest_client"]
+        return await client.login(username, password)
+```
+
+### When to Choose Separate Repositories
+
+1. **Different Teams**: Separate teams maintaining each API
+2. **Different Tech Stacks**: Want to use different technologies
+3. **Independent Scaling**: Need to scale GraphQL separately
+4. **Clear Separation**: Want to enforce clean separation
+
+## Recommendation: Coexistence with Modular Structure
+
+For your project, I strongly recommend **Option 1** (coexistence) because:
+
+1. **You can reuse 90% of your existing code** (models, services, dependencies)
+2. **Authentication system remains unified**
+3. **Database connections are shared**
+4. **Easier to keep both APIs in sync**
+5. **Progressive migration path**
+
+## Implementation Tips
+
+1. **Start with a single module** (like auth) to validate the approach
+2. **Create a base resolver class** to handle common patterns:
+
+```python
+class BaseResolver:
+    def __init__(self, db: Session = Depends(get_db)):
+        self.db = db
+    
+    @classmethod
+    async def resolve(cls, info, **kwargs):
+        # Common resolution logic
+        return cls(db=info.context["db"]).execute(**kwargs)
+```
+
+3. **Use dependency injection** to share services between REST and GraphQL
+
+4. **Consider DataLoader** for N+1 query issues:
+
+```python
+from strawberry.dataloader import DataLoader
+
+async def load_users(db: Session, keys: list[int]) -> list[User]:
+    return db.query(User).filter(User.id.in_(keys)).all()
+
+def create_loaders(db: Session):
+    return {
+        "user_loader": DataLoader(load_fn=lambda keys: load_users(db, keys))
+    }
+```
+
+5. **Document your hybrid approach** so team members understand both APIs are available
+
+## Migration Path
+
+1. Phase 1: Implement GraphQL alongside REST (read-only queries)
+2. Phase 2: Add mutations for write operations
+3. Phase 3: Mark REST endpoints as deprecated in docs
+4. Phase 4: Eventually remove REST endpoints if desired
+
+This approach gives you the flexibility to adopt GraphQL without breaking existing clients.
+
+
+# Adding GraphQL to Your FastAPI Backend
+
+To extend your FastAPI backend with GraphQL capabilities, I'll help you integrate Strawberry (a modern GraphQL library for Python) with your existing authentication system. Here's how to do it:
+
+## 1. Install Required Packages
+
+First, install Strawberry and its FastAPI integration:
+
+```bash
+pip install strawberry-graphql strawberry-graphql-fastapi
+```
+
+## 2. Create GraphQL Schema
+
+Create a new file `backend/api/v1/graphql/schema.py`:
+
+```python
+import strawberry
+from typing import Optional, List
+from fastapi import Depends, Request
+from sqlalchemy.orm import Session
+from core.database import get_db
+from dependencies.auth import UserContext, get_user_context
+from schemas.auth import TokenResponse
+from schemas.user import RegisterRequest
+from services.auth_service import (
+    login_user,
+    register_user,
+    refresh_access_token,
+    logout_user,
+    request_password_reset,
+    confirm_password_reset,
+    change_user_password
+)
+from core.security import OAuth2PasswordRequestForm
+from core.logging import configure_logger
+
+logger = configure_logger()
+
+@strawberry.type
+class TokenResponseType:
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+@strawberry.type
+class UserType:
+    id: str
+    email: str
+    username: str
+    user_type: str
+    subscription: str
+    credits: int
+    role: str
+
+@strawberry.input
+class LoginInput:
+    username: str
+    password: str
+
+@strawberry.input
+class RegisterInput:
+    email: str
+    username: str
+    password: str
+
+@strawberry.input
+class PasswordResetInput:
+    email: str
+
+@strawberry.input
+class PasswordResetConfirmInput:
+    token: str
+    new_password: str
+
+@strawberry.input
+class RefreshTokenInput:
+    refresh_token: str
+
+@strawberry.input
+class ChangePasswordInput:
+    current_password: str
+    new_password: str
+
+@strawberry.type
+class AuthMutations:
+    @strawberry.mutation
+    async def login(
+        self,
+        info,
+        input: LoginInput,
+        request: Request,
+        db: Session = Depends(get_db)
+    ) -> TokenResponseType:
+        form_data = OAuth2PasswordRequestForm(
+            username=input.username,
+            password=input.password,
+            scope=""
+        )
+        ip = request.client.host
+        token_data = login_user(db, form_data.username, form_data.password, ip)
+        return TokenResponseType(
+            access_token=token_data.access_token,
+            refresh_token=token_data.refresh_token,
+            token_type=token_data.token_type
+        )
+
+    @strawberry.mutation
+    async def register(
+        self,
+        info,
+        input: RegisterInput,
+        db: Session = Depends(get_db)
+    ) -> TokenResponseType:
+        from services.settings_service import get_setting
+        enable_registration = get_setting(db, "enable_registration")
+        if enable_registration != "true":
+            raise Exception("User registration is disabled")
+        
+        register_request = RegisterRequest(
+            email=input.email,
+            username=input.username,
+            password=input.password
+        )
+        token_data = register_user(db, register_request)
+        return TokenResponseType(
+            access_token=token_data.access_token,
+            refresh_token=token_data.refresh_token,
+            token_type=token_data.token_type
+        )
+
+    @strawberry.mutation
+    async def refresh_token(
+        self,
+        info,
+        input: RefreshTokenInput,
+        request: Request,
+        db: Session = Depends(get_db)
+    ) -> TokenResponseType:
+        logger.info(f"Refresh token attempt from IP {request.client.host}")
+        token_data = refresh_access_token(db, input.refresh_token)
+        return TokenResponseType(
+            access_token=token_data.access_token,
+            refresh_token=token_data.refresh_token,
+            token_type=token_data.token_type
+        )
+
+    @strawberry.mutation
+    async def logout(
+        self,
+        info,
+        token: str,
+        db: Session = Depends(get_db)
+    ) -> bool:
+        logout_user(db, token)
+        return True
+
+    @strawberry.mutation
+    async def request_password_reset(
+        self,
+        info,
+        input: PasswordResetInput,
+        db: Session = Depends(get_db)
+    ) -> bool:
+        request_password_reset(db, input.email)
+        return True
+
+    @strawberry.mutation
+    async def confirm_password_reset(
+        self,
+        info,
+        input: PasswordResetConfirmInput,
+        db: Session = Depends(get_db)
+    ) -> bool:
+        confirm_password_reset(db, input.token, input.new_password)
+        return True
+
+    @strawberry.mutation
+    async def change_password(
+        self,
+        info,
+        input: ChangePasswordInput,
+        user: UserContext = Depends(get_user_context),
+        db: Session = Depends(get_db)
+    ) -> bool:
+        if user.user_type != "registered":
+            raise Exception("Only registered users can change password")
+        change_user_password(
+            db,
+            int(user.user_id),
+            input.current_password,
+            input.new_password
+        )
+        return True
+
+@strawberry.type
+class AuthQueries:
+    @strawberry.field
+    async def me(
+        self,
+        info,
+        user: UserContext = Depends(get_user_context)
+    ) -> UserType:
+        return UserType(
+            id=user.user_id,
+            email=user.email,
+            username=user.username,
+            user_type=user.user_type,
+            subscription=user.subscription,
+            credits=user.credits,
+            role=user.rol
+        )
+
+@strawberry.type
+class Query(AuthQueries):
+    pass
+
+@strawberry.type
+class Mutation(AuthMutations):
+    pass
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
+```
+
+## 3. Create GraphQL Router
+
+Create `backend/api/v1/graphql/router.py`:
+
+```python
+from fastapi import APIRouter, Depends, Request
+from strawberry.fastapi import GraphQLRouter
+from .schema import schema
+from core.database import get_db
+from dependencies.auth import get_user_context
+
+async def get_context(
+    request: Request,
+    db=Depends(get_db)
+):
+    user = await get_user_context(request, db)
+    return {
+        "request": request,
+        "db": db,
+        "user": user
+    }
+
+router = APIRouter()
+graphql_router = GraphQLRouter(
+    schema,
+    context_getter=get_context,
+    graphiql=True
+)
+
+router.include_router(graphql_router, prefix="/graphql")
+```
+
+## 4. Update Main FastAPI App
+
+Modify your main FastAPI app file (typically `main.py` or `backend/main.py`) to include the GraphQL router:
+
+```python
+from fastapi import FastAPI
+from api.v1.graphql.router import router as graphql_router
+
+app = FastAPI()
+
+# Include your existing REST routers
+# app.include_router(auth_router, prefix="/v1/auth")
+
+# Include GraphQL router
+app.include_router(graphql_router, prefix="/v1")
+```
+
+## 5. Update Dependencies
+
+Modify your `backend/dependencies/auth.py` to make `get_user_context` async:
+
+```python
+async def get_user_context(request: Request, db: Session = Depends(get_db)):
+    # ... existing code ...
+```
+
+## 6. Testing Your GraphQL API
+
+Now you can test your GraphQL API at `/v1/graphql` with GraphiQL interface.
+
+Example mutations:
+
+```graphql
+# Login
+mutation {
+  login(input: {username: "test@example.com", password: "password"}) {
+    access_token
+    refresh_token
+    token_type
+  }
+}
+
+# Get current user
+query {
+  me {
+    id
+    email
+    username
+  }
+}
+
+# Change password
+mutation {
+  changePassword(input: {currentPassword: "oldpass", newPassword: "newpass"})
+}
+```
+
+## Key Integration Points
+
+1. **Authentication**: The GraphQL endpoints use the same authentication system as your REST API.
+2. **Database**: Uses the same database session management.
+3. **Services**: Reuses your existing auth_service functions.
+4. **Context**: Provides user context through the same `get_user_context` dependency.
+
+## Additional Recommendations
+
+1. **Error Handling**: You might want to customize error handling for GraphQL to match your REST API's style.
+2. **Performance Monitoring**: Consider adding dataloaders for batch loading if you have N+1 query issues.
+3. **Schema Stitching**: If you plan to grow your GraphQL API, consider organizing it into multiple schema files.
+
+This implementation maintains all your existing authentication logic while providing a GraphQL interface. The GraphQL API can coexist with your REST endpoints, allowing for a gradual migration.
+
+
+
+I'll help you implement GraphQL for the user and gamification modules while ensuring proper authentication integration. Let's break this down into manageable steps.
+
+## Phase 1: GraphQL Implementation for User Module
+
+First, let's create the GraphQL schema for users:
+
+```python
+# backend/api/v1/graphql/schema/user.py
+import strawberry
+from typing import Optional, List
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from core.database import get_db
+from dependencies.auth import UserContext, get_user_context
+from models.user import User
+from schemas.user import UserResponse, UpdateProfileRequest
+
+@strawberry.type
+class UserType:
+    id: int
+    email: str
+    username: str
+    rol: str
+    activo: bool
+    subscription: str
+    ciudad: Optional[str]
+    website: Optional[str]
+    credits: int
+    create_at: str
+    last_ip: Optional[str]
+
+    @classmethod
+    def from_db(cls, user: User):
+        return cls(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            rol=user.rol,
+            activo=user.activo,
+            subscription=user.subscription.value,
+            ciudad=user.ciudad,
+            website=user.website,
+            credits=user.credits,
+            create_at=user.create_at.isoformat(),
+            last_ip=user.last_ip
+        )
+
+@strawberry.input
+class UpdateProfileInput:
+    email: Optional[str] = None
+    username: Optional[str] = None
+    ciudad: Optional[str] = None
+    website: Optional[str] = None
+
+@strawberry.type
+class UserQueries:
+    @strawberry.field
+    async def me(self, info) -> Optional[UserType]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.user_type != "registered":
+            raise Exception("Only registered users can access this")
+        db_user = info.context["user_service"].get_user_info(info.context["db"], int(user.user_id))
+        return UserType.from_db(db_user)
+
+    @strawberry.field
+    async def user(self, info, user_id: int) -> Optional[UserType]:
+        current_user = await get_user_context(info.context["request"], info.context["db"])
+        if current_user.rol != "admin":
+            raise Exception("Only admins can view other users")
+        db_user = info.context["user_service"].get_user_info(info.context["db"], user_id)
+        return UserType.from_db(db_user)
+
+    @strawberry.field
+    async def users(
+        self,
+        info,
+        page: int = 1,
+        limit: int = 10
+    ) -> List[UserType]:
+        current_user = await get_user_context(info.context["request"], info.context["db"])
+        if current_user.rol != "admin":
+            raise Exception("Only admins can list users")
+        
+        offset = (page - 1) * limit
+        users = info.context["db"].query(User).offset(offset).limit(limit).all()
+        return [UserType.from_db(user) for user in users]
+
+@strawberry.type
+class UserMutations:
+    @strawberry.mutation
+    async def update_me(
+        self,
+        info,
+        input: UpdateProfileInput
+    ) -> UserType:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.user_type != "registered":
+            raise Exception("Only registered users can update profile")
+        
+        update_data = UpdateProfileRequest(
+            email=input.email,
+            username=input.username,
+            ciudad=input.ciudad,
+            website=input.website
+        )
+        updated_user = info.context["user_service"].update_user(
+            info.context["db"],
+            int(user.user_id),
+            update_data.email,
+            update_data.username,
+            update_data.ciudad,
+            update_data.website
+        )
+        return UserType.from_db(updated_user)
+
+    @strawberry.mutation
+    async def delete_me(self, info) -> bool:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.user_type != "registered":
+            raise Exception("Only registered users can delete account")
+        
+        info.context["user_service"].delete_user(info.context["db"], int(user.user_id))
+        return True
+
+    @strawberry.mutation
+    async def update_user(
+        self,
+        info,
+        user_id: int,
+        input: UpdateProfileInput
+    ) -> UserType:
+        current_user = await get_user_context(info.context["request"], info.context["db"])
+        if current_user.rol != "admin":
+            raise Exception("Only admins can update other users")
+        
+        update_data = UpdateProfileRequest(
+            email=input.email,
+            username=input.username,
+            ciudad=input.ciudad,
+            website=input.website
+        )
+        updated_user = info.context["user_service"].update_user(
+            info.context["db"],
+            user_id,
+            update_data.email,
+            update_data.username,
+            update_data.ciudad,
+            update_data.website
+        )
+        return UserType.from_db(updated_user)
+
+    @strawberry.mutation
+    async def delete_user(self, info, user_id: int) -> bool:
+        current_user = await get_user_context(info.context["request"], info.context["db"])
+        if current_user.rol != "admin":
+            raise Exception("Only admins can delete users")
+        
+        info.context["user_service"].delete_user(info.context["db"], user_id)
+        return True
+```
+
+## Phase 2: GraphQL Implementation for Gamification Module
+
+Now let's implement the gamification schema:
+
+```python
+# backend/api/v1/graphql/schema/gamification.py
+import strawberry
+from typing import List, Optional
+from datetime import datetime
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from core.database import get_db
+from dependencies.auth import UserContext, get_user_context
+from schemas.gamification import (
+    EventTypeResponse,
+    BadgeResponse,
+    GamificationEventResponse,
+    UserGamificationResponse,
+    RankingResponse
+)
+
+@strawberry.type
+class EventType:
+    id: int
+    name: str
+    description: Optional[str]
+    points_per_event: int
+
+    @classmethod
+    def from_db(cls, event_type):
+        return cls(
+            id=event_type.id,
+            name=event_type.name,
+            description=event_type.description,
+            points_per_event=event_type.points_per_event
+        )
+
+@strawberry.type
+class Badge:
+    id: int
+    name: str
+    description: Optional[str]
+    event_type_id: int
+    required_points: int
+    user_type: str
+
+    @classmethod
+    def from_db(cls, badge):
+        return cls(
+            id=badge.id,
+            name=badge.name,
+            description=badge.description,
+            event_type_id=badge.event_type_id,
+            required_points=badge.required_points,
+            user_type=badge.user_type
+        )
+
+@strawberry.type
+class GamificationEvent:
+    id: int
+    event_type_id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    timestamp: str
+
+    @classmethod
+    def from_db(cls, event):
+        return cls(
+            id=event.id,
+            event_type_id=event.event_type_id,
+            user_id=event.user_id,
+            session_id=event.session_id,
+            timestamp=event.timestamp.isoformat()
+        )
+
+@strawberry.type
+class UserGamification:
+    id: int
+    user_id: Optional[int]
+    session_id: Optional[str]
+    event_type_id: int
+    points: int
+    badge_id: Optional[int]
+
+    @classmethod
+    def from_db(cls, user_gamification):
+        return cls(
+            id=user_gamification.id,
+            user_id=user_gamification.user_id,
+            session_id=user_gamification.session_id,
+            event_type_id=user_gamification.event_type_id,
+            points=user_gamification.points,
+            badge_id=user_gamification.badge_id
+        )
+
+@strawberry.type
+class Ranking:
+    username: str
+    points: int
+    badges_count: int
+    user_type: str
+
+    @classmethod
+    def from_db(cls, ranking):
+        return cls(
+            username=ranking.username,
+            points=ranking.points,
+            badges_count=ranking.badges_count,
+            user_type=ranking.user_type
+        )
+
+@strawberry.input
+class GamificationEventInput:
+    event_type_id: int
+
+@strawberry.input
+class EventTypeInput:
+    name: str
+    description: Optional[str] = None
+    points_per_event: int = 0
+
+@strawberry.input
+class BadgeInput:
+    name: str
+    description: Optional[str] = None
+    event_type_id: int
+    required_points: int
+    user_type: str = "both"
+
+@strawberry.type
+class GamificationQueries:
+    @strawberry.field
+    async def rankings(self, info) -> List[Ranking]:
+        rankings = info.context["gamification_service"].get_rankings(info.context["db"])
+        return [Ranking.from_db(r) for r in rankings]
+
+    @strawberry.field
+    async def my_gamification(self, info) -> List[UserGamification]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        gamification = info.context["gamification_service"].get_user_gamification(info.context["db"], user)
+        return [UserGamification.from_db(g) for g in gamification]
+
+    @strawberry.field
+    async def my_events(self, info) -> List[GamificationEvent]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        events = info.context["gamification_service"].get_user_events(info.context["db"], user)
+        return [GamificationEvent.from_db(e) for e in events]
+
+    @strawberry.field
+    async def event(self, info, event_id: int) -> Optional[GamificationEvent]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        event = info.context["gamification_service"].get_event_details(info.context["db"], event_id, user)
+        return GamificationEvent.from_db(event) if event else None
+
+    @strawberry.field
+    async def my_progress(self, info, event_type_id: int) -> Optional[UserGamification]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        progress = info.context["gamification_service"].get_user_progress_for_event(
+            info.context["db"], user, event_type_id
+        )
+        return UserGamification.from_db(progress) if progress else None
+
+    @strawberry.field
+    async def event_badges(self, info, event_type_id: int) -> List[Badge]:
+        badges = info.context["gamification_service"].get_badges_for_event(
+            info.context["db"], event_type_id
+        )
+        return [Badge.from_db(b) for b in badges]
+
+    @strawberry.field
+    async def event_types(self, info) -> List[EventType]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can list event types")
+        event_types = info.context["gamification_service"].get_event_types(info.context["db"])
+        return [EventType.from_db(et) for et in event_types]
+
+    @strawberry.field
+    async def badges(self, info) -> List[Badge]:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can list badges")
+        badges = info.context["gamification_service"].get_badges(info.context["db"])
+        return [Badge.from_db(b) for b in badges]
+
+@strawberry.type
+class GamificationMutations:
+    @strawberry.mutation
+    async def register_event(self, info, input: GamificationEventInput) -> GamificationEvent:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        event = info.context["gamification_service"].register_event(
+            info.context["db"],
+            GamificationEventCreate(event_type_id=input.event_type_id),
+            user
+        )
+        return GamificationEvent.from_db(event)
+
+    @strawberry.mutation
+    async def create_event_type(self, info, input: EventTypeInput) -> EventType:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can create event types")
+        
+        event_type = info.context["gamification_service"].create_event_type(
+            info.context["db"],
+            EventTypeCreate(
+                name=input.name,
+                description=input.description,
+                points_per_event=input.points_per_event
+            )
+        )
+        return EventType.from_db(event_type)
+
+    @strawberry.mutation
+    async def update_event_type(
+        self,
+        info,
+        event_type_id: int,
+        input: EventTypeInput
+    ) -> EventType:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can update event types")
+        
+        event_type = info.context["gamification_service"].update_event_type(
+            info.context["db"],
+            event_type_id,
+            EventTypeCreate(
+                name=input.name,
+                description=input.description,
+                points_per_event=input.points_per_event
+            )
+        )
+        return EventType.from_db(event_type)
+
+    @strawberry.mutation
+    async def delete_event_type(self, info, event_type_id: int) -> bool:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can delete event types")
+        
+        info.context["gamification_service"].delete_event_type(
+            info.context["db"], event_type_id
+        )
+        return True
+
+    @strawberry.mutation
+    async def create_badge(self, info, input: BadgeInput) -> Badge:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can create badges")
+        
+        badge = info.context["gamification_service"].create_badge(
+            info.context["db"],
+            BadgeCreate(
+                name=input.name,
+                description=input.description,
+                event_type_id=input.event_type_id,
+                required_points=input.required_points,
+                user_type=input.user_type
+            )
+        )
+        return Badge.from_db(badge)
+
+    @strawberry.mutation
+    async def update_badge(
+        self,
+        info,
+        badge_id: int,
+        input: BadgeInput
+    ) -> Badge:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can update badges")
+        
+        badge = info.context["gamification_service"].update_badge(
+            info.context["db"],
+            badge_id,
+            BadgeCreate(
+                name=input.name,
+                description=input.description,
+                event_type_id=input.event_type_id,
+                required_points=input.required_points,
+                user_type=input.user_type
+            )
+        )
+        return Badge.from_db(badge)
+
+    @strawberry.mutation
+    async def delete_badge(self, info, badge_id: int) -> bool:
+        user = await get_user_context(info.context["request"], info.context["db"])
+        if user.rol != "admin":
+            raise Exception("Only admins can delete badges")
+        
+        info.context["gamification_service"].delete_badge(
+            info.context["db"], badge_id
+        )
+        return True
+```
+
+## Combining the Schemas and Setting Up the Router
+
+Now let's create the combined schema and router:
+
+```python
+# backend/api/v1/graphql/schema/__init__.py
+import strawberry
+from .user import UserQueries, UserMutations
+from .gamification import GamificationQueries, GamificationMutations
+
+@strawberry.type
+class Query(UserQueries, GamificationQueries):
+    pass
+
+@strawberry.type
+class Mutation(UserMutations, GamificationMutations):
+    pass
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
+```
+
+```python
+# backend/api/v1/graphql/router.py
+from fastapi import APIRouter, Depends, Request
+from strawberry.fastapi import GraphQLRouter
+from .schema import schema
+from core.database import get_db
+from dependencies.auth import get_user_context
+from services.user_service import get_user_info, update_user, delete_user, list_users
+from services.gamification_service import (
+    create_event_type, get_badges_for_event, get_event_details,
+    get_event_types, get_rankings, get_user_events, get_user_gamification,
+    get_user_progress_for_event, register_event, update_event_type,
+    delete_event_type, create_badge, get_badges, update_badge, delete_badge
+)
+
+async def get_context(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    user = await get_user_context(request, db)
+    return {
+        "request": request,
+        "db": db,
+        "user": user,
+        "user_service": {
+            "get_user_info": get_user_info,
+            "update_user": update_user,
+            "delete_user": delete_user,
+            "list_users": list_users
+        },
+        "gamification_service": {
+            "create_event_type": create_event_type,
+            "get_badges_for_event": get_badges_for_event,
+            "get_event_details": get_event_details,
+            "get_event_types": get_event_types,
+            "get_rankings": get_rankings,
+            "get_user_events": get_user_events,
+            "get_user_gamification": get_user_gamification,
+            "get_user_progress_for_event": get_user_progress_for_event,
+            "register_event": register_event,
+            "update_event_type": update_event_type,
+            "delete_event_type": delete_event_type,
+            "create_badge": create_badge,
+            "get_badges": get_badges,
+            "update_badge": update_badge,
+            "delete_badge": delete_badge
+        }
+    }
+
+router = APIRouter()
+graphql_app = GraphQLRouter(
+    schema,
+    context_getter=get_context,
+    graphiql=True
+)
+
+router.include_router(graphql_app, prefix="/graphql")
+```
+
+## Updating the Main Application
+
+Finally, update your main FastAPI app to include the GraphQL router:
+
+```python
+# backend/main.py
+from fastapi import FastAPI
+from api.v1.auth import router as auth_router
+from api.v1.users import router as users_router
+from api.v1.gamification import router as gamification_router
+from api.v1.graphql.router import router as graphql_router
+
+app = FastAPI()
+
+# Existing REST endpoints
+app.include_router(auth_router, prefix="/v1/auth")
+app.include_router(users_router, prefix="/v1/users")
+app.include_router(gamification_router, prefix="/v1/gamification")
+
+# New GraphQL endpoint
+app.include_router(graphql_router, prefix="/v1")
+```
+
+## Authentication Integration
+
+The authentication is seamlessly integrated through:
+
+1. The same `get_user_context` dependency is used for both REST and GraphQL
+2. All GraphQL resolvers that require authentication use this context
+3. Admin checks are maintained with the same logic
+4. The token validation system remains unchanged
+
+## Example GraphQL Queries
+
+Here are some example queries you can now run:
+
+```graphql
+# Get current user info
+query {
+  me {
+    id
+    email
+    username
+    credits
+  }
+}
+
+# Get my gamification progress
+query {
+  myGamification {
+    eventTypeId
+    points
+    badgeId
+  }
+}
+
+# Register an event
+mutation {
+  registerEvent(input: {eventTypeId: 1}) {
+    id
+    timestamp
+  }
+}
+
+# Update my profile
+mutation {
+  updateMe(input: {username: "newusername"}) {
+    id
+    username
+  }
+}
+```
+
+This implementation maintains all your existing authentication and authorization logic while providing a GraphQL interface that matches your REST API functionality. The services and database access remain shared between both interfaces.
