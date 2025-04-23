@@ -1,5 +1,6 @@
 # backend/main.py
 # Punto de entrada principal de la API FastAPI
+# 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
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
@@ -7,9 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 from fastapi_limiter.depends import RateLimiter
 
-from backend.api.v1.users import (
-    users
-)
+from api.v1.users import users
 from api.v1.health import test
 from api.v1.transactions import payment_providers, payments, credit_transactions
 from api.v1.logs import api_logs, error_logs
