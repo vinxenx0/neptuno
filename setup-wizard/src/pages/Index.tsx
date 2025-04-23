@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -8,6 +9,10 @@ import { downloadEnvFile, generateEnvFile } from "@/utils/config";
 import { toast } from "sonner";
 import { TranslationProvider } from "@/hooks/useTranslation";
 import { HelpBubble } from "@/components/ui/help-bubble";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import InstallProgressDialog from "@/components/setup/InstallProgressDialog";
 
 const sections: ConfigSection[] = [
   "project",
@@ -15,7 +20,7 @@ const sections: ConfigSection[] = [
   "auth",
   "frontend",
   "docker",
-  "download"
+  "install"
 ];
 
 const initialConfig: NeptunoConfig = {
@@ -36,7 +41,11 @@ const initialConfig: NeptunoConfig = {
   },
   environment: {
     debug: true,
-    mode: "development"
+    mode: "development",
+    gitRepoUrl: "",
+    gitUser: "",
+    gitToken: "",
+    installDirectory: ""
   },
   server: {
     host: "localhost",
@@ -106,6 +115,9 @@ const initialConfig: NeptunoConfig = {
 const Index = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [config, setConfig] = useState<NeptunoConfig>(initialConfig);
+  const [showInstallProgress, setShowInstallProgress] = useState(false);
+  const [installationComplete, setInstallationComplete] = useState(false);
+  const [applicationUrl, setApplicationUrl] = useState("");
 
   const handleLanguageChange = (lang: string) => {
     console.log("Language changed to:", lang);
@@ -122,10 +134,8 @@ const Index = () => {
     if (currentStep < sections.length - 1) {
       setCurrentStep((prev) => prev + 1);
       toast.success("Configuration saved!");
-    } else {
-      const envContent = generateEnvFile(config);
-      downloadEnvFile(envContent);
-      toast.success("Configuration complete! Your .env file has been downloaded.");
+    } else if (currentStep === sections.length - 1) {
+      setShowInstallProgress(true);
     }
   };
 
@@ -133,6 +143,18 @@ const Index = () => {
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
     }
+  };
+
+  const handleInstallComplete = (success: boolean, appUrl?: string) => {
+    if (success && appUrl) {
+      setInstallationComplete(true);
+      setApplicationUrl(appUrl);
+    }
+    setShowInstallProgress(false);
+  };
+
+  const handleVisitApplication = () => {
+    window.open(applicationUrl, "_blank");
   };
 
   const helpResources = [
@@ -159,28 +181,69 @@ const Index = () => {
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
         <Header onLanguageChange={handleLanguageChange} />
         <main className="flex-1 container mx-auto p-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4 gradient-text">Neptuno Setup Wizard</h1>
-            <p className="text-slate-600">
-              Configure your application settings step by step
-            </p>
-          </div>
+          {installationComplete ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <Card className="w-full max-w-md bg-white shadow-md border-slate-200">
+                <CardHeader className="bg-green-50 border-b border-green-100">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="h-8 w-8 text-green-500" />
+                    <CardTitle className="text-2xl text-green-700">Installation Complete!</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="text-center">
+                    <h2 className="text-xl font-semibold text-slate-800 mb-4">Thank you for installing Neptuno!</h2>
+                    <p className="mb-6 text-slate-600">
+                      Your application is now ready to use. You can access it at the URL below:
+                    </p>
+                    <div className="bg-slate-50 p-4 border rounded-md font-mono text-blue-600 mb-6">
+                      {applicationUrl}
+                    </div>
+                    <Button 
+                      onClick={handleVisitApplication}
+                      className="gradient-btn text-white"
+                    >
+                      Visit Application
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <>
+              <div className="text-center mb-12">
+                <h1 className="text-4xl font-bold mb-4 gradient-text">Neptuno Setup Wizard</h1>
+                <p className="text-slate-600">
+                  Configure your application settings step by step
+                </p>
+              </div>
 
-          <StepIndicator
-            currentStep={currentStep + 1}
-            totalSteps={sections.length}
-          />
+              <StepIndicator
+                currentStep={currentStep + 1}
+                totalSteps={sections.length}
+              />
 
-          <ConfigForm
-            section={sections[currentStep]}
-            config={config}
-            onUpdate={handleUpdate}
-            onNext={handleNext}
-            onBack={currentStep > 0 ? handleBack : undefined}
-          />
+              <ConfigForm
+                section={sections[currentStep]}
+                config={config}
+                onUpdate={handleUpdate}
+                onNext={handleNext}
+                onBack={currentStep > 0 ? handleBack : undefined}
+              />
+            </>
+          )}
         </main>
         <Footer />
-        <HelpBubble resources={helpResources} />
+        <div className="fixed bottom-4 left-4">
+          <HelpBubble resources={helpResources} />
+        </div>
+
+        <InstallProgressDialog
+          open={showInstallProgress}
+          onOpenChange={setShowInstallProgress}
+          config={config}
+          onInstallComplete={handleInstallComplete}
+        />
       </div>
     </TranslationProvider>
   );

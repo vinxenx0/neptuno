@@ -20,6 +20,7 @@ migrations
 .trash
 .pytest_cache
 .prompts
+.secrets
 
 # dependencies
 /node_modules
