@@ -1,4 +1,4 @@
-# backend/api/v1/users.py
+# backend/api/v1/users/users.py
 # Endpoints de gestión de usuarios (v1)
 from math import ceil
 from fastapi import APIRouter, Depends, HTTPException, Query

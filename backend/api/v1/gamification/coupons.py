@@ -1,4 +1,4 @@
-# backend/api/v1/coupons.py
+# backend/api/v1/gamification/coupons.py
 # Endpoints para gestión y canje de cupones (v1)
 from datetime import datetime
 import uuid

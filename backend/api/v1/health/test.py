@@ -1,4 +1,4 @@
-# backend/api/v1/test.py
+# backend/api/v1/health/test.py
 # Endpoints de prueba y consumo de créditos para la API
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session

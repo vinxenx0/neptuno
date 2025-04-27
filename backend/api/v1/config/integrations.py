@@ -1,4 +1,4 @@
-# backend/api/v1/integrations.py
+# backend/api/v1/config/integrations.py
 # Endpoints para gestión de integraciones y webhooks
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException

@@ -1,4 +1,4 @@
-# backend/api/v1/payments.py
+# backend/api/v1/transaction/payments.py
 # Endpoints para pagos y métodos de pago (v1)
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session

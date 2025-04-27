@@ -12,7 +12,7 @@ export interface User {
   ciudad?: string;
   website?: string;
   credits: number;
-  create_at: string;  // ISO string (e.g., "2023-10-01T12:00:00Z")
+  create_at: string; // ISO string (e.g., "2023-10-01T12:00:00Z")
   last_ip?: string;
   last_login: string;
   user_type: string;
@@ -23,8 +23,6 @@ export interface TokenResponse {
   refresh_token: string;
   token_type: string;
 }
-
-
 
 export interface RegisterRequest {
   email: string;
@@ -58,8 +56,8 @@ export interface PaymentMethod {
   payment_type: string;
   details: string;
   is_default: boolean;
-  created_at: string;  // ISO string
-  updated_at: string;  // ISO string
+  created_at: string; // ISO string
+  updated_at: string; // ISO string
 }
 
 export interface HTTPValidationError {
@@ -94,13 +92,13 @@ export interface Integration {
 }
 
 export interface SiteSetting {
-    id: number;
-    key: string;
-    value: string;
-    description?: string;
-    tag?: string;
-    updated_by?: number;
-    updated_at: string; // ISO string
+  id: number;
+  key: string;
+  value: string;
+  description?: string;
+  tag?: string;
+  updated_by?: number;
+  updated_at: string; // ISO string
 }
 
 export interface FetchResponse<T> {
@@ -177,18 +175,14 @@ export interface PaymentProvider {
   active: boolean;
 }
 
-
-
 export interface InfoResponse {
   credits: number;
   gamification: { points: number; badge: Badge | null }[];
 }
 
-
 export interface BadgeWithEventType extends Badge {
   event_type: EventType;
 }
-
 
 // src/lib/types.ts
 
@@ -209,8 +203,6 @@ export interface Coupon {
   redeemed_by_user_id?: number; // Quién lo canjeó, si aplica
   redeemed_by_session_id?: string; // Quién lo canjeó (anónimo), si aplica
 }
-
-
 
 export interface CouponType {
   id: number;
@@ -234,4 +226,46 @@ export interface CouponActivity {
 export interface AllowedOrigin {
   id: number;
   origin: string;
+}
+// frontend/src/lib/types.ts (actualización)
+export interface Category {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  description?: string;
+  price: number;
+  category_id: number;
+  is_digital: boolean;
+  file_path?: string;
+  subscription_duration?: number;
+}
+
+export interface CartItem {
+  id: number;
+  product_id: number;
+  quantity: number;
+  product: Product;
+}
+
+export interface OrderItem {
+  id: number;
+  product_id: number;
+  quantity: number;
+  price: number;
+  product_name: string;
+  is_digital: boolean;
+  file_path?: string;
+}
+
+export interface Order {
+  id: number;
+  total_amount: number;
+  status: string;
+  created_at: string;
+  items: OrderItem[];
 }

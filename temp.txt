@@ -1,3 +1,51 @@
+
+Veamos, algunos errores:
+
+al inicializar la db por primera vez con el market place:
+
+(.venv) [28-abr-25 00:30:21] > cd backend/
+(.venv) [28-abr-25 00:30:54] > python3 ini_db.py 
+/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/pydantic/_internal/_config.py:345: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+Creando tablas en la base de datos...
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno/backend/ini_db.py", line 638, in <module>
+    init_db()
+  File "/home/vinxenxo/neptuno/neptuno/backend/ini_db.py", line 33, in init_db
+    Base.metadata.create_all(bind=engine)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/schema.py", line 5907, in create_all
+    bind._run_ddl_visitor(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 3249, in _run_ddl_visitor
+    conn._run_ddl_visitor(visitorcallable, element, **kwargs)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2456, in _run_ddl_visitor
+    visitorcallable(self.dialect, self, **kwargs).traverse_single(element)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/visitors.py", line 664, in traverse_single
+    return meth(obj, **kw)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/ddl.py", line 956, in visit_metadata
+    collection = sort_tables_and_constraints(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/ddl.py", line 1388, in sort_tables_and_constraints
+    dependent_on = fkc.referred_table
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/schema.py", line 4782, in referred_table
+    return self.elements[0].column.table
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 1145, in __get__
+    obj.__dict__[self.__name__] = result = self.fget(obj)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/schema.py", line 3191, in column
+    return self._resolve_column()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/schema.py", line 3214, in _resolve_column
+    raise exc.NoReferencedTableError(
+sqlalchemy.exc.NoReferencedTableError: Foreign key associated with column 'cart_items.user_id' could not find table 'users' with which to generate a foreign key to target column 'id'
+
+2025-04-28 00:36:40,249 - NeptunO - CRITICAL - Error inesperado en GET http://127.0.0.1:8000/v1/marketplace/orders: (sqlite3.OperationalError) no such column: order_items.product_name
+[SQL: SELECT order_items.order_id AS order_items_order_id, order_items.id AS order_items_id, order_items.product_id AS order_items_product_id, order_items.quantity AS order_items_quantity, order_items.price AS order_items_price, order_items.product_name AS order_items_product_name, order_items.is_digital AS order_items_is_digital, order_items.file_path AS order_items_file_path 
+FROM order_items 
+WHERE order_items.order_id IN (?, ?, ?, ?, ?)]
+[parameters: (1, 2, 3, 4, 5)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+INFO:     127.0.0.1:48780 - "GET /v1/marketplace/orders HTTP/1.1" 500 Internal Server Error
+
+Por otro lado no te olvides de reflejar todos los cambios en el icono de navbar de la aplicación, tanto en desktop como en mobile, fijate en como estan trabajdos el resto de de iconos
+
 // frontend/src/components/web/Navbar.tsx
 // Barra de navegación principal con estado de usuario y notificaciones
 "use client";
@@ -803,3 +851,145 @@ export default function Navbar() {
     </>
   );
 }
+
+otros errores:
+
+Console Error
+
+Received NaN for the `value` attribute. If this is expected, cast the value to a string.
+
+src/components/admin/MarketplaceManagement.tsx (94:9) @ MarketplaceManagement
+
+  92 |         <TextField label="Nombre" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
+  93 |         <TextField label="Descripción" value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} />
+> 94 |         <TextField label="Precio" type="number" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })} />
+     |         ^
+  95 |         <TextField label="Categoría ID" type="number" value={newProduct.category_id} onChange={(e) => setNewProduct({ ...newProduct, category_id: parseInt(e.target.value) })} />
+  96 |         <FormControlLabel
+  97 |           control={<Switch checked={newProduct.is_digital} onChange={(e) => setNewProduct({ ...newProduct, is_digital: e.target.checked })} />}
+
+Call Stack 137
+Show 134 ignore-listed frame(s)
+input
+unknown (0:0)
+MarketplaceManagement
+src/components/admin/MarketplaceManagement.tsx (94:9)
+ConfigurePage
+src/app/admin/dashboard/page.tsx (2631:15)
+
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: table products has no column named subscription_duration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/starlette/concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "/home/vinxenxo/neptuno/neptuno/backend/api/v1/marketplace/marketplace.py", line 49, in create_product_route
+    return create_product(db, product)
+  File "/home/vinxenxo/neptuno/neptuno/backend/services/marketplace_service.py", line 38, in create_product
+    db.commit()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2032, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1288, in _prepare_impl
+    self.session.flush()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
+    self._flush(objects)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
+    with util.safe_reraise():
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
+    flush_context.execute()
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
+    return meth(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/vinxenxo/neptuno/neptuno/backend/.venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) table products has no column named subscription_duration
+[SQL: INSERT INTO products (name, description, price, category_id, is_digital, file_path, subscription_duration) VALUES (?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('asdfasdfasdasdfasdf', 'asdfasdf', 12.0, 1, 0, None, None)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+

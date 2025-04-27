@@ -1,3 +1,5 @@
+// frontend/src/ui/SectionHeader.tsx
+// This file defines a SectionHeader component that uses Material-UI's Box and Typography components.
 import { Box, Typography, Button, Divider, styled } from "@mui/material";
 
 const HeaderContainer = styled(Box)(({ theme }) => ({

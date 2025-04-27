@@ -5,6 +5,10 @@ import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
+from models.marketplace import Category, Product
+from schemas.marketplace import CategoryCreate, ProductCreate
+from services.marketplace_service import create_category, create_product
+from services.settings_service import set_setting
 from core.database import SessionLocal, Base, engine
 from models.site_settings import SiteSettings
 from models.user import User, subscriptionEnum
@@ -297,9 +301,8 @@ def init_settings_and_users():
 
         # Orígenes permitidos
         origins = [
-            "localhost:3000", "neptuno.app",
-            "staging.neptuno.app", "api.neptuno.app",
-            "admin.neptuno.app"
+            "localhost:3000", "neptuno.app", "staging.neptuno.app",
+            "api.neptuno.app", "admin.neptuno.app"
         ]
         for origin in origins:
             if not db.query(AllowedOrigin).filter(
@@ -570,6 +573,53 @@ def init_settings_and_users():
         }]
         for ug in user_gamification_data:
             db.add(UserGamification(**ug))
+
+        # Configuración inicial del marketplace
+        if not db.query(SiteSettings).filter(
+                SiteSettings.key == "enable_marketplace").first():
+            db.add(
+                SiteSettings(key="enable_marketplace",
+                             value=json.dumps(True),
+                             description="Habilitar/deshabilitar marketplace",
+                             tag="marketplace"))
+
+        # Categorías de ejemplo
+        categories_data = [{
+            "name": "Electrónica",
+            "description": "Dispositivos electrónicos"
+        }, {
+            "name": "Libros",
+            "description": "Libros físicos y digitales"
+        }]
+        categories = []
+        for cat_data in categories_data:
+            if not db.query(Category).filter(
+                    Category.name == cat_data["name"]).first():
+                category = Category(**cat_data)
+                db.add(category)
+                categories.append(category)
+        db.commit()  # Necesario para obtener los IDs de las categorías
+
+        # Productos de ejemplo
+        products_data = [{
+            "name": "Smartphone",
+            "description": "Teléfono inteligente",
+            "price": 299.99,
+            "category_id": categories[0].id,
+            "is_digital": False,
+            "file_path": None
+        }, {
+            "name": "Ebook",
+            "description": "Libro digital",
+            "price": 9.99,
+            "category_id": categories[1].id,
+            "is_digital": True,
+            "file_path": "/path/to/ebook.pdf"
+        }]
+        for prod_data in products_data:
+            if not db.query(Product).filter(
+                    Product.name == prod_data["name"]).first():
+                db.add(Product(**prod_data))
 
         db.commit()
         print(

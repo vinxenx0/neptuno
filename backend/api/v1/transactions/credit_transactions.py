@@ -1,4 +1,4 @@
-# backend/api/v1/credit_transactions.py
+# backend/api/v1/transactions/credit_transactions.py
 # Endpoints para logs de transacciones de crédito (v1)
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, Query

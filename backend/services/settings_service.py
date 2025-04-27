@@ -99,3 +99,4 @@ def set_setting(db: Session, key: str, value: any, admin_id: str, description: s
 #    
 #    settings = db.query(SiteSettings).all()
 #    return {s.key: json.loads(s.value) for s in settings}
+

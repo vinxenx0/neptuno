@@ -1,3 +1,5 @@
+// src/components/ui/MinimalCard.tsx
+// This file defines a MinimalCard component that uses Material-UI's Card component.
 import { Box, Card, CardContent, Typography, styled } from "@mui/material";
 import { ReactNode } from "react";
 
