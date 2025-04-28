@@ -654,12 +654,15 @@ export default function UserDashboard() {
                 icon={<CreditCard />}
                 iconPosition="start"
               />
+
+              <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
+
               <Tab
                 label="Compras"
                 icon={<ShoppingCart />}
                 iconPosition="start"
               />
-              <Tab label="Integraciones" icon={<Link />} iconPosition="start" />
+              
             </Tabs>
           </Paper>
         </motion.div>
@@ -985,7 +988,6 @@ export default function UserDashboard() {
               </GlassCard>
             </motion.div>
           )}
-
           {/* Security Tab */}
           {tabValue === 1 && (
             <motion.div
@@ -1108,7 +1110,6 @@ export default function UserDashboard() {
               </Grid>
             </motion.div>
           )}
-
           {/* Coupons Tab */}
           {tabValue === 2 && (
             <Box>
@@ -1155,7 +1156,6 @@ export default function UserDashboard() {
               )}
             </Box>
           )}
-
           {/* Transactions Tab */}
           {tabValue === 3 && (
             <motion.div
@@ -1224,7 +1224,6 @@ export default function UserDashboard() {
               </GlassCard>
             </motion.div>
           )}
-
           {/* Payment Methods Tab */}
           {tabValue === 4 && (
             <motion.div
@@ -1479,7 +1478,6 @@ export default function UserDashboard() {
               </Dialog>
             </motion.div>
           )}
-
           {/* Buy Credits Tab */}
           {tabValue === 5 && (
             <motion.div
@@ -1638,7 +1636,6 @@ export default function UserDashboard() {
               </Grid>
             </motion.div>
           )}
-
           {tabValue === 6 && (
             <Box>
               <Box
@@ -1712,6 +1709,7 @@ export default function UserDashboard() {
             </Box>
           )}
 
+          {/* Orders Tab */}
           {tabValue === 7 && (
             <Box>
               <Typography variant="h6">Historial de Compras</Typography>

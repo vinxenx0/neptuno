@@ -139,7 +139,6 @@ app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamifi
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
 app.include_router(origins.router, prefix="/v1/origins", tags=["Origins"])
-
 app.include_router(marketplace.router, prefix="/v1/marketplace", tags=["Marketplace"])
 
 
