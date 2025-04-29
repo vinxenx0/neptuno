@@ -23,6 +23,7 @@ class ProductBase(BaseModel):
     is_digital: bool = False
     file_path: Optional[str] = None
     subscription_duration: Optional[int] = None
+    is_free: bool = False  # Añadido
 
 class ProductCreate(ProductBase):
     pass

@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
-from models.marketplace import Category, Product
+from models.marketplace import CartItem, Category, Order, OrderItem, Product
 from schemas.marketplace import CategoryCreate, ProductCreate
 from services.marketplace_service import create_category, create_product
 from services.settings_service import set_setting
@@ -29,9 +29,14 @@ import json
 
 
 def init_db():
-    """Crea todas las tablas en la base de datos"""
+    """Crea todas las tablas en la base de datos en el orden correcto"""
+    # Primero las tablas base sin dependencias
+    Base.metadata.create_all(bind=engine, tables=[User.__table__, GuestsSession.__table__])
+    # Luego las tablas con dependencias
+    Base.metadata.create_all(bind=engine, tables=[Category.__table__, Product.__table__])
+    Base.metadata.create_all(bind=engine, tables=[CartItem.__table__, Order.__table__, OrderItem.__table__])
+    # Resto de tablas (si aplica)
     Base.metadata.create_all(bind=engine)
-
 
 def init_settings_and_users():
     """Pobla la base de datos con datos iniciales si está vacía."""
@@ -583,42 +588,70 @@ def init_settings_and_users():
                              description="Habilitar/deshabilitar marketplace",
                              tag="marketplace"))
 
-        # Categorías de ejemplo
-        categories_data = [{
-            "name": "Electrónica",
-            "description": "Dispositivos electrónicos"
-        }, {
-            "name": "Libros",
-            "description": "Libros físicos y digitales"
-        }]
+    # Categorías de ejemplo
+        categories_data = [
+            {"name": "Electrónica", "description": "Dispositivos electrónicos"},
+            {"name": "Libros", "description": "Libros físicos y digitales"},
+            {"name": "Accesorios", "description": "Accesorios varios"}
+        ]
         categories = []
         for cat_data in categories_data:
-            if not db.query(Category).filter(
-                    Category.name == cat_data["name"]).first():
+            if not db.query(Category).filter(Category.name == cat_data["name"]).first():
                 category = Category(**cat_data)
                 db.add(category)
                 categories.append(category)
-        db.commit()  # Necesario para obtener los IDs de las categorías
+        db.commit()
 
-        # Productos de ejemplo
-        products_data = [{
-            "name": "Smartphone",
-            "description": "Teléfono inteligente",
-            "price": 299.99,
-            "category_id": categories[0].id,
-            "is_digital": False,
-            "file_path": None
-        }, {
-            "name": "Ebook",
-            "description": "Libro digital",
-            "price": 9.99,
-            "category_id": categories[1].id,
-            "is_digital": True,
-            "file_path": "/path/to/ebook.pdf"
-        }]
+        # Productos de ejemplo (gratuitos y de pago)
+        products_data = [
+            {
+                "name": "Smartphone",
+                "description": "Teléfono inteligente",
+                "price": 299.99,
+                "category_id": categories[0].id,
+                "is_digital": False,
+                "file_path": None,
+                "is_free": False
+            },
+            {
+                "name": "Ebook",
+                "description": "Libro digital",
+                "price": 9.99,
+                "category_id": categories[1].id,
+                "is_digital": True,
+                "file_path": "/path/to/ebook.pdf",
+                "is_free": False
+            },
+            {
+                "name": "Guía de Usuario",
+                "description": "Guía gratuita para usuarios",
+                "price": 0.0,
+                "category_id": categories[1].id,
+                "is_digital": True,
+                "file_path": "/path/to/guide.pdf",
+                "is_free": True
+            },
+            {
+                "name": "Funda para Smartphone",
+                "description": "Funda protectora",
+                "price": 19.99,
+                "category_id": categories[2].id,
+                "is_digital": False,
+                "file_path": None,
+                "is_free": False
+            },
+            {
+                "name": "Sticker Promocional",
+                "description": "Sticker gratuito de cortesía",
+                "price": 0.0,
+                "category_id": categories[2].id,
+                "is_digital": False,
+                "file_path": None,
+                "is_free": True
+            }
+        ]
         for prod_data in products_data:
-            if not db.query(Product).filter(
-                    Product.name == prod_data["name"]).first():
+            if not db.query(Product).filter(Product.name == prod_data["name"]).first():
                 db.add(Product(**prod_data))
 
         db.commit()

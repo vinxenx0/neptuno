@@ -1,8 +1,10 @@
 # backend/models/marketplace.py
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+from core.database import Base
 from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from core.database import Base
 
 class Category(Base):
     __tablename__ = "categories"
@@ -19,17 +21,20 @@ class Product(Base):
     price = Column(Float, nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"))
     is_digital = Column(Boolean, default=False)
-    file_path = Column(String, nullable=True)  # Para descargas digitales
-    subscription_duration = Column(Integer, nullable=True)  # Días, para suscripciones
+    file_path = Column(String, nullable=True)
+    subscription_duration = Column(Integer, nullable=True)
+    is_free = Column(Boolean, default=False)  # Nuevo campo para productos gratuitos
     category = relationship("Category", back_populates="products")
     cart_items = relationship("CartItem", back_populates="product")
     order_items = relationship("OrderItem", back_populates="product")
 
+
+
 class CartItem(Base):
     __tablename__ = "cart_items"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    session_id = Column(String, nullable=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)  # Cambiado de "users.id" a "usuarios.id"
+    session_id = Column(String, ForeignKey("sesiones_anonimas.id"), nullable=True)
     product_id = Column(Integer, ForeignKey("products.id"))
     quantity = Column(Integer, nullable=False)
     product = relationship("Product", back_populates="cart_items")
@@ -37,8 +42,8 @@ class CartItem(Base):
 class Order(Base):
     __tablename__ = "orders"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    session_id = Column(String, nullable=True)
+    user_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)  # Cambiado de "users.id" a "usuarios.id"
+    session_id = Column(String, ForeignKey("sesiones_anonimas.id"), nullable=True)
     total_amount = Column(Float, nullable=False)
     status = Column(String, default="pending")
     created_at = Column(DateTime, default=datetime.utcnow)

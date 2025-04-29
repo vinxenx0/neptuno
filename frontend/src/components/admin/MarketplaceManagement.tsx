@@ -13,8 +13,13 @@ export default function MarketplaceManagement() {
   const [products, setProducts] = useState<Product[]>([]);
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
   const [newProduct, setNewProduct] = useState({
-    name: "", description: "", price: 0, category_id: 0,
-    is_digital: false, file_path: "", subscription_duration: 0
+    name: "",
+    description: "",
+    price: "",  // Cambiado a string
+    category_id: "",  // Cambiado a string
+    is_digital: false,
+    file_path: "",
+    subscription_duration: ""  // Cambiado a string
   });
 
   useEffect(() => {
@@ -49,7 +54,7 @@ export default function MarketplaceManagement() {
     const { data } = await fetchAPI<Product>("/v1/marketplace/products", { method: "POST", data: productData });
     if (data) {
       setProducts([...products, data]);
-      setNewProduct({ name: "", description: "", price: 0, category_id: 0, is_digital: false, file_path: "", subscription_duration: 0 });
+      setNewProduct({ name: "", description: "", price: "", category_id: "", is_digital: false, file_path: "", subscription_duration: "" });
     }
   };
 
@@ -91,16 +96,32 @@ export default function MarketplaceManagement() {
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 2 }}>
         <TextField label="Nombre" value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
         <TextField label="Descripción" value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} />
-        <TextField label="Precio" type="number" value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })} />
-        <TextField label="Categoría ID" type="number" value={newProduct.category_id} onChange={(e) => setNewProduct({ ...newProduct, category_id: parseInt(e.target.value) })} />
-        <FormControlLabel
+        <TextField
+  label="Precio"
+  type="number"
+  value={newProduct.price}
+  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+/>
+<TextField
+  label="Categoría ID"
+  type="number"
+  value={newProduct.category_id}
+  onChange={(e) => setNewProduct({ ...newProduct, category_id: e.target.value })}
+/>
+<TextField
+  label="Duración Suscripción (días)"
+  type="number"
+  value={newProduct.subscription_duration}
+  onChange={(e) => setNewProduct({ ...newProduct, subscription_duration: e.target.value })}
+/>
+<FormControlLabel
           control={<Switch checked={newProduct.is_digital} onChange={(e) => setNewProduct({ ...newProduct, is_digital: e.target.checked })} />}
           label="Digital"
         />
         {newProduct.is_digital && (
           <TextField label="Archivo" value={newProduct.file_path} onChange={(e) => setNewProduct({ ...newProduct, file_path: e.target.value })} />
         )}
-        <TextField label="Duración Suscripción (días)" type="number" value={newProduct.subscription_duration} onChange={(e) => setNewProduct({ ...newProduct, subscription_duration: parseInt(e.target.value) })} />
+        <TextField label="Duración Suscripción (días)" type="number" value={newProduct.subscription_duration} onChange={(e) => setNewProduct({ ...newProduct, subscription_duration: e.target.value })} />
         <Button variant="contained" onClick={handleAddProduct} startIcon={<AddCircle />}>Añadir Producto</Button>
       </Box>
       <Table>

@@ -241,6 +241,7 @@ export interface Product {
   price: number;
   category_id: number;
   is_digital: boolean;
+  is_free: boolean;
   file_path?: string;
   subscription_duration?: number;
 }

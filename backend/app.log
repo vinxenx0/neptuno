@@ -6193,3 +6193,33 @@ WHERE order_items.order_id IN (?, ?, ?, ?, ?)]
 2025-04-28 01:47:15,330 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
 2025-04-28 01:47:15,697 - NeptunO - INFO - Procesando solicitud: token=True, session_id=None, ip=127.0.0.1
 2025-04-28 01:47:15,786 - NeptunO - INFO - Usuario registrado ID 1 autenticado desde IP 127.0.0.1
+2025-04-29 19:43:45,937 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 19:43:45,947 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 19:43:45,947 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:20:11,091 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:20:11,108 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:20:11,108 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:33:46,259 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:33:46,283 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:33:46,284 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:33:50,823 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:33:50,844 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:33:50,844 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:33:53,595 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:33:53,612 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:33:53,612 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:34:27,613 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:34:27,629 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:34:27,629 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:36:45,908 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:36:45,928 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:36:45,928 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:45:05,170 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:45:05,191 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:45:05,191 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:45:19,368 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:45:19,389 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:45:19,389 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar
+2025-04-29 20:45:55,266 - NeptunO - INFO - CORS configurado con orígenes: ['*']
+2025-04-29 20:45:55,290 - NeptunO - INFO - Iniciando Neptuno en entorno development
+2025-04-29 20:45:55,291 - NeptunO - INFO - Ejecutando renovación de créditos automática al iniciar

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import fetchAPI from "@/lib/api";
+import StoreIcon from "@mui/icons-material/Store";
 import {
   Button,
   Avatar,
@@ -386,13 +387,21 @@ export default function Navbar() {
                 </IconButton>
               </Tooltip>
 
-              <Link href="/checkout" passHref>
-                <IconButton className="notification-icon">
-                  <Badge badgeContent={cartItemsCount} color="secondary">
-                    <ShoppingCartIcon />
-                  </Badge>
+              <Tooltip title="Marketplace">
+              <Link href="/marketplace" passHref>
+                <IconButton sx={{ color: theme.palette.text.primary }}>
+                  <StoreIcon />
                 </IconButton>
               </Link>
+            </Tooltip>
+            {/* Carrito existente */}
+            <Link href="/checkout" passHref>
+              <IconButton className="notification-icon">
+                <Badge badgeContent={cartItemsCount} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Link>
 
               {/* Créditos tercero */}
               {!disableCredits && credits > 0 && (
