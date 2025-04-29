@@ -1,6 +1,7 @@
 # backend/services/order_service.py
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from models.credit_transaction import CreditTransaction
 from models.marketplace import Order, OrderItem, Product
 from models.user import User
 from schemas.marketplace import OrderCreate, OrderResponse

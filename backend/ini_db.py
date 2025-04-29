@@ -607,7 +607,7 @@ def init_settings_and_users():
             {
                 "name": "Smartphone",
                 "description": "Teléfono inteligente",
-                "price": 299.99,
+                "price": 299,
                 "category_id": categories[0].id,
                 "is_digital": False,
                 "file_path": None,
@@ -616,7 +616,7 @@ def init_settings_and_users():
             {
                 "name": "Ebook",
                 "description": "Libro digital",
-                "price": 9.99,
+                "price": 9,
                 "category_id": categories[1].id,
                 "is_digital": True,
                 "file_path": "/path/to/ebook.pdf",
@@ -625,7 +625,7 @@ def init_settings_and_users():
             {
                 "name": "Guía de Usuario",
                 "description": "Guía gratuita para usuarios",
-                "price": 0.0,
+                "price": 0,
                 "category_id": categories[1].id,
                 "is_digital": True,
                 "file_path": "/path/to/guide.pdf",
@@ -634,7 +634,7 @@ def init_settings_and_users():
             {
                 "name": "Funda para Smartphone",
                 "description": "Funda protectora",
-                "price": 19.99,
+                "price": 19,
                 "category_id": categories[2].id,
                 "is_digital": False,
                 "file_path": None,
@@ -643,7 +643,7 @@ def init_settings_and_users():
             {
                 "name": "Sticker Promocional",
                 "description": "Sticker gratuito de cortesía",
-                "price": 0.0,
+                "price": 0,
                 "category_id": categories[2].id,
                 "is_digital": False,
                 "file_path": None,
