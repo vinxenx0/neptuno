@@ -16,8 +16,6 @@ from services.integration_service import trigger_webhook
 from services.settings_service import get_setting
 from dependencies.auth import UserContext
 
-logger = configure_logging()
-
 # backend/middleware/credits.py
 from fastapi import Depends, HTTPException
 from functools import wraps

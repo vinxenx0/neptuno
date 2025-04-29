@@ -1,0 +1,22 @@
+añadir nueva descarga digital
+INFO:     127.0.0.1:59186 - "POST /v1/marketplace/products HTTP/1.1" 422 Unprocessable Entity
+añade boton gratuita
+
+
+more verbose
+Historial de Compras
+
+    Orden #1
+
+    Total: 500 - Estado: completed - Fecha: 4/29/2025, 7:59:40 PM
+
+añadir unidades al producto
+
+more verbose a lahoara de pagar: elegir creditos o pagar 
+
+no se borra del carrito
+
+cuando no hay creditos que tb salga el badge con la cantidad (0)
+
+marketplace como texto no como icono
+

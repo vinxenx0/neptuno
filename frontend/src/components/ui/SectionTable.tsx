@@ -1,3 +1,5 @@
+// frontend/src/components/ui/SectionTable.tsx
+// This file defines a SectionTable component that uses Material-UI's Table component.
 import { Table, TableBody, TableCell, TableHead, TableRow, styled } from "@mui/material";
 
 const StyledTable = styled(Table)(({ theme }) => ({

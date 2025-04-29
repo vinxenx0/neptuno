@@ -36,6 +36,7 @@ import {
   Info,
   Cancel,
   Star,
+  ShoppingCart,
 } from "@mui/icons-material";
 import { User, Coupon, InfoResponse, Badge } from "@/lib/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -107,21 +108,36 @@ const InteractiveCard = styled(Card)(({ theme }) => ({
 }));
 
 export default function SplashPage() {
-  const { user, credits, setCredits, setGamification, coupons, setCoupons } = useAuth();
+  const { user, credits, setCredits, setGamification, coupons, setCoupons } =
+    useAuth();
   const theme = useTheme();
 
   // Landing Page States
   const [localCredits, setLocalCredits] = useState<number>(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   // Ejemplos Page States
-  const [registroFields, setRegistroFields] = useState({ name: "", email: "", phone: "" });
-  const [newsletterSubs, setNewsletterSubs] = useState({ tech: false, marketing: false, design: false });
+  const [registroFields, setRegistroFields] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [newsletterSubs, setNewsletterSubs] = useState({
+    tech: false,
+    marketing: false,
+    design: false,
+  });
   const [encuestaAnswers, setEncuestaAnswers] = useState<number[]>([]);
   const [checkinDone, setCheckinDone] = useState(false);
-  const [icpFields, setIcpFields] = useState({ company: "", role: "", industry: "" });
+  const [icpFields, setIcpFields] = useState({
+    company: "",
+    role: "",
+    industry: "",
+  });
   const [tutorialLessons, setTutorialLessons] = useState([false, false, false]);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -139,8 +155,13 @@ export default function SplashPage() {
   const updateGamification = useCallback(async () => {
     const { data } = await fetchAPI<InfoResponse>("/whoami");
     if (data?.gamification) {
-      const totalPoints = data.gamification.reduce((sum, g) => sum + g.points, 0);
-      const badges = data.gamification.map((g) => g.badge).filter((b) => b !== null) as Badge[];
+      const totalPoints = data.gamification.reduce(
+        (sum, g) => sum + g.points,
+        0
+      );
+      const badges = data.gamification
+        .map((g) => g.badge)
+        .filter((b) => b !== null) as Badge[];
       setGamification({ points: totalPoints, badges });
     }
   }, [setGamification]);
@@ -152,9 +173,15 @@ export default function SplashPage() {
   // Landing Page Handlers
   const handleTestCreditConsumption = async () => {
     try {
-      const response = await fetchAPI("/v1/test/test-credit-consumption", { method: "GET" });
+      const response = await fetchAPI("/v1/test/test-credit-consumption", {
+        method: "GET",
+      });
       if (response.error) {
-        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarMessage(
+          typeof response.error === "string"
+            ? response.error
+            : "Error desconocido"
+        );
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       } else {
@@ -181,14 +208,32 @@ export default function SplashPage() {
     }
   };
 
+  const handleAddToCart = async () => {
+    const productId = 1; // ID del producto de ejemplo (Smartphone)
+    await fetchAPI("/v1/marketplace/cart", {
+      method: "POST",
+      data: { product_id: productId, quantity: 1 },
+    });
+    setSnackbarMessage("Producto añadido al carrito");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+  };
+
   const handleNoLoginTest = async () => {
     try {
       const response = await fetchAPI("/v1/test/no-login/", { method: "GET" });
       if (response.error) {
-        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarMessage(
+          typeof response.error === "string"
+            ? response.error
+            : "Error desconocido"
+        );
         setSnackbarSeverity("error");
       } else {
-        setSnackbarMessage("Consulta sin login realizada: " + (response.data as { message: string }).message);
+        setSnackbarMessage(
+          "Consulta sin login realizada: " +
+            (response.data as { message: string }).message
+        );
         setSnackbarSeverity("success");
         if (!user) {
           const newCredits = localCredits - 1;
@@ -210,10 +255,17 @@ export default function SplashPage() {
     try {
       const response = await fetchAPI("/v1/test/restricted", { method: "GET" });
       if (response.error) {
-        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarMessage(
+          typeof response.error === "string"
+            ? response.error
+            : "Error desconocido"
+        );
         setSnackbarSeverity("error");
       } else {
-        setSnackbarMessage("Consulta restringida realizada: " + (response.data as { message: string }).message);
+        setSnackbarMessage(
+          "Consulta restringida realizada: " +
+            (response.data as { message: string }).message
+        );
         setSnackbarSeverity("success");
       }
       setSnackbarOpen(true);
@@ -229,10 +281,16 @@ export default function SplashPage() {
     try {
       const response = await fetchAPI("/whoami", { method: "GET" });
       if (response.error) {
-        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarMessage(
+          typeof response.error === "string"
+            ? response.error
+            : "Error desconocido"
+        );
         setSnackbarSeverity("error");
       } else {
-        setSnackbarMessage("Información obtenida: " + JSON.stringify(response.data));
+        setSnackbarMessage(
+          "Información obtenida: " + JSON.stringify(response.data)
+        );
         setSnackbarSeverity("success");
       }
       setSnackbarOpen(true);
@@ -248,10 +306,16 @@ export default function SplashPage() {
     try {
       const response = await fetchAPI("/v1/gamification/me", { method: "GET" });
       if (response.error) {
-        setSnackbarMessage(typeof response.error === "string" ? response.error : "Error desconocido");
+        setSnackbarMessage(
+          typeof response.error === "string"
+            ? response.error
+            : "Error desconocido"
+        );
         setSnackbarSeverity("error");
       } else {
-        setSnackbarMessage("Información obtenida: " + JSON.stringify(response.data));
+        setSnackbarMessage(
+          "Información obtenida: " + JSON.stringify(response.data)
+        );
         setSnackbarSeverity("success");
       }
       setSnackbarOpen(true);
@@ -271,9 +335,12 @@ export default function SplashPage() {
   // Ejemplos Page Handlers
   const handleGenerateCoupon = async () => {
     try {
-      const { data } = await fetchAPI<Coupon>("/v1/coupons/generate-demo-coupon?credits=5", {
-        method: "POST",
-      });
+      const { data } = await fetchAPI<Coupon>(
+        "/v1/coupons/generate-demo-coupon?credits=5",
+        {
+          method: "POST",
+        }
+      );
       if (data) {
         setCoupons([...coupons, data]);
         setMessage("Cupón generado");
@@ -286,37 +353,63 @@ export default function SplashPage() {
     }
   };
 
-  const handleRegistroChange = async (field: keyof typeof registroFields, value: string) => {
+  const handleRegistroChange = async (
+    field: keyof typeof registroFields,
+    value: string
+  ) => {
     setRegistroFields((prev) => ({ ...prev, [field]: value }));
     if (value) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 1 } });
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 1 },
+      });
       updateGamification();
       setMessage("¡Ganaste 1 punto por completar un campo!");
     }
     if (registroFields.name && registroFields.email && registroFields.phone) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 2 } });
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 2 },
+      });
       updateGamification();
       setMessage("¡Completaste el registro y ganaste 10 puntos!");
     }
   };
 
-  const handleNewsletterChange = async (newsletter: keyof typeof newsletterSubs) => {
+  const handleNewsletterChange = async (
+    newsletter: keyof typeof newsletterSubs
+  ) => {
     setNewsletterSubs((prev) => ({ ...prev, [newsletter]: !prev[newsletter] }));
     if (!newsletterSubs[newsletter]) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 3 } });
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 3 },
+      });
       updateGamification();
       setMessage("¡Ganaste 2 puntos por suscribirte a una newsletter!");
     }
-    if (newsletterSubs.tech && newsletterSubs.marketing && newsletterSubs.design) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 4 } });
+    if (
+      newsletterSubs.tech &&
+      newsletterSubs.marketing &&
+      newsletterSubs.design
+    ) {
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 4 },
+      });
       updateGamification();
-      setMessage("¡Te suscribiste a todas las newsletters y ganaste 15 puntos!");
+      setMessage(
+        "¡Te suscribiste a todas las newsletters y ganaste 15 puntos!"
+      );
     }
   };
 
   const handleEncuestaAnswer = async (answer: number) => {
     setEncuestaAnswers((prev) => [...prev, answer]);
-    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 5 } });
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 5 },
+    });
     updateGamification();
     setMessage("¡Ganaste 1 punto por responder una pregunta!");
   };
@@ -341,7 +434,9 @@ export default function SplashPage() {
         });
         if (coupon) {
           setCoupons([...coupons, coupon]);
-          setMessage("¡Completaste la encuesta y ganaste 10 puntos + un cupón de 10 créditos!");
+          setMessage(
+            "¡Completaste la encuesta y ganaste 10 puntos + un cupón de 10 créditos!"
+          );
         } else {
           setMessage("¡Completaste la encuesta y ganaste 10 puntos!");
         }
@@ -354,20 +449,32 @@ export default function SplashPage() {
 
   const handleCheckin = async () => {
     setCheckinDone(true);
-    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 7 } });
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 7 },
+    });
     updateGamification();
     setMessage("¡Ganaste 5 puntos por hacer check-in!");
   };
 
-  const handleIcpChange = async (field: keyof typeof icpFields, value: string) => {
+  const handleIcpChange = async (
+    field: keyof typeof icpFields,
+    value: string
+  ) => {
     setIcpFields((prev) => ({ ...prev, [field]: value }));
     if (value) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 8 } });
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 8 },
+      });
       updateGamification();
       setMessage("¡Ganaste 1 punto por completar un campo del ICP!");
     }
     if (icpFields.company && icpFields.role && icpFields.industry) {
-      await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 9 } });
+      await fetchAPI("/v1/gamification/events", {
+        method: "POST",
+        data: { event_type_id: 9 },
+      });
       updateGamification();
       setMessage("¡Completaste tu ICP y ganaste 10 puntos!");
     }
@@ -379,7 +486,10 @@ export default function SplashPage() {
       newLessons[index] = true;
       return newLessons;
     });
-    await fetchAPI("/v1/gamification/events", { method: "POST", data: { event_type_id: 10 } });
+    await fetchAPI("/v1/gamification/events", {
+      method: "POST",
+      data: { event_type_id: 10 },
+    });
     updateGamification();
     setMessage("¡Ganaste 3 puntos por completar una lección!");
   };
@@ -391,7 +501,13 @@ export default function SplashPage() {
         description="Construye aplicaciones escalables con Neptuno: gestiona créditos, APIs y gamificación para maximizar el engagement y las conversiones."
         keywords="SaaS, APIs, gamificación, créditos, engagement, escalabilidad"
       />
-      <Box sx={{ minHeight: "100vh", background: "linear-gradient(135deg, #f5f7fa 0%, #e3e8f2 100%)", pb: 12 }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #f5f7fa 0%, #e3e8f2 100%)",
+          pb: 12,
+        }}
+      >
         <Container maxWidth="lg">
           {/* Hero Section */}
           <HeroSection>
@@ -411,7 +527,9 @@ export default function SplashPage() {
                 }}
               >
                 Neptuno: Tu SaaS para <br />
-                <span style={{ color: theme.palette.secondary.light }}>APIs y Gamificación</span>
+                <span style={{ color: theme.palette.secondary.light }}>
+                  APIs y Gamificación
+                </span>
               </Typography>
               <Typography
                 variant="h5"
@@ -423,7 +541,9 @@ export default function SplashPage() {
                   fontWeight: 300,
                 }}
               >
-                Crea aplicaciones modernas con nuestras APIs robustas, gestiona créditos fácilmente y aumenta el engagement con gamificación integrada. ¡Empieza gratis hoy!
+                Crea aplicaciones modernas con nuestras APIs robustas, gestiona
+                créditos fácilmente y aumenta el engagement con gamificación
+                integrada. ¡Empieza gratis hoy!
               </Typography>
               {user ? (
                 <Link href="/user/dashboard" passHref>
@@ -437,9 +557,20 @@ export default function SplashPage() {
                   </ActionButton>
                 </Link>
               ) : (
-                <Box sx={{ display: "flex", gap: 3, justifyContent: "center", flexWrap: "wrap" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 3,
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
                   <Link href="/user/auth/#register" passHref>
-                    <ActionButton variant="contained" color="secondary" size="large">
+                    <ActionButton
+                      variant="contained"
+                      color="secondary"
+                      size="large"
+                    >
                       Comienza Gratis
                     </ActionButton>
                   </Link>
@@ -448,7 +579,10 @@ export default function SplashPage() {
                       variant="outlined"
                       color="inherit"
                       size="large"
-                      sx={{ borderWidth: "2px", "&:hover": { borderWidth: "2px" } }}
+                      sx={{
+                        borderWidth: "2px",
+                        "&:hover": { borderWidth: "2px" },
+                      }}
                     >
                       Iniciar Sesión
                     </ActionButton>
@@ -485,7 +619,8 @@ export default function SplashPage() {
                       Gestión de Créditos
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Controla tus créditos con facilidad y prueba nuestras APIs con 10 créditos gratis al registrarte.
+                      Controla tus créditos con facilidad y prueba nuestras APIs
+                      con 10 créditos gratis al registrarte.
                     </Typography>
                   </FeatureCard>
                 </motion.div>
@@ -508,7 +643,8 @@ export default function SplashPage() {
                       APIs de Alto Rendimiento
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Integra endpoints rápidos y personalizables para potenciar tus aplicaciones.
+                      Integra endpoints rápidos y personalizables para potenciar
+                      tus aplicaciones.
                     </Typography>
                   </FeatureCard>
                 </motion.div>
@@ -531,7 +667,8 @@ export default function SplashPage() {
                       Escalabilidad Segura
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Crece sin límites con un framework seguro diseñado para tu éxito.
+                      Crece sin límites con un framework seguro diseñado para tu
+                      éxito.
                     </Typography>
                   </FeatureCard>
                 </motion.div>
@@ -543,7 +680,12 @@ export default function SplashPage() {
           <Box sx={{ mb: 12 }}>
             <Typography
               variant="h3"
-              sx={{ fontWeight: 700, mb: 6, textAlign: "center", color: theme.palette.text.primary }}
+              sx={{
+                fontWeight: 700,
+                mb: 6,
+                textAlign: "center",
+                color: theme.palette.text.primary,
+              }}
             >
               Prueba Neptuno en Acción
             </Typography>
@@ -551,14 +693,29 @@ export default function SplashPage() {
               {/* Credits Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Sistema de Créditos
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Experimenta nuestro sistema de créditos: realiza una acción y consume un crédito en tiempo real.
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Experimenta nuestro sistema de créditos: realiza una acción
+                    y consume un crédito en tiempo real.
                   </Typography>
                   <Typography variant="h6" sx={{ mb: 2 }}>
-                    <Box component="span" sx={{ color: theme.palette.primary.main }}>
+                    <Box
+                      component="span"
+                      sx={{ color: theme.palette.primary.main }}
+                    >
                       {user ? credits : localCredits} créditos
                     </Box>{" "}
                     disponibles
@@ -575,14 +732,57 @@ export default function SplashPage() {
                 </InteractiveCard>
               </Grid>
 
+              <Grid item xs={12} md={6}>
+                <InteractiveCard>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
+                    Prueba el Marketplace
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Añade un producto de ejemplo a tu carrito y prueba el
+                    proceso de checkout.
+                  </Typography>
+                  <ActionButton
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddToCart}
+                    startIcon={<ShoppingCart />}
+                  >
+                    Añadir al Carrito
+                  </ActionButton>
+                </InteractiveCard>
+              </Grid>
+
               {/* API Endpoints Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Explora Nuestros Endpoints
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Interactúa con nuestras APIs en tiempo real. Cada acción consume 1 crédito.
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Interactúa con nuestras APIs en tiempo real. Cada acción
+                    consume 1 crédito.
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -632,29 +832,50 @@ export default function SplashPage() {
               {/* Gamification Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Gamificación: Registro
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Completa el formulario y gana puntos para desbloquear recompensas.
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Completa el formulario y gana puntos para desbloquear
+                    recompensas.
                   </Typography>
-                  <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box
+                    component="form"
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     <TextField
                       label="Nombre"
                       value={registroFields.name}
-                      onChange={(e) => handleRegistroChange("name", e.target.value)}
+                      onChange={(e) =>
+                        handleRegistroChange("name", e.target.value)
+                      }
                       variant="outlined"
                     />
                     <TextField
                       label="Email"
                       value={registroFields.email}
-                      onChange={(e) => handleRegistroChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleRegistroChange("email", e.target.value)
+                      }
                       variant="outlined"
                     />
                     <TextField
                       label="Teléfono"
                       value={registroFields.phone}
-                      onChange={(e) => handleRegistroChange("phone", e.target.value)}
+                      onChange={(e) =>
+                        handleRegistroChange("phone", e.target.value)
+                      }
                       variant="outlined"
                     />
                   </Box>
@@ -664,15 +885,34 @@ export default function SplashPage() {
               {/* Newsletter Subscription */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Suscripción a Newsletters
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Suscríbete y acumula puntos para personalizar tu experiencia.
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Suscríbete y acumula puntos para personalizar tu
+                    experiencia.
                   </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                  >
                     <FormControlLabel
-                      control={<Checkbox checked={newsletterSubs.tech} onChange={() => handleNewsletterChange("tech")} />}
+                      control={
+                        <Checkbox
+                          checked={newsletterSubs.tech}
+                          onChange={() => handleNewsletterChange("tech")}
+                        />
+                      }
                       label="Tecnología"
                     />
                     <FormControlLabel
@@ -686,7 +926,10 @@ export default function SplashPage() {
                     />
                     <FormControlLabel
                       control={
-                        <Checkbox checked={newsletterSubs.design} onChange={() => handleNewsletterChange("design")} />
+                        <Checkbox
+                          checked={newsletterSubs.design}
+                          onChange={() => handleNewsletterChange("design")}
+                        />
                       }
                       label="Diseño"
                     />
@@ -697,20 +940,42 @@ export default function SplashPage() {
               {/* Survey Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Encuesta Rápida
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
                     Responde preguntas y gana puntos + un cupón al completar.
                   </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Button variant="outlined" onClick={() => handleEncuestaAnswer(1)}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleEncuestaAnswer(1)}
+                    >
                       Pregunta 1
                     </Button>
-                    <Button variant="outlined" onClick={() => handleEncuestaAnswer(2)}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleEncuestaAnswer(2)}
+                    >
                       Pregunta 2
                     </Button>
-                    <Button variant="outlined" onClick={() => handleEncuestaAnswer(3)}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleEncuestaAnswer(3)}
+                    >
                       Pregunta 3
                     </Button>
                     <ActionButton
@@ -727,10 +992,21 @@ export default function SplashPage() {
               {/* Check-in Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Check-in Diario
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
                     Registra tu actividad y gana 5 puntos al instante.
                   </Typography>
                   <ActionButton
@@ -747,17 +1023,34 @@ export default function SplashPage() {
               {/* ICP Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Perfil de Cliente Ideal
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Define tu perfil y desbloquea puntos para personalizar tu experiencia.
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
+                    Define tu perfil y desbloquea puntos para personalizar tu
+                    experiencia.
                   </Typography>
-                  <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box
+                    component="form"
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     <TextField
                       label="Empresa"
                       value={icpFields.company}
-                      onChange={(e) => handleIcpChange("company", e.target.value)}
+                      onChange={(e) =>
+                        handleIcpChange("company", e.target.value)
+                      }
                       variant="outlined"
                     />
                     <TextField
@@ -769,7 +1062,9 @@ export default function SplashPage() {
                     <TextField
                       label="Industria"
                       value={icpFields.industry}
-                      onChange={(e) => handleIcpChange("industry", e.target.value)}
+                      onChange={(e) =>
+                        handleIcpChange("industry", e.target.value)
+                      }
                       variant="outlined"
                     />
                   </Box>
@@ -779,13 +1074,26 @@ export default function SplashPage() {
               {/* Tutorial Demo */}
               <Grid item xs={12} md={6}>
                 <InteractiveCard>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Tutorial Interactivo
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
                     Completa lecciones y gana 3 puntos por cada una.
                   </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     {tutorialLessons.map((completed, index) => (
                       <Button
                         key={index}
@@ -793,7 +1101,9 @@ export default function SplashPage() {
                         onClick={() => handleLessonComplete(index)}
                         disabled={completed}
                       >
-                        {completed ? `Lección ${index + 1} Completada` : `Completar Lección ${index + 1}`}
+                        {completed
+                          ? `Lección ${index + 1} Completada`
+                          : `Completar Lección ${index + 1}`}
                       </Button>
                     ))}
                   </Box>
@@ -803,10 +1113,21 @@ export default function SplashPage() {
               {/* Coupon Generation Demo */}
               <Grid item xs={12}>
                 <InteractiveCard sx={{ textAlign: "center" }}>
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: theme.palette.primary.main }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.primary.main,
+                    }}
+                  >
                     Genera un Cupón
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ mb: 4 }}
+                  >
                     Crea un cupón de 5 créditos para usar en nuestra plataforma.
                   </Typography>
                   <ActionButton
@@ -830,8 +1151,14 @@ export default function SplashPage() {
             >
               ¿Listo para Transformar tu Negocio?
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}>
-              Únete a miles de desarrolladores que ya están creando aplicaciones modernas con Neptuno. Prueba nuestras APIs, gestiona créditos y aumenta el engagement con gamificación. ¡Comienza gratis ahora!
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ mb: 4, maxWidth: "800px", mx: "auto" }}
+            >
+              Únete a miles de desarrolladores que ya están creando aplicaciones
+              modernas con Neptuno. Prueba nuestras APIs, gestiona créditos y
+              aumenta el engagement con gamificación. ¡Comienza gratis ahora!
             </Typography>
             <Link href="/user/auth/#register" passHref>
               <ActionButton
@@ -862,7 +1189,10 @@ export default function SplashPage() {
               >
                 <Alert
                   onClose={handleSnackbarClose}
-                  severity={snackbarSeverity || (message?.includes("Error") ? "error" : "success")}
+                  severity={
+                    snackbarSeverity ||
+                    (message?.includes("Error") ? "error" : "success")
+                  }
                   sx={{
                     width: "100%",
                     borderRadius: "12px",

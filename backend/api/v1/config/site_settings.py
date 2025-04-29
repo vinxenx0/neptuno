@@ -1,4 +1,4 @@
-# backend/api/v1/site_settings.py
+# backend/api/v1/config/site_settings.py
 # Endpoints para configuración y orígenes permitidos (CORS)
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException

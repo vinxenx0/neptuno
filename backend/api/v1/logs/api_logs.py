@@ -1,4 +1,4 @@
-# backend/api/v1/api_logs.py
+# backend/api/v1/logs/api_logs.py
 # Endpoints para logs de actividad de la API (v1)
 # revisar
 

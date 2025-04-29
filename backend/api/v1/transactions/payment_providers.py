@@ -1,4 +1,4 @@
-# backend/api/v1/payment_providers.py
+# backend/api/v1/transaction/payment_providers.py
 # Endpoints para gestión de proveedores de pago (v1)
 
 from fastapi import APIRouter, Depends, HTTPException, status

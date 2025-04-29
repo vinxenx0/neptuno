@@ -13,6 +13,7 @@ from api.v1.transactions import payment_providers, payments, credit_transactions
 from api.v1.logs import api_logs, error_logs
 from api.v1.gamification import coupons, gamification
 from api.v1.auth import auth
+from api.v1.marketplace import marketplace
 from api.v1.config import site_settings
 from api.v1.config import integrations, origins
 from api.v1.users import anonymous_sessions
@@ -138,6 +139,7 @@ app.include_router(gamification.router, prefix="/v1/gamification", tags=["Gamifi
 app.include_router(payment_providers.router, prefix="/v1/payment-providers", tags=["Payment Providers"])
 app.include_router(coupons.router, prefix="/v1/coupons", tags=["Coupons"])
 app.include_router(origins.router, prefix="/v1/origins", tags=["Origins"])
+app.include_router(marketplace.router, prefix="/v1/marketplace", tags=["Marketplace"])
 
 
 

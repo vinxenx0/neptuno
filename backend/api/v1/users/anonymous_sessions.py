@@ -1,4 +1,4 @@
-# backend/api/v1/anonymous_sessions.py
+# backend/api/v1/users/anonymous_sessions.py
 # Endpoints para gestión de sesiones anónimas (v1)
 
 from fastapi import APIRouter, Depends, HTTPException, Query

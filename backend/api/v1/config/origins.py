@@ -1,4 +1,4 @@
-# backend/api/v1/origins.py
+# backend/api/v1/config/origins.py
 # Endpoints para gestión de orígenes permitidos (CORS)
 
 from fastapi import APIRouter, Depends, HTTPException
