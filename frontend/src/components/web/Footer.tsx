@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { consentUpdate, injectGTM, hasConsentExpired } from '../../lib/gtm';
 import Link from "next/link";
 import {
   Box,
@@ -28,6 +29,30 @@ import {
   Email,
   Phone,
 } from "@mui/icons-material";
+
+const doNotSellMyInfo = () => {
+  consentUpdate(false, false);
+  localStorage.setItem('cookie_consent', 'false');
+  localStorage.setItem('analytics_consent', 'false');
+  localStorage.setItem('ads_consent', 'false');
+  localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
+  alert("Tus preferencias de privacidad han sido actualizadas.");
+};
+
+<button
+  onClick={doNotSellMyInfo}
+  style={{
+    padding: '10px 15px',
+    backgroundColor: '#f44336',
+    color: 'white',
+    borderRadius: '8px',
+    marginTop: '20px',
+    cursor: 'pointer'
+  }}
+>
+  No vender ni compartir mi información personal
+</button>
+
 
 const GlassFooter = styled("footer")(({ theme }) => ({
   background: "rgba(255, 255, 255, 0.1)",

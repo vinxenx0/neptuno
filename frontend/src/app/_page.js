@@ -69,8 +69,33 @@ function MyApp({ Component, pageProps }) {
           style={{ display: 'none', visibility: 'hidden' }}
         ></iframe>
       </noscript>
+      
+      {/* Button to reopen consent */}
+      <button
+        onClick={openConsentBanner}
+        style={{
+          position: 'fixed',
+          bottom: '80px',
+          right: '20px',
+          padding: '10px 15px',
+          backgroundColor: '#0070f3',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          zIndex: 9999
+        }}
+      >
+        Cambiar Cookies
+      </button>
+
+      {/* Cookie Banner */}
+      {showConsentManually && (
+        <CookieConsentBanner forceShow={true} onClose={() => setShowConsentManually(false)} />
+      )}
+      {!showConsentManually && (
+        <CookieConsentBanner />
+      )}
     </>
   );
 }
-
-export default MyApp;

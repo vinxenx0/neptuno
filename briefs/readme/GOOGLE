@@ -640,3 +640,378 @@ NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
 
 # ¿Quieres que también te pase un ejemplo de **cómo sería añadir un botón "Cambiar mis cookies"** que abra el banner nuevamente en cualquier momento? (muchos proyectos de compliance lo piden).  
 Te lo puedo dar ahora mismo si quieres. ¿Te interesa?
+
+¡Genial! Vamos a añadir un **botón "Cambiar mis cookies"** para que el usuario pueda:
+
+- Revisar su consentimiento.
+- Cambiar su decisión **en cualquier momento** (por ejemplo desde el footer o el menú).
+
+Esto es **muy recomendable** para cumplir correctamente con **GDPR** y **Google Consent Mode V2**.
+
+---
+
+# Te explico cómo hacerlo:
+
+## 1. Mejora del `CookieConsentBanner.js`
+
+Vamos a permitir abrir el banner manualmente:
+
+```javascript
+// components/CookieConsentBanner.js
+import { useState, useEffect } from 'react';
+import { consentUpdate, injectGTM } from '../lib/gtm';
+
+export default function CookieConsentBanner({ forceShow = false, onClose }) {
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie_consent');
+    if (forceShow) {
+      setShowBanner(true);
+    } else if (!consent) {
+      setShowBanner(true);
+    } else if (consent === 'true') {
+      injectGTM(); // ya aceptó antes
+    }
+  }, [forceShow]);
+
+  const acceptCookies = () => {
+    consentUpdate(true);
+    localStorage.setItem('cookie_consent', 'true');
+    injectGTM();
+    setShowBanner(false);
+    if (onClose) onClose();
+  };
+
+  const rejectCookies = () => {
+    consentUpdate(false);
+    localStorage.setItem('cookie_consent', 'false');
+    setShowBanner(false);
+    if (onClose) onClose();
+  };
+
+  if (!showBanner) return null;
+
+  return (
+    <div style={styles.banner}>
+      <p>Utilizamos cookies para mejorar tu experiencia. ¿Aceptas?</p>
+      <button onClick={acceptCookies} style={styles.buttonAccept}>Aceptar</button>
+      <button onClick={rejectCookies} style={styles.buttonReject}>Rechazar</button>
+      {onClose && <button onClick={() => { setShowBanner(false); onClose(); }} style={styles.buttonClose}>Cerrar</button>}
+    </div>
+  );
+}
+
+const styles = {
+  banner: {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    background: '#fff',
+    padding: '10px',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    boxShadow: '0px -2px 10px rgba(0,0,0,0.1)',
+    zIndex: 9999,
+  },
+  buttonAccept: {
+    padding: '8px 12px',
+    background: 'green',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  },
+  buttonReject: {
+    padding: '8px 12px',
+    background: 'red',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  },
+  buttonClose: {
+    padding: '8px 12px',
+    background: 'gray',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  }
+};
+```
+
+---
+
+## 2. Añadir el **botón de cambiar cookies** en `_app.js`
+
+Actualizamos `/pages/_app.js` para controlar el banner:
+
+```javascript
+// pages/_app.js
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { pageview } from '../lib/gtm';
+import CookieConsentBanner from '../components/CookieConsentBanner';
+import Script from 'next/script';
+
+function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+  const [showConsentManually, setShowConsentManually] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (window.dataLayer) {
+        pageview(url);
+      }
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
+  const openConsentBanner = () => {
+    setShowConsentManually(true);
+  };
+
+  return (
+    <>
+      {/* Consent Mode V2 setup */}
+      <Script
+        id="gtag-consent-init"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              analytics_storage: 'denied',
+              functionality_storage: 'denied',
+              personalization_storage: 'denied',
+              security_storage: 'granted'
+            });
+          `,
+        }}
+      />
+
+      {/* Page content */}
+      <Component {...pageProps} />
+
+      {/* Button to reopen consent */}
+      <button
+        onClick={openConsentBanner}
+        style={{
+          position: 'fixed',
+          bottom: '80px',
+          right: '20px',
+          padding: '10px 15px',
+          backgroundColor: '#0070f3',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          zIndex: 9999
+        }}
+      >
+        Cambiar Cookies
+      </button>
+
+      {/* Cookie Banner */}
+      {showConsentManually && (
+        <CookieConsentBanner forceShow={true} onClose={() => setShowConsentManually(false)} />
+      )}
+      {!showConsentManually && (
+        <CookieConsentBanner />
+      )}
+    </>
+  );
+}
+
+export default MyApp;
+```
+
+---
+
+# ¿Qué pasa ahora?
+
+- Si el usuario **acepta o rechaza cookies** al entrar, todo sigue funcionando como antes.
+- En cualquier momento, puede hacer clic en **"Cambiar Cookies"** (botón flotante en la esquina).
+- Se vuelve a mostrar el **banner**, y puede cambiar su elección.
+- Actualizamos `gtag('consent', 'update', {...})` dinámicamente cada vez que elige.
+
+---
+
+# Vista previa de la nueva UX
+
+- **Entrar:** Banner de cookies normal.
+- **Aceptar/Rechazar:** Se oculta.
+- **Botón Cambiar Cookies:** Siempre visible flotando.
+- **Clic en Botón:** Banner vuelve a aparecer para cambiar preferencias.
+
+---
+
+# Notas finales
+
+- **El botón** puedes moverlo al **footer** si prefieres, en lugar de flotante.
+- Puedes mejorar el diseño usando **TailwindCSS** si quieres.
+- Puedes hacer que el consentimiento expire (por ejemplo, cada 180 días pedirlo de nuevo).
+
+---
+
+# ¿Te gustaría que además te entregue un ejemplo de cómo **expirar el consentimiento automáticamente** después de X días?  
+Te puedo añadir eso también si quieres, es muy útil para compliance fuerte de GDPR (como en Francia o Alemania). ¿Te interesa?
+
+¡Perfecto!  
+Te voy a explicar ahora cómo hacer que **el consentimiento expire automáticamente** después de, por ejemplo, **180 días** (6 meses), como piden normativas de países más estrictos (**CNIL Francia, DSGVO Alemania, etc.**).
+
+---
+
+# ¿Qué cambia?
+
+Ahora en vez de solo guardar `cookie_consent`, también guardaremos **la fecha** en que se aceptó o rechazó.
+
+Cuando el usuario entra de nuevo:
+- Si pasaron más de **180 días**, **borramos su consentimiento** y mostramos de nuevo el banner.
+- Si no, seguimos respetando su elección.
+
+---
+
+# Vamos paso a paso:
+
+---
+
+## 1. Función para comprobar si el consentimiento expiró
+
+Creamos un pequeño helper en `/lib/gtm.js`:
+
+```javascript
+// lib/gtm.js
+
+export const CONSENT_EXPIRATION_DAYS = 180; // puedes cambiarlo
+
+// Check if consent expired
+export const hasConsentExpired = () => {
+  const timestamp = localStorage.getItem('cookie_consent_timestamp');
+  if (!timestamp) return true;
+
+  const savedDate = new Date(parseInt(timestamp, 10));
+  const now = new Date();
+  const diffDays = (now - savedDate) / (1000 * 60 * 60 * 24);
+  
+  return diffDays > CONSENT_EXPIRATION_DAYS;
+};
+```
+
+---
+
+## 2. Actualizar `CookieConsentBanner.js`
+
+Ahora **guardamos también la fecha** cuando aceptan o rechazan:
+
+```javascript
+// components/CookieConsentBanner.js
+import { useState, useEffect } from 'react';
+import { consentUpdate, injectGTM, hasConsentExpired } from '../lib/gtm';
+
+export default function CookieConsentBanner({ forceShow = false, onClose }) {
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookie_consent');
+    const expired = hasConsentExpired();
+    
+    if (forceShow) {
+      setShowBanner(true);
+    } else if (!consent || expired) {
+      setShowBanner(true);
+    } else if (consent === 'true') {
+      injectGTM();
+    }
+  }, [forceShow]);
+
+  const acceptCookies = () => {
+    consentUpdate(true);
+    localStorage.setItem('cookie_consent', 'true');
+    localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
+    injectGTM();
+    setShowBanner(false);
+    if (onClose) onClose();
+  };
+
+  const rejectCookies = () => {
+    consentUpdate(false);
+    localStorage.setItem('cookie_consent', 'false');
+    localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
+    setShowBanner(false);
+    if (onClose) onClose();
+  };
+
+  if (!showBanner) return null;
+
+  return (
+    <div style={styles.banner}>
+      <p>Utilizamos cookies para mejorar tu experiencia. ¿Aceptas?</p>
+      <button onClick={acceptCookies} style={styles.buttonAccept}>Aceptar</button>
+      <button onClick={rejectCookies} style={styles.buttonReject}>Rechazar</button>
+      {onClose && <button onClick={() => { setShowBanner(false); onClose(); }} style={styles.buttonClose}>Cerrar</button>}
+    </div>
+  );
+}
+
+const styles = {
+  banner: {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    background: '#fff',
+    padding: '10px',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    boxShadow: '0px -2px 10px rgba(0,0,0,0.1)',
+    zIndex: 9999,
+  },
+  buttonAccept: {
+    padding: '8px 12px',
+    background: 'green',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  },
+  buttonReject: {
+    padding: '8px 12px',
+    background: 'red',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  },
+  buttonClose: {
+    padding: '8px 12px',
+    background: 'gray',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+  }
+};
+```
+
+---
+
+# ¿Qué pasa ahora?
+
+1. Cuando un usuario **acepta o rechaza cookies**, también guardamos **el timestamp**.
+2. Cada vez que carga tu app, comprobamos:
+   - ¿Hay consentimiento guardado?
+   - ¿Está caducado (más de 180 días)?
+3. Si está caducado, **eliminamos** automáticamente el consentimiento y volvemos a mostrar el **banner**.
+4. De esta forma, cumples perfectamente con:
+   - **Regulaciones europeas** de renovación periódica del consentimiento.
+   - **Google Consent Mode v2** mejores prácticas.
+
+---
+
+# Opcional
+
+**¿Quieres que además te pase un ejemplo de cómo usar cookies reales (en lugar de localStorage) para guardar el consentimiento, que sería aún más formal para servidores SSR como Next.js?**
+
+Te lo puedo dar también, depende si quieres llegar a una solución aún más profesional. ¿Te gustaría?

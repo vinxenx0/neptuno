@@ -1,4 +1,13 @@
 
+GDPR
+
+
+-- footer do not sell my personal info
+-- implementar la lógica para enviar preferencias al backend
+-- implantar privacy center
+-- ubicación correcta archivos
+
+
 
 - AL PROMPT: Info el MVP ya esta desplegado en producción
 - Continuamos

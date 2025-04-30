@@ -1,5 +1,19 @@
 // lib/gtm.js
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
+export const CONSENT_EXPIRATION_DAYS = 180; 
+
+// Check if consent expired
+export const hasConsentExpired = () => {
+  const timestamp = localStorage.getItem('cookie_consent_timestamp');
+  if (!timestamp) return true;
+
+  const savedDate = new Date(parseInt(timestamp, 10));
+  const now = new Date();
+  const diffDays = (now - savedDate) / (1000 * 60 * 60 * 24);
+
+  return diffDays > CONSENT_EXPIRATION_DAYS;
+};
+
 
 // Track pageviews
 export const pageview = (url) => {
@@ -10,37 +24,40 @@ export const pageview = (url) => {
 };
 
 // Consent update
-export const consentUpdate = (granted = false) => {
-  window.gtag('consent', 'update', {
-    ad_storage: granted ? 'granted' : 'denied',
-    analytics_storage: granted ? 'granted' : 'denied',
-    functionality_storage: granted ? 'granted' : 'denied',
-    personalization_storage: granted ? 'granted' : 'denied',
-    security_storage: 'granted'
+export const consentUpdate = (analytics = false, ads = false) => {
+  window.gtag && window.gtag('consent', 'update', {
+    ad_storage: ads ? 'granted' : 'denied',
+    analytics_storage: analytics ? 'granted' : 'denied',
+    functionality_storage: 'granted', // funcional siempre
+    personalization_storage: ads ? 'granted' : 'denied',
+    security_storage: 'granted',
   });
 };
 
 // Insert GTM script dynamically
+
 export const injectGTM = () => {
-  if (document.getElementById('gtm-script')) return; // prevent duplicate
-  
+  if (document.getElementById('gtm-script')) return;
+
   const script = document.createElement('script');
   script.id = 'gtm-script';
+  script.src = `https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX`; // tu Measurement ID
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
   document.head.appendChild(script);
 
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.googletagmanager.com/ns.html?id=${GTM_ID}`;
-  iframe.height = 0;
-  iframe.width = 0;
-  iframe.style.display = 'none';
-  iframe.style.visibility = 'hidden';
-  document.body.appendChild(iframe);
+  const scriptInit = document.createElement('script');
+  scriptInit.innerHTML = `
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXX');
+  `;
+  document.head.appendChild(scriptInit);
 };
 
 
-// --- // Google Tag Manager (GTM) / --- //
+
+// --- Sin aplicar solo definido --- //
 
 // Event tracking
 export const event = ({ action, category, label, value }) => {

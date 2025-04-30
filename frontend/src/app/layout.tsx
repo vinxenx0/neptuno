@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/lib/auth/context";
 import Navbar from "@/components/web/Navbar";
 import Footer from "@/components/web/Footer";
+import CookieBanner from '@/components/gdpr/CookieBanner'
 import "../app/global.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </main>
           {!isAuthPage && <Footer />}
         </AuthProvider>
+        <CookieBanner />
       </body>
     </html>
   );
