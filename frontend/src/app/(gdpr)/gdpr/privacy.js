@@ -1,18 +1,18 @@
-// frontend/src/app/%28gdpr%29/gdpr/consent.js
+// frontend/src/app/%28gdpr%29/gdpr/privacy.js
 
 import { NextApiRequest, NextApiResponse } from 'next'
 
 // Simulando base de datos temporal
 // En producción usarías un DB tipo PostgreSQL, MongoDB, etc.
-let fakeConsentDB: { [userId: string]: any } = {}
+let fakeConsentDB = {};
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req, res) {
   const { method } = req
 
   switch (method) {
     case 'GET':
       // Acceso: Devolver consentimiento del usuario
-      const userId = req.query.userId as string
+      const userId = req.query.userId
       const consentData = fakeConsentDB[userId]
       if (consentData) {
         return res.status(200).json({ consentData })
@@ -22,7 +22,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     case 'DELETE':
       // Derecho al olvido: Borrar consentimiento
-      const userIdToDelete = req.query.userId as string
+      const userIdToDelete = req.query.userId
       delete fakeConsentDB[userIdToDelete]
       return res.status(200).json({ message: 'Consentimiento eliminado.' })
 

@@ -1,19 +1,58 @@
+// frontend/src/components/gdpr/PrivacyCenter.js
 'use client';
 
-import { useState, useEffect } from 'react'
-
+import { useState, useEffect } from 'react';
 
 export default function PrivacyCenter() {
-  const [consent, setConsent] = useState(null)
-  const [complianceJson, setComplianceJson] = useState(null)
-  const [showJson, setShowJson] = useState(false)
+  const [consent, setConsent] = useState(null);
+  const [complianceJson, setComplianceJson] = useState(null);
+  const [showJson, setShowJson] = useState(false);
+
+  const [analyticsConsent, setAnalyticsConsent] = useState(false);
+  const [adsConsent, setAdsConsent] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('cookieConsent')
+    const stored = localStorage.getItem('cookie_consent');
+    const analytics = localStorage.getItem('analytics_consent') === 'true';
+    const ads = localStorage.getItem('ads_consent') === 'true';
     if (stored) {
-      setConsent(JSON.parse(stored))
+      setConsent({
+        cookie_consent: stored,
+        analytics_consent: analytics,
+        ads_consent: ads
+      });
+      setAnalyticsConsent(analytics);
+      setAdsConsent(ads);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchConsent = async () => {
+      try {
+        const res = await fetch('/api/privacy?userId=usuario123') // Simulado
+        if (res.ok) {
+          const data = await res.json()
+          setConsent(data.consentData)
+        }
+      } catch (err) {
+        console.error('Error al recuperar consentimiento:', err)
+      }
+    }
+  
+    fetchConsent()
   }, [])
+  
+
+  const updateCookieConsent = () => {
+    localStorage.setItem('cookie_consent', 'true');
+    localStorage.setItem('analytics_consent', analyticsConsent);
+    localStorage.setItem('ads_consent', adsConsent);
+    localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
+
+    alert('Tus preferencias de cookies se han actualizado.');
+    window.location.reload(); // Opcional para reinicializar GTM
+  };
+
 
   const handleDownloadData = async () => {
     try {
@@ -61,19 +100,47 @@ export default function PrivacyCenter() {
           <ul className="space-y-1">
             {Object.entries(consent).map(([key, value]) => (
               <li key={key}>
-                <span className="font-medium">{key}:</span> <span>{value}</span>
+                <span className="font-medium">{key}:</span> <span>{value ? 'Sí' : 'No'}</span>
               </li>
             ))}
           </ul>
         ) : (
           <p>No hemos registrado tu consentimiento aún.</p>
         )}
-        <button
-          onClick={() => window.dispatchEvent(new Event('openConsentModal'))}
-          className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Cambiar preferencias
-        </button>
+
+        <div className="mt-4 space-y-2">
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={analyticsConsent}
+              onChange={() => setAnalyticsConsent(!analyticsConsent)}
+            />
+            <span>Aceptar cookies de análisis (Google Analytics)</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={adsConsent}
+              onChange={() => setAdsConsent(!adsConsent)}
+            />
+            <span>Aceptar cookies de marketing (Google Ads, Meta Ads)</span>
+          </label>
+        </div>
+
+        <div className="mt-4 flex space-x-3">
+          <button
+            onClick={updateCookieConsent}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Guardar preferencias
+          </button>
+          <button
+            onClick={() => window.dispatchEvent(new Event('openConsentModal'))}
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+          >
+            Abrir banner de consentimiento
+          </button>
+        </div>
       </section>
 
       <section className="bg-white p-4 rounded-xl shadow">

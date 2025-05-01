@@ -1733,3 +1733,545 @@ For any questions regarding our data protection practices, please contact us at:
 ---
 
 Este documento puede ser adaptado a tus necesidades específicas y será útil para garantizar la transparencia en el tratamiento de datos personales. ¿Necesitas algún ajuste o adición?
+
+Gracias por compartir todos los detalles, estructura y componentes de tu proyecto. Estás bastante cerca de tener una implementación de privacidad **enterprise-grade** y 100 % **GDPR/CCPA compliant**. Te indico paso a paso cómo **integrar mi solución** con tu setup existente de Next.js (`/app`) y TypeScript, respetando tu diseño y arquitectura:
+
+---
+
+### ✅ 1. **Integración del Cookie Banner & Consent Mode**
+
+Ya estás utilizando `app/layout.tsx`, lo cual es compatible. Sustituye la sección del banner y añade los scripts de Consent Mode dentro de `app/layout.tsx`.
+
+#### 🔧 Actualiza tu `layout.tsx` así:
+
+```tsx
+// frontend/src/app/layout.tsx
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import Script from 'next/script';
+import { AuthProvider } from "@/lib/auth/context";
+import Navbar from "@/components/web/Navbar";
+import Footer from "@/components/web/Footer";
+import CookieBanner from '@/components/gdpr/CookieBanner';
+import { GTM_ID } from "@/lib/gtm"; // asegúrate de tener esto en .env o lib/gtm.ts
+import "../app/global.css";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isAuthPage = pathname?.startsWith("/user/auth") || pathname?.startsWith("/(auth)");
+
+  return (
+    <html lang="es">
+      <head>
+        {/* GTAG & Consent Mode (Google) */}
+        <Script
+          id="gtag-consent"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                ad_storage: 'denied',
+                analytics_storage: 'denied',
+                functionality_storage: 'denied',
+                personalization_storage: 'denied',
+                security_storage: 'granted'
+              });
+            `,
+          }}
+        />
+        <Script
+          id="gtm-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen flex flex-col bg-gray-100">
+        <AuthProvider>
+          {!isAuthPage && <Navbar />}
+          <main className="flex-grow w-full pt-20 pb-16 md:pb-0">
+            {children}
+          </main>
+          {!isAuthPage && <Footer />}
+        </AuthProvider>
+
+        {/* Banner de cookies */}
+        <CookieBanner />
+
+        {/* NoScript fallback para GTM */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+### ✅ 2. **Integrar el Privacy Center**
+
+Ya generamos `/privacy/page.tsx`, asegúrate de tener la ruta activa. Enlázalo desde el **Footer** con este fragmento:
+
+#### 📌 Añade este `FooterLink`:
+
+```tsx
+<FooterLink href="/privacy">
+  <Gavel fontSize="small" /> Centro de Privacidad
+</FooterLink>
+```
+
+Y opcionalmente:
+
+```tsx
+<FooterLink href="/assets/gdpr-compliance-statement.json" download>
+  <Gavel fontSize="small" /> Declaración de Cumplimiento
+</FooterLink>
+```
+
+---
+
+### ✅ 3. **Archivos JSON legales en `/public/assets/`**
+
+Coloca los archivos `privacy-policy.json`, `gdpr-compliance-statement.json`, etc., dentro de:
+
+```
+/public/assets/
+```
+
+Esto los hace accesibles vía URL pública, por ejemplo:  
+`https://tusitio.com/assets/gdpr-compliance-statement.json`
+
+---
+
+### ✅ 4. **Consent Mode Toggle Manual**
+
+Incluye el botón en el **Footer** (o donde quieras) para cambiar el consentimiento fácilmente:
+
+```tsx
+<button
+  onClick={() => window.dispatchEvent(new Event("openConsentSettings"))}
+  style={{
+    padding: '10px 15px',
+    backgroundColor: '#0070f3',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    marginTop: '1rem',
+  }}
+>
+  Cambiar preferencias de cookies
+</button>
+```
+
+Este botón puede abrir el banner forzadamente (`forceShow`) si está programado así en tu componente `CookieBanner`.
+
+---
+
+### ✅ 5. **Checklist de cumplimiento legal (GDPR/CCPA/CPRA)**
+
+Ya estás **cubriendo** todos estos puntos:
+
+| Cumplimiento | Estado |
+|--------------|--------|
+| Consent Mode Google | ✅ Implementado |
+| Gestión granular de consentimiento | ✅ Implementado |
+| Política de privacidad descargable | ✅ JSON y página |
+| Privacy Center | ✅ Interactivo |
+| Botón “No vender mi info” (CCPA) | ✅ En footer |
+| Declaración de cumplimiento (GDPR) | ✅ Generada |
+| DPIA, DPA y textos contractuales básicos | ✅ Generados |
+| Visor de preferencias | ✅ Integrado |
+
+---
+
+### ✅ 6. **Siguientes pasos recomendados**
+
+- [ ] Enlace a `/privacy` desde el **navbar**, si es relevante.
+- [ ] Validar que `gtm.js` solo se ejecuta después de consentimiento.
+- [ ] Registrar tu sitio en la base de datos de privacidad global (opcional).
+- [ ] Enviar logs de consentimiento si decides usar analítica avanzada.
+- [ ] Traducir las políticas a otros idiomas si tienes tráfico global.
+
+---
+
+¿Quieres que te prepare una última verificación de código para asegurarnos que todo esté perfectamente enlazado en producción?
+
+| Botón                        | Enlace / Acción                         | Contenido                                                   |
+|-----------------------------|-----------------------------------------|-------------------------------------------------------------|
+| Descargar mis datos         | `POST /api/privacy/download`            | Datos personales del usuario (JSON/ZIP export).            |
+| Solicitar eliminación       | `POST /api/privacy/delete`              | Solicitud de supresión bajo Art. 17 del GDPR.              |
+| Descargar JSON              | `/assets/compliance-docs.json` (descarga) | Registro legal de cumplimiento (ROPA, DPIA, retención...). |
+| Ver en línea                | `fetch('/assets/compliance-docs.json')` | Visualización en pantalla de lo anterior.                  |
+
+
+Gracias por compartir todos los archivos. He revisado la implementación y te hago un resumen claro de cuál banner de cookies deberías usar **y por qué**, además de observaciones clave para asegurar la funcionalidad y cumplimiento en producción.
+
+---
+
+### ✅ **Recomendación principal**
+**Usa `CookieConsentBanner.js`** como componente principal para el consentimiento por las siguientes razones:
+
+---
+
+### 🟢 Ventajas de `CookieConsentBanner.js` (el más completo)
+1. **Control granular**: Permite al usuario aceptar de forma separada cookies de análisis (Google Analytics) y marketing (Ads).
+2. **Expiración del consentimiento**: Integra `hasConsentExpired`, lo cual es esencial para el cumplimiento legal (consentimiento debe renovarse tras cierto tiempo, en este caso 180 días).
+3. **Integración directa con GTM**:
+   - Llama a `injectGTM()` solo cuando hay consentimiento válido.
+   - Llama a `consentUpdate()` con los valores correctos para `gtag('consent', 'update', …)`.
+4. **Registro de timestamp**: Guarda un `cookie_consent_timestamp`, fundamental para auditar si el consentimiento es válido.
+5. **Adaptabilidad**: Tiene `forceShow`, útil si quieres forzar mostrarlo desde otro componente o en alguna ruta específica (como `/privacy`).
+
+---
+
+### 🔴 Desventajas de `CookieBanner.tsx`
+1. **No registra fecha del consentimiento** → no puedes verificar expiración.
+2. **No gestiona consentimiento granular** → es solo "aceptar todo" o "rechazar todo".
+3. **No interactúa con `injectGTM()`** → podrías cargar scripts de Google sin consentimiento (muy grave legalmente).
+4. **Inconsistente con `gtm.js`**: maneja el consentimiento como `cookie-consent` (en vez de `cookie_consent`, `analytics_consent`, etc.), generando incompatibilidades si otros componentes esperan estructura específica.
+
+---
+
+### 🎯 Verificación para Producción
+
+Asegúrate de lo siguiente:
+- [ ] En `injectGTM()` reemplaza los placeholders `'G-XXXXXXX'` por `GTM_ID` dinámico, por ejemplo:
+   ```js
+   script.src = `https://www.googletagmanager.com/gtag/js?id=${GTM_ID}`;
+   ...
+   gtag('config', '${GTM_ID}');
+   ```
+- [ ] Incluye `CookieConsentBanner` en `_app.js` o el layout principal, antes de cargar cualquier librería que use cookies.
+- [ ] Revisa que `GTM_ID` esté definido como `NEXT_PUBLIC_GTM_ID` en el entorno de producción (`.env.production`).
+
+---
+
+### 🧩 Integración con PrivacyCenter
+
+El componente `PrivacyCenter` ya está bien alineado con el almacenamiento de consentimiento (`cookieConsent`, `analytics_consent`, etc.), por lo que **funciona correctamente con `CookieConsentBanner.js`**. Solo asegúrate que toda la lógica de consentimiento (lectura, escritura, timestamp) esté centralizada.
+
+---
+
+### ✅ Conclusión
+
+**Elimina `CookieBanner.tsx` y mantén solo `CookieConsentBanner.js`**. Es el único que:
+- Cumple con el RGPD de forma completa,
+- Se alinea con tu lógica en `gtm.js`,
+- Facilita auditorías y control granular.
+
+¿Quieres que te ayude a integrarlo automáticamente en tu layout principal (`_app.js`, `layout.js`, o similar)?
+
+Tu código está bien estructurado y utiliza prácticas modernas de desarrollo con React, Next.js y Material UI. Sin embargo, hay algunas mejoras, correcciones y sugerencias importantes que podrían ayudarte a afinarlo:
+
+---
+
+### ✅ **Observaciones clave y mejoras sugeridas**
+
+#### 1. **Botón "No vender ni compartir mi información" está fuera del componente**
+Actualmente, el botón está definido **fuera del componente `Footer()`**. Eso es un error de sintaxis JSX que causará una excepción de compilación.
+
+🔧 **Solución: muévelo dentro del `return`** del componente, en una ubicación lógica dentro del render:
+
+```tsx
+<Box sx={{ mt: 3 }}>
+  <button
+    onClick={doNotSellMyInfo}
+    style={{
+      padding: '10px 15px',
+      backgroundColor: '#f44336',
+      color: 'white',
+      borderRadius: '8px',
+      marginTop: '20px',
+      cursor: 'pointer'
+    }}
+  >
+    No vender ni compartir mi información personal
+  </button>
+</Box>
+```
+
+Ponlo, por ejemplo, al final de la columna de **"Información"** o **"Contacto"**, según tenga más sentido.
+
+---
+
+#### 2. **`Metadata` no debe ir dentro del componente**
+Tu variable `metadata` en `layout.tsx` no se usa. Además, `Metadata` **no debe declararse dentro de un componente cliente**, ya que es solo válida para layouts o páginas **server-side**.
+
+🔧 Si necesitas definir `metadata` en `layout.tsx`, hazlo fuera del componente como export:
+
+```tsx
+// layout.tsx (si estuviera en modo servidor)
+export const metadata: Metadata = {
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+};
+```
+
+Pero como estás usando `"use client"` en este layout, **no puedes** usar `metadata` así. En este caso, deberías mover esta definición a un `layout.tsx` **server component** en una carpeta superior (`app/(main)/layout.tsx`, por ejemplo).
+
+---
+
+#### 3. **Control global de tema no implementado**
+Estás cambiando el estado local del tema (`currentTheme`), pero no afecta a la app realmente.
+
+🔧 Si usas MUI, deberías manejar el tema globalmente con un `ThemeProvider` envolviendo tu app (por ejemplo, dentro de `AuthProvider` o paralelamente). Luego, podrías cambiar el tema dinámicamente y propagarlo con un context.
+
+¿Quieres que te muestre cómo hacerlo correctamente?
+
+---
+
+#### 4. **Accesibilidad del botón de tema**
+En el botón de modo oscuro/claro, faltan atributos de accesibilidad como `aria-label`.
+
+🔧 Ejemplo:
+```tsx
+<IconButton
+  onClick={toggleTheme}
+  aria-label="Cambiar tema"
+  ...
+>
+```
+
+---
+
+#### 5. **Posible mejora en `useEffect` para `loadTime`**
+Tu cálculo de tiempo de carga no tiene mucho sentido ya que `performance.now()` y `window.load` no están sincronizados con precisión si el componente ya se montó.
+
+🔧 Mejor usar `performance.timing` (aunque está obsoleto en algunos navegadores), o considerar medir con una librería especializada (e.g., `web-vitals`).
+
+---
+
+#### 6. **Separación de lógica de consentimiento**
+Tienes lógica de consentimiento repetida y mezclada con el UI. Una mejora sería encapsularla en un `useConsent()` hook reutilizable que maneje el estado y persistencia en `localStorage`.
+
+---
+
+### ✅ En resumen:
+- [ ] Mueve el botón GDPR **dentro** del componente `Footer`.
+- [ ] Elimina o traslada `metadata` a un layout server-side.
+- [ ] Implementa el cambio de tema a nivel global con `ThemeProvider`.
+- [ ] Mejora la accesibilidad con `aria-label`.
+- [ ] Mejora el cálculo de `loadTime` o considera eliminarlo si no es confiable.
+- [ ] Refactoriza la lógica de consentimiento si planeas escalarla.
+
+---
+
+¿Te gustaría que te prepare un hook para gestionar el cambio de tema y/o el consentimiento de cookies de forma más limpia?
+
+Perfecto, aquí tienes dos hooks reutilizables:
+
+---
+
+## ✅ 1. `useThemeToggle` – Cambiar entre modo claro y oscuro con persistencia en `localStorage`
+
+```tsx
+// src/hooks/useThemeToggle.ts
+import { useEffect, useState } from "react";
+
+const THEME_KEY = "theme_preference";
+
+export type ThemeMode = "light" | "dark";
+
+export function useThemeToggle(): [ThemeMode, () => void] {
+  const [theme, setTheme] = useState<ThemeMode>("light");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem(THEME_KEY) as ThemeMode | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.setAttribute("data-theme", storedTheme);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem(THEME_KEY, newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  return [theme, toggleTheme];
+}
+```
+
+🔧 Esto asume que en tu CSS o theme de MUI reaccionas a `data-theme="dark"` / `"light"`.
+
+---
+
+## ✅ 2. `useCookieConsent` – Manejo de consentimiento de cookies
+
+```tsx
+// src/hooks/useCookieConsent.ts
+import { useEffect, useState } from "react";
+
+type ConsentState = {
+  cookie: boolean;
+  analytics: boolean;
+  ads: boolean;
+};
+
+const defaultConsent: ConsentState = {
+  cookie: false,
+  analytics: false,
+  ads: false,
+};
+
+export function useCookieConsent() {
+  const [consent, setConsent] = useState<ConsentState>(defaultConsent);
+
+  useEffect(() => {
+    const stored = {
+      cookie: localStorage.getItem("cookie_consent") === "true",
+      analytics: localStorage.getItem("analytics_consent") === "true",
+      ads: localStorage.getItem("ads_consent") === "true",
+    };
+    setConsent(stored);
+  }, []);
+
+  const updateConsent = (newConsent: ConsentState) => {
+    setConsent(newConsent);
+    localStorage.setItem("cookie_consent", String(newConsent.cookie));
+    localStorage.setItem("analytics_consent", String(newConsent.analytics));
+    localStorage.setItem("ads_consent", String(newConsent.ads));
+    localStorage.setItem("cookie_consent_timestamp", Date.now().toString());
+  };
+
+  const rejectAll = () => {
+    updateConsent({ cookie: false, analytics: false, ads: false });
+  };
+
+  return { consent, updateConsent, rejectAll };
+}
+```
+
+---
+
+### ✅ Cómo usarlos
+
+#### En tu Footer (modo oscuro):
+```tsx
+const [theme, toggleTheme] = useThemeToggle();
+```
+
+#### Para el botón GDPR:
+```tsx
+const { rejectAll } = useCookieConsent();
+
+<button onClick={rejectAll}>No vender ni compartir mi información</button>
+```
+
+---
+
+¿Quieres que los integre en tu código actual para que lo veas todo junto?
+
+Perfecto. Para lograr un cumplimiento **enterprise-level del GDPR**, tu aplicación ya contempla varias funciones clave. A continuación te resumo **qué enlaces deben apuntar a qué endpoints o archivos**, con base en los botones mencionados:
+
+---
+
+## 🔐 Sección: Gestión de datos personales
+
+### 1. ✅ **Descargar mis datos**
+
+- **Botón:** `Descargar mis datos`
+- **Enlace/acción:**  
+  Llama a un endpoint como:
+
+```ts
+POST /api/privacy/download
+```
+
+- Este endpoint debe generar y retornar un archivo `.json` o `.zip` con todos los datos personales asociados al usuario autenticado.
+- Ya lo estás implementando con:
+  ```js
+  const res = await fetch('/api/privacy/download', { method: 'POST' })
+  ```
+
+---
+
+### 2. ✅ **Solicitar eliminación**
+
+- **Botón:** `Solicitar eliminación`
+- **Enlace/acción:**  
+  Llama a un endpoint como:
+
+```ts
+POST /api/privacy/delete
+```
+
+- Este endpoint debería:
+  - Registrar la solicitud.
+  - Enviar confirmación por email o notificar al equipo legal.
+  - Iniciar el proceso de supresión del usuario conforme al Artículo 17 del GDPR.
+
+---
+
+## 📄 Sección: Documentación de cumplimiento
+
+### 3. ✅ **Descargar JSON**
+
+- **Botón:** `Descargar JSON`
+- **Archivo:**  
+  Este debe enlazar a tu documento de cumplimiento:
+
+```txt
+/assets/compliance-docs.json
+```
+
+- Este archivo debería contener:
+  - Registro de actividades de tratamiento (ROPA).
+  - Evaluación de impacto (DPIA).
+  - Política de retención.
+  - Bases legales de tratamiento.
+  - Detalles de proveedores subprocesadores.
+
+#### Ejemplo de enlace:
+```tsx
+<a href="/assets/compliance-docs.json" download>Descargar JSON</a>
+```
+
+---
+
+### 4. ✅ **Ver en línea**
+
+- **Botón:** `Ver en línea`
+- **Acción:**  
+  Carga el mismo `/assets/compliance-docs.json` en pantalla (lo haces bien con `fetchComplianceJson` y `setShowJson`).
+
+---
+
+## ✅ Resumen Final
+
+| Botón                        | Enlace / Acción                         | Contenido                                                   |
+|-----------------------------|-----------------------------------------|-------------------------------------------------------------|
+| Descargar mis datos         | `POST /api/privacy/download`            | Datos personales del usuario (JSON/ZIP export).            |
+| Solicitar eliminación       | `POST /api/privacy/delete`              | Solicitud de supresión bajo Art. 17 del GDPR.              |
+| Descargar JSON              | `/assets/compliance-docs.json` (descarga) | Registro legal de cumplimiento (ROPA, DPIA, retención...). |
+| Ver en línea                | `fetch('/assets/compliance-docs.json')` | Visualización en pantalla de lo anterior.                  |
+
+---
+
+¿Quieres que te ayude a generar un ejemplo del contenido legal mínimo que debería tener el `compliance-docs.json` para un entorno serio y conforme?
+
+
