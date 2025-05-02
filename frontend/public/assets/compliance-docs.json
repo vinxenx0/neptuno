@@ -1,0 +1,53 @@
+{
+    "empresa": "Tu Empresa S.A.",
+    "responsable_del_tratamiento": {
+      "nombre": "Nombre del DPO",
+      "email": "privacy@tuempresa.com",
+      "telefono": "+34 900 123 456"
+    },
+    "ropa": [
+      {
+        "actividad": "Gestión de cuentas de usuario",
+        "categorias_datos": ["Nombre", "Email", "Contraseña cifrada", "Dirección IP"],
+        "base_legal": "Ejecución de un contrato",
+        "finalidad": "Permitir el acceso a servicios personalizados",
+        "tiempo_conservacion": "5 años desde la última actividad"
+      },
+      {
+        "actividad": "Análisis de tráfico (Google Analytics)",
+        "categorias_datos": ["Dirección IP anonimizada", "Eventos de navegación"],
+        "base_legal": "Consentimiento",
+        "finalidad": "Mejorar la experiencia de usuario",
+        "tiempo_conservacion": "26 meses"
+      },
+      {
+        "actividad": "Publicidad personalizada",
+        "categorias_datos": ["Cookies de marketing", "IDs de dispositivo"],
+        "base_legal": "Consentimiento",
+        "finalidad": "Mostrar anuncios relevantes",
+        "tiempo_conservacion": "180 días"
+      }
+    ],
+    "subencargados": [
+      {
+        "proveedor": "Google Ireland Ltd.",
+        "servicio": "Google Analytics, Google Ads",
+        "ubicacion": "UE y EE.UU.",
+        "garantias": "Cláusulas contractuales tipo"
+      },
+      {
+        "proveedor": "Meta Platforms Ireland",
+        "servicio": "Facebook Ads",
+        "ubicacion": "UE",
+        "garantias": "Cláusulas contractuales tipo"
+      }
+    ],
+    "evaluacion_impacto": {
+      "fecha": "2024-03-10",
+      "riesgos_identificados": ["Robo de credenciales", "Rastreo de comportamiento no consentido"],
+      "medidas_mitigacion": ["Encriptación de datos sensibles", "Consentimiento explícito granular", "Revisión anual de políticas"]
+    },
+    "version": "1.0.0",
+    "ultima_actualizacion": "2025-04-30"
+  }
+  

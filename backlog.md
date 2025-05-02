@@ -1,4 +1,21 @@
 
+GDPR
+
+
+-- footer do not sell my personal info
+-- implementar la lógica para enviar preferencias al backend
+-- implantar privacy center
+-- ubicación correcta archivos
+-- implantar apis
+-- terminar implantacion whistblower
+-- meter el site settings para mostrar u ocultar
+-- 
+./src/components/gdpr/CookieConsentBanner.js
+36:6  Warning: React Hook useEffect has a missing dependency: 'onShow'. Either include it or remove the dependency array. If 'onShow' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+
+
+
+
 
 - AL PROMPT: Info el MVP ya esta desplegado en producción
 - Continuamos

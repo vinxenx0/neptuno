@@ -1,3 +1,4 @@
+
 import { NeptunoConfig } from "@/types/config";
 
 export const generateEnvFile = (config: NeptunoConfig): string => {
@@ -6,6 +7,26 @@ export const generateEnvFile = (config: NeptunoConfig): string => {
     `DOMAIN=${config.project.domain}`,
     `PROXY=${config.project.proxy}`,
     "",
+    "# Git Configuration",
+    `GIT_REPO_URL=${config.environment.gitRepoUrl}`,
+    `GIT_USER=${config.environment.gitUser}`,
+    `GIT_TOKEN=${config.environment.gitToken}`,
+    `INSTALL_DIRECTORY=${config.environment.installDirectory}`,
+    "",
+    "# Project Features",
+    `DEMO_SITE=${config.project.isDemo}`,
+    `DEFAULT_TEMPLATES=${config.project.hasTemplates}`,
+    `SDK=${config.project.hasSDK}`,
+    `CACHE=${config.project.hasCache}`,
+    `GRAPHQL=${config.project.hasGraphQL}`,
+    `DOCS=${config.project.hasDocs}`,
+    "",
+    "# Admin Credentials",
+    `ADMIN_EMAIL=${config.project.adminEmail}`,
+    `ADMIN_PASSWORD=${config.project.adminPassword}`,
+    "",
+    "# Environment",
+    `ENVIRONMENT=${config.environment.mode}`,
     `DEBUG=${config.environment.debug}`,
     "",
     "# Server Backend",
