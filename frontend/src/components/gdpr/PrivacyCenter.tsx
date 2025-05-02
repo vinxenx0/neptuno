@@ -29,6 +29,7 @@ import {
   Description as DocumentTextIcon, 
   Mail as EnvelopeIcon 
 } from '@mui/icons-material'
+import { consentUpdate, injectGTM } from '../../lib/gdpr/gtm'
 
 export default function PrivacyCenter() {
   const [activeTab, setActiveTab] = useState(0)
@@ -37,6 +38,7 @@ export default function PrivacyCenter() {
   const [showJson, setShowJson] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [dataRequests, setDataRequests] = useState([])
+  
   
   // Estado para controles de consentimiento
   const [analyticsConsent, setAnalyticsConsent] = useState(false)
@@ -85,13 +87,18 @@ export default function PrivacyCenter() {
   }, [])
 
   const updateCookieConsent = () => {
-    localStorage.setItem('cookie_consent', 'true')
-    localStorage.setItem('analytics_consent', analyticsConsent.toString())
-    localStorage.setItem('ads_consent', adsConsent.toString())
-    localStorage.setItem('cookie_consent_timestamp', Date.now().toString())
-
-    alert('Tus preferencias de cookies se han actualizado.')
-    window.location.reload() // Opcional para reinicializar GTM
+    // Actualiza estados globales
+    localStorage.setItem('cookie_consent', 'true');
+    localStorage.setItem('analytics_consent', analyticsConsent.toString());
+    localStorage.setItem('ads_consent', adsConsent.toString());
+    localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
+  
+    // Aplica lógica de GTM
+    consentUpdate(analyticsConsent, adsConsent);
+    injectGTM();
+  
+    alert('Tus preferencias de cookies se han actualizado.');
+    window.location.reload(); // Opcional
   }
 
   const handleDownloadData = async () => {

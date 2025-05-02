@@ -5,7 +5,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <CookieConsentBanner onClose={undefined} />
+      <CookieConsentBanner onClose={undefined} onShow={undefined} />
     </>
   )
 }
