@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth/context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import fetchAPI from "@/lib/api";
+import StoreIcon from "@mui/icons-material/Store";
 import {
   Button,
   Avatar,
@@ -25,7 +26,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-  Badge
+  Badge,
 } from "@mui/material";
 import {
   MonetizationOn,
@@ -47,25 +48,27 @@ import {
   Key,
   LocalActivity,
   Mail,
-  Favorite
+  Favorite,
 } from "@mui/icons-material";
 import Image from "next/image";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { CartItem } from "@/lib/types";
 
 const MobileBottomNav = styled(Box)(({ theme }) => ({
-  position: 'fixed',
+  position: "fixed",
   bottom: 0,
   left: 0,
   right: 0,
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
+  background: "rgba(255, 255, 255, 0.1)",
+  backdropFilter: "blur(10px)",
   borderTop: `1px solid ${theme.palette.divider}`,
   padding: theme.spacing(1),
   zIndex: 999,
-  justifyContent: 'space-around',
-  alignItems: 'center',
-  display: 'flex',
-  [theme.breakpoints.up('md')]: {
-    display: 'none',
+  justifyContent: "space-around",
+  alignItems: "center",
+  display: "flex",
+  [theme.breakpoints.up("md")]: {
+    display: "none",
   },
 }));
 
@@ -90,15 +93,25 @@ const NavContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 1
+    gap: 1,
   },
 }));
 
 export default function Navbar() {
   const theme = useTheme();
   const pathname = usePathname();
-  const { user, credits, gamification, coupons, setCredits, setGamification, logout } = useAuth();
-  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
+  const {
+    user,
+    credits,
+    gamification,
+    coupons,
+    setCredits,
+    setGamification,
+    logout,
+  } = useAuth();
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [disableCredits, setDisableCredits] = useState(false);
   const [enableRegistration, setEnableRegistration] = useState(true);
@@ -109,6 +122,15 @@ export default function Navbar() {
   const [anonUsername, setAnonUsername] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [newBadge, setNewBadge] = useState<string | null>(null);
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      const { data } = await fetchAPI<CartItem[]>("/v1/marketplace/cart");
+      setCartItemsCount(data?.length || 0);
+    };
+    fetchCartCount();
+  }, []);
 
   useEffect(() => {
     const storedAnonUsername = localStorage.getItem("anonUsername");
@@ -133,12 +155,26 @@ export default function Navbar() {
           fetchAPI("/v1/settings/enable_badges"),
           fetchAPI("/v1/settings/enable_payment_methods"),
         ]);
-        setDisableCredits(disableCreditsRes.data === "true" || disableCreditsRes.data === true);
-        setEnableRegistration(enableRegistrationRes.data === "true" || enableRegistrationRes.data === true);
-        setEnablePoints(enablePointsRes.data === "true" || enablePointsRes.data === true);
-        setEnableCoupons(enableCouponsRes.data === "true" || enableCouponsRes.data === true);
-        setEnableBadges(enableBadgesRes.data === "true" || enableBadgesRes.data === true);
-        setEnablePaymentMethods(enablePaymentMethodsRes.data === "true" || enablePaymentMethodsRes.data === true);
+        setDisableCredits(
+          disableCreditsRes.data === "true" || disableCreditsRes.data === true
+        );
+        setEnableRegistration(
+          enableRegistrationRes.data === "true" ||
+            enableRegistrationRes.data === true
+        );
+        setEnablePoints(
+          enablePointsRes.data === "true" || enablePointsRes.data === true
+        );
+        setEnableCoupons(
+          enableCouponsRes.data === "true" || enableCouponsRes.data === true
+        );
+        setEnableBadges(
+          enableBadgesRes.data === "true" || enableBadgesRes.data === true
+        );
+        setEnablePaymentMethods(
+          enablePaymentMethodsRes.data === "true" ||
+            enablePaymentMethodsRes.data === true
+        );
       } catch (err) {
         console.error("Error al obtener configuraciones:", err);
       }
@@ -160,7 +196,9 @@ export default function Navbar() {
           setCredits(infoData.credits);
         }
 
-        const { data: gamificationData } = await fetchAPI("/v1/gamification/me");
+        const { data: gamificationData } = await fetchAPI(
+          "/v1/gamification/me"
+        );
         if (gamificationData && Array.isArray(gamificationData)) {
           const totalPoints = enablePoints
             ? gamificationData.reduce((sum, g) => sum + g.points, 0)
@@ -169,9 +207,13 @@ export default function Navbar() {
             ? gamificationData.map((g) => g.badge).filter((b) => b !== null)
             : [];
 
-          const previousBadges = JSON.parse(localStorage.getItem("badges") || "[]");
+          const previousBadges = JSON.parse(
+            localStorage.getItem("badges") || "[]"
+          );
           const currentBadgeIds = badges.map((b) => b.id);
-          const newBadges = currentBadgeIds.filter((id) => !previousBadges.includes(id));
+          const newBadges = currentBadgeIds.filter(
+            (id) => !previousBadges.includes(id)
+          );
           if (newBadges.length > 0 && enableBadges) {
             const badge = badges.find((b) => b.id === newBadges[0]);
             setNewBadge(badge?.name || "Nuevo badge");
@@ -227,12 +269,14 @@ export default function Navbar() {
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Link href="/" passHref>
-                <Box sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  cursor: "pointer"
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    cursor: "pointer",
+                  }}
+                >
                   <Image
                     src="/logo.png"
                     alt="Logo Neptuno"
@@ -247,9 +291,9 @@ export default function Navbar() {
                     sx={{
                       fontWeight: "bold",
                       display: {
-                        xs: 'none',
-                        md: 'block'
-                      }
+                        xs: "none",
+                        md: "block",
+                      },
                     }}
                   >
                     Neptuno
@@ -260,11 +304,13 @@ export default function Navbar() {
           </Box>
 
           {/* Sección derecha: Elementos específicos para móvil */}
-          <Box sx={{ 
-            display: { xs: "flex", md: "none" },
-            alignItems: "center",
-            gap: 1
-          }}>
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
             {/* Mensajes */}
             <Tooltip title="Mensajes (próximamente)">
               <IconButton sx={{ color: theme.palette.text.disabled }}>
@@ -279,6 +325,15 @@ export default function Navbar() {
               </IconButton>
             </Tooltip>
 
+            {/* Marketplace */}
+            <Tooltip title="Marketplace">
+              <Link href="/checkout" passHref>
+              <IconButton sx={{ color: theme.palette.text.disabled }}>
+                <ShoppingCartIcon />
+              </IconButton>
+              </Link>
+            </Tooltip>
+
             {/* Settings solo para admin */}
             {user?.rol === "admin" && (
               <IconButton
@@ -291,36 +346,71 @@ export default function Navbar() {
           </Box>
 
           {/* Sección derecha: Versión desktop */}
-          <Box sx={{ 
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            gap: 2
-          }}>
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
             {/* Enlaces desktop */}
             <Box sx={{ display: "flex", gap: 2, mr: 1 }}>
               <Button
                 component={Link}
                 href="/ejemplos"
-                className={pathname === '/ejemplos' ? 'active-link' : ''}
+                className={pathname === "/ejemplos" ? "active-link" : ""}
               >
                 Ejemplos
               </Button>
               <Button
                 component={Link}
                 href="/rankings"
-                className={pathname === '/rankings' ? 'active-link' : ''}
+                className={pathname === "/rankings" ? "active-link" : ""}
               >
                 Rankings
               </Button>
             </Box>
 
-            {/* Iconos de notificaciones */}
+            {/* Iconos de notificaciones - Orden modificado */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {/* Nuevo orden: corazón primero */}
+              <Tooltip title="Likes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Favorite />
+                </IconButton>
+              </Tooltip>
+
+              {/* Mensaje segundo */}
+              <Tooltip title="Mensajes (próximamente)">
+                <IconButton sx={{ color: theme.palette.text.disabled }}>
+                  <Mail />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Marketplace">
+              <Link href="/marketplace" passHref>
+                <IconButton sx={{ color: theme.palette.text.primary }}>
+                  <StoreIcon />
+                </IconButton>
+              </Link>
+            </Tooltip>
+            {/* Carrito existente */}
+            <Link href="/checkout" passHref>
+              <IconButton className="notification-icon">
+                <Badge badgeContent={cartItemsCount} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Link>
+
+              {/* Créditos tercero */}
               {!disableCredits && credits > 0 && (
                 <Link href="/user/transactions" passHref>
                   <IconButton className="notification-icon">
                     <MonetizationOn />
-                    <span className="notification-badge credits-badge">{credits}</span>
+                    <span className="notification-badge credits-badge">
+                      {credits}
+                    </span>
                   </IconButton>
                 </Link>
               )}
@@ -343,7 +433,9 @@ export default function Navbar() {
                     <Link href="/user/points" passHref>
                       <IconButton className="notification-icon">
                         <Star />
-                        <span className="notification-badge points-badge">{gamification.points}</span>
+                        <span className="notification-badge points-badge">
+                          {gamification.points}
+                        </span>
                       </IconButton>
                     </Link>
                   )}
@@ -351,24 +443,14 @@ export default function Navbar() {
                     <Link href="/user/badges" passHref>
                       <IconButton className="notification-icon">
                         <EmojiEvents />
-                        <span className="notification-badge badges-badge">{gamification.badges.length}</span>
+                        <span className="notification-badge badges-badge">
+                          {gamification.badges.length}
+                        </span>
                       </IconButton>
                     </Link>
                   )}
                 </>
               )}
-
-              <Tooltip title="Mensajes (próximamente)">
-                <IconButton sx={{ color: theme.palette.text.disabled }}>
-                  <Mail />
-                </IconButton>
-              </Tooltip>
-              
-              <Tooltip title="Likes (próximamente)">
-                <IconButton sx={{ color: theme.palette.text.disabled }}>
-                  <Favorite />
-                </IconButton>
-              </Tooltip>
             </Box>
 
             {/* Menú admin y usuario */}
@@ -395,19 +477,39 @@ export default function Navbar() {
                       },
                     }}
                   >
-                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/dashboard">
+                    <MenuItem
+                      onClick={handleSettingsMenuClose}
+                      component={Link}
+                      href="/admin/dashboard"
+                    >
                       <Dashboard sx={{ mr: 1 }} /> Config
                     </MenuItem>
-                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/gamification">
+                    <MenuItem
+                      onClick={handleSettingsMenuClose}
+                      component={Link}
+                      href="/admin/gamification"
+                    >
                       <EmojiEvents sx={{ mr: 1 }} /> Gamification
                     </MenuItem>
-                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/revenues">
+                    <MenuItem
+                      onClick={handleSettingsMenuClose}
+                      component={Link}
+                      href="/admin/revenues"
+                    >
                       <MonetizationOn sx={{ mr: 1 }} /> Revenues
                     </MenuItem>
-                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/registry">
+                    <MenuItem
+                      onClick={handleSettingsMenuClose}
+                      component={Link}
+                      href="/admin/registry"
+                    >
                       <ListAlt sx={{ mr: 1 }} /> Registros
                     </MenuItem>
-                    <MenuItem onClick={handleSettingsMenuClose} component={Link} href="/admin/users">
+                    <MenuItem
+                      onClick={handleSettingsMenuClose}
+                      component={Link}
+                      href="/admin/users"
+                    >
                       <People sx={{ mr: 1 }} /> Usuarios
                     </MenuItem>
                   </Menu>
@@ -421,48 +523,66 @@ export default function Navbar() {
                     href="/user/dashboard"
                     className="user-avatar"
                   >
-                    <Avatar sx={{
-                      bgcolor: theme.palette.primary.main,
-                      width: 40,
-                      height: 40,
-                      fontSize: '1rem'
-                    }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: theme.palette.primary.main,
+                        width: 40,
+                        height: 40,
+                        fontSize: "1rem",
+                      }}
+                    >
                       {user.username[0].toUpperCase()}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
               ) : (
-                <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
-                  <Box sx={{ position: 'relative' }}>
+                <Tooltip
+                  title={anonUsername ? "Iniciar sesión" : "Registrarse"}
+                  arrow
+                >
+                  <Box sx={{ position: "relative" }}>
                     <IconButton
                       component={Link}
-                      href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+                      href={
+                        anonUsername
+                          ? "/user/auth/#login"
+                          : "/user/auth/#register"
+                      }
                       className="user-avatar"
                     >
-                      <Avatar sx={{
-                        bgcolor: theme.palette.grey[500],
-                        width: 40,
-                        height: 40,
-                        color: theme.palette.common.white
-                      }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.grey[500],
+                          width: 40,
+                          height: 40,
+                          color: theme.palette.common.white,
+                        }}
+                      >
                         {anonUsername ? <Person /> : <Key />}
                       </Avatar>
                     </IconButton>
                     {anonUsername && (
-                      <Box sx={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        backgroundColor: theme.palette.secondary.main,
-                        borderRadius: '50%',
-                        width: 20,
-                        height: 20,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: `2px solid ${theme.palette.background.paper}`
-                      }}>
-                        <Key sx={{ fontSize: 12, color: theme.palette.common.white }} />
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          backgroundColor: theme.palette.secondary.main,
+                          borderRadius: "50%",
+                          width: 20,
+                          height: 20,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: `2px solid ${theme.palette.background.paper}`,
+                        }}
+                      >
+                        <Key
+                          sx={{
+                            fontSize: 12,
+                            color: theme.palette.common.white,
+                          }}
+                        />
                       </Box>
                     )}
                   </Box>
@@ -474,14 +594,16 @@ export default function Navbar() {
           {/* Menú hamburguesa */}
           <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
             <List>
-              <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                p: 2,
-                borderBottom: `1px solid ${theme.palette.divider}`
-              }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  p: 2,
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Image
                     src="/logo.png"
                     alt="Logo Neptuno"
@@ -508,52 +630,72 @@ export default function Navbar() {
               </Box>
 
               <ListItem component={Link} href="/">
-                <ListItemIcon><Home /></ListItemIcon>
+                <ListItemIcon>
+                  <Home />
+                </ListItemIcon>
                 <ListItemText primary="Inicio" />
               </ListItem>
               <ListItem component={Link} href="/ejemplos">
-                <ListItemIcon><School /></ListItemIcon>
+                <ListItemIcon>
+                  <School />
+                </ListItemIcon>
                 <ListItemText primary="Ejemplos" />
               </ListItem>
               <ListItem component={Link} href="/rankings">
-                <ListItemIcon><Leaderboard /></ListItemIcon>
+                <ListItemIcon>
+                  <Leaderboard />
+                </ListItemIcon>
                 <ListItemText primary="Rankings" />
               </ListItem>
               <ListItem component={Link} href="/about/contact">
-                <ListItemIcon><ContactMail /></ListItemIcon>
+                <ListItemIcon>
+                  <ContactMail />
+                </ListItemIcon>
                 <ListItemText primary="Contacto" />
               </ListItem>
 
               {user?.rol === "admin" && (
                 <>
                   <ListItem component={Link} href="/admin/dashboard">
-                    <ListItemIcon><Dashboard /></ListItemIcon>
+                    <ListItemIcon>
+                      <Dashboard />
+                    </ListItemIcon>
                     <ListItemText primary="Dashboard" />
                   </ListItem>
                   <ListItem component={Link} href="/admin/registry">
-                    <ListItemIcon><ListAlt /></ListItemIcon>
+                    <ListItemIcon>
+                      <ListAlt />
+                    </ListItemIcon>
                     <ListItemText primary="Registros" />
                   </ListItem>
                   <ListItem component={Link} href="/admin/users">
-                    <ListItemIcon><People /></ListItemIcon>
+                    <ListItemIcon>
+                      <People />
+                    </ListItemIcon>
                     <ListItemText primary="Usuarios" />
                   </ListItem>
                 </>
               )}
               {user ? (
                 <ListItem component={Link} href="/user/dashboard">
-                  <ListItemIcon><Person /></ListItemIcon>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
                   <ListItemText primary={user.username} />
                 </ListItem>
               ) : (
                 <>
                   <ListItem component={Link} href="/user/auth/#login">
-                    <ListItemIcon><Login /></ListItemIcon>
+                    <ListItemIcon>
+                      <Login />
+                    </ListItemIcon>
                     <ListItemText primary="Iniciar Sesión" />
                   </ListItem>
                   {enableRegistration && (
                     <ListItem component={Link} href="/user/auth/#register">
-                      <ListItemIcon><PersonAdd /></ListItemIcon>
+                      <ListItemIcon>
+                        <PersonAdd />
+                      </ListItemIcon>
                       <ListItemText primary="Registrarse" />
                     </ListItem>
                   )}
@@ -563,8 +705,16 @@ export default function Navbar() {
           </Drawer>
         </NavContainer>
 
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-          <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
             ¡Felicidades! Has obtenido el badge: {newBadge}
           </Alert>
         </Snackbar>
@@ -575,7 +725,9 @@ export default function Navbar() {
           <Link href="/user/transactions" passHref>
             <IconButton className="notification-icon">
               <MonetizationOn />
-              <span className="notification-badge credits-badge">{credits}</span>
+              <span className="notification-badge credits-badge">
+                {credits}
+              </span>
             </IconButton>
           </Link>
         )}
@@ -595,39 +747,53 @@ export default function Navbar() {
         {user ? (
           <Tooltip title={user.username} arrow>
             <IconButton component={Link} href="/user/dashboard">
-              <Avatar sx={{
-                bgcolor: theme.palette.primary.main,
-                width: 32,
-                height: 32,
-                fontSize: '0.9rem'
-              }}>
+              <Avatar
+                sx={{
+                  bgcolor: theme.palette.primary.main,
+                  width: 32,
+                  height: 32,
+                  fontSize: "0.9rem",
+                }}
+              >
                 {user.username[0].toUpperCase()}
               </Avatar>
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title={anonUsername ? "Iniciar sesión" : "Registrarse"} arrow>
+          <Tooltip
+            title={anonUsername ? "Iniciar sesión" : "Registrarse"}
+            arrow
+          >
             <IconButton
               component={Link}
               href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
             >
-              <Avatar sx={{
-                bgcolor: theme.palette.grey[500],
-                width: 32,
-                height: 32,
-                color: theme.palette.common.white
-              }}>
-                {anonUsername ? <Person fontSize="small" /> : <Key fontSize="small" />}
+              <Avatar
+                sx={{
+                  bgcolor: theme.palette.grey[500],
+                  width: 32,
+                  height: 32,
+                  color: theme.palette.common.white,
+                }}
+              >
+                {anonUsername ? (
+                  <Person fontSize="small" />
+                ) : (
+                  <Key fontSize="small" />
+                )}
               </Avatar>
             </IconButton>
           </Tooltip>
         )}
 
-        {gamification?.points && enablePoints && (
+        {/* Mostrar icono de puntos incluso cuando es 0 */}
+        {enablePoints && gamification && (
           <Link href="/user/points" passHref>
             <IconButton className="notification-icon">
               <Star />
-              <span className="notification-badge points-badge">{gamification.points}</span>
+              <span className="notification-badge points-badge">
+                {gamification.points || 0}
+              </span>
             </IconButton>
           </Link>
         )}
@@ -636,7 +802,9 @@ export default function Navbar() {
           <Link href="/user/badges" passHref>
             <IconButton className="notification-icon">
               <EmojiEvents />
-              <span className="notification-badge badges-badge">{gamification.badges.length}</span>
+              <span className="notification-badge badges-badge">
+                {gamification.badges.length}
+              </span>
             </IconButton>
           </Link>
         )}

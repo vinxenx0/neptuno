@@ -4,7 +4,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
+import MinimalCard from "@/components/ui/MinimalCard";
+import MinimalForm from "@/components/ui/MinimalForm";
+import MinimalList from "@/components/ui/MinimalList";
 import fetchAPI from "@/lib/api";
+
 import {
   Dialog,
   DialogTitle,
@@ -147,8 +151,8 @@ export default function UserDashboard() {
     event_type: "",
   });
   const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]); // Nuevo estado para órdenes
 
-  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -1158,72 +1162,23 @@ export default function UserDashboard() {
           )}
           {/* Transactions Tab */}
           {tabValue === 3 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <GlassCard>
-                <CardHeader
-                  title="Historial de Transacciones"
-                  avatar={<History color="primary" />}
-                  action={
-                    <Chip
-                      label={`${transactions.length} transacciones`}
-                      color="primary"
-                      variant="outlined"
-                    />
-                  }
-                />
-                <CardContent>
-                  {transactions.length === 0 ? (
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ textAlign: "center", py: 4 }}
-                    >
-                      No hay transacciones registradas
-                    </Typography>
-                  ) : (
-                    <List sx={{ maxHeight: "500px", overflow: "auto" }}>
-                      {transactions.map((t, index) => (
-                        <motion.div
-                          key={t.id || index} // Usar `index` como respaldo si `t.id` no está definido
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar
-                                sx={{
-                                  bgcolor:
-                                    t.amount > 0
-                                      ? theme.palette.success.light
-                                      : theme.palette.error.light,
-                                }}
-                              >
-                                {t.amount > 0 ? "+" : "-"}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={t.transaction_type || "N/A"}
-                              secondary={`${
-                                t.timestamp
-                                  ? new Date(t.timestamp).toLocaleString()
-                                  : "N/A"
-                              } • ${t.payment_status || "N/A"}`}
-                            />
-                          </ListItem>
-                          <Divider variant="inset" component="li" />
-                        </motion.div>
-                      ))}
-                    </List>
-                  )}
-                </CardContent>
-              </GlassCard>
-            </motion.div>
-          )}
+    <Box>
+      <Typography variant="h6">Transacciones de Créditos</Typography>
+      <MinimalList items={transactions.map(t => ({
+        primary: t.transaction_type,
+        secondary: `${new Date(t.timestamp).toLocaleString()} • ${t.payment_status} • ${t.amount} créditos` +
+          (t.payment_method ? ` • Método: ${t.payment_method}` : "") +
+          (t.payment_amount ? ` • Monto: $${t.payment_amount.toFixed(2)}` : "")
+      }))} />
+      <Typography variant="h6" sx={{ mt: 3 }}>Últimas Órdenes del Marketplace</Typography>
+      <MinimalList items={orders.slice(0, 5).map(o => ({
+        primary: `Orden #${o.id}`,
+        secondary: `Total: ${o.total_amount} créditos • Estado: ${o.status} • ${new Date(o.created_at).toLocaleString()}`,
+        action: <Button href={`/marketplace/order/${o.id}`}>Ver Detalles</Button>
+      }))} />
+      <Button onClick={() => router.push('/user/orders')} sx={{ mt: 2 }}>Ver Todas las Órdenes</Button>
+    </Box>
+           )}
           {/* Payment Methods Tab */}
           {tabValue === 4 && (
             <motion.div
@@ -1711,38 +1666,59 @@ export default function UserDashboard() {
 
           {/* Orders Tab */}
           {tabValue === 7 && (
-            <Box>
-              <Typography variant="h6">Historial de Compras</Typography>
-              <List>
-                {orders.map((order) => (
-                  <ListItem key={order.id}>
-                    <ListItemText
-                      primary={`Orden #${order.id}`}
-                      secondary={`Total: ${order.total_amount} - Estado: ${
-                        order.status
-                      } - Fecha: ${new Date(
-                        order.created_at
-                      ).toLocaleString()}`}
-                    />
-                    {order.items.some((item) => item.is_digital) && (
-                      <Button
-                        href={
-                          order.items.find((item) => item.is_digital)?.file_path
-                        }
-                        download
-                        disabled={
-                          !order.items.find((item) => item.is_digital)
-                            ?.file_path
-                        }
-                      >
-                        Descargar
-                      </Button>
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          )}
+  <Box>
+    <Typography variant="h6" sx={{ mb: 2 }}>Historial de Compras</Typography>
+    {orders.length === 0 ? (
+      <Typography>No tienes compras registradas</Typography>
+    ) : (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Orden</TableCell>
+            <TableCell>Fecha</TableCell>
+            <TableCell>Estado</TableCell>
+            <TableCell>Total</TableCell>
+            <TableCell>Detalles</TableCell>
+            <TableCell>Acciones</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders.map((order) => (
+            <TableRow key={order.id}>
+              <TableCell>#{order.id}</TableCell>
+              <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
+              <TableCell>{order.status}</TableCell>
+              <TableCell>{order.total_amount} créditos</TableCell>
+              <TableCell>
+                <List dense>
+                  {order.items.map((item) => (
+                    <ListItem key={item.id}>
+                      <ListItemText
+                        primary={item.product_name}
+                        secondary={`Cant: ${item.quantity} - ${item.price} créditos c/u`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </TableCell>
+              <TableCell>
+                {order.items.some((item) => item.is_digital) && (
+                  <Button
+                    href={order.items.find((item) => item.is_digital)?.file_path}
+                    download
+                    disabled={!order.items.find((item) => item.is_digital)?.file_path}
+                  >
+                    Descargar
+                  </Button>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )}
+  </Box>
+)}
         </Box>
       </Box>
 

@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from models.credit_transaction import CreditTransaction
-from models.marketplace import Order, OrderItem, Product
+from models.marketplace import CartItem, Order, OrderItem, Product
 from models.user import User
 from schemas.marketplace import OrderCreate, OrderResponse
 from typing import Optional, List
@@ -37,13 +37,7 @@ def create_order(db: Session, user_id: int | None, session_id: str | None, order
         if user.credits < total_amount:
             raise HTTPException(status_code=402, detail="Créditos insuficientes")
         user.credits -= total_amount
-        db.add(CreditTransaction(
-            user_id=user_id,
-            user_type="registered",
-            amount=-int(total_amount),
-            transaction_type="purchase",
-            payment_status="completed"
-        ))
+        db.commit()
 
     db_order = Order(
         user_id=user_id,
@@ -60,7 +54,15 @@ def create_order(db: Session, user_id: int | None, session_id: str | None, order
         db.add(item)
     db.commit()
 
+    # Limpiar el carrito
+    if user_id:
+        db.query(CartItem).filter(CartItem.user_id == user_id).delete()
+    elif session_id:
+        db.query(CartItem).filter(CartItem.session_id == session_id).delete()
+    db.commit()
+
     return db_order
+
 def get_orders(db: Session, user_id: Optional[int], session_id: Optional[str]) -> List[Order]:
     query = db.query(Order)
     if user_id:
