@@ -7,6 +7,10 @@ GDPR
 -- implantar privacy center
 -- ubicación correcta archivos
 
+-- terminar implantacion whistblower
+
+
+
 
 
 - AL PROMPT: Info el MVP ya esta desplegado en producción
