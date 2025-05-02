@@ -19,12 +19,12 @@ import {
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
-<<<<<<< HEAD
+
 import { UserGamificationResponse, Badge, InfoResponse, Coupon } from "@/lib/types";
 import { Session } from "inspector/promises";
-=======
-import { Badge, InfoResponse, Coupon } from "@/lib/types";
->>>>>>> 45301732a6302d966059e85f2a26d4db5470bfdb
+
+
+
 
 export default function Ejemplos() {
   const { setGamification, user, coupons, setCoupons } = useAuth();
