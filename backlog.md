@@ -6,7 +6,7 @@ GDPR
 -- implementar la lógica para enviar preferencias al backend
 -- implantar privacy center
 -- ubicación correcta archivos
-
+-- implantar apis
 -- terminar implantacion whistblower
 
 

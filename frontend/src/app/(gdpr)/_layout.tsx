@@ -1,10 +1,11 @@
-import CookieBanner from '@/components/CookieBanner'
+import CookieConsentBanner from '@/components/gdpr/CookieConsentBanner'
+
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <CookieBanner />
+      <CookieConsentBanner onClose={undefined} />
     </>
   )
 }
