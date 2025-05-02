@@ -2,25 +2,19 @@
 "use client";
 
 import { Metadata } from 'next';
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/lib/auth/context";
 import Navbar from "@/components/web/Navbar";
 import Footer from "@/components/web/Footer";
-import "../app/global.css";
 import CookieConsentBanner from '@/components/gdpr/CookieConsentBanner';
+import "../app/global.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/user/auth") || pathname?.startsWith("/(auth)");
 
-  const metadata: Metadata = {
-    icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon-16x16.png',
-      apple: '/apple-touch-icon.png',
-    },
-  };
+  const [bannerVisible, setBannerVisible] = useState(false);
 
   return (
     <html lang="es">
@@ -33,28 +27,32 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {!isAuthPage && <Footer />}
         </AuthProvider>
 
-{/* Banner y botón de cookies */}
-<CookieConsentBanner onClose={() => {}} />
-<button
-  onClick={() => window.location.href = '/gdpr/'}
-  className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 hidden md:block"
-  style={{
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    background: '#333',
-    color: 'white',
-    padding: '10px 14px',
-    borderRadius: '6px',
-    fontSize: '0.875rem',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-    zIndex: 9999,
-  }}
->
-  Privacy Center
-</button>
+        {/* Banner y botón de cookies */}
+        <CookieConsentBanner
+          onClose={() => setBannerVisible(false)}
+          onShow={() => setBannerVisible(true)}
+        />
 
-
+        {!bannerVisible && (
+          <button
+            onClick={() => window.location.href = '/gdpr/'}
+            className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 hidden md:block"
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              right: '20px',
+              background: '#333',
+              color: 'white',
+              padding: '10px 14px',
+              borderRadius: '6px',
+              fontSize: '0.875rem',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+              zIndex: 9999,
+            }}
+          >
+            Privacy Center
+          </button>
+        )}
       </body>
     </html>
   );

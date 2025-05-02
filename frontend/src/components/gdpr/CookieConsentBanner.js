@@ -1,9 +1,9 @@
 // components/CookieConsentBanner.js
 import { useState, useEffect } from 'react';
-import { consentUpdate, injectGTM, hasConsentExpired } from '../../lib/gtm';
+import { consentUpdate, injectGTM, hasConsentExpired } from '../../lib/gdpr/gtm';
 
 
-export default function CookieConsentBanner({ forceShow = false, onClose }) {
+export default function CookieConsentBanner({ forceShow = false, onClose, onShow }) {
   const [showBanner, setShowBanner] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState(false);
   const [adsConsent, setAdsConsent] = useState(false);
@@ -11,50 +11,64 @@ export default function CookieConsentBanner({ forceShow = false, onClose }) {
   useEffect(() => {
     const consent = localStorage.getItem('cookie_consent');
     const expired = hasConsentExpired();
+  
+    const analytics = localStorage.getItem('analytics_consent') === 'true';
+    const ads = localStorage.getItem('ads_consent') === 'true';
+    setAnalyticsConsent(analytics);
+    setAdsConsent(ads);
+  
     if (forceShow || !consent || expired) {
       setShowBanner(true);
+      onShow?.();
     } else if (consent === 'true') {
       injectGTM();
     }
-  }, [forceShow]);
+  }, [forceShow, onShow]);
+  
 
   useEffect(() => {
-    const handleOpenBanner = () => setShowBanner(true);
+    const handleOpenBanner = () => {
+      setShowBanner(true);
+      onShow?.();
+    };
     window.addEventListener('openConsentModal', handleOpenBanner);
     return () => window.removeEventListener('openConsentModal', handleOpenBanner);
   }, []);
+
+  const closeBanner = () => {
+    setShowBanner(false);
+    onClose?.();
+  };
 
   const saveConsent = async () => {
     const consentData = {
       ad_storage: adsConsent ? 'granted' : 'denied',
       analytics_storage: analyticsConsent ? 'granted' : 'denied'
     };
-  
+
     consentUpdate(analyticsConsent, adsConsent);
     localStorage.setItem('cookie_consent', 'true');
     localStorage.setItem('analytics_consent', analyticsConsent);
     localStorage.setItem('ads_consent', adsConsent);
     localStorage.setItem('cookieConsent', JSON.stringify(consentData));
     localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
-  
+
     try {
       await fetch('/api/consent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: 'usuario123', // Reemplazar por el ID real si está autenticado
+          userId: 'usuario123',
           consentData,
         }),
       });
     } catch (err) {
       console.error('Error al guardar consentimiento:', err);
     }
-  
+
     injectGTM();
-    setShowBanner(false);
-    if (onClose) onClose();
+    closeBanner();
   };
-  
 
   if (!showBanner) return null;
 
@@ -86,14 +100,15 @@ export default function CookieConsentBanner({ forceShow = false, onClose }) {
         consentUpdate(false, false);
         localStorage.setItem('cookie_consent', 'false');
         localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
-        setShowBanner(false);
-        if (onClose) onClose();
+        closeBanner();
       }} style={styles.buttonReject}>
         Rechazar Todo
       </button>
     </div>
   );
 }
+
+
 
 const styles = {
   banner: {

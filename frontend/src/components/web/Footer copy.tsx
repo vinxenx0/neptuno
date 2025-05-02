@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { consentUpdate, injectGTM, hasConsentExpired } from '../../lib/gtm';
+import { consentUpdate, injectGTM, hasConsentExpired } from '../../lib/gdpr/gtm';
 import Link from "next/link";
 import {
   Box,

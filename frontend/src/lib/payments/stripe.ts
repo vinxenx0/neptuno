@@ -1,4 +1,4 @@
-import { PaymentProvider, PaymentResult } from "../payments";
+import { PaymentProvider, PaymentResult } from "./payments";
 
 export class StripeProvider implements PaymentProvider {
   name = "Stripe";

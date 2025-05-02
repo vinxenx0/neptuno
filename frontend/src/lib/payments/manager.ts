@@ -1,6 +1,6 @@
 // frontend/src/lib/payments/manager.ts
 // this file manages the payment providers
-import { PaymentProvider, PaymentResult } from "../payments";
+import { PaymentProvider, PaymentResult } from "./payments";
 
 export class PaymentManager {
   private providers: Record<string, PaymentProvider> = {};
