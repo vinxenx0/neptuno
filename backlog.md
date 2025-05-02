@@ -9,6 +9,10 @@ GDPR
 -- implantar apis
 -- terminar implantacion whistblower
 -- meter el site settings para mostrar u ocultar
+-- 
+./src/components/gdpr/CookieConsentBanner.js
+36:6  Warning: React Hook useEffect has a missing dependency: 'onShow'. Either include it or remove the dependency array. If 'onShow' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+
 
 
 
