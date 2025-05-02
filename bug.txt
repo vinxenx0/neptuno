@@ -5,7 +5,7 @@ INFO:     127.0.0.1:54201 - "POST /v1/marketplace/orders HTTP/1.1" 402 Payment R
 2025-05-03 00:28:24,876 - NeptunO - ERROR - HTTP Error 402 en POST http://localhost:8000/v1/marketplace/orders: Créditos insuficientes
 INFO:     127.0.0.1:54212 - "POST /v1/marketplace/orders HTTP/1.1" 402 Payment Required
 añade el atributo cantidad al producto, con la opcion de marcar que sea ilimitado
-=======
+======= 
 añadir nueva descarga digital
 INFO:     127.0.0.1:59186 - "POST /v1/marketplace/products HTTP/1.1" 422 Unprocessable Entity
 añade boton gratuita
