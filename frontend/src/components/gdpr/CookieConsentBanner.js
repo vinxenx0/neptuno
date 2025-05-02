@@ -33,7 +33,7 @@ export default function CookieConsentBanner({ forceShow = false, onClose, onShow
     };
     window.addEventListener('openConsentModal', handleOpenBanner);
     return () => window.removeEventListener('openConsentModal', handleOpenBanner);
-  }, []);
+  }, [onShow]);
 
   const closeBanner = () => {
     setShowBanner(false);
