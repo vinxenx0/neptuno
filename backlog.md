@@ -8,7 +8,7 @@ GDPR
 -- ubicación correcta archivos
 -- implantar apis
 -- terminar implantacion whistblower
-
+-- meter el site settings para mostrar u ocultar
 
 
 
