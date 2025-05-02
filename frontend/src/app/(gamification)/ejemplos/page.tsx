@@ -19,9 +19,7 @@ import {
 import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
-import { UserGamificationResponse, Badge, InfoResponse, Coupon } from "@/lib/types";
-import { n } from "framer-motion/dist/types.d-B50aGbjN";
-import { Session } from "inspector/promises";
+import { Badge, InfoResponse, Coupon } from "@/lib/types";
 
 export default function Ejemplos() {
   const { setGamification, user, coupons, setCoupons } = useAuth();
