@@ -20,7 +20,6 @@ import { motion } from "framer-motion";
 import fetchAPI from "@/lib/api";
 import { useAuth } from "@/lib/auth/context";
 import { UserGamificationResponse, Badge, InfoResponse, Coupon } from "@/lib/types";
-import { n } from "framer-motion/dist/types.d-B50aGbjN";
 import { Session } from "inspector/promises";
 
 export default function Ejemplos() {

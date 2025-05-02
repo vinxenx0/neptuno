@@ -355,6 +355,13 @@ export default function Navbar() {
           >
             {/* Enlaces desktop */}
             <Box sx={{ display: "flex", gap: 2, mr: 1 }}>
+            <Button
+                component={Link}
+                href="/marketplace"
+                className={pathname === "/marketplace" ? "active-link" : ""}
+              >
+                Markeplace
+              </Button>
               <Button
                 component={Link}
                 href="/ejemplos"
@@ -387,13 +394,15 @@ export default function Navbar() {
                 </IconButton>
               </Tooltip>
 
+              { /* 
               <Tooltip title="Marketplace">
               <Link href="/marketplace" passHref>
                 <IconButton sx={{ color: theme.palette.text.primary }}>
                   <StoreIcon />
                 </IconButton>
               </Link>
-            </Tooltip>
+            </Tooltip> 
+            */ }
             {/* Carrito existente */}
             <Link href="/checkout" passHref>
               <IconButton className="notification-icon">
@@ -634,6 +643,10 @@ export default function Navbar() {
                   <Home />
                 </ListItemIcon>
                 <ListItemText primary="Inicio" />
+              </ListItem>
+              <ListItem component={Link} href="/marketplace">
+                <ListItemIcon><StoreIcon /></ListItemIcon>
+                <ListItemText primary="Marketplace" />
               </ListItem>
               <ListItem component={Link} href="/ejemplos">
                 <ListItemIcon>

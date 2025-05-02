@@ -74,6 +74,13 @@ export default function TransactionsPage() {
     checkSettingsAndFetchTransactions();
   }, [router]);
 
+  const getTransactionDetails = (t: CreditTransaction) => {
+    const details = [];
+    if (t.payment_method) details.push(`Método: ${t.payment_method}`);
+    if (t.payment_amount) details.push(`Monto: $${t.payment_amount.toFixed(2)}`);
+    return details.length > 0 ? details.join(' • ') : null;
+  };
+
   const filtered = transactions.filter(t => {
     // Filtro por tipo (entrada/salida)
     if (typeFilter === 'in') return t.amount > 0;
@@ -215,110 +222,62 @@ export default function TransactionsPage() {
                   gap: 3
                 }}
               >
-                {filtered.map((t) => (
-                  <motion.div
-                    key={t.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <TransactionCard>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: 2, 
-                        mb: 2 
-                      }}>
-                        <Avatar
-                          sx={{
-                            bgcolor: t.amount > 0 ? 'success.main' : 'error.main',
-                            color: 'white',
-                            width: 48,
-                            height: 48,
-                            boxShadow: theme.shadows[2]
-                          }}
-                        >
-                          {t.amount > 0 ? <ArrowDownward /> : <ArrowUpward />}
-                        </Avatar>
-                        <Box sx={{ overflow: 'hidden' }}>
-                          <Typography 
-                            variant="h6" 
-                            fontWeight="bold"
-                            noWrap
-                            color="text.primary"
-                          >
-                            {t.transaction_type}
-                          </Typography>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: 1,
-                            mt: 0.5
-                          }}>
-                            <Typography 
-                              variant="body2" 
-                              color="text.secondary"
-                              fontSize="0.75rem"
-                            >
-                              {new Date(t.timestamp).toLocaleString()}
-                            </Typography>
-                            <StatusChip 
-                              label={t.payment_status} 
-                              size="small"
-                              color={
-                                t.payment_status === 'completed' ? 'success' : 
-                                t.payment_status === 'pending' ? 'warning' : 'error'
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      </Box>
-                      <Divider sx={{ 
-                        mb: 2, 
-                        borderColor: 'rgba(0,0,0,0.1)' 
-                      }} />
-                      <Typography
-                        variant="h5"
-                        color={t.amount > 0 ? "success.dark" : "error.dark"}
-                        fontWeight="bold"
-                        sx={{ mb: 1 }}
-                      >
-                        {t.amount > 0 ? '+' : ''}{t.amount} créditos
-                      </Typography>
-                      {user && t.payment_amount && (
-                        <Box sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 1,
-                          mt: 2
-                        }}>
-                          <Box sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                            color: 'text.secondary'
-                          }}>
-                            {getPaymentMethodIcon(t.payment_method)}
-                            <Typography variant="body2">
-                              ${t.payment_amount.toFixed(2)}
-                            </Typography>
-                          </Box>
-                          {t.payment_method && (
-                            <Typography 
-                              variant="caption" 
-                              color="text.secondary"
-                              sx={{ ml: 0.5 }}
-                            >
-                              • {t.payment_method}
-                            </Typography>
-                          )}
-                        </Box>
-                      )}
-                    </TransactionCard>
-                  </motion.div>
-                ))}
+                  {filtered.map((t) => (
+    <motion.div
+      key={t.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+    >
+      <TransactionCard>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Avatar
+            sx={{
+              bgcolor: t.amount > 0 ? 'success.main' : 'error.main',
+              color: 'white',
+              width: 48,
+              height: 48,
+              boxShadow: theme.shadows[2]
+            }}
+          >
+            {t.amount > 0 ? <ArrowDownward /> : <ArrowUpward />}
+          </Avatar>
+          <Box sx={{ overflow: 'hidden' }}>
+            <Typography variant="h6" fontWeight="bold" noWrap color="text.primary">
+              {t.transaction_type}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" fontSize="0.75rem">
+              {new Date(t.timestamp).toLocaleString()}
+            </Typography>
+            <StatusChip
+              label={t.payment_status}
+              size="small"
+              color={
+                t.payment_status === 'completed' ? 'success' :
+                t.payment_status === 'pending' ? 'warning' : 'error'
+              }
+            />
+            {getTransactionDetails(t) && (
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                {getTransactionDetails(t)}
+              </Typography>
+            )}
+          </Box>
+        </Box>
+        <Divider sx={{ mb: 2, borderColor: 'rgba(0,0,0,0.1)' }} />
+        <Typography
+          variant="h5"
+          color={t.amount > 0 ? "success.dark" : "error.dark"}
+          fontWeight="bold"
+          sx={{ mb: 1 }}
+        >
+          {t.amount > 0 ? '+' : ''}{t.amount} créditos
+        </Typography>
+      </TransactionCard>
+    </motion.div>
+  ))}
               </Box>
             </AnimatePresence>
           )}
