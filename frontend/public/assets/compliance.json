@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "CookieConsent",
+    "description": "Schema del consentimiento de cookies de usuario conforme a GDPR/CCPA",
+    "type": "object",
+    "properties": {
+      "ad_storage": {
+        "type": "string",
+        "enum": ["granted", "denied"],
+        "description": "Consentimiento para almacenamiento de anuncios/publicidad."
+      },
+      "analytics_storage": {
+        "type": "string",
+        "enum": ["granted", "denied"],
+        "description": "Consentimiento para almacenamiento de analítica (Google Analytics, etc)."
+      },
+      "functionality_storage": {
+        "type": "string",
+        "enum": ["granted", "denied"],
+        "description": "Consentimiento para funcionalidades del sitio no esenciales."
+      },
+      "personalization_storage": {
+        "type": "string",
+        "enum": ["granted", "denied"],
+        "description": "Consentimiento para personalización (recomendaciones, contenidos adaptados)."
+      },
+      "security_storage": {
+        "type": "string",
+        "enum": ["granted"],
+        "description": "Consentimiento para almacenamiento relacionado con la seguridad y prevención de fraude. Siempre granted por política."
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Fecha y hora en la que el usuario dio el consentimiento."
+      },
+      "userId": {
+        "type": "string",
+        "description": "Identificador anónimo o userId del usuario (opcional, para trazabilidad)."
+      }
+    },
+    "required": ["ad_storage", "analytics_storage", "functionality_storage", "personalization_storage", "security_storage", "timestamp"],
+    "additionalProperties": false
+  }
+  
