@@ -39,7 +39,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const reportData = {
       subject,
       message,
-      email: anonymous === "on" ? null : email,
+      email: (Array.isArray(anonymous) ? anonymous[0] : anonymous) === "on" ? null : email,
       trackingId,
       date: new Date().toISOString(),
     };
@@ -50,9 +50,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Handle file
     let attachmentPath = "";
     if (files.attachment) {
-      const file = files.attachment[0] ?? files.attachment;
+      const file = Array.isArray(files.attachment) ? files.attachment[0] : files.attachment;
       const savePath = path.join(process.cwd(), "uploads", `${trackingId}_${file.originalFilename}`);
-      fs.renameSync(file.filepath, savePath);
+      fs.renameSync((file as formidable.File).filepath, savePath);
       attachmentPath = savePath;
     }
 
