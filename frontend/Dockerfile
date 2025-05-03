@@ -15,7 +15,7 @@ WORKDIR /app
 # Copiamos solo lo necesario desde el builder
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/out ./out
+# COPY --from=builder /app/out ./out
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 
@@ -26,7 +26,7 @@ COPY --from=builder /app/node_modules ./node_modules
 #RUN systemctl restart nginx
 
 # Instalamos serve para servir la aplicación estática
-RUN npm install -g serve
+# RUN npm install -g serve
 
 EXPOSE 3000
 #CMD ["serve", "-s", "out", "-l", "3000"]

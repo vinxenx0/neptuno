@@ -1,0 +1,42 @@
+// app/(marketplace)/marketplace/order/[id]/page.tsx (Server Component)
+import { Order } from "@/lib/types";
+import fetchAPI from "@/lib/api";
+import OrderSuccessClient from "./OrderSuccessClient";
+
+export const dynamic = 'force-dynamic'; // Opcional: si necesitas SSR
+
+// Ensure generateStaticParams is implemented robustly for static export
+export async function generateStaticParams() {
+  try {
+    const { data: orders, error } = await fetchAPI<Order[]>("/v1/marketplace/orders");
+
+    if (error || !orders) {
+      console.error("Failed to fetch orders for static params:", error);
+      return [{ id: "fallback" }]; // Provide a fallback static param to avoid build failure
+    }
+
+    return orders.map((order) => ({
+      id: order.id.toString(),
+    }));
+  } catch (err) {
+    console.error("Unexpected error in generateStaticParams:", err);
+    return [{ id: "fallback" }]; // Provide a fallback static param to avoid build failure
+  }
+}
+
+// Update the PageProps type to match the expected structure
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function OrderSuccessPage({ params }: PageProps) {
+  const resolvedParams = await params; // Resolve the Promise
+  const { data: order, error } = await fetchAPI<Order>(`/v1/marketplace/orders/${resolvedParams.id}`);
+
+  if (error || !order) {
+    console.error("Failed to fetch order details:", error);
+    return <div>Error loading order details. Please try again later.</div>;
+  }
+
+  return <OrderSuccessClient order={order} />;
+}
