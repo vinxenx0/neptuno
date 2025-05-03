@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
  // Specified "headers" will not automatically work with "output: export". See more info here: https://nextjs.org/docs/messages/export-no-custom-routes
-  // output: "export", // Habilita el modo estático para `next export`
+  output: "export", // Habilita el modo estático para `next export`
  
   trailingSlash: true, // Asegura que los archivos se sirvan correctamente
   images: {

@@ -3,7 +3,6 @@
 
 // src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from "axios";
-import { useState, useEffect } from 'react';
 import { HTTPValidationError, FetchResponse, RegisterRequest, TokenResponse, UpdateProfileRequest, User, ValidationError } from "./types";
 
 // Extender AxiosRequestConfig para incluir _retry
@@ -181,40 +180,6 @@ const fetchAPI = async <T>(
 
     return normalizeResponse(undefined, err);
   }
-};
-
-// Custom hook to fetch data
-export const useFetchData = <T>(
-  endpoint: string,
-  options: CustomAxiosRequestConfig = {},
-  dependencies: any[] = []
-): { data: T | null; loading: boolean; error: string | null } => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetchAPI<T>(endpoint, options);
-        if (response.error) {
-          setError(typeof response.error === 'string' ? response.error : 'Error desconocido');
-        } else {
-          setData(response.data);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [endpoint, options, dependencies]); // Asegurar que la lista de dependencias sea un array literal y agregar endpoint y options como dependencias
-
-  return { data, loading, error };
 };
 
 // Funciones específicas de la API
