@@ -1,7 +1,8 @@
 OPTIMIZAR EL DEPLOY CON EL TEMA EXPORT // SSDR ETC en el orders
 
+En el carrito version movil no se ve el badge de notificaciones
 
-
+crear los pytests de cada modulo
 
 GDPR
 
