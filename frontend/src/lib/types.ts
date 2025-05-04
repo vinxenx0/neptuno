@@ -235,6 +235,7 @@ export interface Category {
 }
 
 export interface Product {
+  rating: any;
   id: number;
   name: string;
   description?: string;

@@ -1,7 +1,28 @@
 OPTIMIZAR EL DEPLOY CON EL TEMA EXPORT // SSDR ETC en el orders
 
+En el carrito version movil no se ve el badge de notificaciones
 
+imagenes del nuevo boilerplate no existen
 
+aceptar las politicas al registrarse
+
+crear los pytests de cada modulo
+
+mas componentes:  <FooterLink href="/docs">Documentación</FooterLink>
+              <FooterLink href="/api">API</FooterLink>
+              <FooterLink href="/marketplace">Marketplace</FooterLink>
+              <FooterLink href="/partners">Partners</FooterLink>
+              <FooterLink href="/testimonials">Testimonios</FooterLink>
+              <FooterLink href="/case-studies">Casos de Éxito</FooterLink>
+              <FooterLink href="/careers">Carreras</FooterLink>
+              <FooterLink href="/events">Eventos</FooterLink>
+              <FooterLink href="/webinars">Webinars</FooterLink>
+              <FooterLink href="/news">Noticias</FooterLink>
+              <FooterLink href="/press">Prensa</FooterLink>
+              <FooterLink href="/media">Medios</FooterLink>
+              <FooterLink href="/resources">Recursos</FooterLink>
+              <FooterLink href="/guides">Guías</FooterLink>
+              <FooterLink href="/whitepapers">Documentos Técnicos</FooterLink>
 
 GDPR
 
@@ -82,6 +103,32 @@ Traceback (most recent call last):
     return confirm_password_reset(db, data.token, data.new_password)
 TypeError: confirm_password_reset() takes from 1 to 2 positional arguments but 3 were given
 
+
+el componente img
+
+
+./src/components/default-site/AboutUs.tsx
+46:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/CTA.tsx
+53:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/Careers.tsx
+45:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/EnhancedFeatures.tsx
+79:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/Hero.tsx
+64:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/Marketplace.tsx
+60:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/default-site/Trust.tsx
+37:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
 
 - AL PROMPT: Info el MVP ya esta desplegado en producción
 - Continuamos

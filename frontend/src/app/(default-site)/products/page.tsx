@@ -1,16 +1,21 @@
+// frontend/src/app/(default-site)/products/page.tsx
+'use client';
+
+import Products from '@/components/default-site/Products';
+
 export default function ProductsPage() {
-    return (
-      <div className="max-w-6xl mx-auto py-16 px-4">
-        <h1 className="text-3xl font-bold mb-8">Funcionalidades del Producto</h1>
-        <div className="grid md:grid-cols-3 gap-6">
-          {["Panel de control", "API REST", "Métricas en tiempo real"].map((feature) => (
-            <div key={feature} className="p-6 bg-white rounded shadow">
-              <h3 className="text-xl font-semibold mb-2">{feature}</h3>
-              <p className="text-gray-600">Explicación de cómo esta funcionalidad ayuda al usuario.</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  
+  return (
+    <>
+      {/* Hero de Productos */}
+      <section className="bg-white py-24 px-6 text-center">
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">Características del Producto</h1>
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          Conoce las funcionalidades que hacen única nuestra plataforma.
+        </p>
+      </section>
+
+      {/* Detalles de Productos */}
+      <Products />
+    </>
+  );
+}

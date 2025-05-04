@@ -22,6 +22,7 @@ Captura del dashboard premium mostrando:
 
 Logos de confianza
 Compatible con: React, Next.js, Vue, Angular, FastAPI, Docker, OpenAPI.
+
 2. 🎯 Propuesta de valor
 Formato 3 columnas  
 🧱 
@@ -44,6 +45,7 @@ Auth, pagos, gamificación y webhooks out-of-the-box.
 100% open-source, sin vendor lock-in.
 Copy de apoyo
 “Neptuno elimina semanas de trabajo repetitivo. Autenticación avanzada, gamificación y monetización listas desde el día uno.”
+
 3. 🔍 Qué incluye
 Módulos clave (formato mini-cards, 2 columnas en desktop):
 Ícono
@@ -96,6 +98,7 @@ await sdk.gamification.rewardUser({
   badge: "early-adopter"
 });
 
+
 4. 🛠 Casos de uso listos para lanzar
 “¿Qué puedes construir hoy?” (formato cards horizontales)
 Caso de uso
@@ -123,6 +126,7 @@ Programa de fidelización para clientes
 2 h
 	
 [Iniciar demo]
+
 5. 📈 Cómo funciona (Arquitectura)
 Diagrama simplificado  
 
@@ -168,6 +172,7 @@ curl -s -X GET 127.0.0.1:8000/whoami | jq
   "credits": 100,
   "rol": "anonymous"
 }
+
 
 6. 📦 Planes y monetización
 Plan
