@@ -121,7 +121,7 @@ const TabContent = ({ tab }: { tab: string }) => {
 
   useEffect(() => {
     if (!user || user.rol !== "admin") {
-      router.push("/user/auth/#login");
+      router.push("/auth/login");
       return;
     }
 

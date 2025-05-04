@@ -565,7 +565,7 @@ export default function SplashPage() {
                     flexWrap: "wrap",
                   }}
                 >
-                  <Link href="/user/auth/#register" passHref>
+                  <Link href="/auth/register" passHref>
                     <ActionButton
                       variant="contained"
                       color="secondary"
@@ -574,7 +574,7 @@ export default function SplashPage() {
                       Comienza Gratis
                     </ActionButton>
                   </Link>
-                  <Link href="/user/auth/#login" passHref>
+                  <Link href="/auth/login" passHref>
                     <ActionButton
                       variant="outlined"
                       color="inherit"
@@ -1160,7 +1160,7 @@ export default function SplashPage() {
               modernas con Neptuno. Prueba nuestras APIs, gestiona créditos y
               aumenta el engagement con gamificación. ¡Comienza gratis ahora!
             </Typography>
-            <Link href="/user/auth/#register" passHref>
+            <Link href="/auth/register" passHref>
               <ActionButton
                 variant="contained"
                 color="secondary"

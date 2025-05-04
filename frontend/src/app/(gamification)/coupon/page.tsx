@@ -1,4 +1,4 @@
-// frontend/src/app/user/coupon/page.tsx
+// frontend/src/app/coupon/page.tsx
 // Página de gestión y canjeo de cupones del usuario
 
 "use client";

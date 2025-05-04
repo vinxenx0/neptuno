@@ -18,7 +18,69 @@ GDPR
 36:6  Warning: React Hook useEffect has a missing dependency: 'onShow'. Either include it or remove the dependency array. If 'onShow' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
 
 
+bug al confirmar cambio de contraseña: (no la cambia al final parece)
 
+ "OPTIONS /v1/auth/password-reset/confirm HTTP/1.1" 200 OK
+2025-05-04 13:57:13,811 - NeptunO - CRITICAL - Error inesperado en POST http://localhost:8000/v1/auth/password-reset/confirm: confirm_password_reset() takes from 1 to 2 positional arguments but 3 were given
+CRITICAL:NeptunO:Error inesperado en POST http://localhost:8000/v1/auth/password-reset/confirm: confirm_password_reset() takes from 1 to 2 positional arguments but 3 were given
+INFO:     127.0.0.1:52295 - "POST /v1/auth/password-reset/confirm HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 214, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/starlette/concurrency.py", line 37, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "/home/vinxenxo/neptuno/neptuno-1/backend/api/v1/auth/auth.py", line 61, in confirm_password_reset
+    return confirm_password_reset(db, data.token, data.new_password)
+TypeError: confirm_password_reset() takes from 1 to 2 positional arguments but 3 were given
 
 
 - AL PROMPT: Info el MVP ya esta desplegado en producción

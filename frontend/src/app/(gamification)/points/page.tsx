@@ -1,4 +1,4 @@
-// frontend/src/app/user/points/page.tsx
+// frontend/src/app/points/page.tsx
 // Página de historial y progreso de puntos y gamificación
 
 "use client";

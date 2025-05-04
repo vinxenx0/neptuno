@@ -414,7 +414,7 @@ export default function Navbar() {
 
               {/* Créditos tercero */}
               {!disableCredits && credits > 0 && (
-                <Link href="/user/transactions" passHref>
+                <Link href="/transactions" passHref>
                   <IconButton className="notification-icon">
                     <MonetizationOn />
                     <span className="notification-badge credits-badge">
@@ -425,7 +425,7 @@ export default function Navbar() {
               )}
 
               {enableCoupons && (
-                <Link href="/user/coupon" passHref>
+                <Link href="/coupon" passHref>
                   <Tooltip title="Tus cupones">
                     <IconButton className="notification-icon">
                       <Badge badgeContent={availableCoupons} color="secondary">
@@ -439,7 +439,7 @@ export default function Navbar() {
               {gamification && (
                 <>
                   {enablePoints && (
-                    <Link href="/user/points" passHref>
+                    <Link href="/points" passHref>
                       <IconButton className="notification-icon">
                         <Star />
                         <span className="notification-badge points-badge">
@@ -449,7 +449,7 @@ export default function Navbar() {
                     </Link>
                   )}
                   {enableBadges && (
-                    <Link href="/user/badges" passHref>
+                    <Link href="/badges" passHref>
                       <IconButton className="notification-icon">
                         <EmojiEvents />
                         <span className="notification-badge badges-badge">
@@ -554,8 +554,8 @@ export default function Navbar() {
                       component={Link}
                       href={
                         anonUsername
-                          ? "/user/auth/#login"
-                          : "/user/auth/#register"
+                          ? "/auth/login"
+                          : "/auth/register"
                       }
                       className="user-avatar"
                     >
@@ -698,14 +698,14 @@ export default function Navbar() {
                 </ListItem>
               ) : (
                 <>
-                  <ListItem component={Link} href="/user/auth/#login">
+                  <ListItem component={Link} href="/auth/login">
                     <ListItemIcon>
                       <Login />
                     </ListItemIcon>
                     <ListItemText primary="Iniciar Sesión" />
                   </ListItem>
                   {enableRegistration && (
-                    <ListItem component={Link} href="/user/auth/#register">
+                    <ListItem component={Link} href="/auth/register">
                       <ListItemIcon>
                         <PersonAdd />
                       </ListItemIcon>
@@ -735,7 +735,7 @@ export default function Navbar() {
 
       <MobileBottomNav>
         {!disableCredits && credits > 0 && (
-          <Link href="/user/transactions" passHref>
+          <Link href="/transactions" passHref>
             <IconButton className="notification-icon">
               <MonetizationOn />
               <span className="notification-badge credits-badge">
@@ -746,7 +746,7 @@ export default function Navbar() {
         )}
 
         {enableCoupons && (
-          <Link href="/user/coupon" passHref>
+          <Link href="/coupon" passHref>
             <Tooltip title="Tus cupones">
               <IconButton className="notification-icon">
                 <Badge badgeContent={availableCoupons} color="secondary">
@@ -779,7 +779,7 @@ export default function Navbar() {
           >
             <IconButton
               component={Link}
-              href={anonUsername ? "/user/auth/#login" : "/user/auth/#register"}
+              href={anonUsername ? "/auth/login" : "/auth/register"}
             >
               <Avatar
                 sx={{
@@ -801,7 +801,7 @@ export default function Navbar() {
 
         {/* Mostrar icono de puntos incluso cuando es 0 */}
         {enablePoints && gamification && (
-          <Link href="/user/points" passHref>
+          <Link href="/points" passHref>
             <IconButton className="notification-icon">
               <Star />
               <span className="notification-badge points-badge">
@@ -812,7 +812,7 @@ export default function Navbar() {
         )}
 
         {gamification?.badges && enableBadges && (
-          <Link href="/user/badges" passHref>
+          <Link href="/badges" passHref>
             <IconButton className="notification-icon">
               <EmojiEvents />
               <span className="notification-badge badges-badge">
