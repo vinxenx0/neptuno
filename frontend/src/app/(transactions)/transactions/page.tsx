@@ -1,4 +1,4 @@
-// frontend/src/app/user/transactions/page.tsx
+// frontend/src/app/transactions/page.tsx
 // Página de historial y detalles de transacciones de créditos
 
 "use client";

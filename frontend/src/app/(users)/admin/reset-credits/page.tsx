@@ -15,7 +15,7 @@ export default function ResetCreditsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user || user.user_type !== "registered") router.push("/user/auth/#login");
+    if (!user || user.user_type !== "registered") router.push("/auth/login");
   }, [user, router]);
 
   const handleClick = async () => {

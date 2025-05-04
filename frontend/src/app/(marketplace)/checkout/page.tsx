@@ -64,7 +64,7 @@ export default function CheckoutPage() {
   const handleCheckout = async () => {
     const hasPaidItems = cartItems.some((item) => !item.product.is_free);
     if (hasPaidItems && !user) {
-      router.push("/user/auth/#login");
+      router.push("/auth/login");
       return;
     }
     setLoading(true);
@@ -137,8 +137,8 @@ export default function CheckoutPage() {
             ) : (
               <Typography sx={{ mb: 2, color: "warning.main" }}>
                 ¡Parece que aún no has iniciado sesión! Para comprar productos de pago,{" "}
-                <a href="/user/auth/#login">inicia sesión</a> o{" "}
-                <a href="/user/auth/#register">regístrate</a> y disfruta de una experiencia completa.
+                <a href="/auth/login">inicia sesión</a> o{" "}
+                <a href="/auth/register">regístrate</a> y disfruta de una experiencia completa.
               </Typography>
             )}
 

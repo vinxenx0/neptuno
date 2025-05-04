@@ -230,7 +230,7 @@ export default function UserDashboard() {
       try {
         await fetchAPI("/v1/users/me", { method: "DELETE" });
         await logout();
-        router.push("/user/auth/#login");
+        router.push("/auth/login");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al eliminar cuenta");
       }

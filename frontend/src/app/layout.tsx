@@ -12,7 +12,7 @@ import "../app/global.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname?.startsWith("/user/auth") || pathname?.startsWith("/(auth)");
+  const isAuthPage = pathname?.startsWith("/auth") || pathname?.startsWith("/(auth)");
 
   const [bannerVisible, setBannerVisible] = useState(false);
 

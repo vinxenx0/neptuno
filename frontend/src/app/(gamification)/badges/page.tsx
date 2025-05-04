@@ -1,4 +1,4 @@
-// src/app/user/badges/page.tsx
+// src/app/badges/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
