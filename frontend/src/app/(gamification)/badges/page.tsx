@@ -11,11 +11,12 @@ import {
   Chip,
   Avatar,
   useTheme,
-  styled,
   Tabs,
   Tab,
-  Fade,
-  Paper,
+  Card,
+  CardContent,
+  styled,
+  Paper
 } from "@mui/material";
 import {
   GlassCard,
@@ -24,8 +25,21 @@ import {
   EmptyState,
 } from "@/components/ui";
 import fetchAPI from "@/lib/api";
-import { UserGamificationResponse, BadgeWithEventType } from "@/lib/types";
 import { EmojiEvents, Stars } from "@mui/icons-material";
+import { BadgeWithEventType, UserGamificationResponse } from "@/lib/types";
+
+const BadgeCard = styled(motion.div)(({ theme }) => ({
+  height: "100%",
+  borderRadius: theme.shape.borderRadius,
+  overflow: "hidden",
+  background: "rgba(255, 255, 255, 0.9)",
+  boxShadow: theme.shadows[2],
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-5px)",
+    boxShadow: theme.shadows[6]
+  }
+}));
 
 // Styled Components - Actualizados para mejor legibilidad
 const BadgeContainer = styled("div")(({ theme }) => ({
@@ -36,21 +50,6 @@ const BadgeContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: "1fr",
     padding: theme.spacing(2),
-  },
-}));
-
-const BadgeCard = styled(Box)(({ theme }) => ({
-  height: "100%",
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-  position: "relative",
-  overflow: "hidden",
-  borderRadius: "16px",
-  background: theme.palette.background.paper,
-  boxShadow: theme.shadows[2],
-  border: "1px solid rgba(222, 226, 230, 0.5)",
-  "&:hover": {
-    transform: "translateY(-5px)",
-    boxShadow: theme.shadows[6],
   },
 }));
 
@@ -154,146 +153,116 @@ export default function Badges() {
   const filteredBadges = selectedTab === "all" ? badges : groupedBadges[selectedTab] || [];
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-        py: { xs: 4, md: 6 },
-        px: { xs: 2, md: 6 },
-      }}
-    >
-      <Box sx={{ maxWidth: "1600px", mx: "auto" }}>
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Box
-            sx={{
-              fontSize: { xs: "2rem", md: "2.5rem" },
-              fontWeight: "bold",
-              mb: 4,
-              textAlign: "center",
-            }}
-          >
+    <Box sx={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)",
+      py: 6,
+      px: { xs: 2, sm: 4 },
+    }}>
+      <Card sx={{
+        maxWidth: "1600px",
+        mx: "auto",
+        borderRadius: 4,
+        boxShadow: "0 10px 30px rgba(0, 0, 100, 0.1)",
+      }}>
+        <Box sx={{
+          background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+          color: "white",
+          p: 3,
+          textAlign: "center"
+        }}>
+          <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
             <GradientText>Mis Logros</GradientText>
-            <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
-              Tus insignias de reconocimiento
-            </Typography>
-          </Box>
-        </motion.div>
+          </Typography>
+          <Typography variant="subtitle1">
+            Tus insignias de reconocimiento
+          </Typography>
+        </Box>
 
-        <Paper elevation={0} sx={{ mb: 4, borderRadius: "12px", background: "rgba(255, 255, 255, 0.7)" }}>
-          <StyledTabs
+        <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+          <Tabs
             value={selectedTab}
             onChange={(_, val) => setSelectedTab(val)}
             variant="scrollable"
-            scrollButtons="auto"
-            sx={{ 
-              "& .MuiTabs-scroller": {
-                padding: "0 16px",
+            sx={{
+              mb: 4,
+              '& .MuiTabs-indicator': {
+                height: 3,
+                background: theme.palette.primary.main
               }
             }}
           >
             <Tab label="Todos" value="all" />
             {eventTypes.map((type) => (
-              <Tab 
-                key={type} 
-                label={type.replace(/_/g, " ")} 
-                value={type} 
+              <Tab
+                key={type}
+                label={type.replace(/_/g, " ")}
+                value={type}
                 icon={<BadgeIcon type={type} />}
-                iconPosition="start"
+                sx={{ minHeight: 48 }}
               />
             ))}
-          </StyledTabs>
-        </Paper>
+          </Tabs>
 
-        {filteredBadges.length === 0 ? (
-          <EmptyState
-            icon="🎖️"
-            title="Aún no tienes insignias"
-            description="Completa acciones en la plataforma para desbloquear logros"
-          />
-        ) : (
-          <BadgeContainer>
-            <AnimatePresence>
-              {filteredBadges.map((badge) => (
-                <motion.div
-                  key={badge.id}
+          <Grid container spacing={3}>
+            {filteredBadges.map((badge) => (
+              <Grid item xs={12} sm={6} md={4} key={badge.id}>
+                <BadgeCard
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  whileHover={{ scale: 1.02 }}
                 >
-                  <BadgeCard>
-                    <Box sx={{ p: 3, height: "100%" }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          mb: 2,
-                          gap: 2,
-                        }}
-                      >
-                        <Avatar
-                          sx={{
-                            width: 56,
-                            height: 56,
-                            bgcolor: theme.palette.primary.light,
-                            color: theme.palette.primary.contrastText
-                          }}
-                        >
-                          <BadgeIcon type={badge.event_type.name} />
-                        </Avatar>
-                        <Box>
-                          <Typography
-                            variant="h6"
-                            fontWeight="bold"
-                            color="text.primary"
-                          >
-                            {badge.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {badge.event_type.name.replace(/_/g, " ")}
-                          </Typography>
-                        </Box>
-                      </Box>
-
-                      <Typography variant="body2" color="text.primary" sx={{ mb: 3 }}>
-                        {badge.description}
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          mt: "auto",
-                        }}
-                      >
-                        <Chip
-                          label={`${badge.required_points} pts`}
-                          color="primary"
-                          size="small"
-                          icon={<Stars sx={{ fontSize: "1rem" }} />}
-                          sx={{ 
-                            background: theme.palette.primary.main,
-                            color: theme.palette.primary.contrastText
-                          }}
-                        />
-                        <Typography variant="caption" color="text.secondary">
-                          {badge.user_type}
+                  <Box sx={{ p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+                      <Avatar sx={{
+                        width: 56,
+                        height: 56,
+                        bgcolor: 'primary.light',
+                        color: 'primary.contrastText'
+                      }}>
+                        <BadgeIcon type={badge.event_type.name} />
+                      </Avatar>
+                      <Box>
+                        <Typography variant="h6" fontWeight={600}>
+                          {badge.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {badge.event_type.name.replace(/_/g, " ")}
                         </Typography>
                       </Box>
                     </Box>
-                  </BadgeCard>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </BadgeContainer>
-        )}
-      </Box>
+
+                    <Typography variant="body2" sx={{ mb: 3 }}>
+                      {badge.description}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Chip
+                        label={`${badge.required_points} pts`}
+                        color="primary"
+                        size="small"
+                        icon={<Stars />}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        {badge.user_type}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </BadgeCard>
+              </Grid>
+            ))}
+          </Grid>
+
+          {filteredBadges.length === 0 && (
+            <EmptyState
+              icon="🎖️"
+              title="Aún no tienes insignias"
+              description="Completa acciones en la plataforma para desbloquear logros"
+            />
+          )}
+        </CardContent>
+      </Card>
     </Box>
   );
 }

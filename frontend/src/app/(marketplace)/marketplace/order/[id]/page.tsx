@@ -1,21 +1,14 @@
-// frontend/src/app/%28marketplace%29/marketplace/order/%5Bid%5D/page.tsx
-"use client"; //  cannot use both "use client" and export function "generateStaticParams()".]
+// frontend/src/app/(marketplace)/marketplace/order/[id]/page.tsx
+"use client";
 export const dynamic = 'force-dynamic';
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { Order, OrderItem } from "@/lib/types";
-import { Box, Typography, Button, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Order } from "@/lib/types";
+import OrderSuccessClient from "./OrderSuccessClient";
+import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-
-// Generar parámetros estáticos
-// Ensure generateStaticParams is implemented robustly for static export
-
-// Update the PageProps type to match the expected structure
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-// export default async function OrderSuccessPage({ params }: PageProps) {
+import { ShoppingBag } from "@mui/icons-material";
 
 export default function OrderSuccessPage() {
   const { id } = useParams();
@@ -23,43 +16,34 @@ export default function OrderSuccessPage() {
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const { data } = await fetchAPI<Order>(`/v1/marketplace/orders/${id}`);
-      setOrder(data);
+      try {
+        const { data } = await fetchAPI<Order>(`/v1/marketplace/orders/${id}`);
+        setOrder(data);
+      } catch (error) {
+        console.error("Error fetching order:", error);
+      }
     };
     fetchOrder();
   }, [id]);
 
-  if (!order) return <Typography>Cargando...</Typography>;
+  if (!order) {
+    return (
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)'
+      }}>
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        >
+          <ShoppingBag sx={{ fontSize: 60, color: 'primary.main' }} />
+        </motion.div>
+      </Box>
+    );
+  }
 
-  return (
-    <Box sx={{ p: 4, minHeight: "100vh", background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)" }}>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <Typography variant="h4" sx={{ mb: 3 }}>¡Compra Exitosa!</Typography>
-        <Typography variant="h6">Orden #{order.id}</Typography>
-        <Typography>Fecha: {new Date(order.created_at).toLocaleString()}</Typography>
-        <Typography>Estado: {order.status}</Typography>
-        <Typography>Total: {order.total_amount} créditos</Typography>
-        <Divider sx={{ my: 2 }} />
-        <Typography variant="h6">Detalles de la Orden</Typography>
-        <List>
-          {order.items.map((item: OrderItem) => (
-            <ListItem key={item.id}>
-              <ListItemText
-                primary={item.product_name}
-                secondary={`Cantidad: ${item.quantity} - Precio: ${item.price} créditos`}
-              />
-              {item.is_digital && item.file_path && (
-                <Button href={item.file_path} download variant="outlined" sx={{ ml: 2 }}>
-                  Descargar
-                </Button>
-              )}
-            </ListItem>
-          ))}
-        </List>
-        <Button variant="contained" onClick={() => window.location.href = "/marketplace"} sx={{ mt: 2 }}>
-          Volver al Marketplace
-        </Button>
-      </motion.div>
-    </Box>
-  );
+  return <OrderSuccessClient order={order} />;
 }

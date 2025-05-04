@@ -1,6 +1,6 @@
 // frontend/src/app/points/page.tsx
 // Página de historial y progreso de puntos y gamificación
-
+// frontend/src/app/points/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,31 +8,47 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth/context";
 import { useRouter } from "next/navigation";
 import fetchAPI from "@/lib/api";
-import { GlassCard, GradientText, TimelineIcon, EmptyState } from "@/components/ui";
-import { Box, Typography, Tabs, Tab, styled, Chip, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  Chip,
+  Avatar,
+  useTheme,
+  Card,
+  CardContent,
+  Grid,
+  styled
+} from "@mui/material";
+import {
+  GlassCard,
+  GradientText,
+  TimelineIcon,
+  EmptyState
+} from "@/components/ui";
+import {
+  EmojiEvents,
+  Star,
+  Timeline,
+  CardGiftcard,
+  Redeem
+} from "@mui/icons-material";
 
 const TimelineItemContainer = styled(motion.div)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(3),
   position: "relative",
-  paddingLeft: theme.spacing(6),
-  paddingBottom: theme.spacing(4),
-  borderLeft: `2px solid ${theme.palette.divider}`,
-  "&:last-child": {
-    borderLeft: "none",
-    paddingBottom: 0,
-  },
-  "&::before": {
-    content: '""',
-    position: "absolute",
-    left: "-9px",
-    top: 0,
-    width: "16px",
-    height: "16px",
-    borderRadius: "50%",
-    background: theme.palette.primary.main,
-    boxShadow: `0 0 0 4px ${theme.palette.primary.light}33`,
-  },
+  padding: theme.spacing(3),
+  background: "rgba(255, 255, 255, 0.9)",
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[2],
+  marginBottom: theme.spacing(2),
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-3px)",
+    boxShadow: theme.shadows[4]
+  }
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -148,157 +164,140 @@ export default function PointsPage() {
   const totalPoints = pointsHistory.reduce((sum, entry) => sum + entry.points, 0);
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
-        py: { xs: 4, md: 8 },
-        px: { xs: 2, md: 8 },
-      }}
-    >
-      <Box sx={{ maxWidth: "1200px", mx: "auto" }}>
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Box sx={{ mb: 6, textAlign: "center" }}>
-            <Typography variant="h3" sx={{ fontWeight: "bold", mb: 1 }}>
-              <GradientText>Historial de Puntos</GradientText>
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              Tu progreso y logros en la plataforma
-            </Typography>
-          </Box>
-        </motion.div>
+    <Box sx={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)",
+      py: 6,
+      px: { xs: 2, sm: 4 },
+    }}>
+      <Card sx={{
+        maxWidth: "1200px",
+        mx: "auto",
+        borderRadius: 4,
+        boxShadow: "0 10px 30px rgba(0, 0, 100, 0.1)",
+      }}>
+        <Box sx={{
+          background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+          color: "white",
+          p: 3,
+          textAlign: "center"
+        }}>
+          <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+            <GradientText>Historial de Puntos</GradientText>
+          </Typography>
+          <Typography variant="subtitle1">
+            Tu progreso y logros en la plataforma
+          </Typography>
+        </Box>
 
-        <StyledTabs
-          value={selectedTab}
-          onChange={(_, val) => setSelectedTab(val)}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{ 
-            mb: 4,
-            "& .MuiTabs-scroller": {
-              padding: "0 16px",
-            },
-            background: "rgba(255, 255, 255, 0.7)",
-            borderRadius: theme.shape.borderRadius,
-            px: 2,
-            py: 1,
-          }}
-        >
-          <Tab label="Todos" value="all" />
-          {eventTypes.map((type) => (
-            <Tab 
-              key={type} 
-              label={type.replace(/_/g, " ")} 
-              value={type} 
-              icon={<TimelineIcon type={type} />}
-              iconPosition="start"
-            />
-          ))}
-        </StyledTabs>
-
-        <StyledGlassCard sx={{ p: { xs: 4, md: 6 } }}>
-          <Box
+        <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+          <Tabs
+            value={selectedTab}
+            onChange={(_, val) => setSelectedTab(val)}
+            variant="scrollable"
             sx={{
-              display: "flex",
-              flexDirection: { xs: "column", md: "row" },
-              alignItems: { xs: "flex-start", md: "center" },
-              justifyContent: "space-between",
-              mb: 6,
-              gap: 3,
+              mb: 4,
+              '& .MuiTabs-indicator': {
+                height: 3,
+                background: theme.palette.primary.main
+              }
             }}
           >
-            <Box>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-                Puntos Totales
-              </Typography>
-              <Typography 
-                variant="h3" 
-                sx={{ 
-                  fontWeight: "bold",
-                  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  display: 'inline-block'
-                }}
-              >
-                {totalPoints}
-              </Typography>
-            </Box>
-            {user && (
-              <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  Nivel Actual
-                </Typography>
-                <PointsBadge
-                  label="Experto"
-                />
-              </Box>
-            )}
-          </Box>
-
-          <Box sx={{ "& > * + *": { mt: 4 } }}>
-            <AnimatePresence>
-              {filteredPoints.map((entry, index) => (
-                <TimelineItemContainer
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <TimelineIcon type={entry.event_type.name} />
-                  <Box sx={{ flex: 1 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: { xs: "column", sm: "row" },
-                        justifyContent: "space-between",
-                        alignItems: { xs: "flex-start", sm: "center" },
-                        mb: 2,
-                        gap: 1,
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "semibold" }}>
-                        +{entry.points} puntos
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {new Date(entry.created_at).toLocaleDateString("es-ES", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </Typography>
-                    </Box>
-                    <Typography variant="body1" sx={{ color: "text.primary", mb: 2 }}>
-                      {entry.event_type.description}
-                    </Typography>
-                    <Chip
-                      label={entry.event_type.name}
-                      size="small"
-                      sx={{ 
-                        background: theme.palette.action.selected,
-                        color: theme.palette.text.primary,
-                      }}
-                    />
-                  </Box>
-                </TimelineItemContainer>
-              ))}
-            </AnimatePresence>
-
-            {filteredPoints.length === 0 && (
-              <EmptyState
-                icon="📊"
-                title="Aún no tienes puntos"
-                description="Realiza actividades en la plataforma para ganar puntos"
+            <Tab label="Todos" value="all" />
+            {eventTypes.map((type) => (
+              <Tab
+                key={type}
+                label={type.replace(/_/g, " ")}
+                value={type}
+                icon={<TimelineIcon type={type} />}
+                sx={{ minHeight: 48 }}
               />
-            )}
-          </Box>
-        </StyledGlassCard>
-      </Box>
+            ))}
+          </Tabs>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <Card sx={{
+                background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
+                borderRadius: 3,
+                p: 3
+              }}>
+                <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+                  Resumen de Puntos
+                </Typography>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h2" sx={{ 
+                    fontWeight: 800,
+                    background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>
+                    {totalPoints}
+                  </Typography>
+                  <Chip
+                    label="Nivel Experto"
+                    sx={{
+                      mt: 2,
+                      background: theme.palette.success.light,
+                      color: theme.palette.success.contrastText,
+                      fontWeight: 700
+                    }}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={8}>
+              <AnimatePresence>
+                {filteredPoints.map((entry, index) => (
+                  <TimelineItemContainer
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Avatar sx={{
+                      bgcolor: 'primary.light',
+                      color: 'primary.main',
+                      width: 40,
+                      height: 40
+                    }}>
+                      <TimelineIcon type={entry.event_type.name} />
+                    </Avatar>
+                    <Box sx={{ flex: 1 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          +{entry.points} puntos
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(entry.created_at).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" sx={{ mb: 1 }}>
+                        {entry.event_type.description}
+                      </Typography>
+                      <Chip
+                        label={entry.event_type.name}
+                        size="small"
+                        sx={{ bgcolor: 'action.selected' }}
+                      />
+                    </Box>
+                  </TimelineItemContainer>
+                ))}
+              </AnimatePresence>
+
+              {filteredPoints.length === 0 && (
+                <EmptyState
+                  icon="📊"
+                  title="Aún no tienes puntos"
+                  description="Realiza actividades en la plataforma para ganar puntos"
+                />
+              )}
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

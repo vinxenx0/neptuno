@@ -19,8 +19,9 @@ import {
   TableRow,
   CircularProgress,
   Paper,
-  Divider,
-  Link
+  Link,
+  Avatar,
+  Grid
 } from '@mui/material'
 import { 
   Shield as ShieldCheckIcon, 
@@ -30,6 +31,38 @@ import {
   Mail as EnvelopeIcon 
 } from '@mui/icons-material'
 import { consentUpdate, injectGTM } from '../../lib/gdpr/gtm'
+import { motion, AnimatePresence } from 'framer-motion'
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+}
+
+const hoverVariants = {
+  hover: {
+    y: -5,
+    scale: 1.02,
+    transition: { duration: 0.3 }
+  }
+}
 
 export default function PrivacyCenter() {
   const [activeTab, setActiveTab] = useState(0)
@@ -38,13 +71,9 @@ export default function PrivacyCenter() {
   const [showJson, setShowJson] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [dataRequests, setDataRequests] = useState([])
-  
-  
-  // Estado para controles de consentimiento
   const [analyticsConsent, setAnalyticsConsent] = useState(false)
   const [adsConsent, setAdsConsent] = useState(false)
 
-  // Cargar consentimiento almacenado
   useEffect(() => {
     setIsLoading(true)
     const stored = localStorage.getItem('cookie_consent')
@@ -61,7 +90,6 @@ export default function PrivacyCenter() {
       setAdsConsent(ads)
     }
     
-    // Simular carga de solicitudes de datos
     setTimeout(() => {
       setDataRequests([
         { id: 1, type: 'Datos personales', date: new Date().toISOString().split('T')[0], status: 'Completado' }
@@ -70,11 +98,10 @@ export default function PrivacyCenter() {
     }, 800)
   }, [])
 
-  // Obtener consentimiento del backend
   useEffect(() => {
     const fetchConsent = async () => {
       try {
-        const res = await fetch('/api/privacy?userId=usuario123') // Simulado
+        const res = await fetch('/api/privacy?userId=usuario123')
         if (res.ok) {
           const data = await res.json()
           setConsent(data.consentData)
@@ -87,24 +114,22 @@ export default function PrivacyCenter() {
   }, [])
 
   const updateCookieConsent = () => {
-    // Actualiza estados globales
-    localStorage.setItem('cookie_consent', 'true');
-    localStorage.setItem('analytics_consent', analyticsConsent.toString());
-    localStorage.setItem('ads_consent', adsConsent.toString());
-    localStorage.setItem('cookie_consent_timestamp', Date.now().toString());
-  
-    // Aplica lógica de GTM
-    consentUpdate(analyticsConsent, adsConsent);
-    injectGTM();
-  
-    alert('Tus preferencias de cookies se han actualizado.');
-    window.location.reload(); // Opcional
+    localStorage.setItem('cookie_consent', 'true')
+    localStorage.setItem('analytics_consent', analyticsConsent.toString())
+    localStorage.setItem('ads_consent', adsConsent.toString())
+    localStorage.setItem('cookie_consent_timestamp', Date.now().toString())
+    
+    consentUpdate(analyticsConsent, adsConsent)
+    injectGTM()
+    
+    alert('Tus preferencias de cookies se han actualizado.')
+    window.location.reload()
   }
 
   const handleDownloadData = async () => {
     setIsLoading(true)
     try {
-      const res = await fetch('/api/privacy/download', { method: 'POST' })
+      const res = await fetch('/api/privacy/download', { method: "POST" })
       const blob = await res.blob()
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -124,7 +149,7 @@ export default function PrivacyCenter() {
     if (confirm('¿Estás seguro de que quieres eliminar tu cuenta y todos tus datos? Esta acción no se puede deshacer.')) {
       setIsLoading(true)
       try {
-        await fetch('/api/privacy/delete', { method: 'POST' })
+        await fetch('/api/privacy/delete', { method: "POST" })
         alert('Tu solicitud de eliminación fue recibida. Serás notificado.')
       } catch (err) {
         alert('Error al procesar la solicitud. Intenta más tarde.')
@@ -149,376 +174,397 @@ export default function PrivacyCenter() {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'grey.50', p: { xs: 2, md: 4 } }}>
-      <Box sx={{ maxWidth: '1536px', mx: 'auto' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 4 }}>
-          <ShieldCheckIcon color="primary" sx={{ fontSize: 32 }} />
-          <Box>
-            <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'grey.900' }}>
-              Centro de Privacidad
-            </Typography>
-            <Typography color="text.secondary">
-              Controla cómo recopilamos y usamos tu información
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ mb: 4 }}>
-            <Tab label="Preferencias" />
-            <Tab label="Solicitudes de Datos" />
-            <Tab label="Documentación" />
-          </Tabs>
-
-          <Box sx={{ mt: 2 }}>
-            {activeTab === 0 && (
-              <Box sx={{ display: 'grid', gridTemplateColumns: { md: '1fr 1fr' }, gap: 3 }}>
-                <Card>
-                  <CardContent sx={{ '& > * + *': { mt: 3 } }}>
-                    <Box>
-                      <Typography variant="h5" component="h2">
-                        Configuración de Privacidad
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Administra tus preferencias de consentimiento
-                      </Typography>
-                    </Box>
-
-                    {consent ? (
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                          Estado actual:
-                        </Typography>
-                        <Box component="ul" sx={{ listStyle: 'none', pl: 0, '& > li + li': { mt: 1 } }}>
-                          {Object.entries(consent).map(([key, value]) => (
-                            <Box component="li" key={key} sx={{ display: 'flex', alignItems: 'center' }}>
-                              <Box sx={{ 
-                                width: 16, 
-                                height: 16, 
-                                mr: 1, 
-                                borderRadius: '50%', 
-                                bgcolor: 'primary.light',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}>
-                                {value && (
-                                  <Box sx={{ 
-                                    width: 8, 
-                                    height: 8, 
-                                    borderRadius: '50%', 
-                                    bgcolor: 'primary.main' 
-                                  }} />
-                                )}
-                              </Box>
-                              <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                                {key}: <span>{value ? 'Activado' : 'Desactivado'}</span>
-                              </Typography>
-                            </Box>
-                          ))}
-                        </Box>
-                      </Box>
-                    ) : (
-                      <Typography variant="body2">
-                        No hemos registrado tu consentimiento aún.
-                      </Typography>
-                    )}
-
-                    <Box sx={{ '& > * + *': { mt: 2 } }}>
-                      <Paper elevation={0} sx={{ 
-                        p: 2, 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between',
-                        border: '1px solid',
-                        borderColor: 'divider'
-                      }}>
-                        <Box>
-                          <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                            Analítica
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Cookies de análisis (Google Analytics)
-                          </Typography>
-                        </Box>
-                        <Switch
-                          checked={analyticsConsent}
-                          onChange={() => setAnalyticsConsent(!analyticsConsent)}
-                          color="primary"
-                        />
-                      </Paper>
-
-                      <Paper elevation={0} sx={{ 
-                        p: 2, 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between',
-                        border: '1px solid',
-                        borderColor: 'divider'
-                      }}>
-                        <Box>
-                          <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                            Marketing
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Cookies de publicidad (Google Ads, Meta Ads)
-                          </Typography>
-                        </Box>
-                        <Switch
-                          checked={adsConsent}
-                          onChange={() => setAdsConsent(!adsConsent)}
-                          color="primary"
-                        />
-                      </Paper>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', gap: 2, pt: 2 }}>
-                      <Button
-                        onClick={updateCookieConsent}
-                        variant="contained"
-                        color="primary"
-                      >
-                        Guardar preferencias
-                      </Button>
-                      <Button
-                        onClick={() => window.dispatchEvent(new Event('openConsentModal'))}
-                        variant="outlined"
-                      >
-                        Abrir banner de consentimiento
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <Card>
-                    <CardContent sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-                      <Box sx={{ 
-                        bgcolor: 'primary.light', 
-                        p: 1.5, 
-                        borderRadius: '50%',
-                        color: 'primary.main'
-                      }}>
-                        <DocumentTextIcon />
-                      </Box>
-                      <Box>
-                        <Typography variant="h5" component="h3">
-                          Solicitar mis datos
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                          Descarga un archivo con todos tus datos personales
-                        </Typography>
-                        <Button 
-                          variant="outlined"
-                          onClick={handleDownloadData}
-                          startIcon={<DocumentTextIcon />}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? 'Cargando...' : 'Descargar mis datos'}
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
-
-                  <Card sx={{ borderColor: 'error.light' }}>
-                    <CardContent sx={{ 
-                      display: 'flex', 
-                      alignItems: 'flex-start', 
-                      gap: 2,
-                      borderLeft: '4px solid',
-                      borderColor: 'error.main'
-                    }}>
-                      <Box sx={{ 
-                        bgcolor: 'error.light', 
-                        p: 1.5, 
-                        borderRadius: '50%',
-                        color: 'error.main'
-                      }}>
-                        <TrashIcon />
-                      </Box>
-                      <Box>
-                        <Typography variant="h5" component="h3">
-                          Eliminar mi cuenta
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                          Esta acción eliminará permanentemente todos tus datos
-                        </Typography>
-                        <Button 
-                          variant="outlined"
-                          color="error"
-                          onClick={handleDeleteAccount}
-                          startIcon={<TrashIcon />}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? 'Procesando...' : 'Solicitar eliminación'}
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Box>
+    <Box sx={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)',
+      p: { xs: 2, md: 4 }
+    }}>
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        viewport={{ once: true }}
+      >
+        <Card sx={{
+          maxWidth: '1536px',
+          mx: 'auto',
+          borderRadius: 4,
+          boxShadow: '0 10px 30px rgba(0, 0, 100, 0.1)',
+          overflow: 'hidden'
+        }}>
+          <Box sx={{
+            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            color: 'white',
+            p: 3
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <ShieldCheckIcon sx={{ fontSize: 40 }} />
+              <Box>
+                <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                  Centro de Privacidad
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                  Controla cómo recopilamos y usamos tu información
+                </Typography>
               </Box>
-            )}
-
-            {activeTab === 1 && (
-              <Card>
-                <CardContent>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    mb: 3
-                  }}>
-                    <Box>
-                      <Typography variant="h5" component="h2">
-                        Mis Solicitudes
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Historial de solicitudes de datos personales
-                      </Typography>
-                    </Box>
-                    <Button 
-                      variant="contained"
-                      onClick={handleDownloadData}
-                      startIcon={<DocumentTextIcon />}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Cargando...' : 'Nueva Solicitud'}
-                    </Button>
-                  </Box>
-
-                  {isLoading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-                      <CircularProgress color="primary" />
-                    </Box>
-                  ) : (
-                    <Box sx={{ overflowX: 'auto' }}>
-                      <Table>
-                        <TableHead sx={{ bgcolor: 'grey.50' }}>
-                          <TableRow>
-                            <TableCell sx={{ fontWeight: 'medium' }}>ID</TableCell>
-                            <TableCell sx={{ fontWeight: 'medium' }}>Tipo</TableCell>
-                            <TableCell sx={{ fontWeight: 'medium' }}>Fecha</TableCell>
-                            <TableCell sx={{ fontWeight: 'medium' }}>Estado</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {dataRequests.map((request) => (
-                            <TableRow key={request.id}>
-                              <TableCell>#{request.id}</TableCell>
-                              <TableCell>{request.type}</TableCell>
-                              <TableCell>{request.date}</TableCell>
-                              <TableCell>
-                                <Chip 
-                                  label={request.status}
-                                  color={request.status === 'Completado' ? 'success' : 'warning'}
-                                  size="small"
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {activeTab === 2 && (
-              <Card>
-                <CardContent sx={{ '& > * + *': { mt: 3 } }}>
-                  <Box>
-                    <Typography variant="h5" component="h2">
-                      Documentación de cumplimiento
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Puedes consultar nuestros documentos avanzados de privacidad
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { md: '1fr 1fr' }, gap: 3 }}>
-                    <Paper elevation={0} sx={{ 
-                      p: 3, 
-                      border: '1px solid', 
-                      borderColor: 'divider',
-                      '&:hover': { bgcolor: 'grey.50' }
-                    }}>
-                      <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
-                        Documentos legales
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        Registro de Actividades de Tratamiento, DPIA, política de retención y más.
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Link href="/assets/compliance-docs.json" download>
-                          <Button 
-                            variant="outlined" 
-                            size="small"
-                            startIcon={<DocumentTextIcon />}
-                          >
-                            Descargar JSON
-                          </Button>
-                        </Link>
-                        <Button 
-                          variant="outlined" 
-                          size="small"
-                          startIcon={<DocumentTextIcon />}
-                          onClick={fetchComplianceJson}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? 'Cargando...' : 'Ver en línea'}
-                        </Button>
-                      </Box>
-                    </Paper>
-
-                    <Paper elevation={0} sx={{ 
-                      p: 3, 
-                      border: '1px solid', 
-                      borderColor: 'divider',
-                      '&:hover': { bgcolor: 'grey.50' }
-                    }}>
-                      <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
-                        Contacto
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        ¿Tienes preguntas sobre privacidad?
-                      </Typography>
-                      <Link href="mailto:privacy@tuempresa.com" underline="none">
-                        <Button 
-                          variant="outlined" 
-                          size="small"
-                          startIcon={<EnvelopeIcon />}
-                        >
-                          privacy@tuempresa.com
-                        </Button>
-                      </Link>
-                    </Paper>
-                  </Box>
-
-                  {showJson && complianceJson && (
-                    <Box sx={{ mt: 3 }}>
-                      <Typography variant="h5" component="h2" sx={{ mb: 1 }}>
-                        Documento de cumplimiento
-                      </Typography>
-                      <Paper elevation={0} sx={{ 
-                        p: 2, 
-                        bgcolor: 'grey.100', 
-                        overflow: 'auto',
-                        maxHeight: 400,
-                        whiteSpace: 'pre-wrap'
-                      }}>
-                        <Typography component="pre" sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
-                          {JSON.stringify(complianceJson, null, 2)}
-                        </Typography>
-                      </Paper>
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            </Box>
           </Box>
-        </Box>
-      </Box>
+
+          <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+            <Tabs 
+              value={activeTab} 
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              sx={{ 
+                mb: 4,
+                '& .MuiTabs-flexContainer': { gap: 2 },
+                '& .MuiTab-root': {
+                  fontSize: '1.1rem',
+                  fontWeight: 500,
+                  minHeight: 48,
+                  borderRadius: 2
+                }
+              }}
+            >
+              <Tab label="Preferencias" />
+              <Tab label="Solicitudes" />
+              <Tab label="Documentación" />
+            </Tabs>
+
+            <AnimatePresence mode='wait'>
+              {activeTab === 0 && (
+                <motion.div
+                  key="preferences"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                      <motion.div variants={itemVariants}>
+                        <Card sx={{ borderRadius: 3 }}>
+                          <CardContent sx={{ p: 3 }}>
+                            <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+                              <CogIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                              Configuración de Privacidad
+                            </Typography>
+                            
+                            <Box sx={{ mb: 3 }}>
+                              <Paper sx={{ 
+                                p: 2, 
+                                mb: 2, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                borderRadius: 2,
+                                border: '1px solid',
+                                borderColor: 'divider'
+                              }}>
+                                <Box sx={{ flexGrow: 1 }}>
+                                  <Typography variant="body1" fontWeight={500}>
+                                    Analítica
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Google Analytics
+                                  </Typography>
+                                </Box>
+                                <Switch
+                                  checked={analyticsConsent}
+                                  onChange={() => setAnalyticsConsent(!analyticsConsent)}
+                                  color="primary"
+                                />
+                              </Paper>
+
+                              <Paper sx={{ 
+                                p: 2, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                borderRadius: 2,
+                                border: '1px solid',
+                                borderColor: 'divider'
+                              }}>
+                                <Box sx={{ flexGrow: 1 }}>
+                                  <Typography variant="body1" fontWeight={500}>
+                                    Marketing
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Google Ads, Meta Ads
+                                  </Typography>
+                                </Box>
+                                <Switch
+                                  checked={adsConsent}
+                                  onChange={() => setAdsConsent(!adsConsent)}
+                                  color="primary"
+                                />
+                              </Paper>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                              <motion.div whileHover={{ scale: 1.05 }}>
+                                <Button
+                                  variant="contained"
+                                  onClick={updateCookieConsent}
+                                  sx={{
+                                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                    fontWeight: 600,
+                                    borderRadius: 2,
+                                    px: 4,
+                                    py: 1.5
+                                  }}
+                                >
+                                  Guardar Preferencias
+                                </Button>
+                              </motion.div>
+                            </Box>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <motion.div variants={itemVariants}>
+                        <Card sx={{ borderRadius: 3, height: '100%' }}>
+                          <CardContent sx={{ p: 3, height: '100%' }}>
+                            <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+                              <DocumentTextIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                              Gestión de Datos
+                            </Typography>
+                            
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <motion.div whileHover="hover" variants={hoverVariants}>
+                                  <Paper sx={{ 
+                                    p: 2, 
+                                    borderRadius: 2,
+                                    border: '1px solid',
+                                    borderColor: 'divider'
+                                  }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                      <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.main' }}>
+                                        <DocumentTextIcon />
+                                      </Avatar>
+                                      <Box>
+                                        <Typography variant="body1" fontWeight={500}>
+                                          Descargar mis datos
+                                        </Typography>
+                                        <Button 
+                                          variant="outlined"
+                                          onClick={handleDownloadData}
+                                          disabled={isLoading}
+                                          sx={{ mt: 1, borderRadius: 2 }}
+                                        >
+                                          {isLoading ? 'Generando...' : 'Iniciar Descarga'}
+                                        </Button>
+                                      </Box>
+                                    </Box>
+                                  </Paper>
+                                </motion.div>
+                              </Grid>
+
+                              <Grid item xs={12}>
+                                <motion.div whileHover="hover" variants={hoverVariants}>
+                                  <Paper sx={{ 
+                                    p: 2, 
+                                    borderRadius: 2,
+                                    border: '1px solid',
+                                    borderColor: 'error.light',
+                                    background: 'rgba(239, 68, 68, 0.05)'
+                                  }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                      <Avatar sx={{ bgcolor: 'error.light', color: 'error.main' }}>
+                                        <TrashIcon />
+                                      </Avatar>
+                                      <Box>
+                                        <Typography variant="body1" fontWeight={500} color="error.main">
+                                          Eliminar Cuenta
+                                        </Typography>
+                                        <Button 
+                                          variant="outlined"
+                                          color="error"
+                                          onClick={handleDeleteAccount}
+                                          disabled={isLoading}
+                                          sx={{ mt: 1, borderRadius: 2 }}
+                                        >
+                                          {isLoading ? 'Procesando...' : 'Solicitar Eliminación'}
+                                        </Button>
+                                      </Box>
+                                    </Box>
+                                  </Paper>
+                                </motion.div>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </Grid>
+                  </Grid>
+                </motion.div>
+              )}
+
+              {activeTab === 1 && (
+                <motion.div
+                  key="requests"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Card sx={{ borderRadius: 3 }}>
+                    <CardContent sx={{ p: 3 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                          Historial de Solicitudes
+                        </Typography>
+                        <motion.div whileHover={{ scale: 1.05 }}>
+                          <Button
+                            variant="contained"
+                            onClick={handleDownloadData}
+                            sx={{
+                              background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                              fontWeight: 600,
+                              borderRadius: 2
+                            }}
+                          >
+                            Nueva Solicitud
+                          </Button>
+                        </motion.div>
+                      </Box>
+
+                      <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                        <Table sx={{ minWidth: 650 }}>
+                          <TableHead sx={{ bgcolor: 'grey.50' }}>
+                            <TableRow>
+                              {['ID', 'Tipo', 'Fecha', 'Estado'].map((header) => (
+                                <TableCell key={header} sx={{ fontWeight: 600 }}>
+                                  {header}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {dataRequests.map((request) => (
+                              <TableRow 
+                                key={request.id}
+                                sx={{ '&:nth-of-type(odd)': { bgcolor: 'grey.50' } }}
+                              >
+                                <TableCell>#{request.id}</TableCell>
+                                <TableCell>{request.type}</TableCell>
+                                <TableCell>{request.date}</TableCell>
+                                <TableCell>
+                                  <Chip 
+                                    label={request.status}
+                                    color={request.status === 'Completado' ? 'success' : 'warning'}
+                                    sx={{ borderRadius: 1 }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {activeTab === 2 && (
+                <motion.div
+                  key="docs"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Card sx={{ borderRadius: 3 }}>
+                    <CardContent sx={{ p: 3 }}>
+                      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+                        Documentación Legal
+                      </Typography>
+                      
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={6}>
+                          <motion.div whileHover="hover" variants={hoverVariants}>
+                            <Paper sx={{ 
+                              p: 3, 
+                              borderRadius: 2,
+                              border: '1px solid',
+                              borderColor: 'divider'
+                            }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                                <DocumentTextIcon color="primary" sx={{ fontSize: 32 }} />
+                                <Typography variant="h6" fontWeight={600}>
+                                  Documentos Regulatorios
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                Accede a nuestros documentos de cumplimiento normativo
+                              </Typography>
+                              <Button
+                                variant="outlined"
+                                fullWidth
+                                onClick={fetchComplianceJson}
+                                sx={{ borderRadius: 2 }}
+                              >
+                                {isLoading ? 'Cargando...' : 'Ver Documentación'}
+                              </Button>
+                            </Paper>
+                          </motion.div>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}>
+                          <motion.div whileHover="hover" variants={hoverVariants}>
+                            <Paper sx={{ 
+                              p: 3, 
+                              borderRadius: 2,
+                              border: '1px solid',
+                              borderColor: 'divider'
+                            }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                                <EnvelopeIcon color="primary" sx={{ fontSize: 32 }} />
+                                <Typography variant="h6" fontWeight={600}>
+                                  Contacto
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                ¿Necesitas ayuda? Contácta a nuestro equipo
+                              </Typography>
+                              <Link href="mailto:privacy@tuempresa.com" underline="none">
+                                <Button
+                                  variant="outlined"
+                                  fullWidth
+                                  startIcon={<EnvelopeIcon />}
+                                  sx={{ borderRadius: 2 }}
+                                >
+                                  Enviar Email
+                                </Button>
+                              </Link>
+                            </Paper>
+                          </motion.div>
+                        </Grid>
+                      </Grid>
+
+                      {showJson && complianceJson && (
+                        <Paper sx={{ 
+                          mt: 3, 
+                          p: 3, 
+                          borderRadius: 2,
+                          bgcolor: 'grey.50',
+                          maxHeight: 400,
+                          overflow: 'auto'
+                        }}>
+                          <Typography component="pre" sx={{ 
+                            fontFamily: 'monospace', 
+                            fontSize: '0.75rem',
+                            whiteSpace: 'pre-wrap'
+                          }}>
+                            {JSON.stringify(complianceJson, null, 2)}
+                          </Typography>
+                        </Paper>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+      </motion.div>
     </Box>
   )
 }

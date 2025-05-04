@@ -13,7 +13,11 @@ import {
   Typography,
   Avatar,
   Tab,
-  Divider
+  Divider,
+  Card,
+  Chip,
+  Grid,
+  CardContent
 } from "@mui/material";
 import { styled, useTheme } from '@mui/material/styles';
 import {
@@ -28,20 +32,28 @@ import {
   Error
 } from "@mui/icons-material";
 import FeatureDisabled from '@/components/ui/FeatureDisabled';
-import { StyledTabs, StatusChip } from '@/components/ui/Styled';
+import { StyledTabs } from '@/components/ui/Styled';
 import { CreditTransaction } from '@/lib/types';
 
-const TransactionCard = styled(Box)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.85)',
+const TransactionCard = styled(Card)(({ theme }) => ({
   borderRadius: '16px',
-  padding: theme.spacing(3),
   boxShadow: theme.shadows[4],
-  border: '1px solid rgba(222, 226, 230, 0.5)',
   transition: 'all 0.3s ease',
   '&:hover': {
-    transform: 'translateY(-4px)',
+    transform: 'translateY(-5px)',
     boxShadow: theme.shadows[6],
   },
+}));
+
+const StatusChip = styled(Chip)(({ theme }) => ({
+  borderRadius: '20px',
+  fontWeight: 700,
+  fontSize: '0.75rem',
+  padding: '4px 12px',
+  color: 'white',
+  '&.MuiChip-colorSuccess': { background: theme.palette.success.main },
+  '&.MuiChip-colorWarning': { background: theme.palette.warning.main },
+  '&.MuiChip-colorError': { background: theme.palette.error.main },
 }));
 
 export default function TransactionsPage() {
@@ -113,175 +125,152 @@ export default function TransactionsPage() {
     <FeatureDisabled message="Esta funcionalidad no está habilitada en este momento." isEnabled={enableCredits}>
       <Box sx={{
         minHeight: "100vh",
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-        p: { xs: 2, md: 4 },
-        color: 'text.primary'
+        background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%)",
+        py: 6,
+        px: { xs: 2, sm: 4 },
       }}>
-        <Box sx={{ 
-          maxWidth: "1200px", 
+        <Card sx={{
+          maxWidth: "1200px",
           mx: "auto",
-          position: 'relative'
+          borderRadius: 4,
+          boxShadow: "0 10px 30px rgba(0, 0, 100, 0.1)",
         }}>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                mb: 4,
-                fontWeight: "bold",
-                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                display: 'inline-block',
-                letterSpacing: '-0.5px'
-              }}
-            >
+          <Box sx={{
+            background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+            color: "white",
+            p: 3,
+            textAlign: "center"
+          }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
               Historial de Transacciones
             </Typography>
-          </motion.div>
-
-          <Box sx={{ display: 'flex', gap: 2, mb: 4, flexDirection: { xs: 'column', sm: 'row' } }}>
-            <StyledTabs
-              value={typeFilter}
-              onChange={(e, newValue) => {
-                setTypeFilter(newValue);
-                setStatusFilter('all'); // Reset status filter when changing type
-              }}
-              textColor="primary"
-              indicatorColor="primary"
-              variant="scrollable"
-              scrollButtons="auto"
-              sx={{ 
-                background: 'rgba(255, 255, 255, 0.7)',
-                borderRadius: '12px',
-                padding: '4px',
-                boxShadow: theme.shadows[1]
-              }}
-            >
-              <Tab label="Todas" value="all" />
-              <Tab label="Entradas" value="in" icon={<ArrowDownward fontSize="small" />} iconPosition="start" />
-              <Tab label="Salidas" value="out" icon={<ArrowUpward fontSize="small" />} iconPosition="start" />
-            </StyledTabs>
-
-            <StyledTabs
-              value={statusFilter}
-              onChange={(e, newValue) => {
-                setStatusFilter(newValue);
-                setTypeFilter('all'); // Reset type filter when changing status
-              }}
-              textColor="primary"
-              indicatorColor="primary"
-              variant="scrollable"
-              scrollButtons="auto"
-              sx={{ 
-                background: 'rgba(255, 255, 255, 0.7)',
-                borderRadius: '12px',
-                padding: '4px',
-                boxShadow: theme.shadows[1]
-              }}
-            >
-              <Tab label="Todos estados" value="all" />
-              <Tab label="Completadas" value="completed" icon={<CheckCircle fontSize="small" />} iconPosition="start" />
-              <Tab label="Pendientes" value="pending" icon={<Pending fontSize="small" />} iconPosition="start" />
-              <Tab label="Fallidas" value="failed" icon={<Error fontSize="small" />} iconPosition="start" />
-            </StyledTabs>
+            <Typography variant="subtitle1">
+              Registro completo de movimientos de créditos
+            </Typography>
           </Box>
 
-          {filtered.length === 0 ? (
-            <Box sx={{
-              textAlign: 'center',
-              py: 6,
-              background: 'rgba(255, 255, 255, 0.7)',
-              borderRadius: '24px',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(222, 226, 230, 0.5)',
-              boxShadow: theme.shadows[2]
-            }}>
-              <History sx={{ 
-                fontSize: 48, 
-                color: 'text.secondary', 
-                mb: 2,
-                opacity: 0.5
-              }} />
-              <Typography variant="h6" color="text.secondary">
-                No hay transacciones registradas
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {user ? 'Todas tus transacciones aparecerán aquí' : 'Las transacciones de créditos aparecerán aquí'}
-              </Typography>
-            </Box>
-          ) : (
-            <AnimatePresence>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
-                  gap: 3
+          <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+            <Box sx={{ display: 'flex', gap: 2, mb: 4, flexWrap: 'wrap' }}>
+              <StyledTabs
+                value={typeFilter}
+                onChange={(e, newValue) => {
+                  setTypeFilter(newValue);
+                  setStatusFilter('all');
                 }}
+                variant="scrollable"
               >
-                  {filtered.map((t) => (
-    <motion.div
-      key={t.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.02 }}
-    >
-      <TransactionCard>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Avatar
-            sx={{
-              bgcolor: t.amount > 0 ? 'success.main' : 'error.main',
-              color: 'white',
-              width: 48,
-              height: 48,
-              boxShadow: theme.shadows[2]
-            }}
-          >
-            {t.amount > 0 ? <ArrowDownward /> : <ArrowUpward />}
-          </Avatar>
-          <Box sx={{ overflow: 'hidden' }}>
-            <Typography variant="h6" fontWeight="bold" noWrap color="text.primary">
-              {t.transaction_type}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" fontSize="0.75rem">
-              {new Date(t.timestamp).toLocaleString()}
-            </Typography>
-            <StatusChip
-              label={t.payment_status}
-              size="small"
-              color={
-                t.payment_status === 'completed' ? 'success' :
-                t.payment_status === 'pending' ? 'warning' : 'error'
-              }
-            />
-            {getTransactionDetails(t) && (
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-                {getTransactionDetails(t)}
-              </Typography>
-            )}
-          </Box>
-        </Box>
-        <Divider sx={{ mb: 2, borderColor: 'rgba(0,0,0,0.1)' }} />
-        <Typography
-          variant="h5"
-          color={t.amount > 0 ? "success.dark" : "error.dark"}
-          fontWeight="bold"
-          sx={{ mb: 1 }}
-        >
-          {t.amount > 0 ? '+' : ''}{t.amount} créditos
-        </Typography>
-      </TransactionCard>
-    </motion.div>
-  ))}
+                <Tab label="Todas" value="all" />
+                <Tab label="Entradas" value="in" icon={<ArrowDownward />} />
+                <Tab label="Salidas" value="out" icon={<ArrowUpward />} />
+              </StyledTabs>
+
+              <StyledTabs
+                value={statusFilter}
+                onChange={(e, newValue) => {
+                  setStatusFilter(newValue);
+                  setTypeFilter('all');
+                }}
+                variant="scrollable"
+              >
+                <Tab label="Todos estados" value="all" />
+                <Tab label="Completadas" value="completed" icon={<CheckCircle />} />
+                <Tab label="Pendientes" value="pending" icon={<Pending />} />
+                <Tab label="Fallidas" value="failed" icon={<Error />} />
+              </StyledTabs>
+            </Box>
+
+            {filtered.length === 0 ? (
+              <Box sx={{
+                textAlign: 'center',
+                py: 6,
+                background: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: 3,
+                boxShadow: theme.shadows[2]
+              }}>
+                <History sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h6" color="text.secondary">
+                  No hay transacciones registradas
+                </Typography>
               </Box>
-            </AnimatePresence>
-          )}
-        </Box>
+            ) : (
+              <Grid container spacing={3}>
+                <AnimatePresence>
+                  {filtered.map((t) => (
+                    <Grid item xs={12} sm={6} lg={4} key={t.id}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <TransactionCard>
+                          <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                              <Avatar sx={{
+                                bgcolor: t.amount > 0 ? 'success.main' : 'error.main',
+                                color: 'white',
+                                width: 48,
+                                height: 48,
+                                boxShadow: theme.shadows[4]
+                              }}>
+                                {t.amount > 0 ? <ArrowDownward /> : <ArrowUpward />}
+                              </Avatar>
+                              <Box>
+                                <Typography variant="h6" fontWeight={600}>
+                                  {t.transaction_type}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                  {new Date(t.timestamp).toLocaleDateString()}
+                                </Typography>
+                              </Box>
+                            </Box>
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              <Typography variant="body1" color="text.secondary">
+                                Estado:
+                              </Typography>
+                              <StatusChip
+                                label={t.payment_status}
+                                color={
+                                  t.payment_status === 'completed' ? 'success' :
+                                  t.payment_status === 'pending' ? 'warning' : 'error'
+                                }
+                              />
+                            </Box>
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <Typography variant="body1" color="text.secondary">
+                                Método:
+                              </Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {t.payment_method?.toLowerCase() === 'card' ? <CreditCard /> :
+                                 t.payment_method?.toLowerCase() === 'bank' ? <AccountBalance /> : <Paid />}
+                                <Typography variant="body1">
+                                  {t.payment_method || 'N/A'}
+                                </Typography>
+                              </Box>
+                            </Box>
+
+                            <Typography variant="h4" sx={{
+                              mt: 2,
+                              textAlign: 'right',
+                              color: t.amount > 0 ? 'success.main' : 'error.main',
+                              fontWeight: 700
+                            }}>
+                              {t.amount > 0 ? '+' : ''}{t.amount} créditos
+                            </Typography>
+                          </CardContent>
+                        </TransactionCard>
+                      </motion.div>
+                    </Grid>
+                  ))}
+                </AnimatePresence>
+              </Grid>
+            )}
+          </CardContent>
+        </Card>
       </Box>
     </FeatureDisabled>
   );

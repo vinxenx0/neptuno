@@ -82,6 +82,16 @@ export default function Footer() {
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Tu framework SaaS para gestión de créditos y APIs.
             </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <FooterLink href="mailto:info@neptuno.com">info@neptuno.com</FooterLink>
+            <FooterLink href="tel:+34987654321">+34 987 654 321</FooterLink>
+              <ContactItem>
+                <Typography variant="body2">
+                  Avenida Miguel Indurain, Murcia, 30008 España
+                </Typography>
+              </ContactItem>
+              
+            </Box>
             <IconButton
               onClick={toggleTheme}
               color="inherit"
@@ -94,43 +104,53 @@ export default function Footer() {
             </IconButton>
           </Grid>
 
-          {/* Columna 2: Información */}
+          {/* Columna 2: Nosotros */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Información
+              Empresa
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <FooterLink href="/about/us">Sobre Nosotros</FooterLink>
-              <FooterLink href="/about/privacy">Privacidad</FooterLink>
-              <FooterLink href="/about/legal">Términos Legales</FooterLink>
+              <FooterLink href="/landing">Inicio</FooterLink>
+              <FooterLink href="/about-us">Nosotros</FooterLink>
+              <FooterLink href="/products">Productos</FooterLink>
+              <FooterLink href="/services">Servicios</FooterLink>
+              <FooterLink href="/marketplace">Marketplace</FooterLink>
+              <FooterLink href="/pricing">Precios</FooterLink>
+              <FooterLink href="/blog">Novedades</FooterLink>
+              <FooterLink href="/contact">Contacto</FooterLink>
+            </Box>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 3 }}>
+              Legal
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <FooterLink href="/privacy">Privacidad</FooterLink>
+              <FooterLink href="/policy">Política del sitio</FooterLink>
+              <FooterLink href="/terms">Términos Legales</FooterLink>
             </Box>
           </Grid>
 
-          {/* Columna 3: Soporte */}
+          {/* Columna 3: Ayuda */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Soporte
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
               <FooterLink href="/api/docs">API Docs</FooterLink>
+              <FooterLink href="/ejemplos">Ejemplos</FooterLink>
               <FooterLink href="/installation">Instalación</FooterLink>
               <FooterLink href="/help">Ayuda</FooterLink>
+              <FooterLink href="/faq">Preguntas Frecuentes</FooterLink>
             </Box>
           </Grid>
 
-          {/* Columna 4: Contacto */}
+          {/* Columna 4: WACG */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Contacto
+              WACG-AAA-WCAG
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <ContactItem>
-                <Typography variant="body2">
-                  Avenida Miguel Indurain, Murcia, 30008 España
-                </Typography>
-              </ContactItem>
-              <FooterLink href="mailto:info@neptuno.com">info@neptuno.com</FooterLink>
-              <FooterLink href="tel:+34987654321">+34 987 654 321</FooterLink>
+              <FooterLink href="#">Accesibilidad #1</FooterLink>
+              <FooterLink href="#">Accesibilidad #2</FooterLink>
             </Box>
           </Grid>
 
@@ -196,3 +216,5 @@ export default function Footer() {
     </GlassFooter>
   );
 }
+
+
