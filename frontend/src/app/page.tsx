@@ -546,7 +546,7 @@ export default function SplashPage() {
                 integrada. ¡Empieza gratis hoy!
               </Typography>
               {user ? (
-                <Link href="/user/dashboard" passHref>
+                <Link href="/user/" passHref>
                   <ActionButton
                     variant="contained"
                     color="secondary"
