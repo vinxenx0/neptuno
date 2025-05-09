@@ -489,21 +489,21 @@ export default function Navbar() {
                     <MenuItem
                       onClick={handleSettingsMenuClose}
                       component={Link}
-                      href="/admin/dashboard"
+                      href="/admin/"
                     >
                       <Dashboard sx={{ mr: 1 }} /> Config
                     </MenuItem>
                     <MenuItem
                       onClick={handleSettingsMenuClose}
                       component={Link}
-                      href="/admin/gamification"
+                      href="/gamification"
                     >
                       <EmojiEvents sx={{ mr: 1 }} /> Gamification
                     </MenuItem>
                     <MenuItem
                       onClick={handleSettingsMenuClose}
                       component={Link}
-                      href="/admin/revenues"
+                      href="/revenues"
                     >
                       <MonetizationOn sx={{ mr: 1 }} /> Revenues
                     </MenuItem>
@@ -529,7 +529,7 @@ export default function Navbar() {
                 <Tooltip title={user.username} arrow>
                   <IconButton
                     component={Link}
-                    href="/user/dashboard"
+                    href="/user/"
                     className="user-avatar"
                   >
                     <Avatar
@@ -669,7 +669,7 @@ export default function Navbar() {
 
               {user?.rol === "admin" && (
                 <>
-                  <ListItem component={Link} href="/admin/dashboard">
+                  <ListItem component={Link} href="/admin/">
                     <ListItemIcon>
                       <Dashboard />
                     </ListItemIcon>
@@ -690,7 +690,7 @@ export default function Navbar() {
                 </>
               )}
               {user ? (
-                <ListItem component={Link} href="/user/dashboard">
+                <ListItem component={Link} href="/user/">
                   <ListItemIcon>
                     <Person />
                   </ListItemIcon>
@@ -759,7 +759,7 @@ export default function Navbar() {
 
         {user ? (
           <Tooltip title={user.username} arrow>
-            <IconButton component={Link} href="/user/dashboard">
+            <IconButton component={Link} href="/user/"> 
               <Avatar
                 sx={{
                   bgcolor: theme.palette.primary.main,

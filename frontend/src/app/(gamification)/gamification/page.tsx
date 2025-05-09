@@ -1,4 +1,4 @@
-// frontend/src/app/admin/gamification/page.tsx
+// frontend/src/app/gamification/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";

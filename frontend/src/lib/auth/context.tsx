@@ -115,7 +115,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (userResponse.data) {
       setUser(userResponse.data);
       setCredits(userResponse.data.credits);
-      router.push("/user/dashboard");
+      router.push("/user/"); // Redirigir a la página de usuario, en el futuro a home?
     }
   };
 
