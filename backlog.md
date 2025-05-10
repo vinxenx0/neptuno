@@ -15,6 +15,8 @@ idea PMM : dividir neptuno en productos
 
 cada uno 25$/m
 
+neptuno es nuestro propio marketplace / demostración!! 
+
 imagenes del nuevo boilerplate no existen
 
 aceptar las politicas al registrarse
