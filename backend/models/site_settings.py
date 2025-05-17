@@ -17,6 +17,9 @@ class SiteSettings(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Claves esperadas (documentación):
+    
+    # - email_enabled: bool
+    
     # - token_expiration: int (segundos)
     # - refresh_token_expiration: int (segundos)
     # - rate_limit_auth: {"times": int, "seconds": int}

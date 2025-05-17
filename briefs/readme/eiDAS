@@ -1,0 +1,133 @@
+Implantar el reglamento **eIDAS** en una aplicación desarrollada con **Next.js** requiere combinar tu frontend con servicios de confianza que cumplan con las especificaciones del reglamento. Esto no se logra solo con código: debes integrarte con **prestadores cualificados de servicios electrónicos de confianza** (QTSPs) y respetar los aspectos legales, técnicos y de seguridad.
+
+Aquí tienes una **guía paso a paso** para implementar eIDAS en tu app:
+
+---
+
+### 🔒 1. **Define los servicios eIDAS que necesitas**
+
+eIDAS regula varios servicios. Decide cuáles aplicarás:
+
+* **Identificación electrónica (eID):** permitir que usuarios se autentiquen usando su identidad digital nacional (como el DNIe, Cl\@ve, o sistemas similares europeos).
+* **Firmas electrónicas** (simple, avanzada, cualificada).
+* **Sellos electrónicos**, **marcado de tiempo**, **certificados SSL cualificados**, etc.
+
+Ejemplo práctico: si tu aplicación es un portal de firma digital de contratos, deberías implementar:
+
+* Firma electrónica cualificada.
+* Identificación mediante identidad electrónica.
+
+---
+
+### 🧩 2. **Selecciona un prestador cualificado (QTSP)**
+
+No puedes emitir firmas o autenticaciones eIDAS tú mismo. Debes usar una entidad certificada.
+
+Algunos QTSP con API compatibles:
+
+* **Firmaprofesional**
+* **VIDsigner** (Validated ID)
+* **Docusign EU**
+* **Uanataca**
+* **Signicat**
+* **LuxTrust**
+
+➡️ Revisa la [lista de QTSP oficiales del EU Trusted List](https://webgate.ec.europa.eu/tl-browser/).
+
+---
+
+### ⚙️ 3. **Integra la autenticación eID con tu app Next.js**
+
+Esto se hace a través de OpenID Connect (OIDC) o SAML, dependiendo del sistema del proveedor.
+
+**Ejemplo con eID de España (Cl\@ve):**
+
+* Solicita alta en el sistema Cl\@ve (proveído por el Gobierno).
+* Implementa un flujo OIDC o SAML para redirigir al usuario al proveedor de identidad.
+* Al volver, validas el token y obtienes los datos del usuario autenticado.
+
+📦 Puedes usar:
+
+* [`next-auth`](https://next-auth.js.org/) para facilitar OIDC.
+* Módulos como `openid-client` si haces una integración más directa.
+
+---
+
+### ✍️ 4. **Firmas electrónicas eIDAS**
+
+Si necesitas firma avanzada o cualificada:
+
+* Usa una API del QTSP que te permita generar firmas.
+* Estas APIs suelen funcionar así:
+
+  1. Envío de documento.
+  2. Verificación de identidad del usuario (OTP, biometría, eID, etc.).
+  3. Firma digital usando un certificado cualificado del usuario.
+
+**Ejemplo flujo con API de firma:**
+
+```ts
+POST /send-document
+{
+  "userId": "123",
+  "documentUrl": "https://...",
+  "signatureLevel": "qualified"
+}
+```
+
+---
+
+### 📄 5. **Trazabilidad y sellado de tiempo**
+
+* Algunos QTSP también te permiten **sellar digitalmente documentos** con una marca de tiempo cualificada.
+* Esto es útil para contratos, facturas electrónicas o trazabilidad legal.
+
+---
+
+### 🛡️ 6. **Cumple con los requisitos legales y de protección de datos**
+
+* Informa a los usuarios sobre el uso de datos personales e identidades digitales.
+* Asegura el cumplimiento del **RGPD** y proporciona una política de privacidad clara.
+* Almacena pruebas de firma con trazabilidad (hash, IP, timestamp, certificado, etc.).
+
+---
+
+### 🧪 7. **Prueba eIDAS en entornos sandbox**
+
+Muchos QTSP ofrecen entornos de pruebas donde puedes:
+
+* Simular usuarios y firmas.
+* Validar la integración sin coste ni responsabilidad legal.
+
+---
+
+### 🧰 8. Herramientas y librerías útiles
+
+* [`next-auth`](https://next-auth.js.org/) – para autenticación OIDC/SAML.
+* `openid-client` – cliente para OIDC.
+* `axios` o `fetch` – para llamar a APIs de firma.
+* Libs de PDF/firma: `pdf-lib`, `node-forge`, `OpenSSL` (según el caso).
+* UI components: para visualizar firmas, documentos, estados del flujo, etc.
+
+---
+
+### ✅ Checklist para cumplir con eIDAS en Next.js
+
+| Elemento                       | Cumplido |
+| ------------------------------ | -------- |
+| Uso de QTSP                    | ✅        |
+| Integración con eID nacional   | ✅        |
+| Firma cualificada o avanzada   | ✅        |
+| Sellado de tiempo              | ✅        |
+| Registro de evidencias legales | ✅        |
+| Protección de datos personales | ✅        |
+
+---
+
+### ¿Quieres un ejemplo concreto de código?
+
+Puedo ayudarte con un ejemplo de integración con un proveedor específico (como Validated ID o Cl\@ve) usando Next.js. Solo dime cuál quieres.
+
+---
+
+¿Te interesa un ejemplo real de flujo de firma o autenticación? ¿Tienes ya un QTSP elegido?
