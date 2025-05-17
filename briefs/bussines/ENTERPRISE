@@ -1,0 +1,56 @@
+Tras haber incorporado esas diez grandes áreas, para dar por “cerrado” tu MMP necesitarías cubrir aún unos cuantos aspectos finales que aseguren que la plataforma está verdaderamente lista para pasar de un proyecto piloto a un producto estable y autosuficiente. Estas son las funcionalidades o procesos que complementan lo ya implementado:
+
+1. **Documentación y onboarding completos**
+
+   * **Guías de usuario y de administrador**: Manuales claros, con ejemplos de uso, FAQs y walkthroughs en vídeo.
+   * **Tour interactivo in-app**: Un asistente guiado para nuevos usuarios que explique cada módulo clave la primera vez que lo usan.
+
+2. **Atención al cliente y soporte técnico**
+
+   * **Sistema de tickets integrado**: Canal propio para reportar incidencias y hacer seguimiento.
+   * **Chat en vivo o chatbot**: Soporte inmediato para dudas de configuración o despliegue.
+   * **Base de conocimiento / Wiki pública**: Donde los usuarios puedan auto-servirse desde documentaciones y tutoriales.
+
+3. **Acuerdos de nivel de servicio (SLA)**
+
+   * **Definición de uptime garantizado**: Políticas claras de disponibilidad (p. ej. 99.9 %).
+   * **Protocolos de escalado de incidencias**: Tiempos de respuesta y resolución según severidad.
+
+4. **Backup y recuperación ante desastres**
+
+   * **Snapshots periódicos**: Automatización de copias de datos y de imágenes Docker.
+   * **Plan de DR (Disaster Recovery)**: Procedimientos y pruebas documentadas para recuperación en otra región o proveedor.
+
+5. **Versionado y gestión de releases**
+
+   * **Changelog automático**: Registro público de cambios con links a issues o PR.
+   * **Branching + pipelines** en CI/CD: Flujo Gitflow o trunk-based con gates de calidad antes de merge.
+
+6. **Testeo automatizado y QA**
+
+   * **Suite de tests end-to-end**: Cobertura mínima de flujos críticos (registro, pago, feedback, etc.).
+   * **Tests de accesibilidad periódicos**: No solo al inicio, sino como parte de CI para asegurar WCAG.
+
+7. **Seguridad reforzada y pentesting**
+
+   * **Escaneo de vulnerabilidades automáticos**: Dependencias, configuraciones y contenedores.
+   * **Pentesting anual o semestral**: Test de intrusión externa y auditoría de código.
+
+8. **Estrategia de escalado organizativo**
+
+   * **Modelo de roles y gobernanza**: Procedimientos para añadir nuevos equipos, entornos o proyectos sin colapsar el sistema.
+   * **Onboarding interno**: Formación para nuevos PMs, desarrolladores y soporte sobre cómo usar la plataforma y sus mejores prácticas.
+
+9. **Métricas de negocio y KPIs de éxito de la plataforma**
+
+   * **Dashboards de adopción**: Número de proyectos activos, churn de PMs, uso de features clave.
+   * **ROI y TCO para clientes**: Medición del ahorro de tiempo/desarrollo que aporta versus costes.
+
+10. **Estrategia de roadmap y feedback continuo**
+
+    * **Canal de sugerencias públicas**: Para que los usuarios voten nuevas funcionalidades.
+    * **Releases cadenciadas**: Plan de versiones trimestrales y comunicación anticipada de novedades.
+
+---
+
+Cuando tengas todos estos puntos cubiertos, podrás afirmar que tu **MMP** ya no es “mínimo” sino un **producto maduro, completo y autosuficiente**, con la infraestructura, el soporte, la seguridad y los procesos necesarios para operar en producción de forma estable y escalar con tus clientes.

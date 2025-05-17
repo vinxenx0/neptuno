@@ -2,6 +2,21 @@ OPTIMIZAR EL DEPLOY CON EL TEMA EXPORT // SSDR ETC en el orders
 
 En el carrito version movil no se ve el badge de notificaciones
 
+bug frontpage: las variables se machacan
+
+idea PMM : dividir neptuno en productos
+
+- neptuno base / ce / pruebas / starter()
+- neptuno stack + boilerplate / mvp (uth y user y front)
+- neptuno retail / delivery / food : (marketplace - credits )
+- neptuno growth / agency (badges - points - subs?)
+- neptuno cms / people ( user - subs - events - gdpr - wcag )
+- enterprise / corp : sdk - cloud - all features
+
+cada uno 25$/m
+
+neptuno es nuestro propio marketplace / demostración!! 
+
 imagenes del nuevo boilerplate no existen
 
 aceptar las politicas al registrarse
