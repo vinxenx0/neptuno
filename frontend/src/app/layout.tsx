@@ -13,6 +13,8 @@ import "../app/global.css";
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/auth") || pathname?.startsWith("/(auth)");
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isUserRoute = pathname.startsWith("/user");
 
   const [bannerVisible, setBannerVisible] = useState(false);
 
@@ -20,11 +22,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="es">
       <body className="min-h-screen flex flex-col bg-gray-100">
         <AuthProvider>
-          {!isAuthPage && <Navbar />}
-          <main className="flex-grow w-full pt-20 pb-16 md:pb-0">
+          {!isAuthPage && !isAdminRoute && !isUserRoute && <Navbar />}
+           <main className={`flex-grow w-full pb-16 md:pb-0 ${!isAuthPage && !isAdminRoute && !isUserRoute ? 'pt-20' : ''}`}>
             {children}
           </main>
-          {!isAuthPage && <Footer />}
+          {!isAuthPage && !isAdminRoute && !isUserRoute && <Footer />}
         </AuthProvider>
 
         {/* Banner y botón de cookies */}

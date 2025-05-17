@@ -1,0 +1,115 @@
+.
+├── (auth)
+│   └── auth
+│       ├── layout.tsx
+│       ├── login
+│       │   └── page.tsx
+│       ├── register
+│       │   └── page.tsx
+│       └── reset-password
+│           └── page.tsx
+├── (default-site)
+│   ├── _sitemap.xml
+│   │   └── route.ts
+│   ├── about-us
+│   │   └── page.tsx
+│   ├── blog
+│   │   ├── [slug]
+│   │   │   └── page.tsx.bug
+│   │   └── page.tsx
+│   ├── contact
+│   │   └── page.tsx
+│   ├── faq
+│   │   └── page.tsx
+│   ├── landing
+│   │   └── page.tsx
+│   ├── newsletter
+│   │   └── page.tsx
+│   ├── policy
+│   │   └── page.tsx
+│   ├── pricing
+│   │   └── page.tsx
+│   ├── privacy
+│   │   └── page.tsx
+│   ├── products
+│   │   └── page.tsx
+│   ├── services
+│   │   └── page.tsx
+│   └── terms
+│       └── page.tsx
+├── (gamification)
+│   ├── badges
+│   │   └── page.tsx
+│   ├── coupon
+│   │   └── page.tsx
+│   ├── gamification
+│   │   └── page.tsx
+│   ├── points
+│   │   └── page.tsx
+│   └── rankings
+│       └── page.tsx
+├── (gdpr)
+│   ├── _document.tsx
+│   ├── _layout.tsx
+│   ├── _page.js
+│   ├── gdpr
+│   │   ├── consent.js
+│   │   ├── consent.json
+│   │   ├── docs
+│   │   │   ├── basic-privacy.md
+│   │   │   ├── checklist.md
+│   │   │   ├── compliant.md
+│   │   │   ├── cookies.md
+│   │   │   ├── ext-cookies.md
+│   │   │   ├── ext-privacy.md
+│   │   │   └── tos.md
+│   │   ├── page.tsx
+│   │   ├── privacy.js
+│   │   └── use-consent.json
+│   └── whistleblow
+│       ├── page.tsx
+│       └── track.tsx
+├── (health)
+│   └── ejemplos
+│       └── page.tsx
+├── (marketplace)
+│   ├── checkout
+│   │   └── page.tsx
+│   └── marketplace
+│       ├── order
+│       │   └── [id]
+│       │       ├── OrderSuccessClient.tsx
+│       │       └── page.tsx
+│       └── page.tsx
+├── (transactions)
+│   ├── payments
+│   ├── revenues
+│   │   └── page.tsx
+│   └── transactions
+│       └── page.tsx
+├── (users)
+│   ├── admin
+│   │   ├── page.tsx
+│   │   ├── profile
+│   │   │   └── page.tsx
+│   │   ├── registry
+│   │   │   └── page.tsx
+│   │   ├── reset-credits
+│   │   │   └── page.tsx
+│   │   └── users
+│   │       └── page.tsx
+│   ├── profile
+│   └── user
+│       ├── change-password
+│       │   └── page.tsx
+│       ├── page.tsx
+│       └── profile
+│           └── page.tsx
+├── global.css
+├── layout.tsx
+├── not-found.tsx
+├── page.tsx
+├── sitemap.ts.example
+└── tree.txt
+
+51 directories, 61 files
