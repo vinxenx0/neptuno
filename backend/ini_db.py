@@ -588,7 +588,7 @@ def init_settings_and_users():
                              description="Habilitar/deshabilitar marketplace",
                              tag="marketplace"))
 
-    # Categorías de ejemplo
+        # Categorías de ejemplo
         categories_data = [
             {"name": "Electrónica", "description": "Dispositivos electrónicos"},
             {"name": "Libros", "description": "Libros físicos y digitales"},
@@ -653,6 +653,103 @@ def init_settings_and_users():
         for prod_data in products_data:
             if not db.query(Product).filter(Product.name == prod_data["name"]).first():
                 db.add(Product(**prod_data))
+                
+        
+        email_settings = [
+            {
+                "key": "email_enabled",
+                "value": True,  # "true" convertido a booleano
+                "description": "Habilitar/deshabilitar el envío de emails",
+                "tag": "email"
+            },
+            {
+                "key": "email_provider",
+                "value": "smtp",
+                "description": "Proveedor de servicio de email (smtp, sendgrid, mailgun, aws)",
+                "tag": "email"
+            },
+            {
+                "key": "smtp_host",
+                "value": "smtp.gmail.com",
+                "description": "Host del servidor SMTP",
+                "tag": "email"
+            },
+            {
+                "key": "smtp_port",
+                "value": 587,  # Convertido a entero
+                "description": "Puerto del servidor SMTP",
+                "tag": "email"
+            },
+            {
+                "key": "smtp_user",
+                "value": "noreply@neptuno.com",
+                "description": "Usuario para autenticación SMTP",
+                "tag": "email"
+            },
+            {
+                "key": "smtp_pass",
+                "value": "supersecreta",
+                "description": "Contraseña para autenticación SMTP",
+                "tag": "email"
+            },
+            {
+                "key": "mail_from",
+                "value": "noreply@neptuno.com",
+                "description": "Email del remitente",
+                "tag": "email"
+            },
+            {
+                "key": "mail_from_name",
+                "value": "Neptuno",
+                "description": "Nombre del remitente",
+                "tag": "email"
+            },
+            {
+                "key": "sendgrid_api_key",
+                "value": "",  # Valor vacío según la configuración original
+                "description": "API Key para SendGrid",
+                "tag": "email"
+            },
+            {
+                "key": "mailgun_api_key",
+                "value": "",  # Valor vacío
+                "description": "API Key para Mailgun",
+                "tag": "email"
+            },
+            {
+                "key": "mailgun_domain",
+                "value": "",  # Valor vacío
+                "description": "Dominio para Mailgun",
+                "tag": "email"
+            },
+            {
+                "key": "aws_access_key",
+                "value": "",  # Valor vacío
+                "description": "AWS Access Key para SES",
+                "tag": "email"
+            },
+            {
+                "key": "aws_secret_key",
+                "value": "",  # Valor vacío
+                "description": "AWS Secret Key para SES",
+                "tag": "email"
+            },
+            {
+                "key": "aws_region",
+                "value": "us-east-1",
+                "description": "Región AWS para SES",
+                "tag": "email"
+            }
+        ]
+        
+        for setting in email_settings:
+            if not db.query(SiteSettings).filter(
+                    SiteSettings.key == setting["key"]).first():
+                db.add(
+                    SiteSettings(key=setting["key"],
+                                 value=json.dumps(setting["value"]),
+                                 description=setting["description"],
+                                 tag=setting["tag"]))
 
         db.commit()
         print(

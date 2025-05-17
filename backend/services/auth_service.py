@@ -3,6 +3,7 @@
 from os import getenv
 from uuid import uuid4
 from sqlalchemy.orm import Session
+from services.email.email_service import send_email
 from models.user import User, subscriptionEnum
 from models.token import PasswordResetToken, RevokedToken
 from core.security import (
@@ -58,6 +59,16 @@ def register_user(
         db.add(user)
         db.commit()
         db.refresh(user)
+        
+         # Enviar correo de bienvenida
+        import asyncio
+        asyncio.create_task(send_email(
+            db=db,
+            to=email,
+            subject="Bienvenido a Neptuno",
+            template_name="welcome.html",
+            context={"username": username}
+        ))
         
         access_token = create_access_token({"sub": str(user.id), "type": "registered"})
         refresh_token = create_refresh_token({"sub": str(user.id), "type": "registered"})
@@ -171,6 +182,7 @@ def logout_user(db: Session, token: str): #_estimate ?
     db.commit()
     return {"message": "Sesión cerrada"}
 
+
 def request_password_reset(db: Session, email: str):
     user = db.query(User).filter(User.email == email).first()
     if not user:
@@ -180,6 +192,18 @@ def request_password_reset(db: Session, email: str):
     reset_token = PasswordResetToken(user_id=user.id, token=token)
     db.add(reset_token)
     db.commit()
+    
+    import asyncio
+    asyncio.create_task(send_email(
+        db=db,
+        to=email,
+        subject="Recuperación de contraseña",
+        template_name="reset_password.html",
+        context={
+            "username": user.username,
+            "reset_url": f"https://tu-app.com/reset-password?token={token}"
+        }
+    ))
     
     logger.info(f"Token de reseteo generado para usuario ID {user.id}: {token}")
     return {"message": "Solicitud de recuperación enviada", "token": token}
