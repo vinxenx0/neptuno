@@ -134,3 +134,7 @@ metodos de pago de user revisar, y los cupones los creditos
 -- GET /api/privacy/?userId=usuario123 404 in 677ms
 
 -- los origenes no cargan al principioe
+
+-- añadir badges a las opciones del menu de dashboard?
+
+-- en la api origins hay que darle su fichero
