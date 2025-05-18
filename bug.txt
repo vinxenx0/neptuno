@@ -125,3 +125,12 @@ metodos de pago de user revisar, y los cupones los creditos
 	"endLineNumber": 94,
 	"endColumn": 44
 }]
+
+
+
+-- revisar el logout
+--- falla otro map page props en transactions en el dashboard de user
+
+-- GET /api/privacy/?userId=usuario123 404 in 677ms
+
+-- los origenes no cargan al principioe

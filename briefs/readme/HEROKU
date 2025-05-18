@@ -1,0 +1,130 @@
+Para desplegar un proyecto **Next.js** en **Heroku** desde la línea de comandos, sigue estos pasos:
+
+---
+
+### **1. Instala el CLI de Heroku**
+Si no lo tienes instalado, descárgalo desde [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) o usa:  
+```bash
+npm install -g heroku
+```
+
+Luego, inicia sesión en Heroku:
+```bash
+heroku login
+```
+(Se abrirá una ventana del navegador para autenticarte).
+
+---
+
+### **2. Prepara tu proyecto Next.js para Heroku**
+Heroku requiere ciertas configuraciones adicionales:
+
+#### **A. Agrega un `server.js` (para SSR)**
+Si tu proyecto usa **Server-Side Rendering (SSR)**, crea un archivo `server.js` en la raíz:
+```javascript
+const { createServer } = require('http');
+const { parse } = require('url');
+const next = require('next');
+
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
+
+app.prepare().then(() => {
+  createServer((req, res) => {
+    const parsedUrl = parse(req.url, true);
+    handle(req, res, parsedUrl);
+  }).listen(process.env.PORT || 3000, () => {
+    console.log('> Ready on http://localhost:3000');
+  });
+});
+```
+
+#### **B. Configura `package.json`**
+Asegúrate de que tu `package.json` incluya:
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "node server.js"  // o "next start" si no usas SSR
+  },
+  "engines": {
+    "node": "18.x"  // Especifica tu versión de Node
+  }
+}
+```
+
+---
+
+### **3. Crea una app en Heroku**
+Ejecuta en la terminal (desde la raíz de tu proyecto):
+```bash
+heroku create nombre-de-tu-app
+```
+(Si no pones un nombre, Heroku generará uno aleatorio).
+
+---
+
+### **4. Configura el Buildpack de Node.js**
+Heroku necesita saber que es una app Node.js:
+```bash
+heroku buildpacks:set heroku/nodejs
+```
+
+---
+
+### **5. Despliega a Heroku**
+#### **Opción A: Con Git (recomendado)**
+1. Inicializa un repositorio Git si no lo tienes:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   ```
+2. Conecta tu repo con Heroku:
+   ```bash
+   heroku git:remote -a nombre-de-tu-app
+   ```
+3. Sube el código:
+   ```bash
+   git push heroku main
+   ```
+   (Si usas `master` en lugar de `main`, cambia el comando).
+
+#### **Opción B: Directamente con el CLI (sin Git)**
+```bash
+heroku plugins:install @heroku-cli/plugin-buildpacks
+heroku buildpacks:set heroku/nodejs
+heroku config:set NPM_CONFIG_PRODUCTION=false
+heroku config:set NODE_ENV=production
+heroku deploy:jar --jar path/to/your/project
+```
+
+---
+
+### **6. Abre tu app**
+Una vez finalizado el despliegue, abre la app en el navegador:
+```bash
+heroku open
+```
+
+---
+
+### **Solución de Problemas Comunes**
+- **Error en el build**: Verifica los logs con `heroku logs --tail`.
+- **Variables de entorno**: Configúralas con `heroku config:set KEY=value`.
+- **Static Exports**: Si usas `next export`, necesitas un servidor estático como `serve` (instálalo con `npm install serve` y cambia el `start` en `package.json` a `serve -s out`).
+
+---
+
+### **Resumen de Comandos Clave**
+```bash
+heroku login
+heroku create nombre-app
+heroku buildpacks:set heroku/nodejs
+git push heroku main
+heroku open
+```
+
+¡Listo! Tu app de Next.js debería estar funcionando en Heroku. Si tienes errores, revisa los logs (`heroku logs --tail`) y ajusta la configuración según sea necesario. 🚀

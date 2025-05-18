@@ -3,6 +3,7 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 import { Lock, Security } from "@mui/icons-material";
 import fetchAPI from "@/lib/api";
 import { GlassCard } from "./StyledComponents";
+import { FetchResponse } from "@/lib/types";
 
 export default function SecuritySection() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -10,13 +11,16 @@ export default function SecuritySection() {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleChangePassword = async (e) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data } = await fetchAPI("/v1/auth/me/password", {
-        method: "PUT",
-        data: { current_password: currentPassword, new_password: newPassword },
-      });
+      const { data }: FetchResponse<{ message: string }> = await fetchAPI(
+        "/v1/auth/me/password",
+        {
+          method: "PUT",
+          data: { current_password: currentPassword, new_password: newPassword },
+        }
+      );
       setSuccess(data?.message || "Contraseña actualizada");
       setCurrentPassword("");
       setNewPassword("");
@@ -29,8 +33,18 @@ export default function SecuritySection() {
   return (
     <GlassCard>
       <Box sx={{ p: 3 }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>Cambiar Contraseña</Typography>
-        <Box component="form" onSubmit={handleChangePassword} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Cambiar Contraseña
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleChangePassword}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
           <TextField
             label="Contraseña Actual"
             type="password"
@@ -40,7 +54,9 @@ export default function SecuritySection() {
             required
             variant="outlined"
             size="small"
-            InputProps={{ startAdornment: <Lock color="action" sx={{ mr: 1 }} /> }}
+            InputProps={{
+              startAdornment: <Lock color="action" sx={{ mr: 1 }} />,
+            }}
           />
           <TextField
             label="Nueva Contraseña"
@@ -51,9 +67,16 @@ export default function SecuritySection() {
             required
             variant="outlined"
             size="small"
-            InputProps={{ startAdornment: <Security color="action" sx={{ mr: 1 }} /> }}
+            InputProps={{
+              startAdornment: <Security color="action" sx={{ mr: 1 }} />,
+            }}
           />
-          <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 1 }}
+          >
             Actualizar Contraseña
           </Button>
         </Box>

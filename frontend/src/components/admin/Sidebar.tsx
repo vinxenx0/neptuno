@@ -1,36 +1,65 @@
 // frontend/src/app/(users)/admin/Sidebar.tsx
-import { List, ListItem, ListItemText, ListItemIcon, ListItemButton } from "@mui/material";
-import { Home, LockPerson, Security, Link, EmojiEvents, LocalActivity, MonetizationOn, Settings, ShoppingCart } from "@mui/icons-material";
+import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Collapse } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { useState } from "react";
 
-interface SidebarProps {
-  onSelect: (section: string) => void;
+interface SidebarItem {
+  name: string;
+  icon: React.ReactNode;
+  suboptions?: { name: string; icon: React.ReactNode }[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onSelect }) => {
-  const sections = [
-    { name: "Panel", icon: <Home /> },
-    { name: "Funcionalidades", icon: <LockPerson /> },
-    { name: "Orígenes", icon: <Security /> },
-    { name: "Integraciones", icon: <Link /> },
-    { name: "Gamificación", icon: <EmojiEvents /> },
-    { name: "Cupones", icon: <LocalActivity /> },
-    { name: "Pagos", icon: <MonetizationOn /> },
-    { name: "Configuraciones", icon: <Settings /> },
-    { name: "Marketplace", icon: <ShoppingCart /> },
-  ];
+interface SidebarProps {
+  items: SidebarItem[];
+  onSelect: (section: string) => void;
+  selectedSection: string;
+}
+
+export default function Sidebar({ items, onSelect, selectedSection }: SidebarProps) {
+  const [expanded, setExpanded] = useState<string[]>([]);
+
+  const handleToggleExpand = (name: string) => {
+    setExpanded((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+    );
+  };
 
   return (
     <List>
-      {sections.map((section) => (
-        <ListItem key={section.name} disablePadding>
-          <ListItemButton onClick={() => onSelect(section.name)}>
-            <ListItemIcon>{section.icon}</ListItemIcon>
-            <ListItemText primary={section.name} />
+      {items.map((item) => (
+        <div key={item.name}>
+          <ListItemButton
+            onClick={() => {
+              if (item.suboptions) {
+                handleToggleExpand(item.name);
+              }
+              onSelect(item.name);
+            }}
+            selected={selectedSection === item.name}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.name} />
+            {item.suboptions && (expanded.includes(item.name) ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
-        </ListItem>
+          {item.suboptions && (
+            <Collapse in={expanded.includes(item.name)} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {item.suboptions.map((sub) => (
+                  <ListItemButton
+                    key={sub.name}
+                    sx={{ pl: 4 }}
+                    onClick={() => onSelect(`${item.name} - ${sub.name}`)}
+                    selected={selectedSection === `${item.name} - ${sub.name}`}
+                  >
+                    <ListItemIcon>{sub.icon}</ListItemIcon>
+                    <ListItemText primary={sub.name} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Collapse>
+          )}
+        </div>
       ))}
     </List>
   );
-};
-
-export default Sidebar;
+}

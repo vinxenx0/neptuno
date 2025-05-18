@@ -1,4 +1,5 @@
 // frontend/src/app/layout.tsx
+// frontend/src/app/layout.tsx
 "use client";
 
 import { Metadata } from 'next';
@@ -13,8 +14,9 @@ import "../app/global.css";
 export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname?.startsWith("/auth") || pathname?.startsWith("/(auth)");
-  const isAdminRoute = pathname.startsWith("/admin");
-  const isUserRoute = pathname.startsWith("/user");
+  const isAdminRoute = pathname?.startsWith("/admin");
+  const isUserRoute = pathname?.startsWith("/user");
+  const showCookieComponents = !isAuthPage && !isAdminRoute && !isUserRoute;
 
   const [bannerVisible, setBannerVisible] = useState(false);
 
@@ -22,38 +24,42 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="es">
       <body className="min-h-screen flex flex-col bg-gray-100">
         <AuthProvider>
-          {!isAuthPage && !isAdminRoute && !isUserRoute && <Navbar />}
-           <main className={`flex-grow w-full pb-16 md:pb-0 ${!isAuthPage && !isAdminRoute && !isUserRoute ? 'pt-20' : ''}`}>
+          {showCookieComponents && <Navbar />}
+          <main className={`flex-grow w-full pb-16 md:pb-0 ${showCookieComponents ? 'pt-20' : ''}`}>
             {children}
           </main>
-          {!isAuthPage && !isAdminRoute && !isUserRoute && <Footer />}
+          {showCookieComponents && <Footer />}
         </AuthProvider>
 
-        {/* Banner y botón de cookies */}
-        <CookieConsentBanner
-          onClose={() => setBannerVisible(false)}
-          onShow={() => setBannerVisible(true)}
-        />
+        {/* Banner y botón de cookies - solo se muestran en rutas no protegidas */}
+        {showCookieComponents && (
+          <>
+            <CookieConsentBanner
+              onClose={() => setBannerVisible(false)}
+              onShow={() => setBannerVisible(true)}
+            />
 
-        {!bannerVisible && (
-          <button
-            onClick={() => window.location.href = '/gdpr/'}
-            className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 hidden md:block"
-            style={{
-              position: 'fixed',
-              bottom: '20px',
-              right: '20px',
-              background: '#333',
-              color: 'white',
-              padding: '10px 14px',
-              borderRadius: '6px',
-              fontSize: '0.875rem',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-              zIndex: 9999,
-            }}
-          >
-            Privacy Center
-          </button>
+            {!bannerVisible && (
+              <button
+                onClick={() => window.location.href = '/gdpr/'}
+                className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 hidden md:block"
+                style={{
+                  position: 'fixed',
+                  bottom: '20px',
+                  right: '20px',
+                  background: '#333',
+                  color: 'white',
+                  padding: '10px 14px',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                  zIndex: 9999,
+                }}
+              >
+                Privacy Center
+              </button>
+            )}
+          </>
         )}
       </body>
     </html>

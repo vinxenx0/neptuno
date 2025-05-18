@@ -17,10 +17,8 @@ import {
   useTheme,
   Snackbar,
   Alert,
-  Link as MuiLink,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import Link from "next/link";
 import Sidebar from "@/components/admin/Sidebar";
 import HomeSection from "@/components/admin/HomeSection";
 import FeaturesSection from "@/components/admin/FeaturesSection";
@@ -56,9 +54,6 @@ import {
   ShoppingCart,
   CreditCard,
   Receipt,
-  Public,
-  IntegrationInstructions,
-  Settings,
 } from "@mui/icons-material";
 import {
   SiteSetting,
@@ -464,16 +459,13 @@ export default function AdminDashboard() {
     }
   };
 
-  // Definición del sidebar con las secciones faltantes integradas
+  // Definición del sidebar con nuevas secciones y subopciones
   const sidebarItems = [
     { name: "Inicio", icon: <Home /> },
     { name: "Revenues", icon: <AttachMoney /> },
     { name: "Logs", icon: <Description /> },
     { name: "Usuarios", icon: <People /> },
     { name: "Privacidad", icon: <Security /> },
-    { name: "Orígenes", icon: <Public /> }, // Nueva sección
-    { name: "Integraciones", icon: <IntegrationInstructions /> }, // Nueva sección
-    { name: "Configuraciones", icon: <Settings /> }, // Nueva sección
     {
       name: "Gamificación",
       icon: <EmojiEvents />,
@@ -551,17 +543,6 @@ export default function AdminDashboard() {
             onDelete={handleDeleteIntegration}
           />
         );
-      case "Configuraciones":
-        return (
-          <SettingsSection
-            settingsByTag={settingsByTag}
-            expandedSettings={expandedSettings}
-            setExpandedSettings={setExpandedSettings}
-            allSettingsExpanded={allSettingsExpanded}
-            setAllSettingsExpanded={setAllSettingsExpanded}
-            onSave={handleSaveSetting}
-          />
-        );
       case "Gamificación":
         return (
           <GamificationSection
@@ -600,6 +581,17 @@ export default function AdminDashboard() {
             onCreate={handleCreatePaymentProvider}
             onUpdate={handleUpdatePaymentProvider}
             onDelete={handleDeletePaymentProvider}
+          />
+        );
+      case "Configuraciones":
+        return (
+          <SettingsSection
+            settingsByTag={settingsByTag}
+            expandedSettings={expandedSettings}
+            setExpandedSettings={setExpandedSettings}
+            allSettingsExpanded={allSettingsExpanded}
+            setAllSettingsExpanded={setAllSettingsExpanded}
+            onSave={handleSaveSetting}
           />
         );
       case "Marketplace":
@@ -676,11 +668,7 @@ export default function AdminDashboard() {
         onClose={handleDrawerToggle}
         sx={{ width: drawerWidth, flexShrink: 0, [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" } }}
       >
-        <Toolbar>
-          <MuiLink component={Link} href="/" variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
-            Volver a Neptuno
-          </MuiLink>
-        </Toolbar>
+        <Toolbar />
         <Sidebar items={sidebarItems} onSelect={setSelectedSection} selectedSection={selectedSection} />
       </Drawer>
 

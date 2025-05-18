@@ -3,10 +3,11 @@ import { Box, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar, 
 import { Edit, Delete, ExpandMore, AddCircle, Star, CreditCard } from "@mui/icons-material";
 import fetchAPI from "@/lib/api";
 import { GlassCard } from "./StyledComponents";
+import { PaymentMethod } from "@/lib/types";
 
 export default function PaymentMethodsSection({ methods, setMethods, paymentProviders }) {
   const [newMethod, setNewMethod] = useState({ payment_type: paymentProviders[0]?.name || "", details: "", is_default: false });
-  const [editMethod, setEditMethod] = useState(null);
+  const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
   const [deleteMethodId, setDeleteMethodId] = useState(null);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -24,11 +25,11 @@ export default function PaymentMethodsSection({ methods, setMethods, paymentProv
     }
   };
 
-  const handleEditMethod = async (e) => {
+  const handleEditMethod = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editMethod) return;
     try {
-      const { data } = await fetchAPI(`/v1/payments/methods/${editMethod.id}`, { method: "PUT", data: editMethod });
+      const { data } = await fetchAPI<PaymentMethod>(`/v1/payments/methods/${editMethod.id}`, { method: "PUT", data: editMethod });
       setMethods(methods.map((m) => (m.id === data.id ? data : m)));
       setEditMethod(null);
       setSuccess("Método actualizado");

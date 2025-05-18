@@ -12,7 +12,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <Box sx={{ display: "flex", minHeight: "calc(100vh - 80px)" }}>
       <Box sx={{ width: "250px", bgcolor: "background.paper", boxShadow: 2 }}>
-        <Sidebar onSelect={setActiveSection} />
+        <Sidebar onSelect={setActiveSection} items={[]} selectedSection={""} />
       </Box>
       <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto" }}>
         {children(activeSection)}
