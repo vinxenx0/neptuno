@@ -1,5 +1,6 @@
 import { Box, Typography, Table, TableHead, TableRow, TableCell, TableBody, Button, List, ListItem, ListItemText } from "@mui/material";
 import { GlassCard } from "./StyledComponents";
+import Link from "next/link";
 
 export default function OrdersSection({ orders }) {
   return (
@@ -23,7 +24,11 @@ export default function OrdersSection({ orders }) {
             <TableBody>
               {orders.map((order) => (
                 <TableRow key={order.id}>
-                  <TableCell>#{order.id}</TableCell>
+                  <TableCell>
+                     <Link href={`/marketplace/order/${order.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                     #{order.id}
+                     </Link>
+                    </TableCell>
                   <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>{order.total_amount} créditos</TableCell>
@@ -32,7 +37,11 @@ export default function OrdersSection({ orders }) {
                       {order.items.map((item) => (
                         <ListItem key={item.id}>
                           <ListItemText
-                            primary={item.product_name}
+                            primary={
+                              <Link href={`/marketplace/product/${item.product_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                {item.product_name}
+                              </Link>
+                            }
                             secondary={`Cant: ${item.quantity} - ${item.price} créditos c/u`}
                           />
                         </ListItem>

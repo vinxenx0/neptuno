@@ -1,7 +1,7 @@
 # backend/api/v1/marketplace.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models.marketplace import CartItem, Order
+from models.marketplace import CartItem, Order, Product
 from core.database import get_db
 from services.marketplace_service import (
     create_category, get_categories, update_category, delete_category,
@@ -52,6 +52,14 @@ def create_product_route(product: ProductCreate, db: Session = Depends(get_db), 
 @router.get("/products", response_model=List[ProductResponse])
 def get_products_route(db: Session = Depends(get_db)):
     return get_products(db)
+
+
+@router.get("/products/{product_id}", response_model=ProductResponse)
+def get_product(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    return product
 
 @router.put("/products/{product_id}", response_model=ProductResponse)
 def update_product_route(product_id: int, product: ProductCreate, db: Session = Depends(get_db), user_context: UserContext = Depends(get_user_context)):

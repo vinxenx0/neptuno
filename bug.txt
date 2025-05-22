@@ -138,3 +138,6 @@ metodos de pago de user revisar, y los cupones los creditos
 -- añadir badges a las opciones del menu de dashboard?
 
 -- en la api origins hay que darle su fichero
+
+-- se ha perdido funcionalidades del panel de admin
+

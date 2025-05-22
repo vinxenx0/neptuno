@@ -1,58 +1,35 @@
 // frontend/src/app/(auth)/auth/login/page.tsx
-// src/app/(auth)/auth/login/page.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuth } from '@/lib/auth/context';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import fetchAPI from '@/lib/api';
-import { TextField, Alert, Divider, Chip, Button, Box } from '@mui/material';
-import { Lock, Email, VpnKey, EmojiEvents } from '@mui/icons-material';
-import Link from 'next/link';
-import { AuthGlassCard, AuthButton } from '../../../../components/auth/AuthCard';
-import AuthFormContainer from '../../../../components/auth/AuthFormContainer';
+import { useState } from "react";
+import { useAuth } from "@/lib/auth/context";
+import { TextField, Alert, Button, Box, Typography } from "@mui/material";
+import { Lock, Email, VpnKey, Google, Facebook } from "@mui/icons-material";
+import Link from "next/link";
+import AuthLayout from "@/components/auth/AuthLayout";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
     try {
       await login(email, password);
-      
-      try {
-        await fetchAPI('/v1/gamification/events', {
-          method: 'POST',
-          data: { event_type_id: 100 }
-        });
-        setSuccess('¡Inicio de sesión exitoso! Redirigiendo... (+1 punto 🎉)');
-      } catch (gamErr) {
-        setSuccess('¡Inicio de sesión exitoso! Redirigiendo...');
-      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+      setError(err instanceof Error ? err.message : "Error al iniciar sesión");
     }
   };
 
   return (
-    <AuthGlassCard>
-      <AuthFormContainer
-        title="Iniciar Sesión"
-        description="Accede a tu cuenta para continuar"
-        icon={<Lock color="primary" sx={{ fontSize: 48, mb: 2 }} />}
-      >
-        {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>{success}</Alert>}
-
-        <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
+    <AuthLayout>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 600 }}>Iniciar Sesión</Typography>
+        {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+        <Box component="form" onSubmit={handleLogin}>
           <TextField
             fullWidth
             label="Email"
@@ -60,8 +37,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
-            InputProps={{ startAdornment: <Email color="action" sx={{ mr: 1 }} /> }}
-            sx={{ mb: 2 }}
+            InputProps={{ startAdornment: <Email sx={{ mr: 1 }} /> }}
           />
           <TextField
             fullWidth
@@ -70,41 +46,49 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
-            InputProps={{ startAdornment: <VpnKey color="action" sx={{ mr: 1 }} /> }}
-            sx={{ mb: 2 }}
+            InputProps={{ startAdornment: <VpnKey sx={{ mr: 1 }} /> }}
           />
-          <AuthButton
+          <Button
             fullWidth
             type="submit"
             variant="contained"
-            color="primary"
-            size="large"
             startIcon={<Lock />}
+            sx={{ mt: 2, py: 1.5 }}
           >
             Iniciar Sesión
-          </AuthButton>
+          </Button>
         </Box>
-
-        <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Chip 
-            icon={<EmojiEvents />}
-            label="+1 punto por cada login"
-            color="warning"
+        <Box sx={{ mt: 2 }}>
+          <Button
+            fullWidth
             variant="outlined"
-          />
-        </Box>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button component={Link} href="/auth/register" color="secondary">
-            Crear una cuenta
+            startIcon={<Google />}
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login/google`}
+            sx={{ mb: 1 }}
+          >
+            Iniciar sesión con Google
           </Button>
-          <Button component={Link} href="/auth/reset-password" color="inherit">
-            ¿Olvidaste tu contraseña?
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<Facebook />}
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login/meta`}
+          >
+            Iniciar sesión con Meta
           </Button>
         </Box>
-      </AuthFormContainer>
-    </AuthGlassCard>
+        <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
+          Al usar Neptuno, aceptas nuestros <Link href="/terms">Términos y Condiciones</Link>.
+        </Typography>
+        <Box sx={{ mt: 2, textAlign: "center" }}>
+          <Link href="/auth/register" style={{ textDecoration: "none" }}>
+            <Button color="secondary">Crear una cuenta</Button>
+          </Link>
+          <Link href="/auth/reset-password" style={{ textDecoration: "none" }}>
+            <Button color="inherit">¿Olvidaste tu contraseña?</Button>
+          </Link>
+        </Box>
+      </Box>
+    </AuthLayout>
   );
 }
