@@ -24,6 +24,10 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = () => {
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login/google`;
+};
+
   return (
     <AuthLayout>
       <Box sx={{ p: 2 }}>

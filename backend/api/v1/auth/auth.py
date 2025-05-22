@@ -122,6 +122,16 @@ def provider_register_callback(provider: str, code: str, request: Request, db: S
     ip = request.client.host
     return login_with_provider(db, provider, code, ip, is_register=True)
 
+@router.get("/login/{provider}/callback")
+def provider_login_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip, is_register=False)
+
+@router.get("/register/{provider}/callback")
+def provider_register_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip, is_register=True)
+
 
 @router.put("/me/password", response_model=dict)
 def change_password(data: ChangePasswordRequest,
