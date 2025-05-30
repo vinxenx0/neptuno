@@ -1,37 +1,27 @@
 // frontend/src/app/(auth)/auth/register/page.tsx
-// src/app/(auth)/auth/register/page.tsx
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/lib/auth/context';
-import { useRouter } from 'next/navigation';
-import fetchAPI from '@/lib/api';
-import { TextField, Alert, Chip, Typography, Box, Button } from '@mui/material';
-import { Person, Email, VpnKey, PersonAdd, Stars } from '@mui/icons-material';
-import Link from 'next/link';
-import { AuthGlassCard, AuthButton } from '../../../../components/auth/AuthCard';
-import AuthFormContainer from '../../../../components/auth/AuthFormContainer';
-import BackButton from '../../../../components/auth/BackButton';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth/context";
+import fetchAPI from "@/lib/api";
+import { TextField, Alert, Button, Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { Person, Email, VpnKey, PersonAdd, Google, Facebook } from "@mui/icons-material";
+import Link from "next/link";
+import AuthLayout from "@/components/auth/AuthLayout";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [enableRegistration, setEnableRegistration] = useState(true);
   const { register } = useAuth();
 
   useEffect(() => {
     const fetchSettings = async () => {
-      try {
-        const enableRegistrationRes = await fetchAPI('/v1/settings/enable_registration');
-        setEnableRegistration(enableRegistrationRes.data === 'true' || enableRegistrationRes.data === true);
-      } catch (err) {
-        console.error('Error al obtener configuraciones:', err);
-        setEnableRegistration(true);
-      }
+      const { data } = await fetchAPI("/v1/settings/enable_registration");
+      setEnableRegistration(data === "true" || data === true);
     };
     fetchSettings();
   }, []);
@@ -39,83 +29,21 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(null);
-    
-    if (!enableRegistration) return;
-    
+    if (!enableRegistration || !termsAccepted) return;
     try {
       await register({ email, username, password });
-
-      try {
-        await Promise.all([
-          fetchAPI('/v1/gamification/events', { 
-            method: 'POST',
-            data: { event_type_id: 101 }
-          }),
-          fetchAPI('/v1/gamification/events', { 
-            method: 'POST',
-            data: { event_type_id: 102 }
-          }),
-          fetchAPI('/v1/gamification/events', { 
-            method: 'POST',
-            data: { event_type_id: 103 }
-          })
-        ]);
-        
-        await fetchAPI('/v1/gamification/events', { 
-          method: 'POST',
-          data: { event_type_id: 104 }
-        });
-        
-        setSuccess('¡Registro exitoso! 🏆 ¡Insignia obtenida! Redirigiendo...');
-      } catch (gamErr) {
-        setSuccess('¡Registro exitoso! Redirigiendo...');
-      }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al registrarse';
-      if (errorMessage.includes('email')) {
-        setError('El email ya está registrado');
-      } else if (errorMessage.includes('username')) {
-        setError('El nombre de usuario ya está en uso');
-      } else {
-        setError(errorMessage);
-      }
+      setError(err instanceof Error ? err.message : "Error al registrarse");
     }
   };
 
-  
-
   return (
-    <AuthGlassCard>
-      <AuthFormContainer
-        title="Crear Cuenta"
-        initial={{ x: 100, opacity: 0 }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <BackButton href="/auth/login" />
-          <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
-            Crear Cuenta
-          </Typography>
-        </Box>
-
-        {!enableRegistration && (
-          <Alert severity="warning" sx={{ mb: 3, borderRadius: '12px' }}>
-            El registro está deshabilitado en este momento.
-          </Alert>
-        )}
-        {error && <Alert severity="error" sx={{ mb: 3, borderRadius: '12px' }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 3, borderRadius: '12px' }}>{success}</Alert>}
-
-        <Box sx={{ textAlign: 'center', mt: 2, mb: 3 }}>
-          <Chip 
-            icon={<Stars />}
-            label="¡Gana 3 puntos + insignia al registrarte!"
-            color="secondary"
-            variant="outlined"
-          />
-        </Box>
-
-        <Box component="form" onSubmit={handleRegister} sx={{ mt: 2 }}>
+    <AuthLayout>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 600 }}>Crear Cuenta</Typography>
+        {!enableRegistration && <Alert severity="warning" sx={{ mb: 3 }}>El registro está deshabilitado.</Alert>}
+        {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+        <Box component="form" onSubmit={handleRegister}>
           <TextField
             fullWidth
             label="Email"
@@ -124,8 +52,7 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
             disabled={!enableRegistration}
-            InputProps={{ startAdornment: <Email color="action" sx={{ mr: 1 }} /> }}
-            sx={{ mb: 2 }}
+            InputProps={{ startAdornment: <Email sx={{ mr: 1 }} /> }}
           />
           <TextField
             fullWidth
@@ -134,8 +61,7 @@ export default function RegisterPage() {
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
             disabled={!enableRegistration}
-            InputProps={{ startAdornment: <Person color="action" sx={{ mr: 1 }} /> }}
-            sx={{ mb: 2 }}
+            InputProps={{ startAdornment: <Person sx={{ mr: 1 }} /> }}
           />
           <TextField
             fullWidth
@@ -145,29 +71,50 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             disabled={!enableRegistration}
-            InputProps={{ startAdornment: <VpnKey color="action" sx={{ mr: 1 }} /> }}
-            sx={{ mb: 2 }}
+            InputProps={{ startAdornment: <VpnKey sx={{ mr: 1 }} /> }}
           />
-          <AuthButton
+          <FormControlLabel
+            control={<Checkbox checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />}
+            label={<Typography>Acepto los <Link href="/terms">Términos y Condiciones</Link></Typography>}
+            sx={{ mt: 2 }}
+          />
+          <Button
             fullWidth
             type="submit"
             variant="contained"
-            color="primary"
-            size="large"
-            disabled={!enableRegistration}
             startIcon={<PersonAdd />}
+            disabled={!enableRegistration || !termsAccepted}
+            sx={{ mt: 2, py: 1.5 }}
           >
             Registrarse
-          </AuthButton>
-        </Box>
-
-        <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          ¿Ya tienes una cuenta?{' '}
-          <Button component={Link} href="/auth/login" color="primary">
-            Inicia sesión
           </Button>
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<Google />}
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/register/google`}
+            sx={{ mb: 1 }}
+          >
+            Registrarse con Google
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<Facebook />}
+            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/register/meta`}
+          >
+            Registrarse con Meta
+          </Button>
+        </Box>
+        <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
+          ¿Ya tienes una cuenta?{" "}
+          <Link href="/auth/login" style={{ textDecoration: "none" }}>
+            <Button color="primary">Inicia sesión</Button>
+          </Link>
         </Typography>
-      </AuthFormContainer>
-    </AuthGlassCard>
+      </Box>
+    </AuthLayout>
   );
 }

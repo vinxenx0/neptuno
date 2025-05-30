@@ -28,3 +28,116 @@ cuando no hay creditos que tb salga el badge con la cantidad (0)
 
 marketplace como texto no como icono
 >>>>>>> 45301732a6302d966059e85f2a26d4db5470bfdb
+
+NUEVOS DASHBOARDS
+
+revisar el originenes cuando carga que no carga la primera vez
+
+metodos de pago de user revisar, y los cupones los creditos
+
+
+[{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2345",
+	"severity": 8,
+	"message": "Argument of type 'unknown' is not assignable to parameter of type 'Coupon[]'.\n  Type '{}' is missing the following properties from type 'Coupon[]': length, pop, push, concat, and 35 more.",
+	"source": "ts",
+	"startLineNumber": 99,
+	"startColumn": 20,
+	"endLineNumber": 99,
+	"endColumn": 41
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/components/user/PaymentMethodsSection.tsx",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'id' does not exist on type 'unknown'.",
+	"source": "ts",
+	"startLineNumber": 32,
+	"startColumn": 52,
+	"endLineNumber": 32,
+	"endColumn": 54
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/components/user/SecuritySection.tsx",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'message' does not exist on type 'unknown'.",
+	"source": "ts",
+	"startLineNumber": 20,
+	"startColumn": 24,
+	"endLineNumber": 20,
+	"endColumn": 31
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2345",
+	"severity": 8,
+	"message": "Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<Order[]>'.",
+	"source": "ts",
+	"startLineNumber": 98,
+	"startColumn": 19,
+	"endLineNumber": 98,
+	"endColumn": 39
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2345",
+	"severity": 8,
+	"message": "Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<Integration[]>'.",
+	"source": "ts",
+	"startLineNumber": 97,
+	"startColumn": 25,
+	"endLineNumber": 97,
+	"endColumn": 51
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2339",
+	"severity": 8,
+	"message": "Property 'filter' does not exist on type 'unknown'.",
+	"source": "ts",
+	"startLineNumber": 96,
+	"startColumn": 48,
+	"endLineNumber": 96,
+	"endColumn": 54
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2345",
+	"severity": 8,
+	"message": "Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<any[]>'.",
+	"source": "ts",
+	"startLineNumber": 95,
+	"startColumn": 20,
+	"endLineNumber": 95,
+	"endColumn": 38
+},{
+	"resource": "/home/vinxenxo/neptuno/neptuno-1/frontend/src/app/(users)/user/page.tsx",
+	"owner": "typescript",
+	"code": "2345",
+	"severity": 8,
+	"message": "Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<any[]>'.",
+	"source": "ts",
+	"startLineNumber": 94,
+	"startColumn": 25,
+	"endLineNumber": 94,
+	"endColumn": 44
+}]
+
+
+
+-- revisar el logout
+--- falla otro map page props en transactions en el dashboard de user
+
+-- GET /api/privacy/?userId=usuario123 404 in 677ms
+
+-- los origenes no cargan al principioe
+
+-- añadir badges a las opciones del menu de dashboard?
+
+-- en la api origins hay que darle su fichero
+
+-- se ha perdido funcionalidades del panel de admin
+

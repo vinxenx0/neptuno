@@ -86,28 +86,51 @@ def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return logout_user(db, token)
 
 
+# Ruta para login con OAuth2
 @router.get("/login/{provider}", response_model=dict)
 def get_provider_login_url(provider: str, db: Session = Depends(get_db)):
-    enable_social_login = get_setting(
-        db, "enable_social_login")  # comprobar he tenido que meter db
+    enable_social_login = get_setting(db, "enable_social_login")
     if enable_social_login != "true":
-        raise HTTPException(status_code=403,
-                            detail="El login social está deshabilitado")
-
+        raise HTTPException(status_code=403, detail="El login social está deshabilitado")
     try:
-        redirect_url = get_oauth2_redirect_url(provider)
+        redirect_url = get_oauth2_redirect_url(provider, is_register=False)
         return {"redirect_url": redirect_url}
     except ValueError:
         raise HTTPException(status_code=400, detail="Proveedor no soportado")
 
+# Ruta para registro con OAuth2
+@router.get("/register/{provider}", response_model=dict)
+def get_provider_register_url(provider: str, db: Session = Depends(get_db)):
+    enable_registration = get_setting(db, "enable_registration")
+    if enable_registration != "true":
+        raise HTTPException(status_code=403, detail="El registro está deshabilitado")
+    try:
+        redirect_url = get_oauth2_redirect_url(provider, is_register=True)
+        return {"redirect_url": redirect_url}
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Proveedor no soportado")
 
+# Callback para login
 @router.post("/login/{provider}/callback", response_model=TokenResponse)
-def provider_callback(provider: str,
-                      code: str,
-                      request: Request,
-                      db: Session = Depends(get_db)):
+def provider_login_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
     ip = request.client.host
-    return login_with_provider(db, provider, code, ip)
+    return login_with_provider(db, provider, code, ip, is_register=False)
+
+# Callback para registro
+@router.post("/register/{provider}/callback", response_model=TokenResponse)
+def provider_register_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip, is_register=True)
+
+@router.get("/login/{provider}/callback")
+def provider_login_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip, is_register=False)
+
+@router.get("/register/{provider}/callback")
+def provider_register_callback(provider: str, code: str, request: Request, db: Session = Depends(get_db)):
+    ip = request.client.host
+    return login_with_provider(db, provider, code, ip, is_register=True)
 
 
 @router.put("/me/password", response_model=dict)

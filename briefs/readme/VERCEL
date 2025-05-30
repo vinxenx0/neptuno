@@ -1,0 +1,81 @@
+Deploying to Vercel from the command line is straightforward using the Vercel CLI. Here's a step-by-step guide:
+
+### **1. Install the Vercel CLI**
+If you haven't already installed it, run:
+```bash
+npm install -g vercel
+# or
+yarn global add vercel
+```
+
+### **2. Log in to Vercel**
+Run:
+```bash
+vercel login
+```
+This will open a browser window where you can authenticate your Vercel account.
+
+### **3. Navigate to Your Project**
+```bash
+cd /path/to/your/project
+```
+
+### **4. Deploy Your Project**
+Run:
+```bash
+vercel
+```
+- The CLI will guide you through the deployment process.
+- You can choose to link the project to an existing Vercel project or create a new one.
+- Configure settings like project name, framework, and environment variables.
+
+### **5. (Optional) Deploy to Production**
+By default, `vercel` deploys to a preview URL. To deploy to production (if linked to a Git branch), use:
+```bash
+vercel --prod
+```
+
+### **6. (Optional) Additional Commands**
+- **Force a new deployment** (ignoring cached files):
+  ```bash
+  vercel --force
+  ```
+- **Deploy with specific environment variables**:
+  ```bash
+  vercel -e ENV_VAR_NAME=value
+  ```
+- **List deployments**:
+  ```bash
+  vercel ls
+  ```
+- **Remove a deployment**:
+  ```bash
+  vercel remove <project-name>
+  ```
+
+### **7. (Advanced) Automate with `vercel.json`**
+You can configure deployment settings in a `vercel.json` file:
+```json
+{
+  "version": 2,
+  "name": "my-project",
+  "builds": [
+    { "src": "*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/", "dest": "index.js" }
+  ]
+}
+```
+
+### **8. (Git Integration) Auto-Deploy on Push**
+If your project is connected to a Git repository (GitHub, GitLab, Bitbucket), Vercel automatically deploys when you push changes.
+
+---
+### **Summary**
+1. `npm install -g vercel`  
+2. `vercel login`  
+3. `cd your-project`  
+4. `vercel` (preview) or `vercel --prod` (production)  
+
+That's it! 🚀 Let me know if you need help with any step.

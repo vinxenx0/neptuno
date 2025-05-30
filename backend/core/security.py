@@ -14,9 +14,12 @@ from core.logging import configure_logging
 from core.database import get_db
 from services.settings_service import get_setting
 
+
+
 logger = configure_logging()
 
 # Configuración de OAuth2
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/token")
 google_client = WebApplicationClient(getenv("GOOGLE_CLIENT_ID"))
 meta_client = WebApplicationClient(getenv("META_CLIENT_ID"))
@@ -107,18 +110,22 @@ def create_refresh_token(data: dict):
     to_encode.update({"exp": expire, "type": "refresh"})
     return jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm="HS256")
 
+
+
+def get_oauth2_redirect_url(provider: str, is_register: bool = False) -> str:
+    redirect_uri_key = "GOOGLE_REDIRECT_URI" if provider == "google" else "META_REDIRECT_URI"
+    redirect_uri = getenv(redirect_uri_key).replace("login", "register") if is_register else getenv(redirect_uri_key)
     
-def get_oauth2_redirect_url(provider: str) -> str:
     if provider == "google":
         return google_client.prepare_request_uri(
             "https://accounts.google.com/o/oauth2/v2/auth",
-            redirect_uri=getenv("GOOGLE_REDIRECT_URI"),
+            redirect_uri=redirect_uri,
             scope=["openid", "email", "profile"]
         )
     elif provider == "meta":
         return meta_client.prepare_request_uri(
             "https://www.facebook.com/v13.0/dialog/oauth",
-            redirect_uri=getenv("META_REDIRECT_URI"),
+            redirect_uri=redirect_uri,
             scope=["email"]
         )
     raise ValueError("Proveedor no soportado")

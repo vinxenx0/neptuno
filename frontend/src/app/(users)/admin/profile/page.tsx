@@ -1,4 +1,4 @@
-// frontend/src/app/admin/profile/page.tsx
+// frontend/src/app/admin/dashboard/page.tsx
 // Panel de administración principal para configuración y gestión
 "use client";
 

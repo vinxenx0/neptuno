@@ -20,7 +20,6 @@ import {
   ListItemIcon,
   ListItemText,
   styled,
-  Link as MuiLink,
 } from "@mui/material";
 import { Menu as MenuIcon, Home, Shield as ShieldCheckIcon } from "@mui/icons-material";
 import {
@@ -30,13 +29,12 @@ import {
   History,
   Payment,
   CreditCard,
-  Link as MuiIconLink,
+  Link,
   ShoppingCart,
   Logout,
   Delete,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import ProfileSection from "@/components/user/ProfileSection";
 import SecuritySection from "@/components/user/SecuritySection";
 import CouponsSection from "@/components/user/CouponsSection";
@@ -46,7 +44,7 @@ import BuyCreditsSection from "@/components/user/BuyCreditsSection";
 import IntegrationsSection from "@/components/user/IntegrationsSection";
 import OrdersSection from "@/components/user/OrdersSection";
 import HomeSection from "@/components/user/HomeSection";
-import PrivacySection from "@/components/user/PrivacySection";
+import PrivacySection from "@/components/user/PrivacySection"; 
 import fetchAPI from "@/lib/api";
 import {
   Integration,
@@ -58,14 +56,14 @@ import {
 } from "@/lib/types";
 
 // Styled Components
-const GradientCard = styled("div")(({ theme }) => ({
+export const GradientCard = styled("div")(({ theme }) => ({
   background: `linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)`,
   color: "white",
   borderRadius: "16px",
   boxShadow: theme.shadows[4],
 }));
 
-const GlassCard = styled("div")(({ theme }) => ({
+export const GlassCard = styled("div")(({ theme }) => ({
   background: "rgba(248, 249, 250, 0.8)",
   backdropFilter: "blur(10px)",
   border: "1px solid rgba(222, 226, 230, 0.5)",
@@ -140,7 +138,7 @@ export default function UserDashboard() {
     }
   };
 
-  // Secciones del sidebar
+  // Updated sections array with Privacy Center
   const sections = [
     { name: "Inicio", icon: <Home /> },
     { name: "Profile", icon: <Person /> },
@@ -149,17 +147,15 @@ export default function UserDashboard() {
     { name: "Transactions", icon: <History /> },
     { name: "Payment Methods", icon: <Payment /> },
     { name: "Buy Credits", icon: <CreditCard /> },
-    { name: "Integrations", icon: <MuiIconLink /> },
+    { name: "Integrations", icon: <Link /> },
     { name: "Orders", icon: <ShoppingCart /> },
-    { name: "Privacy Center", icon: <ShieldCheckIcon /> },
+    { name: "Privacy Center", icon: <ShieldCheckIcon /> }, // New section
   ];
 
   const drawer = (
     <Box sx={{ width: drawerWidth, bgcolor: "background.paper", height: "100%" }}>
       <Toolbar>
-        <MuiLink component={Link} href="/" variant="h6" sx={{ textDecoration: "none", color: "inherit" }}>
-          Volver a Neptuno
-        </MuiLink>
+        <Typography variant="h6">Mi Cuenta</Typography>
       </Toolbar>
       <List>
         {sections.map((section) => (
@@ -221,7 +217,7 @@ export default function UserDashboard() {
         display: "flex",
       }}
     >
-      {/* AppBar para móviles */}
+      {/* AppBar for mobile */}
       <AppBar
         position="fixed"
         sx={{ zIndex: theme.zIndex.drawer + 1, display: { md: "none" } }}
@@ -234,7 +230,7 @@ export default function UserDashboard() {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer del sidebar */}
+      {/* Sidebar Drawer */}
       <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
         <Drawer
           variant="temporary"
@@ -260,7 +256,7 @@ export default function UserDashboard() {
         </Drawer>
       </Box>
 
-      {/* Contenido principal */}
+      {/* Main Content */}
       <Box
         component="main"
         sx={{
@@ -270,7 +266,7 @@ export default function UserDashboard() {
           mt: { xs: 8, md: 0 },
         }}
       >
-        {/* Encabezado */}
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
@@ -285,7 +281,7 @@ export default function UserDashboard() {
           </Avatar>
         </Box>
 
-        {/* Renderizado de la sección seleccionada */}
+        {/* Render Selected Section */}
         {selectedSection === "Inicio" && (
           <HomeSection
             user={user}

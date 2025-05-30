@@ -102,6 +102,11 @@ const fetchAPI = async <T>(
     const response: AxiosResponse<T> = await api(config); // Usar la instancia 'api'
     logRequest(config.method || "GET", config.url!, response.status, response.data);
 
+    if (response.data && (response.data as any).redirect_url) {
+      window.location.href = (response.data as any).redirect_url;
+      return { data: null, error: "Redirecting..." };
+    }
+
     if (response.data && (response.data as any).session_id) {
       localStorage.setItem("session_id", (response.data as any).session_id);
     }

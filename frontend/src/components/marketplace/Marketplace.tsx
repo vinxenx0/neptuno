@@ -27,6 +27,7 @@ import {
   Download,
   Star
 } from "@mui/icons-material";
+import Link from "next/link";
 
 // Animaciones
 const containerVariants = {
@@ -178,7 +179,9 @@ export default function Marketplace() {
                               {product.is_digital ? <Download /> : <ShoppingCart />}
                             </Avatar>
                             <Typography variant="h6" fontWeight={600}>
-                              {product.name}
+                              <Link href={`/marketplace/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                {product.name}
+                              </Link>
                             </Typography>
                           </Box>
 

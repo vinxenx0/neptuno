@@ -211,20 +211,24 @@ def change_user_password(db: Session, user_id: int, current_password: str, new_p
     db.commit()
     return {"message": "Contraseña actualizada con éxito"}
 
-def login_with_provider(db: Session, provider: str, code: str, ip: str):
+
+
+def login_with_provider(db: Session, provider: str, code: str, ip: str, is_register: bool = False):
+    # Configuración del proveedor
     if provider == "google":
         token_url = "https://oauth2.googleapis.com/token"
         client_id = getenv("GOOGLE_CLIENT_ID")
         client_secret = getenv("GOOGLE_CLIENT_SECRET")
-        redirect_uri = getenv("GOOGLE_REDIRECT_URI")
+        redirect_uri = getenv("GOOGLE_REDIRECT_URI") if not is_register else getenv("GOOGLE_REDIRECT_URI").replace("login", "register")
     elif provider == "meta":
         token_url = "https://graph.facebook.com/v13.0/oauth/access_token"
         client_id = getenv("META_CLIENT_ID")
         client_secret = getenv("META_CLIENT_SECRET")
-        redirect_uri = getenv("META_REDIRECT_URI")
+        redirect_uri = getenv("META_REDIRECT_URI") if not is_register else getenv("META_REDIRECT_URI").replace("login", "register")
     else:
         raise HTTPException(status_code=400, detail="Proveedor no soportado")
 
+    # Obtener token del proveedor
     token_data = {
         "code": code,
         "client_id": client_id,
@@ -246,22 +250,26 @@ def login_with_provider(db: Session, provider: str, code: str, ip: str):
     provider_id = user_data.get("id") or user_data.get("sub")
     user = db.query(User).filter(User.email == email).first()
 
-    if not user:
+    if is_register:
+        if user:
+            raise HTTPException(status_code=400, detail="El email ya está registrado")
         user = User(
             email=email,
             username=email.split("@")[0],
             auth_provider=provider,
             provider_id=provider_id,
-            credits= 200, # Comprobar si es cuando hace login o cuando se registra por primera vez con otro proveedor
+            credits=200,
             create_at=datetime.utcnow()
         )
         db.add(user)
         db.commit()
         db.refresh(user)
+        logger.info(f"Nuevo usuario registrado con {provider}: ID {user.id}")
     else:
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado. Regístrate primero.")
         if user.auth_provider != provider or user.provider_id != provider_id:
-            logger.warning(f"Conflicto de proveedor para email {email}")
-            raise HTTPException(status_code=400, detail="Email ya registrado con otro proveedor")
+            raise HTTPException(status_code=400, detail="Credenciales no coinciden")
 
     user.last_ip = ip
     user.last_login = datetime.utcnow()
